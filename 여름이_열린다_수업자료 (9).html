@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>여름이 열린다 - 수업자료</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap');
+:root{
+  --purple:#8B7CC8; --purple-dark:#6B5CA5;
+  --mint:#6FC2B4;   --mint-dark:#4FA89A;
+  --lavender:#EFEBFB; --peach:#FFE3D1; --yellow:#FFE9A8;
+  --sky:#D7F0F5;    --leaf:#D9F2DD;
+  --text:#4A3F6B;   --bg:#FBF8FF; --white:#fff;
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html,body{height:100%; overflow:hidden; font-family:'Jua','Gaegu',sans-serif; color:var(--text); background:var(--bg);}
+#stage{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;background:linear-gradient(135deg,#F3F0FF,#E8F7F2);}
+.navwrap{position:relative;width:1280px;}
+
+/* PAGE */
+.page{width:1280px;height:720px;background:var(--white);border-radius:28px;
+  box-shadow:0 20px 60px rgba(107,92,165,.25);display:none;overflow:hidden;flex-direction:column;}
+.page.active{display:flex;}
+.topbar{height:82px;flex:0 0 82px;background:linear-gradient(90deg,var(--purple),var(--purple-dark));
+  display:flex;align-items:center;justify-content:space-between;padding:0 36px;color:#fff;}
+.topbar h1{font-size:32px;letter-spacing:1px;}
+.topbar .sub{font-size:19px;opacity:.85;font-family:'Gaegu';}
+.pagebody{flex:1;padding:22px 40px;position:relative;overflow:hidden;}
+
+/* NAV */
+.navbtn{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;border-radius:50%;
+  background:var(--mint);color:#fff;border:none;font-size:26px;cursor:pointer;
+  box-shadow:0 6px 14px rgba(79,168,154,.4);z-index:25;display:flex;align-items:center;justify-content:center;}
+.navbtn:hover{background:var(--mint-dark);}
+.navbtn.prev{left:-26px;} .navbtn.next{right:-26px;}
+.dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);display:flex;gap:9px;z-index:20;}
+.dot{width:13px;height:13px;border-radius:50%;background:#E2DCF5;cursor:pointer;transition:.2s;}
+.dot.active{background:var(--purple-dark);transform:scale(1.3);}
+
+/* TOP BUTTONS */
+.editbtn{position:fixed;top:16px;right:16px;z-index:100;background:var(--white);border:3px solid var(--purple);
+  border-radius:50%;width:50px;height:50px;font-size:22px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.15);}
+.savebtn{position:fixed;top:16px;right:78px;z-index:100;background:var(--purple-dark);color:#fff;border:none;
+  border-radius:18px;padding:12px 20px;font-size:15px;font-family:'Jua';cursor:pointer;display:none;
+  box-shadow:0 4px 10px rgba(0,0,0,.15);}
+body.editmode .savebtn{display:block;}
+body.editmode [contenteditable]{outline:2px dashed var(--mint-dark);background:#FFFDF2;}
+
+/* COMMON */
+.badge{display:inline-flex;align-items:center;justify-content:center;width:36px;height:36px;
+  border-radius:50%;background:var(--purple);color:#fff;font-size:17px;flex:0 0 36px;}
+.resetbtn{font-family:'Jua';font-size:17px;border:none;border-radius:14px;
+  padding:9px 22px;cursor:pointer;color:#fff;background:#C8BEEA;}
+.checkbtn{font-family:'Jua';font-size:17px;border:none;border-radius:14px;
+  padding:9px 22px;cursor:pointer;color:#fff;background:var(--mint-dark);margin-right:8px;}
+.uploadph{width:100%;height:100%;display:flex;align-items:center;justify-content:center;
+  text-align:center;font-size:18px;font-family:'Gaegu';color:#A79CCB;
+  background:repeating-linear-gradient(45deg,#F7F4FF,#F7F4FF 10px,#F1ECFE 10px,#F1ECFE 20px);}
+
+/* ══════════════════════════════════════
+   PAGE 1: COVER
+══════════════════════════════════════ */
+.cover{background:linear-gradient(160deg,var(--sky) 0%,var(--leaf) 55%,var(--yellow) 100%);
+  flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
+.cover h1{font-size:60px;color:var(--purple-dark);text-shadow:2px 2px 0 #fff;}
+.cover h2{font-size:28px;color:var(--mint-dark);margin:6px 0 16px;}
+.cover p{font-size:21px;max-width:760px;line-height:1.7;font-family:'Gaegu';}
+.cover .deco{position:absolute;font-size:56px;}
+.deco1{top:36px;left:56px;} .deco2{top:56px;right:86px;} .deco3{bottom:46px;left:110px;} .deco4{bottom:36px;right:66px;}
+
+/* ══════════════════════════════════════
+   PAGE 2: 열린다/돌린다 배치하기
+══════════════════════════════════════ */
+.p2sort-wrap{display:flex;flex-direction:column;gap:18px;height:calc(100% - 60px);}
+.p2wordpool{
+  display:flex;flex-wrap:wrap;gap:14px;justify-content:center;align-content:center;
+  background:var(--lavender);border-radius:20px;padding:18px 24px;min-height:100px;
+}
+.p2boxes{display:flex;gap:24px;flex:1;}
+.p2box{
+  flex:1;border-radius:22px;border:4px dashed #D5CCEF;background:#FAFAFE;
+  display:flex;flex-direction:column;overflow:hidden;transition:background .15s,border-color .15s;
+}
+.p2box.over{background:#EAE4FF;border-color:var(--purple-dark);}
+.p2box-title{
+  font-size:36px;font-weight:bold;text-align:center;padding:16px 0;
+  border-radius:18px 18px 0 0;color:#fff;letter-spacing:2px;
+}
+.p2box-title.open{background:linear-gradient(90deg,#6FC2B4,#4FA89A);}
+.p2box-title.turn{background:linear-gradient(90deg,#8B7CC8,#6B5CA5);}
+.p2box-words{
+  flex:1;display:flex;flex-wrap:wrap;gap:12px;padding:18px;
+  align-content:flex-start;
+}
+.sorttag{
+  background:#fff;border:3px solid var(--yellow);border-radius:16px;
+  padding:12px 22px;font-size:38px;cursor:grab;user-select:none;
+  box-shadow:0 4px 10px rgba(0,0,0,.1);transition:.15s;
+  display:inline-block;white-space:nowrap;
+}
+.sorttag:hover{transform:translateY(-3px);box-shadow:0 8px 16px rgba(0,0,0,.15);}
+.sorttag.dragging{opacity:.45;cursor:grabbing;}
+.sorttag.correct{border-color:var(--mint-dark);background:#DFF6EF;}
+.sorttag.wrong{border-color:#E08A8A;background:#FBE6E6;}
+.p2feedback{font-size:24px;font-family:'Gaegu';color:var(--purple-dark);align-self:center;}
+
+/* ══════════════════════════════════════
+   PAGE 3: 안전수칙 선긋기
+══════════════════════════════════════ */
+.p3wrap{display:flex;gap:20px;height:100%;align-items:stretch;}
+.p3img{flex:0 0 200px;border-radius:18px;overflow:hidden;cursor:pointer;
+  box-shadow:0 6px 16px rgba(0,0,0,.15);align-self:center;height:560px;}
+.p3img img{width:100%;height:100%;object-fit:cover;display:block;}
+.p3match{flex:1;display:flex;gap:0;position:relative;align-items:stretch;}
+.p3col{flex:1;display:flex;flex-direction:column;justify-content:space-around;padding:8px 0;gap:8px;}
+.p3col.left{padding-right:20px;}
+.p3col.right{padding-left:20px;}
+.p3gap{flex:0 0 100px;position:relative;}
+.p3svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;cursor:crosshair;}
+.p3node{border-radius:14px;padding:13px 16px;font-size:22px;line-height:1.5;
+  border:3px solid transparent;transition:.15s;user-select:none;position:relative;}
+.p3node.rule{background:#F1ECFE;text-align:left;cursor:default;}
+.p3node.reason{background:#FFF1E5;text-align:right;cursor:default;}
+.p3node.matched{border-color:var(--mint-dark);background:#DFF6EF;}
+.p3node.wrong-flash{border-color:#E08A8A;background:#FBE6E6;}
+.p3anchor{position:absolute;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;border-radius:50%;background:var(--mint-dark);cursor:crosshair;z-index:3;}
+.p3node.rule .p3anchor{right:-9px;}
+.p3node.reason .p3anchor{left:-9px;}
+.p3btnrow{text-align:center;margin-top:6px;}
+
+/* ══════════════════════════════════════
+   PAGE 4: 코드네임스 (4×6)
+══════════════════════════════════════ */
+.cnwrap{display:flex;flex-direction:column;align-items:center;justify-content:center;height:100%;gap:12px;}
+.cnlayout{display:flex;gap:22px;height:100%;align-items:center;}
+.cncover{flex:0 0 180px;height:100%;cursor:pointer;border-radius:14px;overflow:hidden;
+  box-shadow:0 6px 16px rgba(0,0,0,.15);align-self:center;max-height:580px;}
+.cnright{flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center;}
+.cngrid{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;width:100%;}
+.cncard{border-radius:12px;display:flex;align-items:center;justify-content:center;
+  font-size:22px;font-weight:bold;cursor:pointer;text-align:center;padding:0 6px;
+  box-shadow:0 3px 6px rgba(0,0,0,.12);user-select:none;transition:transform .12s;
+  background:#fff;border:3px solid #E2DCF5;color:var(--text);height:76px;}
+.cncard:hover{transform:translateY(-2px);}
+.cncard.revealed.blue{background:#4F8FE0;color:#fff;border-color:#4F8FE0;}
+.cncard.revealed.red{background:#E0635C;color:#fff;border-color:#E0635C;}
+.cncard.revealed.gray{background:#9E97B5;color:#fff;border-color:#9E97B5;}
+.cnlegend{display:flex;gap:22px;font-size:16px;font-family:'Gaegu';}
+.cnlegend span{display:flex;align-items:center;gap:6px;}
+.cndot{width:16px;height:16px;border-radius:50%;display:inline-block;}
+.cnscore{font-size:20px;font-family:'Gaegu';color:var(--purple-dark);}
+
+/* ══════════════════════════════════════
+   PAGE 5: 워드서치 6×6
+══════════════════════════════════════ */
+.wswrap{display:flex;gap:28px;height:100%;}
+.wsleft{flex:0 0 340px;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;}
+.wsgrid{display:grid;gap:5px;background:var(--lavender);padding:14px;border-radius:18px;
+  box-shadow:0 4px 10px rgba(139,124,200,.18);}
+.wscell{width:50px;height:50px;display:flex;align-items:center;justify-content:center;
+  background:#fff;border-radius:9px;font-size:22px;font-weight:bold;
+  cursor:pointer;user-select:none;transition:.1s;}
+.wscell:hover{background:#F4F0FF;}
+.wscell.selecting{background:var(--yellow);}
+.wscell.found-sound{background:var(--mint);color:#fff;}
+.wscell.found-shape{background:var(--purple);color:#fff;}
+.wsright{flex:1;display:flex;flex-direction:column;gap:10px;justify-content:center;}
+.hintcard{background:var(--peach);border-radius:14px;padding:13px 18px;font-size:22px;
+  font-family:'Gaegu';display:flex;align-items:center;gap:10px;}
+.hintcard.done{background:#DFF6EF;text-decoration:line-through;opacity:.6;}
+.hinttype{flex:0 0 34px;height:34px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;color:#fff;}
+.hinttype.sound{background:var(--mint-dark);} .hinttype.shape{background:var(--purple-dark);}
+.hintblank{display:inline-flex;gap:1px;cursor:grab;vertical-align:middle;}
+.hintchar{display:inline-block;width:1.1em;text-align:center;border-radius:5px;
+  background:#3A2E25;color:transparent;transition:background .15s,color .15s;}
+.hintchar.revealed{background:#F5EEDC;color:var(--purple-dark);font-weight:bold;}
+.wsprogress{font-size:21px;font-family:'Gaegu';color:var(--purple-dark);text-align:center;}
+
+/* ══════════════════════════════════════
+   PAGE 6: 그림+빈칸채우기 드래그앤드롭
+══════════════════════════════════════ */
+.p6wrap{display:flex;gap:22px;height:100%;}
+.p6left{flex:0 0 380px;display:flex;flex-direction:column;gap:12px;}
+.p6imgbox{flex:1;border-radius:18px;overflow:hidden;cursor:pointer;
+  box-shadow:0 4px 12px rgba(0,0,0,.12);}
+.p6imgbox img{width:100%;height:100%;object-fit:cover;display:block;}
+.p6wordbar{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:var(--peach);border-radius:14px;}
+.p6right{flex:1;display:flex;flex-direction:column;gap:12px;justify-content:center;}
+.p6sentence{background:var(--lavender);border-radius:16px;padding:14px 18px;
+  font-size:26px;display:flex;align-items:center;gap:10px;flex-wrap:wrap;line-height:2;}
+.p6blank{display:inline-flex;align-items:center;justify-content:center;
+  min-width:130px;height:48px;border-radius:12px;border:3px dashed var(--purple);
+  background:#fff;font-size:22px;font-weight:bold;color:var(--purple-dark);
+  transition:background .15s,border-color .15s;padding:0 12px;vertical-align:middle;}
+.p6blank.over{background:#EAE4FF;border-color:var(--mint-dark);}
+.p6blank.correct{border-style:solid;border-color:var(--mint-dark);background:#DFF6EF;color:var(--mint-dark);}
+.p6blank.wrong{border-style:solid;border-color:#E08A8A;background:#FBE6E6;color:#C05050;}
+.dragtag{background:#fff;border:3px solid var(--yellow);border-radius:12px;
+  padding:9px 18px;font-size:22px;cursor:grab;user-select:none;
+  box-shadow:0 3px 6px rgba(0,0,0,.08);transition:.15s;display:inline-block;}
+.dragtag:hover{transform:translateY(-2px);}
+.dragtag.used{opacity:.3;cursor:default;pointer-events:none;}
+.dragtag.dragging{opacity:.5;cursor:grabbing;}
+
+/* ══════════════════════════════════════
+   PAGE 7: 단어카드 뒤집기 (의성어/의태어 + 여름 조합)
+══════════════════════════════════════ */
+.p7wrap{display:flex;gap:30px;height:100%;align-items:center;justify-content:center;}
+.p7col{display:flex;flex-direction:column;align-items:center;gap:14px;flex:1;}
+.p7label{font-size:22px;font-weight:bold;padding:10px 24px;border-radius:16px;color:#fff;}
+.p7label.sound{background:var(--mint-dark);} .p7label.summer{background:var(--purple-dark);}
+.p7cards{display:flex;flex-direction:column;gap:7px;width:100%;}
+.p7card{perspective:700px;cursor:pointer;height:68px;}
+.p7card-inner{position:relative;width:100%;height:100%;
+  transform-style:preserve-3d;transition:transform .4s ease;}
+.p7card.flipped .p7card-inner{transform:rotateY(180deg);}
+.p7front,.p7back{position:absolute;inset:0;border-radius:14px;
+  backface-visibility:hidden;display:flex;align-items:center;justify-content:center;font-size:20px;}
+.p7front{background:var(--lavender);border:3px solid #D5CCEF;font-size:28px;}
+.p7back.sound-back{background:#DFF6EF;border:3px solid var(--mint-dark);color:var(--mint-dark);}
+.p7back.summer-back{background:var(--peach);border:3px solid #F5C9A3;color:var(--purple-dark);}
+.p7back{transform:rotateY(180deg);}
+.p7divider{width:4px;background:var(--lavender);border-radius:4px;align-self:stretch;}
+.p7result{flex:0 0 280px;background:var(--yellow);border-radius:22px;padding:22px;
+  display:flex;flex-direction:column;align-items:center;justify-content:center;gap:14px;text-align:center;}
+.p7result h3{font-size:22px;color:var(--purple-dark);}
+.p7combo{font-size:26px;font-family:'Gaegu';color:var(--text);min-height:60px;line-height:1.5;}
+.p7combobtn{font-family:'Jua';font-size:17px;border:none;border-radius:14px;
+  padding:10px 22px;cursor:pointer;color:#fff;background:var(--purple-dark);}
+
+/* ══════════════════════════════════════
+   PAGE 8: Q&A
+══════════════════════════════════════ */
+.qa{display:flex;flex-direction:column;gap:12px;height:100%;justify-content:center;}
+.qcard{background:var(--lavender);border-radius:16px;padding:14px 20px;cursor:pointer;}
+.qcard h4{margin:0;font-size:24px;color:var(--purple-dark);display:flex;align-items:center;}
+.acontent{max-height:0;overflow:hidden;transition:max-height .35s ease;
+  font-size:21px;font-family:'Gaegu';color:var(--text);padding-left:46px;}
+.qcard.open .acontent{max-height:160px;padding-top:8px;}
+.qcard .arrow{margin-left:auto;transition:.3s;}
+.qcard.open .arrow{transform:rotate(90deg);}
+</style>
+</head>
+<body>
+<button class="editbtn" onclick="toggleEdit()">✏️</button>
+<button class="savebtn" onclick="downloadHTML()">⬇ 저장</button>
+
+<div id="stage"><div class="navwrap">
+
+<!-- ═══ PAGE 1: COVER ═══ -->
+<div class="page active cover" data-page="1">
+  <span class="deco deco1">🍉</span><span class="deco deco2">☀️</span>
+  <span class="deco deco3">🌻</span><span class="deco deco4">🦋</span>
+  <h1 contenteditable="false">열린다 열린다</h1>
+  <h2 contenteditable="false">반짝반짝 여름이 열린다 🌞</h2>
+  <p contenteditable="false">올망졸망, 아삭아삭, 맨들맨들, 알알이 알알이!<br>여름 풍경 속에 숨어있는 재미있는 소리와 모양을 흉내내는 말을 함께 찾아볼까요?</p>
+</div>
+
+<!-- ═══ PAGE 2: 열린다/돌린다 배치하기 ═══ -->
+<div class="page" data-page="2">
+  <div class="topbar"><h1>알맞게 배치해요</h1><div class="sub">단어를 알맞은 상자에 드래그해서 넣어보세요 🎯</div></div>
+  <div class="pagebody">
+    <div class="p2sort-wrap">
+      <div class="p2wordpool" id="p2Pool"></div>
+      <div class="p2boxes">
+        <div class="p2box" id="box-open"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="dropSort(event,'open')">
+          <div class="p2box-title open">🔓 열린다</div>
+          <div class="p2box-words" id="words-open"></div>
+        </div>
+        <div class="p2box" id="box-turn"
+          ondragover="event.preventDefault();this.classList.add('over')"
+          ondragleave="this.classList.remove('over')"
+          ondrop="dropSort(event,'turn')">
+          <div class="p2box-title turn">🔄 돌린다</div>
+          <div class="p2box-words" id="words-turn"></div>
+        </div>
+      </div>
+    </div>
+    <div style="text-align:center;margin-top:12px;display:flex;gap:12px;justify-content:center;">
+      <button class="checkbtn" onclick="checkSort()">정답 확인</button>
+      <button class="resetbtn" onclick="buildSort()">다시하기</button>
+      <span class="p2feedback" id="p2feedback"></span>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 3: 안전수칙 선긋기 ═══ -->
+<div class="page" data-page="3">
+  <div class="topbar"><h1>바다에서 지켜야 할 안전 수칙</h1><div class="sub">규칙과 그 이유를 선으로 연결해 보아요</div></div>
+  <div class="pagebody" style="padding-bottom:40px;">
+    <div class="p3wrap">
+      <div class="p3img" id="p3img" onclick="document.getElementById('safetyFileInput').click()">
+        <img src="https://raw.githubusercontent.com/hi3957348-boop/images/main/safety.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+             style="width:100%;height:100%;object-fit:cover;display:block;">
+        <div class="uploadph" style="display:none;">🖼️<br>그림을<br>올려주세요</div>
+      </div>
+      <div class="p3match" id="p3match">
+        <div class="p3col left" id="p3rules"></div>
+        <div class="p3gap"><svg class="p3svg" id="p3svg"></svg></div>
+        <div class="p3col right" id="p3reasons"></div>
+      </div>
+    </div>
+    <div class="p3btnrow"><button class="resetbtn" onclick="buildSafety()">다시하기</button></div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 4: 코드네임스 (6×4) ═══ -->
+<div class="page" data-page="4">
+  <div class="topbar"><h1>표지 코드네임스</h1><div class="sub">카드를 눌러 어떤 팀인지 확인해보세요</div></div>
+  <div class="pagebody">
+    <div class="cnlayout">
+      <div class="cncover" onclick="document.getElementById('coverFileInput').click()">
+        <img src="https://raw.githubusercontent.com/hi3957348-boop/images/main/cover.png"
+             onerror="this.style.display='none';this.nextElementSibling.style.display='flex';"
+             style="width:100%;height:100%;object-fit:cover;display:block;border-radius:14px;">
+        <div class="uploadph" style="display:none;border-radius:14px;">🖼️<br>표지를<br>올려주세요</div>
+      </div>
+      <div class="cnright">
+        <div class="cnlegend">
+          <span><span class="cndot" style="background:#4F8FE0"></span>표지에 있어요</span>
+          <span><span class="cndot" style="background:#E0635C"></span>표지에 없어요</span>
+          <span><span class="cndot" style="background:#9E97B5"></span>여름이 아니에요</span>
+        </div>
+        <div class="cngrid" id="cnGrid"></div>
+        <div style="display:flex;gap:12px;align-items:center;justify-content:center;">
+          <div class="cnscore" id="cnScore">카드를 눌러 색을 확인해보세요!</div>
+          <button class="resetbtn" onclick="buildCodenames()">다시하기</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 5: 워드서치 6×6 ═══ -->
+<div class="page" data-page="5">
+  <div class="topbar"><h1>흉내말 찾기</h1><div class="sub">예문 힌트를 읽고 격자에서 흉내말을 찾아보세요</div></div>
+  <div class="pagebody">
+    <div class="wswrap">
+      <div class="wsleft">
+        <div class="wsgrid" id="wsgrid" style="grid-template-columns:repeat(6,1fr)"></div>
+        <div class="wsprogress" id="wsProgress">0 / 5 찾았어요</div>
+      </div>
+      <div class="wsright" id="wsHints"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 6: 그림+빈칸 드래그앤드롭 ═══ -->
+<div class="page" data-page="6">
+  <div class="topbar"><h1>어떤 흉내말일까요?</h1><div class="sub">단어를 빈칸으로 드래그해서 문장을 완성해보세요</div></div>
+  <div class="pagebody">
+    <div class="p6wrap">
+      <div class="p6left">
+        <div class="p6imgbox" id="p6imgbox" onclick="document.getElementById('p6FileInput').click()">
+          <div class="uploadph">🖼️<br>그림을<br>올려주세요</div>
+        </div>
+        <div class="p6wordbar" id="p6wordbar"></div>
+      </div>
+      <div class="p6right" id="p6right"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 7: 단어카드 조합 활동 ═══ -->
+<div class="page" data-page="7">
+  <div class="topbar"><h1>뒤집어서 만들어봐요!</h1><div class="sub">카드를 뒤집고 나온 단어로 말이 되는 문장을 만들어보세요</div></div>
+  <div class="pagebody">
+    <div class="p7wrap">
+      <div class="p7col">
+        <div class="p7label sound">🔊 흉내내는 말</div>
+        <div class="p7cards" id="p7soundCards"></div>
+      </div>
+      <div class="p7divider"></div>
+      <div class="p7col">
+        <div class="p7label summer">🌞 여름 단어</div>
+        <div class="p7cards" id="p7summerCards"></div>
+      </div>
+      <div class="p7divider"></div>
+      <div class="p7result">
+        <h3>나온 조합</h3>
+        <div class="p7combo" id="p7combo">카드를 뒤집어보세요!</div>
+        <button class="p7combobtn" onclick="buildP7()">🔀 다시섞기</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ═══ PAGE 8: Q&A ═══ -->
+<div class="page" data-page="8">
+  <div class="topbar"><h1>오늘 배운 내용 정리</h1><div class="sub">질문을 눌러 답을 확인해보세요</div></div>
+  <div class="pagebody"><div class="qa" id="qaWrap"></div></div>
+</div>
+
+<!-- file inputs -->
+<input type="file" id="coverFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event,'cover')">
+<input type="file" id="safetyFileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event,'safety')">
+<input type="file" id="p6FileInput" accept="image/*" style="display:none" onchange="handleImgUpload(event,'p6')">
+
+<button class="navbtn prev" onclick="goPage(-1)">‹</button>
+<button class="navbtn next" onclick="goPage(1)">›</button>
+<div class="dots" id="dots"></div>
+</div></div>
+
+<script>
+/* ════════════════ DATA ════════════════ */
+const SOUND_WORDS = ["맴맴맴맴","찌익쭈욱","촤락촤락","달그락달그락","쏴아쏴아","끼룩끼룩","헥헥헥"];
+const SHAPE_WORDS = ["올망졸망","아삭아삭","맨들맨들","알알이알알이","주렁주렁","방긋방긋","뱅글뱅글","이글이글","빙그르르"];
+const SUMMER_WORDS = ["수박","바다","모래사장","해","파도","튜브","파라솔","아이스크림","갈매기"];
+
+/* ════════════════ NAV ════════════════ */
+const totalPages = 8;
+let current = 1;
+function renderDots(){
+  const el=document.getElementById('dots'); el.innerHTML='';
+  for(let i=1;i<=totalPages;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===current?' active':'');
+    d.onclick=()=>showPage(i); el.appendChild(d);
+  }
+}
+function showPage(n){
+  current=Math.max(1,Math.min(totalPages,n));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',+p.dataset.page===current));
+  if(current===3) setTimeout(redrawSafetyLines,50);
+  renderDots();
+}
+function goPage(d){showPage(current+d);}
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goPage(1);if(e.key==='ArrowLeft')goPage(-1);});
+
+/* ════════════════ UTIL ════════════════ */
+function shuffle(a){return a.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);}
+
+/* ════════════════ IMAGE UPLOAD ════════════════ */
+function handleImgUpload(e,target){
+  const file=e.target.files[0]; if(!file)return;
+  const r=new FileReader();
+  r.onload=ev=>{
+    const src=ev.target.result;
+    if(target==='cover'){
+      document.querySelectorAll('.cover-upload-target').forEach(b=>{b.innerHTML=`<img src="${src}">`;});
+    } else if(target==='safety'){
+      const b=document.querySelector('.p3img');
+      b.innerHTML=`<img src="${src}" style="width:100%;height:100%;object-fit:cover;">`;
+    } else if(target==='p6'){
+      const b=document.getElementById('p6imgbox');
+      b.innerHTML=`<img src="${src}">`;
+      b.onclick=()=>document.getElementById('p6FileInput').click();
+    }
+  };
+  r.readAsDataURL(file);
+}
+
+/* ════════════════ PAGE 2: 열린다/돌린다 배치하기 ════════════════ */
+const SORT_DATA={
+  open: ['수박이','참외가','뚜껑이','대회가','서랍이','축제가'],
+  turn: ['손잡이를','지구본을','청소기를','세탁기를','고개를']
+};
+let p2DragWord=null, p2DragEl=null;
+
+function buildSort(){
+  document.getElementById('p2feedback').textContent='';
+  document.getElementById('words-open').innerHTML='';
+  document.getElementById('words-turn').innerHTML='';
+  document.getElementById('box-open').classList.remove('over');
+  document.getElementById('box-turn').classList.remove('over');
+  const pool=document.getElementById('p2Pool'); pool.innerHTML='';
+  const all=shuffle([
+    ...SORT_DATA.open.map(w=>({word:w,type:'open'})),
+    ...SORT_DATA.turn.map(w=>({word:w,type:'turn'}))
+  ]);
+  all.forEach(item=>{
+    const tag=makeSortTag(item.word,item.type);
+    pool.appendChild(tag);
+  });
+}
+
+function makeSortTag(word,type){
+  const tag=document.createElement('div');
+  tag.className='sorttag'; tag.textContent=word;
+  tag.dataset.word=word; tag.dataset.type=type;
+  tag.draggable=true;
+  tag.addEventListener('dragstart',e=>{
+    p2DragWord=word; p2DragEl=tag;
+    tag.classList.add('dragging');
+    e.dataTransfer.setData('text/plain',JSON.stringify({word,type}));
+  });
+  tag.addEventListener('dragend',()=>tag.classList.remove('dragging'));
+  return tag;
+}
+
+function dropSort(e,boxType){
+  e.preventDefault();
+  document.getElementById('box-'+boxType).classList.remove('over');
+  const data=JSON.parse(e.dataTransfer.getData('text/plain'));
+  // 풀 또는 다른 상자에서 제거
+  if(p2DragEl) p2DragEl.remove();
+  // 새 태그 생성해서 해당 상자에 삽입
+  const tag=makeSortTag(data.word,data.type);
+  tag.classList.remove('correct','wrong');
+  document.getElementById('words-'+boxType).appendChild(tag);
+  document.getElementById('p2feedback').textContent='';
+  p2DragWord=null; p2DragEl=null;
+}
+
+function checkSort(){
+  let total=0, correct=0;
+  ['open','turn'].forEach(boxType=>{
+    document.querySelectorAll(`#words-${boxType} .sorttag`).forEach(tag=>{
+      total++;
+      const ok=tag.dataset.type===boxType;
+      tag.classList.remove('correct','wrong');
+      tag.classList.add(ok?'correct':'wrong');
+      if(ok)correct++;
+    });
+  });
+  const fb=document.getElementById('p2feedback');
+  if(total===0){fb.textContent='단어를 상자에 넣어보세요!';return;}
+  fb.textContent=correct===total?`🎉 모두 맞았어요! (${correct}/${total})`:`다시 생각해봐요~ (${correct}/${total})`;
+}
+
+/* ════════════════ PAGE 3: 안전수칙 드래그 선긋기 ════════════════ */
+const SAFETY=[
+  {rule:'준비 운동을 꼭 해요',    reason:'다치지 않고 안전하게 놀 수 있어요'},
+  {rule:'구명조끼를 입어요',      reason:'물에 빠져도 몸이 떠올라요'},
+  {rule:'빨간 깃발을 확인해요',   reason:'위험한 파도를 미리 피할 수 있어요'},
+  {rule:'어른과 함께 다녀요',     reason:'위험할 때 바로 도와줄 수 있어요'},
+  {rule:'깊은 곳엔 가지 않아요',  reason:'발이 닿아서 안전하게 설 수 있어요'},
+];
+let safetyMatched={};
+let p3Dragging=false, p3DragRuleIdx=null, p3PreviewLine=null;
+
+function buildSafety(){
+  safetyMatched={};
+  p3Dragging=false; p3DragRuleIdx=null; p3PreviewLine=null;
+  const ruleCol=document.getElementById('p3rules');
+  const reasonCol=document.getElementById('p3reasons');
+  ruleCol.innerHTML=''; reasonCol.innerHTML='';
+  const svg=document.getElementById('p3svg');
+  svg.innerHTML='';
+
+  SAFETY.forEach((s,i)=>{
+    const r=document.createElement('div');
+    r.className='p3node rule'; r.dataset.idx=i;
+    r.innerHTML=`<span class="badge" style="margin-right:8px;flex-shrink:0;">${i+1}</span>${s.rule}<span class="p3anchor" data-rule="${i}"></span>`;
+    ruleCol.appendChild(r);
+  });
+
+  const shuffled=shuffle(SAFETY.map((_,i)=>i));
+  shuffled.forEach(origIdx=>{
+    const rs=document.createElement('div');
+    rs.className='p3node reason'; rs.dataset.idx=origIdx;
+    rs.innerHTML=`<span class="p3anchor" data-reason="${origIdx}"></span>${SAFETY[origIdx].reason}`;
+    reasonCol.appendChild(rs);
+  });
+
+  // 앵커 mousedown → 드래그 시작
+  document.querySelectorAll('.p3anchor[data-rule]').forEach(anchor=>{
+    anchor.addEventListener('mousedown',e=>{
+      const ruleIdx=+anchor.dataset.rule;
+      if(safetyMatched[ruleIdx]) return;
+      e.preventDefault(); e.stopPropagation();
+      p3Dragging=true; p3DragRuleIdx=ruleIdx;
+      // 프리뷰 선 생성
+      const pos=getP3AnchorCenter(anchor);
+      p3PreviewLine=document.createElementNS('http://www.w3.org/2000/svg','line');
+      p3PreviewLine.setAttribute('x1',pos.x); p3PreviewLine.setAttribute('y1',pos.y);
+      p3PreviewLine.setAttribute('x2',pos.x); p3PreviewLine.setAttribute('y2',pos.y);
+      p3PreviewLine.setAttribute('stroke','#8B7CC8');
+      p3PreviewLine.setAttribute('stroke-width','4');
+      p3PreviewLine.setAttribute('stroke-linecap','round');
+      p3PreviewLine.setAttribute('stroke-dasharray','8,4');
+      p3PreviewLine.setAttribute('opacity','0.7');
+      svg.appendChild(p3PreviewLine);
+    });
+  });
+}
+
+function getP3AnchorCenter(anchor){
+  const svgEl=document.getElementById('p3svg');
+  const svgRect=svgEl.getBoundingClientRect();
+  const ar=anchor.getBoundingClientRect();
+  return{x:ar.left+ar.width/2-svgRect.left, y:ar.top+ar.height/2-svgRect.top};
+}
+
+function getP3SvgPoint(e){
+  const svgEl=document.getElementById('p3svg');
+  const rect=svgEl.getBoundingClientRect();
+  return{x:e.clientX-rect.left, y:e.clientY-rect.top};
+}
+
+// 전역 mousemove — 드래그 중 프리뷰 선 업데이트
+document.addEventListener('mousemove',e=>{
+  if(!p3Dragging||!p3PreviewLine) return;
+  const pt=getP3SvgPoint(e);
+  p3PreviewLine.setAttribute('x2',pt.x);
+  p3PreviewLine.setAttribute('y2',pt.y);
+  // 가까운 reason 앵커 하이라이트
+  document.querySelectorAll('.p3anchor[data-reason]').forEach(a=>{
+    const pos=getP3AnchorCenter(a);
+    const dist=Math.hypot(pt.x-pos.x, pt.y-pos.y);
+    a.style.background=dist<40?'#F5A623':'var(--mint-dark)';
+    a.style.transform=dist<40?'translateY(-50%) scale(1.4)':'translateY(-50%)';
+  });
+});
+
+// 전역 mouseup — 스냅 판정
+document.addEventListener('mouseup',e=>{
+  if(!p3Dragging) return;
+  p3Dragging=false;
+  if(p3PreviewLine) p3PreviewLine.remove();
+  p3PreviewLine=null;
+
+  // 원래 앵커 스타일 복원
+  document.querySelectorAll('.p3anchor[data-reason]').forEach(a=>{
+    a.style.background='var(--mint-dark)';
+    a.style.transform='translateY(-50%)';
+  });
+
+  // 가장 가까운 reason 앵커 찾기
+  const pt=getP3SvgPoint(e);
+  let best=null, bestDist=60; // 60px 이내에 스냅
+  document.querySelectorAll('.p3anchor[data-reason]').forEach(a=>{
+    const reasonIdx=+a.dataset.reason;
+    if(safetyMatched[reasonIdx]) return; // 이미 연결됨
+    const pos=getP3AnchorCenter(a);
+    const dist=Math.hypot(pt.x-pos.x, pt.y-pos.y);
+    if(dist<bestDist){bestDist=dist; best={el:a, idx:reasonIdx};}
+  });
+
+  if(!best) return; // 스냅 범위 밖
+
+  const ruleIdx=p3DragRuleIdx;
+  const ok=(ruleIdx===best.idx);
+  const ruleEl=document.querySelector(`.p3node.rule[data-idx="${ruleIdx}"]`);
+  const reasonEl=document.querySelector(`.p3node.reason[data-idx="${best.idx}"]`);
+
+  if(ok){
+    safetyMatched[ruleIdx]=true;
+    ruleEl.classList.add('matched');
+    reasonEl.classList.add('matched');
+    drawP3Line(ruleIdx, best.idx, true);
+  } else {
+    ruleEl.classList.add('wrong-flash'); reasonEl.classList.add('wrong-flash');
+    drawP3Line(ruleIdx, best.idx, false);
+    setTimeout(()=>{ruleEl.classList.remove('wrong-flash');reasonEl.classList.remove('wrong-flash');},600);
+  }
+  p3DragRuleIdx=null;
+});
+
+function drawP3Line(ruleIdx, reasonIdx, correct){
+  const svg=document.getElementById('p3svg');
+  const ruleAnchor=document.querySelector(`.p3anchor[data-rule="${ruleIdx}"]`);
+  const reasonAnchor=document.querySelector(`.p3anchor[data-reason="${reasonIdx}"]`);
+  const p1=getP3AnchorCenter(ruleAnchor), p2=getP3AnchorCenter(reasonAnchor);
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',p1.x); line.setAttribute('y1',p1.y);
+  line.setAttribute('x2',p2.x); line.setAttribute('y2',p2.y);
+  line.setAttribute('stroke',correct?'#4FA89A':'#E08A8A');
+  line.setAttribute('stroke-width','5'); line.setAttribute('stroke-linecap','round');
+  if(!correct){line.setAttribute('opacity','0.7'); setTimeout(()=>line.remove(),600);}
+  else line.dataset.correct='1';
+  svg.appendChild(line);
+}
+
+function redrawSafetyLines(){
+  const svg=document.getElementById('p3svg'); if(!svg)return;
+  svg.querySelectorAll('line[data-correct]').forEach(l=>l.remove());
+  Object.keys(safetyMatched).forEach(k=>{
+    if(safetyMatched[k]) drawP3Line(+k,+k,true);
+  });
+}
+
+/* ════════════════ PAGE 4: 코드네임스 ════════════════ */
+const CN_BLUE  = ["여름","아이들","햇살","바다","모래","갈매기","튜브","수박","구름"];
+const CN_RED   = ["도넛츠","그네","아이스크림","팥빙수","꽃게","수영장","감자","미끄럼틀"];
+const CN_GRAY  = ["단풍","눈사람","우산","불가사리","소나기","함박눈","낙엽"];
+// total: 9+8+7=24 = 4×6
+function buildCodenames(){
+  const items=[
+    ...CN_BLUE.map(w=>({word:w,type:'blue'})),
+    ...CN_RED.map(w=>({word:w,type:'red'})),
+    ...CN_GRAY.map(w=>({word:w,type:'gray'}))
+  ];
+  const grid=document.getElementById('cnGrid'); grid.innerHTML='';
+  shuffle(items).forEach(item=>{
+    const c=document.createElement('div'); c.className='cncard'; c.textContent=item.word;
+    c.onclick=()=>{if(!c.classList.contains('revealed')){c.classList.add('revealed',item.type);updateCnScore();}};
+    grid.appendChild(c);
+  });
+  document.getElementById('cnScore').textContent='카드를 눌러 색을 확인해보세요!';
+}
+function updateCnScore(){
+  const r=document.querySelectorAll('.cncard.revealed').length;
+  document.getElementById('cnScore').textContent=`${r} / 24 카드를 확인했어요`;
+}
+
+/* ════════════════ PAGE 5: 워드서치 6×6 ════════════════ */
+const WS_SIZE=6;
+const WS_WORDS=[
+  {word:'맴맴맴맴',type:'sound',hint:'매미가 ____ 노래합니다.'},
+  {word:'쏴아쏴아',type:'sound',hint:'소나기가 ____ 쏟아집니다.'},
+  {word:'끼룩끼룩',type:'sound',hint:'갈매기가 ____ 웁니다.'},
+  {word:'올망졸망',type:'shape',hint:'크기가 제각각, ____ 모여있어요.'},
+  {word:'이글이글',type:'shape',hint:'뜨거운 햇볕이 ____ 내리쬡니다.'},
+];
+let wsGrid=[], wsFound=new Set(), wsSelecting=false, wsStart=null, wsSelected=[];
+
+function buildWordSearch(){
+  wsGrid=Array.from({length:WS_SIZE},()=>Array(WS_SIZE).fill(null));
+  wsFound=new Set(); wsSelecting=false; wsStart=null; wsSelected=[];
+  const dirs=[[0,1],[1,0]];
+  WS_WORDS.forEach(item=>{
+    const chars=[...item.word.replace(/\s/g,'')];
+    let placed=false, tries=0;
+    while(!placed&&tries<300){
+      tries++;
+      const dir=dirs[Math.floor(Math.random()*dirs.length)];
+      const mr=dir[0]?WS_SIZE-chars.length:WS_SIZE-1;
+      const mc=dir[1]?WS_SIZE-chars.length:WS_SIZE-1;
+      const row=Math.floor(Math.random()*(mr+1));
+      const col=Math.floor(Math.random()*(mc+1));
+      let ok=true;
+      for(let i=0;i<chars.length;i++){
+        const r=row+dir[0]*i,c=col+dir[1]*i;
+        if(wsGrid[r][c]&&wsGrid[r][c].char!==chars[i]){ok=false;break;}
+      }
+      if(ok){
+        for(let i=0;i<chars.length;i++){wsGrid[row+dir[0]*i][col+dir[1]*i]={char:chars[i],word:item.word};}
+        placed=true;
+      }
+    }
+  });
+  const KO='가나다라마바사아자차카타파하별달꽃해풀물숲여름파도'.split('');
+  for(let r=0;r<WS_SIZE;r++)for(let c=0;c<WS_SIZE;c++){
+    if(!wsGrid[r][c])wsGrid[r][c]={char:KO[Math.floor(Math.random()*KO.length)],word:null};
+  }
+  const g=document.getElementById('wsgrid'); g.innerHTML='';
+  for(let r=0;r<WS_SIZE;r++)for(let c=0;c<WS_SIZE;c++){
+    const cell=document.createElement('div'); cell.className='wscell';
+    cell.textContent=wsGrid[r][c].char; cell.dataset.r=r; cell.dataset.c=c;
+    cell.addEventListener('mousedown',()=>{wsSelecting=true;wsStart={r,c};wsSelected=[{r,c}];cell.classList.add('selecting');});
+    cell.addEventListener('mouseenter',()=>{if(wsSelecting)wsDrag(r,c);});
+    cell.addEventListener('mouseup',wsEnd);
+    g.appendChild(cell);
+  }
+  const hw=document.getElementById('wsHints'); hw.innerHTML='';
+  WS_WORDS.forEach(item=>{
+    const card=document.createElement('div'); card.className='hintcard'; card.id='wh-'+item.word;
+    const chars=[...item.word];
+    const blank=`<span class="hintblank">${chars.map(ch=>`<span class="hintchar">${ch}</span>`).join('')}</span>`;
+    card.innerHTML=`<span class="hinttype ${item.type}">${item.type==='sound'?'🔊':'✨'}</span><span>${item.hint.replace('____',blank)}</span>`;
+    hw.appendChild(card);
+  });
+  attachReveal();
+  document.getElementById('wsProgress').textContent=`0 / ${WS_WORDS.length} 찾았어요`;
+}
+function wsDrag(r,c){
+  if(!wsStart)return;
+  const dr=r-wsStart.r,dc=c-wsStart.c;
+  let cells=[];
+  if(dr===0||dc===0){
+    const steps=Math.max(Math.abs(dr),Math.abs(dc));
+    const sr=steps?dr/steps:0,sc=steps?dc/steps:0;
+    for(let i=0;i<=steps;i++)cells.push({r:wsStart.r+Math.round(sr*i),c:wsStart.c+Math.round(sc*i)});
+  }else cells=[wsStart];
+  document.querySelectorAll('.wscell.selecting').forEach(el=>el.classList.remove('selecting'));
+  wsSelected=cells;
+  cells.forEach(cc=>{const el=document.querySelector(`.wscell[data-r="${cc.r}"][data-c="${cc.c}"]`);if(el)el.classList.add('selecting');});
+}
+function wsEnd(){
+  if(!wsSelecting)return; wsSelecting=false;
+  const word=wsSelected.map(cc=>wsGrid[cc.r][cc.c].char).join('');
+  const rev=word.split('').reverse().join('');
+  const match=WS_WORDS.find(item=>{const t=item.word.replace(/\s/g,'');return t===word||t===rev;});
+  document.querySelectorAll('.wscell.selecting').forEach(el=>el.classList.remove('selecting'));
+  if(match&&!wsFound.has(match.word)){
+    wsFound.add(match.word);
+    wsSelected.forEach(cc=>{const el=document.querySelector(`.wscell[data-r="${cc.r}"][data-c="${cc.c}"]`);if(el&&wsGrid[cc.r][cc.c].word===match.word)el.classList.add('found-'+match.type);});
+    const hc=document.getElementById('wh-'+match.word);if(hc)hc.classList.add('done');
+    document.getElementById('wsProgress').textContent=`${wsFound.size} / ${WS_WORDS.length} 찾았어요`;
+  }
+  wsSelected=[]; wsStart=null;
+}
+document.addEventListener('mouseup',wsEnd);
+
+function attachReveal(){
+  let dragging=false;
+  document.querySelectorAll('.hintchar').forEach(s=>{
+    s.addEventListener('mousedown',e=>{dragging=true;s.classList.add('revealed');e.preventDefault();e.stopPropagation();});
+    s.addEventListener('mouseenter',()=>{if(dragging)s.classList.add('revealed');});
+  });
+  document.addEventListener('mouseup',()=>{dragging=false;});
+}
+
+/* ════════════════ PAGE 6: 드래그앤드롭 빈칸채우기 ════════════════ */
+const P6_DATA=[
+  {sentence:'뜨거운 햇볕이 ____ 내리쬡니다.',answer:'이글이글'},
+  {sentence:'시원한 얼음물을 ____ 마십니다.',answer:'찌익쭈욱'},
+  {sentence:'잘 익은 빨간 수박을 ____ 먹습니다.',answer:'아삭아삭'},
+  {sentence:'바다에서 ____ 물놀이를 합니다.',answer:'첨벙첨벙'},
+  {sentence:'매미가 나무 위에서 ____ 웁니다.',answer:'맴맴맴맴'},
+];
+const P6_CHOICES=['이글이글','찌익쭈욱','아삭아삭','첨벙첨벙','맴맴맴맴','올망졸망','뱅글뱅글'];
+let p6Dragging=null;
+
+function buildP6(){
+  const bar=document.getElementById('p6wordbar'); bar.innerHTML='';
+  shuffle(P6_CHOICES).forEach(w=>{
+    const tag=document.createElement('div'); tag.className='dragtag'; tag.textContent=w;
+    tag.draggable=true;
+    tag.addEventListener('dragstart',e=>{p6Dragging=w;tag.classList.add('dragging');e.dataTransfer.setData('text/plain',w);});
+    tag.addEventListener('dragend',()=>tag.classList.remove('dragging'));
+    bar.appendChild(tag);
+  });
+  const right=document.getElementById('p6right'); right.innerHTML='';
+  P6_DATA.forEach((d,i)=>{
+    const parts=d.sentence.split('____');
+    const row=document.createElement('div'); row.className='p6sentence';
+    const badge=document.createElement('span'); badge.className='badge'; badge.textContent=i+1;
+    const s1=document.createElement('span'); s1.textContent=parts[0];
+    const s2=document.createElement('span'); s2.textContent=parts[1];
+    const blank=document.createElement('span'); blank.className='p6blank';
+    blank.dataset.answer=d.answer; blank.innerHTML='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';
+    blank.addEventListener('dragover',e=>{e.preventDefault();blank.classList.add('over');});
+    blank.addEventListener('dragleave',()=>blank.classList.remove('over'));
+    blank.addEventListener('drop',e=>{
+      e.preventDefault(); blank.classList.remove('over');
+      const word=e.dataTransfer.getData('text/plain');
+      const ok=word===blank.dataset.answer;
+      blank.textContent=word;
+      blank.classList.remove('correct','wrong');
+      blank.classList.add(ok?'correct':'wrong');
+      if(ok){
+        const tag=[...document.querySelectorAll('#p6wordbar .dragtag')].find(t=>t.textContent===word&&!t.classList.contains('used'));
+        if(tag)tag.classList.add('used');
+        blank.style.transform='scale(1.18)';
+        setTimeout(()=>blank.style.transform='',250);
+      } else {
+        setTimeout(()=>{blank.classList.remove('wrong');blank.innerHTML='&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;';},700);
+      }
+    });
+    row.append(badge,s1,blank,s2);
+    right.appendChild(row);
+  });
+}
+
+/* ════════════════ PAGE 7: 카드 뒤집기 조합 ════════════════ */
+const P7_SOUND_POOL=['맴맴맴맴','첨벙첨벙','촤락촤락','꿀꺽꿀꺽','두근두근','쿵쾅쿵쾅'];
+const P7_SUMMER_POOL=['수박','바다','파도','모래사장','아이스크림','파라솔'];
+let p7SoundFlipped=null, p7SummerFlipped=null;
+
+function buildP7(){
+  p7SoundFlipped=null; p7SummerFlipped=null;
+  document.getElementById('p7combo').textContent='카드를 뒤집어보세요!';
+  buildP7Col('p7soundCards', shuffle(P7_SOUND_POOL), 'sound-back', 'sound');
+  buildP7Col('p7summerCards', shuffle(P7_SUMMER_POOL), 'summer-back', 'summer');
+}
+function buildP7Col(id,words,backClass,type){
+  const col=document.getElementById(id); col.innerHTML='';
+  words.forEach(w=>{
+    const card=document.createElement('div'); card.className='p7card';
+    card.innerHTML=`<div class="p7card-inner"><div class="p7front">❓</div><div class="p7back ${backClass}">${w}</div></div>`;
+    card.onclick=()=>{
+      card.classList.toggle('flipped');
+      if(type==='sound') p7SoundFlipped=card.classList.contains('flipped')?w:null;
+      else p7SummerFlipped=card.classList.contains('flipped')?w:null;
+      updateP7Combo();
+    };
+    col.appendChild(card);
+  });
+}
+function updateP7Combo(){
+  const combo=document.getElementById('p7combo');
+  if(p7SoundFlipped&&p7SummerFlipped){
+    combo.textContent=`"${p7SoundFlipped}" ${p7SummerFlipped}`;
+  } else if(p7SoundFlipped){
+    combo.textContent=`"${p7SoundFlipped}" + ?`;
+  } else if(p7SummerFlipped){
+    combo.textContent=`? + ${p7SummerFlipped}`;
+  } else {
+    combo.textContent='카드를 뒤집어보세요!';
+  }
+}
+
+/* ════════════════ PAGE 8: Q&A ════════════════ */
+const QA=[
+  {q:'의성어란 무엇인가요?',a:'소리를 흉내내는 말이에요. 예) 맴맴맴맴, 쏴아쏴아, 끼룩끼룩'},
+  {q:'의태어란 무엇인가요?',a:'모양이나 움직임을 흉내내는 말이에요. 예) 올망졸망, 뱅글뱅글, 이글이글'},
+  {q:'책에서 매미는 어떤 소리를 내나요?',a:'맴맴맴맴 하고 노래하며 한여름 아이들을 응원해요.'},
+  {q:'바다에서 안전하게 놀려면?',a:'준비운동, 구명조끼 착용, 깃발 확인, 어른과 함께, 깊은 곳 조심!'},
+  {q:'오늘 배운 흉내말 중 가장 마음에 드는 말은?',a:'나만의 생각을 자유롭게 이야기해 보세요!'},
+];
+function buildQA(){
+  const wrap=document.getElementById('qaWrap'); wrap.innerHTML='';
+  QA.forEach((item,i)=>{
+    const card=document.createElement('div'); card.className='qcard';
+    card.innerHTML=`<h4 onclick="this.parentElement.classList.toggle('open')"><span class="badge" style="margin-right:10px;">Q${i+1}</span>${item.q}<span class="arrow">▶</span></h4><div class="acontent">${item.a}</div>`;
+    wrap.appendChild(card);
+  });
+}
+
+/* ════════════════ EDIT MODE ════════════════ */
+function toggleEdit(){
+  document.body.classList.toggle('editmode');
+  const on=document.body.classList.contains('editmode');
+  document.querySelectorAll('[contenteditable]').forEach(el=>el.setAttribute('contenteditable',on));
+  document.querySelectorAll('.edit-text').forEach(el=>el.readOnly=!on);
+}
+function downloadHTML(){
+  const blob=new Blob([document.documentElement.outerHTML],{type:'text/html'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download='여름이_열린다_수업자료.html'; a.click();
+}
+
+/* ════════════════ INIT ════════════════ */
+buildSort();
+buildSafety();
+buildCodenames();
+buildWordSearch();
+buildP6();
+buildP7();
+buildQA();
+renderDots();
+</script>
+</body>
+</html>
