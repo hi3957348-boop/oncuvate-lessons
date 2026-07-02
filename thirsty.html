@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -175,23 +176,27 @@ input[type=text]:focus,textarea:focus{border-color:var(--blue);}
 .double-card.revealed .double-pronun{opacity:1;}
 .double-hint{font-size:19px;color:var(--gray);font-family:'Gaegu';}
 
-/* ── PAGE 5: 인물 마음 매칭 ── */
-.match-wrap{display:flex;gap:0;height:100%;align-items:stretch;}
-.match-col{flex:1;display:flex;flex-direction:column;gap:10px;justify-content:space-around;padding:8px 0;}
-.match-col.left{padding-right:20px;}
-.match-col.right{padding-left:20px;}
-.match-gap{flex:0 0 90px;position:relative;}
-.match-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;cursor:crosshair;}
-.match-node{border-radius:16px;padding:14px 18px;font-size:22px;line-height:1.5;
-  border:3px solid transparent;user-select:none;position:relative;}
-.match-node.char{background:#EDF4FF;text-align:left;}
-.match-node.heart{background:#FFF4E6;text-align:right;}
-.match-node.matched{border-color:var(--teal-dark);background:#DFF6EF;}
-.match-node.wrong-flash{border-color:#E08A8A;background:#FBE6E6;}
-.match-anchor{position:absolute;top:50%;transform:translateY(-50%);
-  width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:crosshair;z-index:3;}
-.match-node.char .match-anchor{right:-9px;}
-.match-node.heart .match-anchor{left:-9px;}
+/* ── PAGE 5: 동물 이름 맞추기 ── */
+.quiz-wrap{display:flex;gap:20px;height:100%;}
+.quiz-left{flex:0 0 300px;display:flex;flex-direction:column;gap:10px;justify-content:center;}
+.quiz-desc-card{background:#FFF8EE;border-radius:16px;padding:14px 18px;
+  border:3px solid var(--orange-light);font-size:19px;font-family:'Gaegu';
+  line-height:1.6;cursor:pointer;transition:.15s;user-select:none;}
+.quiz-desc-card:hover{border-color:var(--orange);background:#FFF3D8;}
+.quiz-desc-card.selected{border-color:var(--orange);background:#FFE8B0;box-shadow:0 0 0 3px rgba(245,166,35,.3);}
+.quiz-desc-card.matched{border-color:var(--teal-dark);background:#DFF6EF;cursor:default;}
+.quiz-desc-card .desc-num{color:var(--orange);font-size:16px;font-weight:bold;margin-right:6px;}
+.quiz-right{flex:1;position:relative;border-radius:18px;overflow:hidden;
+  box-shadow:0 4px 12px rgba(0,0,0,.15);}
+.quiz-bg{width:100%;height:100%;object-fit:cover;display:block;}
+.animal-tag{position:absolute;background:rgba(255,255,255,.92);border:3px solid var(--blue);
+  border-radius:20px;padding:5px 14px;font-size:17px;font-weight:bold;cursor:pointer;
+  color:var(--blue-dark);transition:.15s;white-space:nowrap;box-shadow:0 2px 6px rgba(0,0,0,.15);}
+.animal-tag:hover{background:#E3F2FD;transform:scale(1.08);}
+.animal-tag.correct{background:#DFF6EF;border-color:var(--teal-dark);color:var(--teal-dark);cursor:default;transform:none;}
+.animal-tag.wrong-flash{background:#FBE6E6;border-color:#E08A8A;}
+.quiz-progress{position:absolute;top:10px;right:14px;background:rgba(255,255,255,.9);
+  border-radius:12px;padding:6px 14px;font-size:17px;font-family:'Gaegu';color:var(--blue-dark);}
 
 /* ── PAGE 6: 동물 소개 ── */
 .intro-wrap{display:flex;gap:24px;height:100%;}
@@ -380,17 +385,18 @@ input[type=text]:focus,textarea:focus{border-color:var(--blue);}
   </div>
 </div>
 
-<!-- ══ P5: 인물 마음 매칭 ══ -->
+<!-- ══ P5: 동물 이름 맞추기 ══ -->
 <div class="page" data-page="5">
-  <div class="topbar blue"><h1>💛 인물의 마음 짐작하기</h1><div class="sub">왼쪽 인물에서 드래그해 알맞은 마음과 연결하세요</div></div>
-  <div class="pagebody" style="padding-bottom:38px;">
-    <div class="match-wrap" id="matchWrap">
-      <div class="match-col left" id="matchChars"></div>
-      <div class="match-gap"><svg class="match-svg" id="matchSvg"></svg></div>
-      <div class="match-col right" id="matchHearts"></div>
-    </div>
-    <div style="text-align:center;margin-top:8px;display:flex;gap:10px;justify-content:center;">
-      <button class="btn gray" onclick="buildMatch()">다시하기</button>
+  <div class="topbar blue"><h1>🦒 동물 이름 맞추기</h1><div class="sub">설명을 읽고 그림에서 알맞은 동물 이름을 클릭하세요!</div></div>
+  <div class="pagebody" style="padding:16px 24px;">
+    <div class="quiz-wrap">
+      <div class="quiz-left" id="quizDescs"></div>
+      <div class="quiz-right" id="quizRight">
+        <img class="quiz-bg" src="https://raw.githubusercontent.com/hi3957348-boop/images/main/animals.png"
+          onerror="this.src='data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%22800%22 height=%22500%22><rect fill=%22%23F5A623%22 width=%22800%22 height=%22500%22/><text x=%22400%22 y=%22250%22 text-anchor=%22middle%22 font-size=%2224%22 fill=%22%23fff%22>animals.png 를 GitHub에 올려주세요</text></svg>'"
+          alt="사바나 동물들">
+        <div class="quiz-progress" id="quizProgress">0 / 6 맞췄어요</div>
+      </div>
     </div>
   </div>
 </div>
@@ -603,124 +609,97 @@ function renderChain(){
 /* ════ P4: 겹받침 ════ */
 function revealDouble(el){ el.classList.toggle('revealed'); }
 
-/* ════ P5: 인물 마음 매칭 ════ */
-const MATCH_PAIRS=[
-  {char:'하마',heart:'짜증나고 화난 마음'},
-  {char:'얼룩말',heart:'배려하고 여유로운 마음'},
-  {char:'개코원숭이',heart:'성급하고 조급한 마음'},
-  {char:'흰코뿔소',heart:'외롭고 안심하는 마음'},
-  {char:'코끼리',heart:'걱정하고 돕고 싶은 마음'},
+/* ════ P5: 동물 이름 맞추기 퀴즈 ════ */
+// 그림 속 동물 위치 (%, %) — 이미지 기준
+const QUIZ_ANIMALS = [
+  { name:'악어',       x:9,  y:13, desc:'몸이 길고 딱딱한 비늘로 덮여 있으며, 강이나 연못에 살아요. 큰 입과 날카로운 이빨이 있어요.' },
+  { name:'코끼리',     x:12, y:42, desc:'코가 아주 길고 귀가 넓어요. 코로 물을 마시고 엄니로 땅을 팔 수 있어요.' },
+  { name:'뱀잡이수리', x:38, y:16, desc:'머리에 긴 깃털이 있고, 뱀을 잡아먹어요. 다리가 길고 하늘을 잘 날아요.' },
+  { name:'기린',       x:46, y:76, desc:'목이 매우 길어서 높은 나무의 잎을 먹어요. 몸에 갈색 무늬가 있어요.' },
+  { name:'하마',       x:14, y:72, desc:'몸이 크고 통통해요. 물속에서 많은 시간을 보내며 큰 입을 벌려요.' },
+  { name:'얼룩말',     x:89, y:80, desc:'온몸에 흑백 줄무늬가 있어요. 무리 지어 다니고 풀을 먹어요.' },
+  { name:'타조',       x:72, y:78, desc:'날지 못하지만 다리가 강해서 매우 빠르게 달려요. 알이 아주 커요.' },
+  { name:'개코원숭이', x:65, y:36, desc:'코가 개처럼 앞으로 튀어나와 있어요. 무리 지어 생활하고 나무에도 잘 올라가요.' },
+  { name:'왜가리',     x:79, y:18, desc:'목이 길고 다리가 가늘어요. 물가에서 물고기를 잡아먹어요.' },
+  { name:'코뿔소',     x:13, y:85, desc:'코 위에 뿔이 있어요. 몸집이 크고 피부가 두꺼워요. 멸종 위기 동물이에요.' },
 ];
-let matchMatched={}, matchDragging=false, matchDragIdx=null, matchPreview=null;
 
-function buildMatch(){
-  matchMatched={}; matchDragging=false; matchDragIdx=null; matchPreview=null;
-  document.getElementById('matchSvg').innerHTML='';
-  const charCol=document.getElementById('matchChars'); charCol.innerHTML='';
-  const heartCol=document.getElementById('matchHearts'); heartCol.innerHTML='';
-  const shuffledHearts=shuffle(MATCH_PAIRS.map((_,i)=>i));
-  MATCH_PAIRS.forEach((p,i)=>{
-    const c=document.createElement('div'); c.className='match-node char'; c.dataset.idx=i;
-    c.innerHTML=`${p.char}<span class="match-anchor" data-char="${i}"></span>`;
-    charCol.appendChild(c);
+// 활동에 사용할 6개만 랜덤 선택
+let quizSelected=[], quizSelectedDesc=null, quizCorrect=0;
+
+function buildQuiz(){
+  quizSelected=shuffle([...QUIZ_ANIMALS]).slice(0,6);
+  quizSelectedDesc=null; quizCorrect=0;
+  document.getElementById('quizProgress').textContent='0 / 6 맞췄어요';
+
+  // 설명 카드 렌더
+  const descWrap=document.getElementById('quizDescs'); descWrap.innerHTML='';
+  quizSelected.forEach((q,i)=>{
+    const card=document.createElement('div'); card.className='quiz-desc-card'; card.dataset.idx=i;
+    card.innerHTML=`<span class="desc-num">${i+1}.</span>${q.desc}`;
+    card.onclick=()=>selectDesc(i);
+    descWrap.appendChild(card);
   });
-  shuffledHearts.forEach(origIdx=>{
-    const rs=document.createElement('div'); rs.className='match-node heart'; rs.dataset.idx=origIdx;
-    rs.innerHTML=`<span class="match-anchor" data-heart="${origIdx}"></span>${MATCH_PAIRS[origIdx].heart}`;
-    heartCol.appendChild(rs);
+
+  // 그림 위 동물 태그 렌더
+  const right=document.getElementById('quizRight');
+  right.querySelectorAll('.animal-tag').forEach(t=>t.remove());
+  quizSelected.forEach((q,i)=>{
+    const tag=document.createElement('div'); tag.className='animal-tag'; tag.dataset.idx=i;
+    tag.textContent=q.name;
+    tag.style.left=q.x+'%'; tag.style.top=q.y+'%';
+    tag.onclick=()=>selectTag(i);
+    right.appendChild(tag);
   });
-  attachMatchDrag();
 }
+
+function selectDesc(idx){
+  if(quizSelected[idx]._matched) return;
+  quizSelectedDesc=idx;
+  document.querySelectorAll('.quiz-desc-card').forEach(c=>{
+    c.classList.toggle('selected', +c.dataset.idx===idx && !c.classList.contains('matched'));
+  });
+}
+
+function selectTag(idx){
+  if(quizSelectedDesc===null){ return; }
+  const tag=document.querySelector(`.animal-tag[data-idx="${idx}"]`);
+  if(tag.classList.contains('correct')) return;
+  const ok=(quizSelectedDesc===idx);
+  if(ok){
+    quizSelected[idx]._matched=true;
+    // desc 카드 matched
+    const card=document.querySelector(`.quiz-desc-card[data-idx="${quizSelectedDesc}"]`);
+    if(card){ card.classList.remove('selected'); card.classList.add('matched'); }
+    // tag correct
+    tag.classList.add('correct');
+    quizCorrect++;
+    document.getElementById('quizProgress').textContent=`${quizCorrect} / 6 맞췄어요`;
+    if(window.fbMatch) window.fbMatch({[idx]:'correct'});
+    if(quizCorrect===6){
+      setTimeout(()=>document.getElementById('quizProgress').textContent='🎉 모두 맞췄어요!',300);
+    }
+  } else {
+    tag.classList.add('wrong-flash');
+    setTimeout(()=>tag.classList.remove('wrong-flash'),600);
+  }
+  quizSelectedDesc=null;
+  document.querySelectorAll('.quiz-desc-card').forEach(c=>c.classList.remove('selected'));
+}
+
 window._lMatch=function(data){
-  Object.entries(data).forEach(([ci,ri])=>{
-    const charIdx=+ci, heartIdx=+ri;
-    if(matchMatched[charIdx]!=null) return;
-    matchMatched[charIdx]=heartIdx;
-    const ce=document.querySelector(`.match-node.char[data-idx="${charIdx}"]`);
-    const he=document.querySelector(`.match-node.heart[data-idx="${heartIdx}"]`);
-    if(ce) ce.classList.add('matched');
-    if(he) he.classList.add('matched');
-    drawMatchLine(charIdx,heartIdx,true);
+  Object.entries(data).forEach(([idx,val])=>{
+    if(val==='correct'){
+      const i=+idx;
+      const tag=document.querySelector(`.animal-tag[data-idx="${i}"]`);
+      const card=document.querySelector(`.quiz-desc-card[data-idx="${i}"]`);
+      if(tag&&!tag.classList.contains('correct')){ tag.classList.add('correct'); }
+      if(card&&!card.classList.contains('matched')){ card.classList.add('matched'); }
+      if(quizSelected[i]) quizSelected[i]._matched=true;
+    }
   });
 };
-function attachMatchDrag(){
-  document.querySelectorAll('.match-anchor[data-char]').forEach(a=>{
-    a.addEventListener('mousedown',e=>{
-      const idx=+a.dataset.char; if(matchMatched[idx]!=null) return;
-      e.preventDefault(); matchDragging=true; matchDragIdx=idx;
-      const pos=matchAnchorPos(a);
-      matchPreview=document.createElementNS('http://www.w3.org/2000/svg','line');
-      matchPreview.setAttribute('x1',pos.x); matchPreview.setAttribute('y1',pos.y);
-      matchPreview.setAttribute('x2',pos.x); matchPreview.setAttribute('y2',pos.y);
-      matchPreview.setAttribute('stroke','#4A90C8'); matchPreview.setAttribute('stroke-width','4');
-      matchPreview.setAttribute('stroke-dasharray','8,4'); matchPreview.setAttribute('opacity','0.7');
-      document.getElementById('matchSvg').appendChild(matchPreview);
-    });
-  });
-}
-document.addEventListener('mousemove',e=>{
-  if(!matchDragging||!matchPreview) return;
-  const pt=matchSvgPoint(e);
-  matchPreview.setAttribute('x2',pt.x); matchPreview.setAttribute('y2',pt.y);
-  document.querySelectorAll('.match-anchor[data-heart]').forEach(a=>{
-    const pos=matchAnchorPos(a); const dist=Math.hypot(pt.x-pos.x,pt.y-pos.y);
-    a.style.background=dist<40?'#F5A623':'var(--blue)';
-    a.style.transform=dist<40?'translateY(-50%) scale(1.4)':'translateY(-50%)';
-  });
-});
-document.addEventListener('mouseup',e=>{
-  if(!matchDragging) return;
-  matchDragging=false;
-  if(matchPreview){matchPreview.remove();matchPreview=null;}
-  document.querySelectorAll('.match-anchor[data-heart]').forEach(a=>{a.style.background='var(--blue)';a.style.transform='translateY(-50%)';});
-  const pt=matchSvgPoint(e);
-  let best=null,bestDist=60;
-  document.querySelectorAll('.match-anchor[data-heart]').forEach(a=>{
-    const hi=+a.dataset.heart;
-    const he=document.querySelector(`.match-node.heart[data-idx="${hi}"]`);
-    if(he.classList.contains('matched')) return;
-    const pos=matchAnchorPos(a); const dist=Math.hypot(pt.x-pos.x,pt.y-pos.y);
-    if(dist<bestDist){bestDist=dist;best={el:a,idx:hi};}
-  });
-  if(!best){matchDragIdx=null;return;}
-  const ci=matchDragIdx; const ok=(ci===best.idx);
-  const ce=document.querySelector(`.match-node.char[data-idx="${ci}"]`);
-  const he=document.querySelector(`.match-node.heart[data-idx="${best.idx}"]`);
-  if(ok){
-    matchMatched[ci]=best.idx;
-    ce.classList.add('matched'); he.classList.add('matched');
-    drawMatchLine(ci,best.idx,true);
-    if(window.fbMatch) window.fbMatch({[ci]:best.idx});
-  } else {
-    ce.classList.add('wrong-flash'); he.classList.add('wrong-flash');
-    drawMatchLine(ci,best.idx,false);
-    setTimeout(()=>{ce.classList.remove('wrong-flash');he.classList.remove('wrong-flash');},600);
-  }
-  matchDragIdx=null;
-});
-function matchAnchorPos(a){
-  const svg=document.getElementById('matchSvg'); const sr=svg.getBoundingClientRect();
-  const ar=a.getBoundingClientRect();
-  return{x:ar.left+ar.width/2-sr.left,y:ar.top+ar.height/2-sr.top};
-}
-function matchSvgPoint(e){
-  const svg=document.getElementById('matchSvg'); const r=svg.getBoundingClientRect();
-  return{x:e.clientX-r.left,y:e.clientY-r.top};
-}
-function drawMatchLine(ci,hi,correct){
-  const svg=document.getElementById('matchSvg');
-  const ca=document.querySelector(`.match-anchor[data-char="${ci}"]`);
-  const ha=document.querySelector(`.match-anchor[data-heart="${hi}"]`);
-  if(!ca||!ha) return;
-  const p1=matchAnchorPos(ca),p2=matchAnchorPos(ha);
-  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
-  line.setAttribute('x1',p1.x);line.setAttribute('y1',p1.y);
-  line.setAttribute('x2',p2.x);line.setAttribute('y2',p2.y);
-  line.setAttribute('stroke',correct?'#28A09A':'#E08A8A');
-  line.setAttribute('stroke-width','5');line.setAttribute('stroke-linecap','round');
-  if(!correct){line.setAttribute('opacity','0.7');setTimeout(()=>line.remove(),600);}
-  svg.appendChild(line);
-}
+
 
 /* ════ P6: 동물 소개 입력 ════ */
 const INTRO_FIELDS=[
@@ -817,10 +796,11 @@ function shuffle(a){return a.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).ma
 
 /* ════ INIT ════ */
 buildAnimalPool();
-buildMatch();
+buildQuiz();
 buildIntroForm();
 buildChalTable();
 renderDots();
 </script>
 </body>
 </html>
+
