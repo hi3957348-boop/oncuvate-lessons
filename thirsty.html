@@ -1,0 +1,826 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<title>목이 말라요 - 수업자료</title>
+
+<!-- Firebase -->
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+import { getDatabase, ref, set, onValue, update }
+  from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+
+const cfg = {
+  apiKey:"AIzaSyAHib_-XPXfuvhsZcPlMSnqi4O46kAR0mM",
+  authDomain:"non-1-4a6f5.firebaseapp.com",
+  databaseURL:"https://non-1-4a6f5-default-rtdb.asia-southeast1.firebasedatabase.app",
+  projectId:"non-1-4a6f5",
+  storageBucket:"non-1-4a6f5.firebasestorage.app",
+  messagingSenderId:"871721592960",
+  appId:"1:871721592960:web:b342eab286024473845e65"
+};
+const app=initializeApp(cfg);
+const db=getDatabase(app);
+let SESSION=null;
+let _suppress=false;
+
+function sref(p){ return ref(db,`sessions/${SESSION}/thirsty/${p}`); }
+function pub(p,v){ if(!SESSION)return; _suppress=true; set(sref(p),v).finally(()=>setTimeout(()=>_suppress=false,120)); }
+function pubU(p,v){ if(!SESSION)return; update(sref(p),v); }
+
+window.fbJoin=function(code){
+  SESSION=code;
+  // page sync
+  onValue(sref('page'),s=>{ if(!_suppress&&s.val())window._lPage(s.val()); });
+  // kaba sync
+  onValue(sref('kaba'),s=>{ if(!_suppress)window._lKaba(s.val()||{}); });
+  // chain sync
+  onValue(sref('chain'),s=>{ if(!_suppress)window._lChain(s.val()||[]); });
+  // match sync
+  onValue(sref('match'),s=>{ if(!_suppress)window._lMatch(s.val()||{}); });
+  // challenge sync
+  onValue(sref('challenge'),s=>{ if(!_suppress)window._lChallenge(s.val()||{}); });
+  // canvas sync
+  onValue(sref('canvas'),s=>{ if(!_suppress&&s.val())window._lCanvas(s.val()); });
+  // intro form sync
+  onValue(sref('intro'),s=>{ if(!_suppress)window._lIntro(s.val()||{}); });
+};
+window.fbPage=p=>pub('page',p);
+window.fbKaba=(k,v)=>pubU('kaba',{[k]:v});
+window.fbChain=v=>pub('chain',v);
+window.fbMatch=v=>pubU('match',v);
+window.fbChallenge=(r,d,v)=>pubU('challenge',{[`${r}_${d}`]:v});
+window.fbCanvas=v=>pub('canvas',v);
+window.fbIntro=(k,v)=>pubU('intro',{[k]:v});
+</script>
+
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Gaegu:wght@400;700&family=Jua&display=swap');
+:root{
+  --blue:#4A90C8; --blue-dark:#2E6FA8;
+  --orange:#F5A623; --orange-light:#FFE0A8;
+  --teal:#3DBFB8;  --teal-dark:#28A09A;
+  --sand:#FFF8EE;  --cream:#FFFDF7;
+  --text:#3A3060;  --gray:#888;
+}
+*{box-sizing:border-box;margin:0;padding:0;}
+html,body{height:100%;overflow:hidden;font-family:'Jua','Gaegu',sans-serif;
+  background:linear-gradient(135deg,#E8F4FD,#FFF3E0);color:var(--text);}
+#stage{width:100vw;height:100vh;display:flex;align-items:center;justify-content:center;}
+.navwrap{position:relative;width:1280px;}
+.page{width:1280px;height:720px;background:var(--cream);border-radius:28px;
+  box-shadow:0 20px 60px rgba(46,111,168,.22);display:none;overflow:hidden;flex-direction:column;}
+.page.active{display:flex;}
+
+/* topbar */
+.topbar{height:80px;flex:0 0 80px;display:flex;align-items:center;
+  justify-content:space-between;padding:0 36px;color:#fff;}
+.topbar.blue{background:linear-gradient(90deg,var(--blue),var(--blue-dark));}
+.topbar.orange{background:linear-gradient(90deg,#E8892A,#C86820);}
+.topbar.teal{background:linear-gradient(90deg,var(--teal),var(--teal-dark));}
+.topbar h1{font-size:30px;letter-spacing:1px;}
+.topbar .sub{font-size:17px;opacity:.85;font-family:'Gaegu';}
+.pagebody{flex:1;padding:22px 40px;overflow:hidden;position:relative;}
+
+/* nav */
+.navbtn{position:absolute;top:50%;transform:translateY(-50%);width:52px;height:52px;
+  border-radius:50%;background:var(--teal);color:#fff;border:none;font-size:26px;
+  cursor:pointer;box-shadow:0 6px 14px rgba(0,0,0,.2);z-index:25;
+  display:flex;align-items:center;justify-content:center;}
+.navbtn:hover{background:var(--teal-dark);}
+.navbtn.prev{left:-26px;} .navbtn.next{right:-26px;}
+.dots{position:absolute;bottom:14px;left:50%;transform:translateX(-50%);
+  display:flex;gap:9px;z-index:20;}
+.dot{width:13px;height:13px;border-radius:50%;background:#D0E8F5;cursor:pointer;transition:.2s;}
+.dot.active{background:var(--blue-dark);transform:scale(1.3);}
+
+/* fixed ui */
+.topbtn{position:fixed;top:16px;right:16px;z-index:300;background:#fff;
+  border:3px solid var(--blue);border-radius:50%;width:50px;height:50px;
+  font-size:22px;cursor:pointer;box-shadow:0 4px 10px rgba(0,0,0,.15);}
+#sessionBadge{display:none;position:fixed;top:16px;left:50%;transform:translateX(-50%);
+  background:var(--blue-dark);color:#fff;border-radius:20px;padding:8px 20px;
+  font-size:16px;font-family:'Jua';z-index:200;box-shadow:0 4px 12px rgba(0,0,0,.2);}
+
+/* modal */
+.modal-bg{position:fixed;inset:0;background:rgba(30,60,90,.5);
+  display:flex;align-items:center;justify-content:center;z-index:500;}
+.modal{background:#fff;border-radius:28px;padding:44px 52px;text-align:center;
+  box-shadow:0 24px 60px rgba(46,111,168,.3);min-width:380px;}
+
+/* common */
+.badge{display:inline-flex;align-items:center;justify-content:center;
+  width:38px;height:38px;border-radius:50%;background:var(--blue);color:#fff;
+  font-size:17px;flex:0 0 38px;}
+.btn{font-family:'Jua';border:none;border-radius:14px;padding:10px 22px;
+  cursor:pointer;color:#fff;font-size:18px;}
+.btn.blue{background:var(--blue);}
+.btn.teal{background:var(--teal-dark);}
+.btn.orange{background:var(--orange);}
+.btn.gray{background:#B0B8C8;}
+input[type=text],textarea{font-family:'Gaegu';border:3px solid #D0E4F0;border-radius:12px;
+  padding:10px 14px;outline:none;font-size:20px;color:var(--text);}
+input[type=text]:focus,textarea:focus{border-color:var(--blue);}
+
+/* ── PAGE 1: 표지 ── */
+.cover-p1{background:linear-gradient(160deg,#E3F2FD,#FFF8E1,#E8F5E9);
+  flex-direction:column;align-items:center;justify-content:center;text-align:center;position:relative;}
+.cover-p1 h1{font-size:72px;color:var(--blue-dark);text-shadow:2px 2px 0 #fff;margin-bottom:8px;}
+.cover-p1 h2{font-size:28px;color:var(--orange);margin-bottom:20px;}
+.cover-p1 p{font-size:22px;font-family:'Gaegu';color:var(--text);line-height:1.8;max-width:760px;}
+.cover-deco{position:absolute;font-size:60px;}
+
+/* ── PAGE 2: 까바놀이 ── */
+.kaba-wrap{display:flex;gap:28px;height:100%;}
+.kaba-left{flex:0 0 340px;display:flex;flex-direction:column;gap:14px;}
+.kaba-right{flex:1;display:flex;flex-direction:column;gap:12px;overflow-y:auto;}
+.kaba-instr{background:var(--orange-light);border-radius:16px;padding:14px 18px;
+  font-size:20px;font-family:'Gaegu';line-height:1.7;}
+.kaba-input-row{display:flex;gap:8px;}
+.kaba-input-row input{flex:1;font-size:22px;}
+.kaba-pair{display:flex;gap:12px;align-items:stretch;}
+.kaba-bubble{flex:1;border-radius:16px;padding:14px 18px;font-size:22px;
+  font-family:'Gaegu';line-height:1.6;min-height:70px;}
+.kaba-bubble.teacher{background:#E3F2FD;border:2px solid #90CAF9;}
+.kaba-bubble.student{background:#FFF3E0;border:2px solid #FFCC80;position:relative;}
+.kaba-bubble.student .convert-btn{position:absolute;right:10px;bottom:8px;font-size:15px;
+  background:var(--orange);color:#fff;border:none;border-radius:8px;padding:4px 10px;cursor:pointer;}
+.kaba-label{font-size:17px;font-family:'Gaegu';color:var(--gray);margin-bottom:4px;}
+
+/* ── PAGE 3: 말 덧붙이기 ── */
+.chain-wrap{display:flex;gap:24px;height:100%;}
+.animal-pool{flex:0 0 360px;display:flex;flex-wrap:wrap;gap:10px;align-content:flex-start;
+  background:#F0FBF9;border-radius:20px;padding:16px;overflow-y:auto;}
+.animal-chip{background:#fff;border:3px solid var(--teal);border-radius:14px;
+  padding:10px 16px;font-size:22px;cursor:pointer;user-select:none;transition:.15s;white-space:nowrap;}
+.animal-chip:hover{background:#E0F7F5;transform:translateY(-2px);}
+.animal-chip.used{opacity:.35;cursor:default;pointer-events:none;}
+.chain-right{flex:1;display:flex;flex-direction:column;gap:14px;}
+.chain-box{flex:1;background:#FFF8EE;border-radius:18px;padding:18px;border:3px solid #FFE0A8;
+  overflow-y:auto;font-size:24px;font-family:'Gaegu';line-height:2;}
+.chain-sentence{background:#fff;border-radius:12px;padding:10px 16px;margin-bottom:8px;
+  border-left:6px solid var(--orange);}
+.chain-num{color:var(--orange);font-size:20px;margin-right:8px;}
+
+/* ── PAGE 4: 겹받침 ── */
+.double-wrap{display:flex;flex-direction:column;gap:18px;height:100%;justify-content:center;}
+.double-card{background:#F0F8FF;border-radius:20px;padding:20px 28px;
+  display:flex;align-items:center;gap:20px;cursor:pointer;border:3px solid transparent;transition:.2s;}
+.double-card:hover{border-color:var(--blue);background:#E3F2FD;}
+.double-card.revealed{border-color:var(--teal);background:#E0F7F5;}
+.double-sent{font-size:26px;flex:1;}
+.double-sent .highlight{color:var(--blue-dark);font-size:28px;border-bottom:3px solid var(--blue);}
+.double-pronun{font-size:24px;color:var(--teal-dark);font-family:'Gaegu';
+  min-width:120px;text-align:center;opacity:0;transition:opacity .3s;}
+.double-card.revealed .double-pronun{opacity:1;}
+.double-hint{font-size:19px;color:var(--gray);font-family:'Gaegu';}
+
+/* ── PAGE 5: 인물 마음 매칭 ── */
+.match-wrap{display:flex;gap:0;height:100%;align-items:stretch;}
+.match-col{flex:1;display:flex;flex-direction:column;gap:10px;justify-content:space-around;padding:8px 0;}
+.match-col.left{padding-right:20px;}
+.match-col.right{padding-left:20px;}
+.match-gap{flex:0 0 90px;position:relative;}
+.match-svg{position:absolute;inset:0;width:100%;height:100%;overflow:visible;cursor:crosshair;}
+.match-node{border-radius:16px;padding:14px 18px;font-size:22px;line-height:1.5;
+  border:3px solid transparent;user-select:none;position:relative;}
+.match-node.char{background:#EDF4FF;text-align:left;}
+.match-node.heart{background:#FFF4E6;text-align:right;}
+.match-node.matched{border-color:var(--teal-dark);background:#DFF6EF;}
+.match-node.wrong-flash{border-color:#E08A8A;background:#FBE6E6;}
+.match-anchor{position:absolute;top:50%;transform:translateY(-50%);
+  width:18px;height:18px;border-radius:50%;background:var(--blue);cursor:crosshair;z-index:3;}
+.match-node.char .match-anchor{right:-9px;}
+.match-node.heart .match-anchor{left:-9px;}
+
+/* ── PAGE 6: 동물 소개 ── */
+.intro-wrap{display:flex;gap:24px;height:100%;}
+.intro-form{flex:1;display:flex;flex-direction:column;gap:10px;}
+.intro-row{display:flex;align-items:stretch;gap:10px;}
+.intro-label{background:var(--blue);color:#fff;border-radius:12px;padding:10px 14px;
+  font-size:20px;min-width:120px;display:flex;align-items:center;justify-content:center;text-align:center;}
+.intro-input{flex:1;font-size:20px;resize:none;min-height:50px;}
+.intro-right{flex:0 0 260px;display:flex;flex-direction:column;gap:10px;}
+.present-check{background:#FFF8EE;border-radius:18px;padding:14px;border:3px solid #FFE0A8;}
+.present-check h4{font-size:19px;margin-bottom:10px;color:var(--orange);}
+.check-row{display:flex;align-items:center;justify-content:space-between;
+  font-size:18px;font-family:'Gaegu';margin-bottom:8px;}
+.hearts{display:flex;gap:6px;}
+.heart{font-size:22px;cursor:pointer;opacity:.3;transition:.15s;}
+.heart.active{opacity:1;}
+
+/* ── PAGE 7: 생각/느낌 ── */
+.feel-wrap{display:flex;gap:22px;height:100%;}
+.feel-left{flex:1;display:flex;flex-direction:column;gap:12px;}
+.feel-right{flex:0 0 320px;display:flex;flex-direction:column;gap:12px;}
+.feel-card{background:#F0F8FF;border-radius:16px;padding:14px 18px;}
+.feel-card h4{font-size:20px;color:var(--blue-dark);margin-bottom:8px;}
+.feel-card textarea{width:100%;font-size:19px;border:2px solid #B0D4F0;border-radius:10px;
+  padding:10px;resize:none;outline:none;background:#fff;font-family:'Gaegu';}
+.friend-table{flex:1;overflow:hidden;}
+.friend-table table{width:100%;border-collapse:collapse;font-size:18px;}
+.friend-table th{background:var(--blue);color:#fff;padding:10px;font-size:18px;}
+.friend-table td{border:2px solid #D0E4F0;padding:8px;vertical-align:top;}
+.friend-table td input{width:100%;border:none;font-family:'Gaegu';font-size:17px;
+  background:transparent;outline:none;color:var(--text);}
+
+/* ── PAGE 8: 물 절약 챌린지 ── */
+.chal-wrap{display:flex;flex-direction:column;gap:16px;height:100%;}
+.chal-table{width:100%;border-collapse:collapse;font-size:20px;}
+.chal-table th{background:var(--blue);color:#fff;padding:10px 8px;text-align:center;}
+.chal-table td{border:2px solid #D0E8F5;padding:8px;text-align:center;vertical-align:middle;}
+.chal-table td.method{text-align:left;padding-left:12px;}
+.chal-table td input.method-input{width:100%;border:none;font-family:'Gaegu';
+  font-size:19px;background:transparent;outline:none;color:var(--text);}
+.chal-btn{width:42px;height:42px;border-radius:50%;border:3px solid #D0E8F5;
+  background:#fff;cursor:pointer;font-size:18px;transition:.15s;}
+.chal-btn:hover{border-color:var(--teal);}
+.chal-btn.circledot{background:#FFE9A8;border-color:var(--orange);}
+.chal-btn.circle{background:#DFF6EF;border-color:var(--teal-dark);}
+.chal-btn.triangle{background:#FBE6E6;border-color:#E08A8A;}
+.chal-legend{text-align:right;font-size:17px;font-family:'Gaegu';color:var(--gray);}
+
+/* ── PAGE 9: 포스터 드로잉 ── */
+.poster-wrap{display:flex;gap:20px;height:100%;}
+.poster-tools{flex:0 0 130px;display:flex;flex-direction:column;gap:10px;justify-content:center;}
+.color-btn{width:44px;height:44px;border-radius:50%;border:3px solid #fff;
+  cursor:pointer;box-shadow:0 2px 6px rgba(0,0,0,.2);transition:.15s;}
+.color-btn.active{transform:scale(1.25);border-color:#333;}
+.tool-label{font-size:15px;font-family:'Gaegu';color:var(--gray);text-align:center;}
+.size-btn{font-family:'Jua';font-size:15px;border:2px solid #D0E8F5;border-radius:8px;
+  padding:5px 8px;cursor:pointer;background:#fff;}
+.size-btn.active{background:var(--blue);color:#fff;border-color:var(--blue);}
+#posterCanvas{flex:1;border-radius:18px;border:4px solid #B0D4EE;
+  background:#fff;cursor:crosshair;box-shadow:0 4px 12px rgba(0,0,0,.1);}
+</style>
+</head>
+<body>
+
+<button class="topbtn" onclick="document.getElementById('sessionModal').style.display='flex'">📡</button>
+<div id="sessionBadge"></div>
+
+<!-- 세션 모달 -->
+<div class="modal-bg" id="sessionModal">
+  <div class="modal">
+    <div style="font-size:52px;margin-bottom:8px;">🐘</div>
+    <h2 style="font-size:30px;color:var(--blue-dark);margin-bottom:6px;">목이 말라요!</h2>
+    <p style="font-family:'Gaegu';font-size:20px;color:var(--gray);margin-bottom:24px;">세션 코드를 입력하고 입장하세요</p>
+    <input id="sessionCode" type="text" placeholder="예: thirsty01"
+      style="width:100%;text-align:center;margin-bottom:18px;display:block;"
+      onkeydown="if(event.key==='Enter')joinSession()">
+    <div style="display:flex;gap:18px;justify-content:center;margin-bottom:22px;font-size:20px;font-family:'Gaegu';">
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="radio" name="role" value="teacher" checked style="width:20px;height:20px;accent-color:var(--blue-dark);">👩‍🏫 강사
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;cursor:pointer;">
+        <input type="radio" name="role" value="student" style="width:20px;height:20px;accent-color:var(--teal-dark);">🧒 학생
+      </label>
+    </div>
+    <button onclick="joinSession()" class="btn blue" style="width:100%;font-size:22px;padding:14px;">입장하기 🚀</button>
+    <button onclick="document.getElementById('sessionModal').style.display='none'"
+      style="margin-top:12px;background:none;border:none;font-family:'Gaegu';font-size:17px;color:#aaa;cursor:pointer;">세션 없이 계속하기</button>
+  </div>
+</div>
+
+<div id="stage"><div class="navwrap">
+
+<!-- ══ P1: 표지 ══ -->
+<div class="page active cover-p1" data-page="1">
+  <span class="cover-deco" style="top:40px;left:60px;">💧</span>
+  <span class="cover-deco" style="top:50px;right:80px;">🐘</span>
+  <span class="cover-deco" style="bottom:50px;left:100px;">🦒</span>
+  <span class="cover-deco" style="bottom:40px;right:70px;">🌵</span>
+  <h1>목이 말라요!</h1>
+  <h2>요안나 제자크 글·그림</h2>
+  <p>아프리카 사바나의 동물들이 물을 찾아 모여들어요.<br>
+  물 부족을 겪는 동물들의 마음을 함께 느껴보아요.<br>
+  <span style="font-size:18px;color:var(--blue);">대상 학년: 1~2학년 &nbsp;|&nbsp; 권장 차시: 6차시</span></p>
+</div>
+
+<!-- ══ P2: 까바 놀이 ══ -->
+<div class="page" data-page="2">
+  <div class="topbar blue"><h1>📖 표지 살펴보기 — 까바 놀이</h1><div class="sub">문장을 쓰면 의문문으로 바꿔보세요!</div></div>
+  <div class="pagebody">
+    <div class="kaba-wrap">
+      <div class="kaba-left">
+        <div class="kaba-instr">
+          👩‍🏫 <b>까바 놀이 방법</b><br>
+          ① 강사(학생1)가 표지에서 본 것을 문장으로 말해요.<br>
+          ② 짝(학생2)이 그 문장을 <b>~까?</b> 의문문으로 바꿔요.<br>
+          ③ 번갈아 가며 계속해요!
+        </div>
+        <div class="kaba-label">강사가 문장 입력:</div>
+        <div class="kaba-input-row">
+          <input id="kabaInput" type="text" placeholder="예) 코끼리가 보입니다." style="flex:1;">
+          <button class="btn blue" onclick="addKaba()">추가</button>
+        </div>
+        <button class="btn gray" onclick="clearKaba()" style="font-size:16px;padding:8px;">지우기</button>
+      </div>
+      <div class="kaba-right" id="kabaList">
+        <div style="text-align:center;font-size:22px;font-family:'Gaegu';color:#ccc;margin-top:40px;">
+          문장을 입력하면 여기에 나타나요 👆
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P3: 말 덧붙이기 ══ -->
+<div class="page" data-page="3">
+  <div class="topbar orange"><h1>🐾 말 덧붙이기 놀이</h1><div class="sub">동물 이름을 클릭해서 문장을 이어 만들어요!</div></div>
+  <div class="pagebody">
+    <div class="chain-wrap">
+      <div class="animal-pool" id="animalPool"></div>
+      <div class="chain-right">
+        <div style="font-size:21px;font-family:'Gaegu';color:var(--orange);">
+          💡 <b>물웅덩이에 가면</b> — 클릭해서 동물을 추가해요!
+        </div>
+        <div class="chain-box" id="chainBox">
+          <div style="color:#ccc;font-size:20px;font-family:'Gaegu';">동물 카드를 클릭해보세요 👈</div>
+        </div>
+        <div style="display:flex;gap:10px;">
+          <button class="btn orange" onclick="undoChain()">↩ 한 칸 되돌리기</button>
+          <button class="btn gray" onclick="resetChain()">처음부터</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P4: 겹받침 낱말 ══ -->
+<div class="page" data-page="4">
+  <div class="topbar teal"><h1>📝 겹받침 낱말 바르게 읽기</h1><div class="sub">파란 낱말을 클릭하면 발음이 나타나요!</div></div>
+  <div class="pagebody">
+    <div class="double-wrap">
+      <div class="double-card" onclick="revealDouble(this)" data-idx="0">
+        <div class="badge">1</div>
+        <div class="double-sent">연못이 비좁아진 게 싫어서 하마들은 <span class="highlight">심술</span>을 부려요.
+          <div class="double-hint">💡 '싫어서'는 어떻게 읽을까요?</div>
+        </div>
+        <div class="double-pronun">👄 [시러서]</div>
+      </div>
+      <div class="double-card" onclick="revealDouble(this)" data-idx="1">
+        <div class="badge">2</div>
+        <div class="double-sent">때로는 <span class="highlight">무릎</span>을 꿇기도 하지요.
+          <div class="double-hint">💡 '무릎을 꿇기도'는 어떻게 읽을까요?</div>
+        </div>
+        <div class="double-pronun">👄 [무르플 꿀키도]</div>
+      </div>
+      <div class="double-card" onclick="revealDouble(this)" data-idx="2">
+        <div class="badge">3</div>
+        <div class="double-sent">다시 돌아왔는데, 물이 한 방울도 <span class="highlight">남아 있지 않아요.</span>
+          <div class="double-hint">💡 '않아요'는 어떻게 읽을까요?</div>
+        </div>
+        <div class="double-pronun">👄 [아나요]</div>
+      </div>
+      <div style="background:var(--orange-light);border-radius:14px;padding:12px 18px;font-size:19px;font-family:'Gaegu';">
+        💡 겹받침은 두 자음이 받침에 함께 있는 경우예요. 발음이 다를 수 있으니 주의해서 읽어봐요!
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P5: 인물 마음 매칭 ══ -->
+<div class="page" data-page="5">
+  <div class="topbar blue"><h1>💛 인물의 마음 짐작하기</h1><div class="sub">왼쪽 인물에서 드래그해 알맞은 마음과 연결하세요</div></div>
+  <div class="pagebody" style="padding-bottom:38px;">
+    <div class="match-wrap" id="matchWrap">
+      <div class="match-col left" id="matchChars"></div>
+      <div class="match-gap"><svg class="match-svg" id="matchSvg"></svg></div>
+      <div class="match-col right" id="matchHearts"></div>
+    </div>
+    <div style="text-align:center;margin-top:8px;display:flex;gap:10px;justify-content:center;">
+      <button class="btn gray" onclick="buildMatch()">다시하기</button>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P6: 동물 소개 ══ -->
+<div class="page" data-page="6">
+  <div class="topbar orange"><h1>🦒 내가 소개할 동물</h1><div class="sub">좋아하는 동물을 소개하고 친구 앞에서 발표해봐요</div></div>
+  <div class="pagebody">
+    <div class="intro-wrap">
+      <div class="intro-form" id="introForm"></div>
+      <div class="intro-right">
+        <div class="present-check">
+          <h4>🗣 발표 자기 점검</h4>
+          <div class="check-row"><span>또박또박 말했나요?</span><div class="hearts" data-check="0"></div></div>
+          <div class="check-row"><span>큰 소리로 말했나요?</span><div class="hearts" data-check="1"></div></div>
+          <div class="check-row"><span>듣는 사람을 바라봤나요?</span><div class="hearts" data-check="2"></div></div>
+        </div>
+        <div class="present-check">
+          <h4>👂 듣기 자기 점검</h4>
+          <div class="check-row"><span>말하는 사람을 봤나요?</span><div class="hearts" data-check="3"></div></div>
+          <div class="check-row"><span>귀 기울여 들었나요?</span><div class="hearts" data-check="4"></div></div>
+          <div class="check-row"><span>고개를 끄덕였나요?</span><div class="hearts" data-check="5"></div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P7: 생각/느낌 ══ -->
+<div class="page" data-page="7">
+  <div class="topbar teal"><h1>💭 생각이나 느낌 표현하기</h1><div class="sub">인상 깊은 장면과 친구 이야기를 기록해요</div></div>
+  <div class="pagebody">
+    <div class="feel-wrap">
+      <div class="feel-left">
+        <div class="feel-card">
+          <h4>📌 인상 깊은 문장이나 장면</h4>
+          <textarea rows="3" id="feelScene" placeholder="예) 코끼리가 코와 엄니로 강바닥을 파서 물을 찾았어요." style="width:100%;"></textarea>
+        </div>
+        <div class="feel-card" style="flex:1;">
+          <h4>💬 그 부분이 인상 깊은 까닭</h4>
+          <textarea rows="5" id="feelReason" placeholder="까닭을 써보세요..." style="width:100%;height:calc(100% - 40px);"></textarea>
+        </div>
+      </div>
+      <div class="feel-right">
+        <div class="friend-table" style="flex:1;">
+          <h4 style="font-size:20px;margin-bottom:8px;color:var(--blue-dark);">👫 친구들의 인상 깊은 장면</h4>
+          <table>
+            <thead><tr><th>이름</th><th>인상 깊은 장면</th><th>까닭</th></tr></thead>
+            <tbody id="friendTable">
+              <tr><td><input type="text" placeholder="이름"></td><td><input type="text" placeholder="장면"></td><td><input type="text" placeholder="까닭"></td></tr>
+              <tr><td><input type="text" placeholder="이름"></td><td><input type="text" placeholder="장면"></td><td><input type="text" placeholder="까닭"></td></tr>
+              <tr><td><input type="text" placeholder="이름"></td><td><input type="text" placeholder="장면"></td><td><input type="text" placeholder="까닭"></td></tr>
+              <tr><td><input type="text" placeholder="이름"></td><td><input type="text" placeholder="장면"></td><td><input type="text" placeholder="까닭"></td></tr>
+            </tbody>
+          </table>
+        </div>
+        <div style="background:#E8F5E9;border-radius:14px;padding:12px 16px;font-size:18px;font-family:'Gaegu';">
+          🌿 물의 소중함을 다룬 책이나 영상을 더 찾아봐요!
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P8: 물 절약 챌린지 ══ -->
+<div class="page" data-page="8">
+  <div class="topbar blue"><h1>💧 물 절약 챌린지</h1><div class="sub">내가 실천할 방법을 쓰고 매일 체크해봐요!</div></div>
+  <div class="pagebody">
+    <div class="chal-wrap">
+      <div class="chal-legend">◎ 잘함 &nbsp; ○ 보통 &nbsp; △ 노력요함</div>
+      <table class="chal-table" id="chalTable"></table>
+    </div>
+  </div>
+</div>
+
+<!-- ══ P9: 포스터 드로잉 ══ -->
+<div class="page" data-page="9">
+  <div class="topbar teal"><h1>🎨 물 절약 포스터 만들기</h1><div class="sub">물 부족을 알리는 포스터를 그려봐요</div></div>
+  <div class="pagebody">
+    <div class="poster-wrap">
+      <div class="poster-tools">
+        <div class="tool-label">색깔</div>
+        <div style="display:flex;flex-wrap:wrap;gap:6px;justify-content:center;">
+          <div class="color-btn active" style="background:#2E6FA8" onclick="setColor('#2E6FA8',this)"></div>
+          <div class="color-btn" style="background:#E0635C" onclick="setColor('#E0635C',this)"></div>
+          <div class="color-btn" style="background:#28A09A" onclick="setColor('#28A09A',this)"></div>
+          <div class="color-btn" style="background:#F5A623" onclick="setColor('#F5A623',this)"></div>
+          <div class="color-btn" style="background:#6B5CA5" onclick="setColor('#6B5CA5',this)"></div>
+          <div class="color-btn" style="background:#4CAF50" onclick="setColor('#4CAF50',this)"></div>
+          <div class="color-btn" style="background:#333" onclick="setColor('#333',this)"></div>
+          <div class="color-btn" style="background:#fff;border:2px solid #ccc" onclick="setColor('#fff',this)"></div>
+        </div>
+        <div class="tool-label" style="margin-top:10px;">굵기</div>
+        <div style="display:flex;flex-direction:column;gap:6px;">
+          <button class="size-btn" onclick="setSize(3,this)">얇게</button>
+          <button class="size-btn active" onclick="setSize(7,this)">보통</button>
+          <button class="size-btn" onclick="setSize(16,this)">굵게</button>
+          <button class="size-btn" onclick="setSize(32,this)">매우굵게</button>
+        </div>
+        <button class="btn gray" style="margin-top:10px;font-size:15px;padding:8px;" onclick="clearCanvas()">지우기</button>
+        <button class="btn teal" style="margin-top:6px;font-size:15px;padding:8px;" onclick="saveCanvas()">저장</button>
+      </div>
+      <canvas id="posterCanvas"></canvas>
+    </div>
+  </div>
+</div>
+
+<button class="navbtn prev" onclick="goPage(-1)">‹</button>
+<button class="navbtn next" onclick="goPage(1)">›</button>
+<div class="dots" id="dots"></div>
+</div></div>
+
+<script>
+/* ════ NAV ════ */
+const TOTAL=9; let cur=1;
+function renderDots(){
+  const el=document.getElementById('dots'); el.innerHTML='';
+  for(let i=1;i<=TOTAL;i++){
+    const d=document.createElement('div');
+    d.className='dot'+(i===cur?' active':'');
+    d.onclick=()=>showPage(i); el.appendChild(d);
+  }
+}
+function showPage(n){
+  cur=Math.max(1,Math.min(TOTAL,n));
+  document.querySelectorAll('.page').forEach(p=>p.classList.toggle('active',+p.dataset.page===cur));
+  if(cur===9) initCanvas();
+  renderDots();
+}
+function goPage(d){ const n=cur+d; showPage(n); if(window.fbPage) window.fbPage(n); }
+window._lPage=n=>showPage(n);
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight')goPage(1);if(e.key==='ArrowLeft')goPage(-1);});
+
+/* ════ SESSION ════ */
+function joinSession(){
+  const code=document.getElementById('sessionCode').value.trim();
+  if(!code){alert('세션 코드를 입력하세요');return;}
+  const role=document.querySelector('input[name=role]:checked').value;
+  document.getElementById('sessionModal').style.display='none';
+  document.getElementById('sessionBadge').textContent=`📡 ${role==='teacher'?'강사':'학생'} · ${code}`;
+  document.getElementById('sessionBadge').style.display='block';
+  if(window.fbJoin) window.fbJoin(code);
+}
+
+/* ════ P2: 까바 놀이 ════ */
+let kabaItems=[];
+window._lKaba=function(data){
+  kabaItems=Object.entries(data).map(([k,v])=>({k,v}));
+  renderKaba();
+};
+function addKaba(){
+  const inp=document.getElementById('kabaInput');
+  const txt=inp.value.trim(); if(!txt)return;
+  const k=Date.now().toString();
+  kabaItems.push({k,v:txt});
+  inp.value='';
+  renderKaba();
+  if(window.fbKaba) window.fbKaba(k,txt);
+}
+function convertToQuestion(txt){
+  if(txt.endsWith('.')|| txt.endsWith('。')) txt=txt.slice(0,-1);
+  if(txt.endsWith('습니다')) return txt.slice(0,-3)+'습니까?';
+  if(txt.endsWith('어요')||txt.endsWith('아요')) return txt.slice(0,-2)+'나요?';
+  if(txt.endsWith('이에요')) return txt.slice(0,-3)+'인가요?';
+  return txt+'까?';
+}
+function renderKaba(){
+  const list=document.getElementById('kabaList');
+  if(kabaItems.length===0){list.innerHTML='<div style="text-align:center;font-size:22px;font-family:Gaegu;color:#ccc;margin-top:40px;">문장을 입력하면 여기에 나타나요 👆</div>';return;}
+  list.innerHTML=kabaItems.map(({v})=>`
+    <div class="kaba-pair">
+      <div style="flex:0 0 60px;display:flex;align-items:center;justify-content:center;font-size:28px;">👩‍🏫</div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:8px;">
+        <div class="kaba-bubble teacher">${v}</div>
+        <div class="kaba-bubble student">${convertToQuestion(v)}</div>
+      </div>
+      <div style="flex:0 0 60px;display:flex;align-items:center;justify-content:center;font-size:28px;">🧒</div>
+    </div>`).join('');
+}
+function clearKaba(){ kabaItems=[]; renderKaba(); if(window.fbKaba) window.fbKaba('_clear',null); }
+document.getElementById('kabaInput').addEventListener('keydown',e=>{ if(e.key==='Enter') addKaba(); });
+
+/* ════ P3: 말 덧붙이기 ════ */
+const ANIMALS=['악어','뱀잡이수리','코끼리','오릭스영양','임팔라','하마','코뿔소','기린','사슴영양','왜가리','개코원숭이','뿔닭','얼룩영양','아프리카맷돼지','타조','얼룩말'];
+let chainList=[];
+window._lChain=function(data){ chainList=[...data]; renderChain(); };
+function buildAnimalPool(){
+  const pool=document.getElementById('animalPool'); pool.innerHTML='';
+  ANIMALS.forEach(a=>{
+    const c=document.createElement('div'); c.className='animal-chip'; c.textContent=a;
+    c.onclick=()=>addToChain(a); pool.appendChild(c);
+  });
+}
+function addToChain(animal){
+  chainList.push(animal); renderChain();
+  if(window.fbChain) window.fbChain([...chainList]);
+}
+function undoChain(){ if(!chainList.length)return; chainList.pop(); renderChain(); if(window.fbChain) window.fbChain([...chainList]); }
+function resetChain(){ chainList=[]; renderChain(); if(window.fbChain) window.fbChain([]); }
+function renderChain(){
+  const box=document.getElementById('chainBox');
+  if(!chainList.length){box.innerHTML='<div style="color:#ccc;font-size:20px;font-family:Gaegu;">동물 카드를 클릭해보세요 👈</div>';return;}
+  let sentence='물웅덩이에 가면 ';
+  const parts=chainList.map((a,i)=>`<b style="color:var(--orange)">${a}</b>도 있고`);
+  box.innerHTML=`<div class="chain-sentence">${sentence}${parts.join(', ')}...</div>`;
+  // scroll to bottom
+  box.scrollTop=box.scrollHeight;
+}
+
+/* ════ P4: 겹받침 ════ */
+function revealDouble(el){ el.classList.toggle('revealed'); }
+
+/* ════ P5: 인물 마음 매칭 ════ */
+const MATCH_PAIRS=[
+  {char:'하마',heart:'짜증나고 화난 마음'},
+  {char:'얼룩말',heart:'배려하고 여유로운 마음'},
+  {char:'개코원숭이',heart:'성급하고 조급한 마음'},
+  {char:'흰코뿔소',heart:'외롭고 안심하는 마음'},
+  {char:'코끼리',heart:'걱정하고 돕고 싶은 마음'},
+];
+let matchMatched={}, matchDragging=false, matchDragIdx=null, matchPreview=null;
+
+function buildMatch(){
+  matchMatched={}; matchDragging=false; matchDragIdx=null; matchPreview=null;
+  document.getElementById('matchSvg').innerHTML='';
+  const charCol=document.getElementById('matchChars'); charCol.innerHTML='';
+  const heartCol=document.getElementById('matchHearts'); heartCol.innerHTML='';
+  const shuffledHearts=shuffle(MATCH_PAIRS.map((_,i)=>i));
+  MATCH_PAIRS.forEach((p,i)=>{
+    const c=document.createElement('div'); c.className='match-node char'; c.dataset.idx=i;
+    c.innerHTML=`${p.char}<span class="match-anchor" data-char="${i}"></span>`;
+    charCol.appendChild(c);
+  });
+  shuffledHearts.forEach(origIdx=>{
+    const rs=document.createElement('div'); rs.className='match-node heart'; rs.dataset.idx=origIdx;
+    rs.innerHTML=`<span class="match-anchor" data-heart="${origIdx}"></span>${MATCH_PAIRS[origIdx].heart}`;
+    heartCol.appendChild(rs);
+  });
+  attachMatchDrag();
+}
+window._lMatch=function(data){
+  Object.entries(data).forEach(([ci,ri])=>{
+    const charIdx=+ci, heartIdx=+ri;
+    if(matchMatched[charIdx]!=null) return;
+    matchMatched[charIdx]=heartIdx;
+    const ce=document.querySelector(`.match-node.char[data-idx="${charIdx}"]`);
+    const he=document.querySelector(`.match-node.heart[data-idx="${heartIdx}"]`);
+    if(ce) ce.classList.add('matched');
+    if(he) he.classList.add('matched');
+    drawMatchLine(charIdx,heartIdx,true);
+  });
+};
+function attachMatchDrag(){
+  document.querySelectorAll('.match-anchor[data-char]').forEach(a=>{
+    a.addEventListener('mousedown',e=>{
+      const idx=+a.dataset.char; if(matchMatched[idx]!=null) return;
+      e.preventDefault(); matchDragging=true; matchDragIdx=idx;
+      const pos=matchAnchorPos(a);
+      matchPreview=document.createElementNS('http://www.w3.org/2000/svg','line');
+      matchPreview.setAttribute('x1',pos.x); matchPreview.setAttribute('y1',pos.y);
+      matchPreview.setAttribute('x2',pos.x); matchPreview.setAttribute('y2',pos.y);
+      matchPreview.setAttribute('stroke','#4A90C8'); matchPreview.setAttribute('stroke-width','4');
+      matchPreview.setAttribute('stroke-dasharray','8,4'); matchPreview.setAttribute('opacity','0.7');
+      document.getElementById('matchSvg').appendChild(matchPreview);
+    });
+  });
+}
+document.addEventListener('mousemove',e=>{
+  if(!matchDragging||!matchPreview) return;
+  const pt=matchSvgPoint(e);
+  matchPreview.setAttribute('x2',pt.x); matchPreview.setAttribute('y2',pt.y);
+  document.querySelectorAll('.match-anchor[data-heart]').forEach(a=>{
+    const pos=matchAnchorPos(a); const dist=Math.hypot(pt.x-pos.x,pt.y-pos.y);
+    a.style.background=dist<40?'#F5A623':'var(--blue)';
+    a.style.transform=dist<40?'translateY(-50%) scale(1.4)':'translateY(-50%)';
+  });
+});
+document.addEventListener('mouseup',e=>{
+  if(!matchDragging) return;
+  matchDragging=false;
+  if(matchPreview){matchPreview.remove();matchPreview=null;}
+  document.querySelectorAll('.match-anchor[data-heart]').forEach(a=>{a.style.background='var(--blue)';a.style.transform='translateY(-50%)';});
+  const pt=matchSvgPoint(e);
+  let best=null,bestDist=60;
+  document.querySelectorAll('.match-anchor[data-heart]').forEach(a=>{
+    const hi=+a.dataset.heart;
+    const he=document.querySelector(`.match-node.heart[data-idx="${hi}"]`);
+    if(he.classList.contains('matched')) return;
+    const pos=matchAnchorPos(a); const dist=Math.hypot(pt.x-pos.x,pt.y-pos.y);
+    if(dist<bestDist){bestDist=dist;best={el:a,idx:hi};}
+  });
+  if(!best){matchDragIdx=null;return;}
+  const ci=matchDragIdx; const ok=(ci===best.idx);
+  const ce=document.querySelector(`.match-node.char[data-idx="${ci}"]`);
+  const he=document.querySelector(`.match-node.heart[data-idx="${best.idx}"]`);
+  if(ok){
+    matchMatched[ci]=best.idx;
+    ce.classList.add('matched'); he.classList.add('matched');
+    drawMatchLine(ci,best.idx,true);
+    if(window.fbMatch) window.fbMatch({[ci]:best.idx});
+  } else {
+    ce.classList.add('wrong-flash'); he.classList.add('wrong-flash');
+    drawMatchLine(ci,best.idx,false);
+    setTimeout(()=>{ce.classList.remove('wrong-flash');he.classList.remove('wrong-flash');},600);
+  }
+  matchDragIdx=null;
+});
+function matchAnchorPos(a){
+  const svg=document.getElementById('matchSvg'); const sr=svg.getBoundingClientRect();
+  const ar=a.getBoundingClientRect();
+  return{x:ar.left+ar.width/2-sr.left,y:ar.top+ar.height/2-sr.top};
+}
+function matchSvgPoint(e){
+  const svg=document.getElementById('matchSvg'); const r=svg.getBoundingClientRect();
+  return{x:e.clientX-r.left,y:e.clientY-r.top};
+}
+function drawMatchLine(ci,hi,correct){
+  const svg=document.getElementById('matchSvg');
+  const ca=document.querySelector(`.match-anchor[data-char="${ci}"]`);
+  const ha=document.querySelector(`.match-anchor[data-heart="${hi}"]`);
+  if(!ca||!ha) return;
+  const p1=matchAnchorPos(ca),p2=matchAnchorPos(ha);
+  const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+  line.setAttribute('x1',p1.x);line.setAttribute('y1',p1.y);
+  line.setAttribute('x2',p2.x);line.setAttribute('y2',p2.y);
+  line.setAttribute('stroke',correct?'#28A09A':'#E08A8A');
+  line.setAttribute('stroke-width','5');line.setAttribute('stroke-linecap','round');
+  if(!correct){line.setAttribute('opacity','0.7');setTimeout(()=>line.remove(),600);}
+  svg.appendChild(line);
+}
+
+/* ════ P6: 동물 소개 입력 ════ */
+const INTRO_FIELDS=[
+  {key:'name',label:'동물 이름',rows:1},
+  {key:'place',label:'사는 곳',rows:1},
+  {key:'feature',label:'특징',rows:2},
+  {key:'reason',label:'좋아하는 까닭',rows:2},
+  {key:'learn',label:'이 책을 읽고 새롭게 알게 된 점',rows:2},
+];
+window._lIntro=function(data){ INTRO_FIELDS.forEach(f=>{ const el=document.getElementById('intro_'+f.key); if(el&&data[f.key]) el.value=data[f.key]; }); };
+function buildIntroForm(){
+  const form=document.getElementById('introForm');
+  INTRO_FIELDS.forEach(f=>{
+    const row=document.createElement('div'); row.className='intro-row';
+    const label=document.createElement('div'); label.className='intro-label'; label.textContent=f.label;
+    const ta=document.createElement('textarea'); ta.className='intro-input';
+    ta.rows=f.rows; ta.id='intro_'+f.key; ta.placeholder='여기에 써보세요...';
+    ta.addEventListener('input',()=>{ if(window.fbIntro) window.fbIntro(f.key,ta.value); });
+    row.append(label,ta); form.appendChild(row);
+  });
+  // hearts
+  document.querySelectorAll('.hearts').forEach(h=>{
+    for(let i=0;i<3;i++){
+      const s=document.createElement('span'); s.className='heart'; s.textContent='♡';
+      s.onclick=()=>{
+        const all=[...h.querySelectorAll('.heart')];
+        const n=all.indexOf(s)+1;
+        all.forEach((el,j)=>{el.classList.toggle('active',j<n);el.textContent=j<n?'♥':'♡';});
+      };
+      h.appendChild(s);
+    }
+  });
+}
+
+/* ════ P8: 물 절약 챌린지 ════ */
+const DAYS=['월','화','수','목','금','토','일'];
+const CHAL_STATES=['','◎','○','△'];
+let chalData={};
+window._lChallenge=function(data){ chalData={...data}; renderChalTable(); };
+function buildChalTable(){
+  const t=document.getElementById('chalTable');
+  t.innerHTML=`<thead><tr><th style="width:200px">물 절약 방법</th>${DAYS.map(d=>`<th>${d}</th>`).join('')}</tr></thead>`;
+  const tbody=document.createElement('tbody');
+  for(let r=0;r<3;r++){
+    const tr=document.createElement('tr');
+    const tdM=document.createElement('td'); tdM.className='method';
+    const inp=document.createElement('input'); inp.className='method-input';
+    inp.placeholder=`방법 ${r+1}을 써보세요`;
+    inp.addEventListener('input',()=>{ if(window.fbIntro) window.fbIntro(`chal_method_${r}`,inp.value); });
+    tdM.appendChild(inp); tr.appendChild(tdM);
+    DAYS.forEach((_,d)=>{
+      const td=document.createElement('td');
+      const btn=document.createElement('button'); btn.className='chal-btn';
+      btn.dataset.r=r; btn.dataset.d=d;
+      const k=`${r}_${d}`; btn.textContent=chalData[k]||'';
+      btn.onclick=()=>cycleChal(btn,r,d);
+      td.appendChild(btn); tr.appendChild(td);
+    });
+    tbody.appendChild(tr);
+  }
+  t.appendChild(tbody);
+}
+function cycleChal(btn,r,d){
+  const k=`${r}_${d}`; const cur=chalData[k]||'';
+  const next=CHAL_STATES[(CHAL_STATES.indexOf(cur)+1)%CHAL_STATES.length];
+  chalData[k]=next; btn.textContent=next;
+  btn.className='chal-btn'+( next==='◎'?' circledot':next==='○'?' circle':next==='△'?' triangle':'');
+  if(window.fbChallenge) window.fbChallenge(r,d,next);
+}
+function renderChalTable(){ buildChalTable(); Object.entries(chalData).forEach(([k,v])=>{ const btn=document.querySelector(`.chal-btn[data-r="${k.split('_')[0]}"][data-d="${k.split('_')[1]}"]`); if(btn){btn.textContent=v;btn.className='chal-btn'+(v==='◎'?' circledot':v==='○'?' circle':v==='△'?' triangle':'');} }); }
+
+/* ════ P9: 포스터 캔버스 ════ */
+let paintColor='#2E6FA8', paintSize=7, painting=false;
+function initCanvas(){
+  const canvas=document.getElementById('posterCanvas');
+  const wrap=canvas.parentElement;
+  canvas.width=wrap.clientWidth-150; canvas.height=wrap.clientHeight-10;
+  const ctx=canvas.getContext('2d');
+  canvas.onmousedown=e=>{painting=true;ctx.beginPath();ctx.moveTo(e.offsetX,e.offsetY);};
+  canvas.onmousemove=e=>{if(!painting)return;ctx.lineTo(e.offsetX,e.offsetY);ctx.strokeStyle=paintColor;ctx.lineWidth=paintSize;ctx.lineCap='round';ctx.stroke();};
+  canvas.onmouseup=canvas.onmouseleave=()=>{
+    if(!painting)return; painting=false;
+    if(window.fbCanvas) window.fbCanvas(canvas.toDataURL());
+  };
+}
+window._lCanvas=function(src){ const c=document.getElementById('posterCanvas'); const img=new Image(); img.onload=()=>c.getContext('2d').drawImage(img,0,0); img.src=src; };
+function setColor(c,el){ paintColor=c; document.querySelectorAll('.color-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }
+function setSize(s,el){ paintSize=s; document.querySelectorAll('.size-btn').forEach(b=>b.classList.remove('active')); el.classList.add('active'); }
+function clearCanvas(){ const c=document.getElementById('posterCanvas'); c.getContext('2d').clearRect(0,0,c.width,c.height); if(window.fbCanvas) window.fbCanvas(''); }
+function saveCanvas(){ const a=document.createElement('a'); a.href=document.getElementById('posterCanvas').toDataURL(); a.download='물절약_포스터.png'; a.click(); }
+
+/* ════ UTIL ════ */
+function shuffle(a){return a.map(v=>[Math.random(),v]).sort((a,b)=>a[0]-b[0]).map(v=>v[1]);}
+
+/* ════ INIT ════ */
+buildAnimalPool();
+buildMatch();
+buildIntroForm();
+buildChalTable();
+renderDots();
+</script>
+</body>
+</html>
