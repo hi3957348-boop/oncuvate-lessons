@@ -780,6 +780,7 @@ body{
 })();
 
 const TOTAL=8; let cur=1;
+let cnState=[], cnDone=false; // 미리 선언
 function buildDots(){
   const c=document.getElementById('dots');c.innerHTML='';
   for(let i=1;i<=TOTAL;i++){
@@ -971,7 +972,7 @@ const CN_ALL = [
   {w:'박물관',t:'gray'},
 ];
 const CN_TOTAL_BLUE = 8;
-let cnState=[], cnDone=false;
+// cnState, cnDone은 위에서 선언됨
 
 function cnShuffle(a){return a.slice().sort(()=>Math.random()-.5);}
 
