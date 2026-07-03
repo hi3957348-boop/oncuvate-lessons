@@ -1,0 +1,865 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>난독증 텍스트 리더기 — Oncuvate</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;background:#f5f4f8;color:#1a1a2e;min-height:100vh;padding:1.5rem}
+#app{max-width:960px;margin:0 auto}
+h1{font-size:18px;font-weight:700;color:#6A5DA7;margin-bottom:1rem;display:flex;align-items:center;gap:8px}
+h1 span{font-size:12px;font-weight:400;color:#888}
+
+/* API 패널 */
+#api-panel{display:flex;align-items:center;gap:8px;padding:10px 14px;background:#fff8e1;border:1px solid #ffe082;border-radius:10px;margin-bottom:10px}
+#api-panel.connected{background:#e8f5e9;border-color:#a5d6a7}
+#api-key-input{flex:1;font-size:13px;padding:6px 10px;border:1px solid #ddd;border-radius:6px;background:#fff;color:#333;font-family:monospace}
+#api-key-input:focus{outline:none;border-color:#6A5DA7}
+#api-connect-btn{font-size:13px;padding:6px 14px;border-radius:6px;border:none;background:#6A5DA7;color:#fff;cursor:pointer;font-weight:600;font-family:inherit}
+#api-connect-btn:hover{background:#5a4d97}
+#api-status{font-size:12px;white-space:nowrap;color:#f57f17;font-weight:600}
+#api-panel.connected #api-status{color:#2e7d32}
+
+/* 툴바 */
+#toolbar{display:flex;flex-direction:column;gap:8px;padding:14px;background:#fff;border:1px solid #e0dff0;border-radius:12px;margin-bottom:10px;box-shadow:0 1px 4px rgba(106,93,167,.06)}
+.tb-row{display:flex;flex-wrap:wrap;gap:8px;align-items:center}
+.tb-sec{display:flex;align-items:center;gap:8px;padding:8px 12px;border:1px solid #ece9f5;border-radius:10px;background:#faf9fd}
+.tb-sec-label{font-size:11px;color:#999;font-weight:600;white-space:nowrap;text-transform:uppercase;letter-spacing:.03em}
+.tog{display:flex;align-items:center;gap:6px;padding:5px 12px;border-radius:6px;border:1px solid #d0cce8;background:#fff;color:#666;cursor:pointer;font-size:13px;transition:all .15s;user-select:none;font-family:inherit}
+.tog:hover{background:#f0eefb}
+.tog.on{background:#ede9fc;border-color:#6A5DA7;color:#6A5DA7;font-weight:600}
+.tog .dot{width:8px;height:8px;border-radius:50%;background:#ccc;transition:background .15s;flex-shrink:0}
+.tog.on .dot{background:#6A5DA7}
+.seg{display:flex}
+.seg button{font-size:12px;padding:5px 11px;border:1px solid #d0cce8;background:#fff;color:#666;cursor:pointer;transition:all .15s;white-space:nowrap;font-family:inherit}
+.seg button:first-child{border-radius:6px 0 0 6px}
+.seg button:last-child{border-radius:0 6px 6px 0}
+.seg button:not(:first-child){border-left:none}
+.seg button.on{background:#ede9fc;color:#6A5DA7;border-color:#6A5DA7;font-weight:600;z-index:1}
+.seg button:hover:not(.on){background:#f5f3fc}
+#chunk-sub{display:none;flex-wrap:wrap;gap:8px;align-items:center;padding:8px 12px;border:1px solid #b39ddb;border-radius:10px;background:#ede9fc}
+#chunk-sub.show{display:flex}
+.sub-label{font-size:11px;color:#6A5DA7;font-weight:700;white-space:nowrap}
+#level-desc{font-size:11px;color:#6A5DA7}
+input[type=range]{cursor:pointer;accent-color:#6A5DA7}
+.val-label{font-size:12px;color:#666;min-width:36px;text-align:right}
+
+/* 읽기/편집 모드 토글 */
+#mode-toggle-bar{display:flex;align-items:center;gap:10px;margin-bottom:10px;padding:8px 14px;background:#fff;border:1px solid #e0dff0;border-radius:10px}
+#mode-toggle-bar .mode-label{font-size:12px;color:#999;font-weight:600}
+.mode-btn{padding:5px 16px;border-radius:6px;border:1px solid #d0cce8;background:#fff;color:#666;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:all .15s}
+.mode-btn.active{background:#6A5DA7;color:#fff;border-color:#6A5DA7}
+.mode-btn:hover:not(.active){background:#f0eefb}
+#mode-hint{font-size:11px;color:#aaa;margin-left:4px}
+
+/* 입력 */
+#input-area{width:100%;min-height:90px;padding:12px;border:1px solid #ddd;border-radius:10px;font-size:15px;font-family:'Malgun Gothic','Apple SD Gothic Neo',sans-serif;resize:vertical;background:#fff;color:#333;margin-bottom:8px;line-height:1.7}
+#input-area:focus{outline:none;border-color:#6A5DA7}
+
+/* 버튼 행 */
+.btn-row{display:flex;align-items:center;gap:8px;margin-bottom:12px;flex-wrap:wrap}
+#analyze-btn{padding:8px 22px;background:#6A5DA7;color:#fff;border:none;border-radius:6px;cursor:pointer;font-size:14px;font-weight:700;font-family:inherit}
+#analyze-btn:hover{background:#5a4d97}
+#analyze-btn:disabled{background:#bbb;cursor:not-allowed}
+.sec-btn{padding:7px 14px;background:#fff;color:#6A5DA7;border:1px solid #6A5DA7;border-radius:6px;cursor:pointer;font-size:13px;font-weight:600;font-family:inherit;transition:all .15s}
+.sec-btn:hover{background:#ede9fc}
+.sec-btn.on{background:#ede9fc}
+.sec-btn.danger{color:#c62828;border-color:#c62828}
+.sec-btn.danger:hover{background:#ffebee}
+#status{font-size:12px;color:#999;margin-left:4px}
+
+/* 범례 */
+#legend{display:flex;flex-wrap:wrap;gap:10px;margin-bottom:8px;font-size:12px;color:#666;align-items:center}
+.leg{display:flex;align-items:center;gap:4px}
+.leg-dot{width:9px;height:9px;border-radius:50%;flex-shrink:0}
+#edit-mode-badge{display:none;font-size:11px;padding:3px 8px;background:#fff3e0;color:#e65100;border:1px solid #ffb74d;border-radius:4px;font-weight:600}
+#edit-mode-badge.show{display:inline-block}
+
+/* 출력 */
+#output{padding:20px;background:#fff;border:1px solid #e0dff0;border-radius:12px;min-height:100px;font-size:18px;line-height:2.2;box-shadow:0 1px 4px rgba(106,93,167,.06)}
+#output.sent-mode .sent-block{display:block;line-height:1.4}
+
+/* 강조 */
+.josa{color:#c0354e;font-weight:700;border-bottom:2px solid #c0354e}
+.eomi-conn{color:#7a4f00;font-style:italic;font-weight:600}
+.eomi-term{color:#1556a0;font-style:italic;font-weight:600}
+/* 편집모드에서만 커서/호버 */
+body.edit-mode .josa,body.edit-mode .eomi-conn,body.edit-mode .eomi-term{cursor:pointer}
+body.edit-mode .josa:hover,body.edit-mode .eomi-conn:hover,body.edit-mode .eomi-term:hover{opacity:.7}
+/* 편집모드에서 강조 없는 어절 클릭 가능 */
+body.edit-mode .tok-plain{cursor:pointer;border-radius:3px}
+body.edit-mode .tok-plain:hover{background:#f0eefb;outline:1px dashed #b39ddb}
+
+/* 끊어읽기 */
+.ck-a{color:#4f35b8}
+.ck-b{color:#0d7060}
+.ck{border-radius:3px;padding:1px 3px;transition:all .12s}
+.ck.manual-target{cursor:pointer}
+
+/* 수동 모드 포커스 */
+#output.manual-focus-mode .ck{color:#aaa !important;background:none !important;outline:none !important}
+#output.manual-focus-mode .ck.active{color:#4527a0 !important;background:#ede9fc !important;outline:2px solid #6A5DA7 !important}
+#output.manual-focus-mode .ck.done{color:#ccc !important;background:none !important}
+/* 강조도 흐리게 */
+#output.manual-focus-mode .josa,
+#output.manual-focus-mode .eomi-conn,
+#output.manual-focus-mode .eomi-term{color:#aaa !important;border-color:#ccc !important}
+#output.manual-focus-mode .ck.active .josa{color:#c0354e !important;border-color:#c0354e !important}
+#output.manual-focus-mode .ck.active .eomi-conn{color:#7a4f00 !important}
+#output.manual-focus-mode .ck.active .eomi-term{color:#1556a0 !important}
+
+/* 끊기 경계 편집 */
+.word-gap{display:inline-block;width:6px;height:1em;vertical-align:middle;cursor:pointer;border-radius:2px}
+.word-gap:hover{background:#ffe0b2;outline:1px solid #ff9800}
+.sent-gap{width:10px;background:rgba(255,152,0,.08);border-radius:3px}
+.sent-gap:hover{background:#ffe0b2;outline:1px solid #ff9800}
+.chunk-break{display:inline-block;width:0;height:1em;vertical-align:middle;cursor:pointer;position:relative;margin:0 4px}
+.chunk-break::after{content:'|';color:#ff9800;font-weight:900;font-size:.9em;position:absolute;left:-4px;top:0}
+.chunk-break:hover::after{color:#e65100}
+.sent-break::after{content:'||';color:#e65100;font-weight:900;font-size:.9em;position:absolute;left:-6px;top:0}
+
+/* 팝업 */
+#popup{display:none;position:fixed;z-index:1000;background:#fff;border:1px solid #ddd;border-radius:10px;padding:16px;box-shadow:0 4px 20px rgba(0,0,0,.18);min-width:240px;max-width:300px}
+#popup h3{font-size:13px;font-weight:700;color:#333;margin-bottom:10px}
+.popup-field-label{font-size:11px;color:#888;margin-bottom:4px;margin-top:8px}
+#popup input{width:100%;padding:6px 8px;border:1px solid #ddd;border-radius:5px;font-size:13px;font-family:inherit;margin-bottom:4px}
+#popup input:focus{outline:none;border-color:#6A5DA7}
+.popup-row{display:flex;gap:6px;flex-wrap:wrap;margin-top:10px}
+.popup-btn{padding:5px 10px;border-radius:5px;border:1px solid #ddd;background:#fff;cursor:pointer;font-size:12px;font-family:inherit}
+.popup-btn.primary{background:#6A5DA7;color:#fff;border-color:#6A5DA7}
+.popup-btn.primary:hover{background:#5a4d97}
+.popup-btn.del{background:#ffebee;color:#c62828;border-color:#ef9a9a}
+.popup-btn:hover:not(.primary):not(.del){background:#f5f5f5}
+#popup-close{position:absolute;top:8px;right:10px;cursor:pointer;color:#999;font-size:18px;line-height:1;background:none;border:none;font-family:inherit}
+.etype-row{display:flex;gap:4px;margin-bottom:4px}
+.etype-btn{flex:1;padding:4px;border-radius:5px;border:1px solid #d0cce8;background:#fff;cursor:pointer;font-size:12px;font-family:inherit}
+.etype-btn.on{background:#ede9fc;color:#6A5DA7;border-color:#6A5DA7;font-weight:600}
+
+/* 오류 */
+.err-msg{color:#c62828;font-size:13px;background:#ffebee;padding:8px 12px;border-radius:6px;border:1px solid #ef9a9a;margin-top:8px}
+.upload-label{font-size:12px;padding:6px 12px;border-radius:6px;border:1px solid #d0cce8;background:#fff;color:#666;cursor:pointer;white-space:nowrap;font-family:inherit}
+.upload-label:hover{background:#f5f3fc}
+.spinner{display:inline-block;width:13px;height:13px;border:2px solid #ddd;border-top-color:#6A5DA7;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:5px}
+@keyframes spin{to{transform:rotate(360deg)}}
+#progress-bar{height:3px;background:#e0dff0;border-radius:2px;margin-bottom:10px;overflow:hidden;display:none}
+#progress-fill{height:100%;background:#6A5DA7;width:0;transition:width .3s}
+</style>
+</head>
+<body>
+<div id="app">
+<h1>📖 난독증 텍스트 리더기 <span>by Oncuvate · Claude API</span></h1>
+
+<div id="api-panel">
+  <span>🔑</span>
+  <input type="password" id="api-key-input" placeholder="Claude API 키 (sk-ant-...)">
+  <button id="api-connect-btn" onclick="connectAPI()">연결</button>
+  <button id="api-disconnect-btn" onclick="disconnectAPI()" style="font-size:13px;padding:6px 10px;border-radius:6px;border:1px solid #ddd;background:#fff;color:#888;cursor:pointer;font-family:inherit;display:none">연결 해제</button>
+  <span id="api-status">미연결 — 규칙 기반 분석 사용</span>
+</div>
+
+<div id="toolbar">
+  <div class="tb-row">
+    <div class="tb-sec">
+      <span class="tb-sec-label">강조</span>
+      <button class="tog" id="tog-josa" onclick="toggle('josa')"><span class="dot"></span>조사</button>
+      <button class="tog" id="tog-eomi-conn" onclick="toggle('eomiConn')"><span class="dot"></span>연결어미</button>
+      <button class="tog" id="tog-eomi-term" onclick="toggle('eomiTerm')"><span class="dot"></span>종결어미</button>
+    </div>
+    <div class="tb-sec">
+      <span class="tb-sec-label">끊어읽기</span>
+      <div class="seg">
+        <button id="cm-off" class="on" onclick="setChunkMode('off')">끄기</button>
+        <button id="cm-auto" onclick="setChunkMode('auto')">자동</button>
+        <button id="cm-manual" onclick="setChunkMode('manual')">수동</button>
+      </div>
+    </div>
+    <div class="tb-sec">
+      <span class="tb-sec-label">줄바꿈</span>
+      <div class="seg">
+        <button id="wb-normal" class="on" onclick="setWrap('normal')">기본</button>
+        <button id="wb-word" onclick="setWrap('word')">단어보존</button>
+        <button id="wb-sentence" onclick="setWrap('sentence')">문장단위</button>
+      </div>
+    </div>
+    <div class="tb-sec">
+      <span class="tb-sec-label">글자크기</span>
+      <input type="range" min="14" max="32" value="18" step="1" style="width:80px" oninput="setSize(this.value)">
+      <span class="val-label" id="size-val">18px</span>
+    </div>
+    <div class="tb-sec">
+      <span class="tb-sec-label">행간</span>
+      <input type="range" min="1.2" max="3.5" value="2.2" step="0.1" style="width:80px" oninput="setLineHeight(this.value)">
+      <span class="val-label" id="lh-val">2.2</span>
+    </div>
+    <label class="upload-label">📂 txt<input type="file" accept=".txt" style="display:none" onchange="loadTxt(this)"></label>
+  </div>
+  <div id="chunk-sub">
+    <span class="sub-label">레벨</span>
+    <div class="seg">
+      <button id="lv-1" class="on" onclick="setLevel(1)">1 — 짧게</button>
+      <button id="lv-2" onclick="setLevel(2)">2 — 보통</button>
+      <button id="lv-3" onclick="setLevel(3)">3 — 길게</button>
+    </div>
+    <span id="level-desc">단어 하나씩 끊기</span>
+  </div>
+</div>
+
+<textarea id="input-area" placeholder="한국어 텍스트를 붙여넣으세요. (Ctrl+Enter로 분석)&#10;&#10;예: 봄이 오면 꽃이 피고, &quot;새들이 노래한다.&quot; 아이들은 들판을 뛰어다니며 즐겁게 웃었다."></textarea>
+
+<div class="btn-row">
+  <button id="analyze-btn" onclick="analyze()">✨ 분석하기</button>
+  <button class="sec-btn" id="edit-chunk-btn" onclick="toggleChunkEdit()" style="display:none">✏️ 끊기 편집</button>
+  <button class="sec-btn" onclick="saveCorrections()" id="save-btn" style="display:none">💾 저장</button>
+  <label class="upload-label" id="load-btn" style="display:none">📥 불러오기<input type="file" accept=".json" style="display:none" onchange="loadCorrections(this)"></label>
+  <button class="sec-btn danger" onclick="resetCorrections()" id="reset-btn" style="display:none">↩ 초기화</button>
+  <span id="status">텍스트를 입력하고 분석하기를 누르세요 (API 없이도 사용 가능)</span>
+</div>
+
+<!-- 읽기/편집 모드 토글 -->
+<div id="mode-toggle-bar" style="display:none">
+  <span class="mode-label">모드</span>
+  <button class="mode-btn active" id="mode-read" onclick="setAppMode('read')">👁 읽기</button>
+  <button class="mode-btn" id="mode-edit" onclick="setAppMode('edit')">✏️ 편집</button>
+  <span id="mode-hint">읽기 모드: 클릭해도 팝업이 열리지 않습니다</span>
+</div>
+
+<div id="progress-bar"><div id="progress-fill"></div></div>
+
+<div id="legend">
+  <span class="leg"><span class="leg-dot" style="background:#c0354e"></span>조사</span>
+  <span class="leg"><span class="leg-dot" style="background:#7a4f00"></span>연결어미</span>
+  <span class="leg"><span class="leg-dot" style="background:#1556a0"></span>종결어미</span>
+  <span class="leg"><span class="leg-dot" style="background:#4f35b8"></span>끊어읽기 A</span>
+  <span class="leg"><span class="leg-dot" style="background:#0d7060"></span>끊어읽기 B</span>
+  <span id="edit-mode-badge">✏️ 끊기 편집 중</span>
+</div>
+
+<div id="output"><span style="color:#bbb;font-size:15px">분석 결과가 여기에 표시됩니다.</span></div>
+<div id="err-area"></div>
+
+<div id="popup">
+  <button id="popup-close" onclick="closePopup()">×</button>
+  <h3 id="popup-title">보정</h3>
+  <div id="popup-body"></div>
+</div>
+</div>
+
+<script>
+const S={
+  apiKey:'',apiConnected:false,
+  josa:false,eomiConn:false,eomiTerm:false,
+  chunkMode:'off',level:1,wrap:'normal',
+  fontSize:18,lineHeight:2.2,
+  chunks:[],manualIdx:0,
+  analysis:null,
+  corrections:{tokens:{},chunkBreaks:{}},
+  chunkEditMode:false,
+  appMode:'read', // 'read' | 'edit'
+  currentPopup:null
+};
+
+// ── API ──
+function connectAPI(){
+  const key=document.getElementById('api-key-input').value.trim();
+  if(!key.startsWith('sk-ant-')){setAPIStatus(false,'형식 오류 (sk-ant-로 시작)');return;}
+  S.apiKey=key;S.apiConnected=true;
+  setAPIStatus(true,'✅ Claude 분석 사용 중');
+  document.getElementById('status').textContent='텍스트를 입력하고 분석하기를 누르세요';
+}
+function disconnectAPI(){
+  S.apiKey='';S.apiConnected=false;
+  document.getElementById('api-key-input').value='';
+  setAPIStatus(false,'미연결');
+}
+function setAPIStatus(ok,msg){
+  document.getElementById('api-panel').classList.toggle('connected',ok);
+  document.getElementById('api-status').textContent=msg;
+  document.getElementById('api-status').style.color=ok?'#2e7d32':'#888';
+  const dcBtn=document.getElementById('api-disconnect-btn');
+  if(dcBtn)dcBtn.style.display=ok?'inline-block':'none';
+  const cBtn=document.getElementById('api-connect-btn');
+  if(cBtn)cBtn.style.display=ok?'none':'inline-block';
+}
+
+// ── 규칙 기반 분석 (API 없을 때) ──
+const JOSA_LIST=['으로부터','로부터','에서부터','으로서','로서','에게서','한테서','이라는','라는','이라고','라고','이라서','라서','이라며','라며','이라면','라면','이라도','라도','이란','란','에게도','한테도','께서는','께서도','에서는','으로는','으로도','은커녕','는커녕','이나마','나마','이야말로','야말로','만큼은','만큼도','처럼은','처럼도','보다는','보다도','부터는','부터도','까지는','까지도','에서','에게','한테','께서','으로','부터','까지','마다','처럼','만큼','보다','이나','이라','이야','이며','이고','이랑','랑','은','는','이','가','을','를','의','와','과','도','만'];
+const CONN_EOMI=['으면서','면서','으면서도','으면','이면','으니까','니까','으니','니','고서','아서','어서','여서','으므로','므로','지만','는데','은데','ㄴ데','으나','나','아도','어도','여도','거나','든지','ㄹ수록','을수록','다가','아다가','어다가','려면','으려면','자마자','도록','고도','지도'];
+const TERM_EOMI=['었습니다','았습니다','겠습니다','었습니까','았습니까','겠습니까','이었습니다','였습니다','습니다','ㅂ니다','습니까','ㅂ니까','입니다','입니까','다고요','라고요','잖아요','거든요','네요','군요','구나','는구나','는군','아요','어요','여요','해요','이에요','예요','었다','았다','겠다','ㄴ다','는다','이다','지','아','어','여'];
+
+function ruleMarkJosa(w){
+  const body=w.replace(/['"''"」』.,!?。，\]】)）]+$/,'');
+  const suf=w.slice(body.length);
+  const sorted=[...JOSA_LIST].sort((a,b)=>b.length-a.length);
+  for(const j of sorted){
+    if(body.endsWith(j)&&body.length>j.length+1){
+      return{text:w,josa:j,eomi:null};
+    }
+  }
+  return{text:w,josa:null,eomi:null};
+}
+function ruleMarkEomi(w){
+  const body=w.replace(/['"''"」』.,!?。，\]】)）]+$/,'');
+  const st=[...TERM_EOMI].sort((a,b)=>b.length-a.length);
+  const sc=[...CONN_EOMI].sort((a,b)=>b.length-a.length);
+  for(const e of st){if(body.endsWith(e)&&body.length>e.length+1)return{text:w,josa:null,eomi:{text:e,type:'term'}};}
+  for(const e of sc){if(body.endsWith(e)&&body.length>e.length+1)return{text:w,josa:null,eomi:{text:e,type:'conn'}};}
+  return{text:w,josa:null,eomi:null};
+}
+function ruleBasedAnalyze(sent,level){
+  const words=sent.split(/\s+/).filter(Boolean);
+  // chunks
+  let chunks=[];
+  if(level===1){chunks=words.slice();}
+  else if(level===2){for(let i=0;i<words.length;i+=2)chunks.push(words.slice(i,i+2).join(' '));}
+  else{chunks=[sent];}
+  // tokens
+  const tokens=words.map(w=>{
+    const j=ruleMarkJosa(w);
+    if(j.josa)return j;
+    return ruleMarkEomi(w);
+  });
+  return{chunks,tokens,original:sent};
+}
+
+async function callClaudeForSentence(sent,level){
+  const levelDesc=['가장 짧은 의미 단위(1~2어절)','중간 의미 단위(2~4어절)','절 또는 문장 단위'];
+  const prompt=`다음 한국어 문장을 분석해서 JSON만 출력하세요. 마크다운 없이 순수 JSON만.
+
+문장: ${sent}
+
+출력형식:
+{"chunks":["끊기1","끊기2"],"tokens":[{"text":"어절","josa":"조사또는null","eomi":{"text":"어미","type":"conn또는term"},"eomi가없으면":"null로"}]}
+
+규칙:
+- chunks: ${levelDesc[level-1]}로 의미 단위 분리. 따옴표(\\",',' 등)는 앞뒤 어절에 붙여서 원문 그대로 보존
+- tokens: 띄어쓰기 기준 각 어절. text는 따옴표/문장부호 포함 원문 그대로
+- josa: 조사(은/는/이/가/을/를/의/에/에서/로/과/와/도/만/부터/까지/에게/한테/처럼/만큼/보다/이나/이라/이며/이고/랑 등) 있으면 문자열, 없으면 null. 문장부호/따옴표는 포함 금지
+- eomi: 어미 있으면 {"text":"어미","type":"conn"또는"term"}, 없으면 null. 문장부호/따옴표는 포함 금지
+- josa와 eomi 동시 불가`;
+
+  const res=await fetch('https://api.anthropic.com/v1/messages',{
+    method:'POST',
+    headers:{'Content-Type':'application/json','x-api-key':S.apiKey,'anthropic-version':'2023-06-01','anthropic-dangerous-direct-browser-access':'true'},
+    body:JSON.stringify({model:'claude-haiku-4-5-20251001',max_tokens:1024,messages:[{role:'user',content:prompt}]})
+  });
+  if(!res.ok){const e=await res.json();throw new Error(e.error?.message||'API 오류');}
+  const data=await res.json();
+  const raw=data.content[0].text.replace(/```json|```/g,'').trim();
+  const match=raw.match(/\{[\s\S]*\}/);
+  return JSON.parse(match?match[0]:raw);
+}
+
+// ── 문장 분리 (따옴표 보존 + 여는따옴표 경계) ──
+function splitSentences(text){
+  const results=[];
+  let buf='';
+  // 빈 줄 → 단락 구분이므로 공백 한 칸으로
+  const t=text.split(/\r?\n/).map(l=>l.trim()).filter(l=>l).join(' ');
+  const CLOSE=/[”’》」"'\]）】』」］)]/;
+  const OPEN=/[“‘《「“„"'(（【『「［]/;
+  for(let i=0;i<t.length;i++){
+    buf+=t[i];
+    const ch=t[i];
+    const isKorEnd=/[다요까죠네군야]/.test(ch);
+    const isPunctEnd=/[.!?]/.test(ch);
+    if(isKorEnd||isPunctEnd){
+      // 뒤따르는 닫는따옴표/부호 모두 흡수
+      let j=i+1;
+      while(j<t.length&&(CLOSE.test(t[j])||/[.!?]/.test(t[j]))){buf+=t[j];j++;}
+      i=j-1;
+      const after=t[i+1]||'';
+      // 다음이 공백/끝/여는따옴표이면 문장 경계
+      if(after===''||after===' '||OPEN.test(after)){
+        results.push(buf.trim());
+        buf='';
+        if(after===' ')i++;
+      }
+    }
+  }
+  if(buf.trim())results.push(buf.trim());
+  return results.filter(Boolean);
+}
+
+// ── 분석 ──
+async function analyze(){
+  const text=document.getElementById('input-area').value.trim();
+  if(!text)return;
+  const btn=document.getElementById('analyze-btn');
+  const st=document.getElementById('status');
+  const errArea=document.getElementById('err-area');
+  const pb=document.getElementById('progress-bar');
+  const pf=document.getElementById('progress-fill');
+  btn.disabled=true;errArea.innerHTML='';
+  pb.style.display='block';pf.style.width='0';
+  const sents=splitSentences(text);
+  S.analysis={sentences:[]};
+  S.corrections={tokens:{},chunkBreaks:{}};
+  S.chunks=[];S.manualIdx=0;
+  const out=document.getElementById('output');
+  out.innerHTML='';out.classList.remove('sent-mode','manual-focus-mode');
+  applyWrapStyle();
+  try{
+    for(let i=0;i<sents.length;i++){
+      st.innerHTML=`<span class="spinner"></span>${i+1}/${sents.length} 분석 중...`;
+      pf.style.width=((i/sents.length)*100)+'%';
+      let sentData;
+      if(S.apiConnected){
+        try{sentData=await callClaudeForSentence(sents[i],S.level);}
+        catch(e){sentData=ruleBasedAnalyze(sents[i],S.level);}
+      } else {
+        sentData=ruleBasedAnalyze(sents[i],S.level);
+      }
+      sentData.original=sents[i];
+      S.analysis.sentences.push(sentData);
+      if(S.chunkMode!=='off'&&sentData.chunks){
+        sentData.chunks.forEach((c,ci)=>S.chunks.push({text:c,sentIdx:i,sentEnd:ci===sentData.chunks.length-1}));
+      }
+      appendSentenceToOutput(sentData,i);
+      if(S.chunkMode==='manual'){highlightManual();applyManualFocus();}
+      applyLineHeightDOM();
+    }
+    pf.style.width='100%';
+    setTimeout(()=>pb.style.display='none',500);
+    const modeLabel=S.apiConnected?'Claude 분석':'규칙 기반 분석';
+    st.textContent=`분석 완료 (${modeLabel})`+(S.chunkMode==='manual'?' — 청크를 순서대로 클릭':'');
+    showCorrectionButtons();
+    document.getElementById('mode-toggle-bar').style.display='flex';
+    setAppMode('read');
+  }catch(e){
+    st.textContent='분석 실패';
+    errArea.innerHTML='<div class="err-msg">오류: '+e.message+'</div>';
+  }finally{btn.disabled=false;}
+}
+
+function showCorrectionButtons(){
+  ['save-btn','load-btn','reset-btn'].forEach(id=>{
+    const el=document.getElementById(id);if(el)el.style.display='inline-block';
+  });
+  const ecb=document.getElementById('edit-chunk-btn');
+  if(ecb)ecb.style.display=S.chunkMode==='off'?'none':'inline-block';
+}
+
+// ── 읽기/편집 모드 ──
+function setAppMode(mode){
+  S.appMode=mode;
+  document.getElementById('mode-read').classList.toggle('active',mode==='read');
+  document.getElementById('mode-edit').classList.toggle('active',mode==='edit');
+  document.body.classList.toggle('edit-mode',mode==='edit');
+  const hints={
+    read:'읽기 모드: 클릭해도 팝업이 열리지 않습니다',
+    edit:'편집 모드: 강조 부분 클릭 → 보정 / 빈 어절 클릭 → 조사·어미 추가'
+  };
+  document.getElementById('mode-hint').textContent=hints[mode];
+  // 편집모드 해제시 팝업 닫기
+  if(mode==='read')closePopup();
+  // 끊기편집도 읽기모드시 해제
+  if(mode==='read'&&S.chunkEditMode)toggleChunkEdit();
+}
+
+// ── 렌더링 ──
+function appendSentenceToOutput(sentData,si){
+  const out=document.getElementById('output');
+  const block=buildSentBlock(sentData,si);
+  if(S.wrap==='sentence'){
+    out.classList.add('sent-mode');
+    const span=document.createElement('span');
+    span.className='sent-block';span.id='sent-'+si;
+    span.style.lineHeight='1.4';
+    span.innerHTML=block;
+    out.appendChild(span);
+  } else {
+    const span=document.createElement('span');
+    span.id='sent-'+si;
+    span.innerHTML=block+' ';
+    out.appendChild(span);
+  }
+}
+
+function rerenderAll(){
+  if(!S.analysis)return;
+  const out=document.getElementById('output');
+  out.innerHTML='';S.chunks=[];S.manualIdx=0;
+  out.classList.remove('sent-mode','manual-focus-mode');
+  applyWrapStyle();
+  S.analysis.sentences.forEach((sent,si)=>{
+    if(S.chunkMode!=='off'&&sent.chunks){
+      const breaks=S.corrections.chunkBreaks[si]||[];
+      const cc=applyChunkBreaks(sent,si,breaks);
+      cc.forEach((c,ci)=>S.chunks.push({text:c,sentIdx:si,sentEnd:ci===cc.length-1}));
+    }
+    appendSentenceToOutput(sent,si);
+  });
+  if(S.chunkMode==='manual'){highlightManual();applyManualFocus();}
+  applyLineHeightDOM();
+}
+
+function buildSentBlock(sentData,si){
+  const breaks=S.corrections.chunkBreaks[si]||[];
+  if(S.chunkMode==='off') return buildTokensHTML(sentData,si);
+  const chunks=applyChunkBreaks(sentData,si,breaks);
+  const chunkOffset=S.chunks.filter(c=>c.sentIdx<si).length;
+  if(S.chunkEditMode){
+    const isLastSent=(si===S.analysis.sentences.length-1);
+    return buildChunkEditHTML(sentData,si,breaks,isLastSent);
+  }
+  // 문장 사이 경계가 있으면 색 번호 리셋
+  const sentBreak=S.corrections.chunkBreaks['sb'+(si-1)]||false;
+  const colorBase=sentBreak?0:chunkOffset;
+  return chunks.map((chunk,ci)=>{
+    const gi=chunkOffset+ci;
+    const colorCls=(colorBase+ci)%2===0?'ck-a':'ck-b';
+    const inner=buildChunkInner(chunk,sentData,si);
+    if(S.chunkMode==='auto') return`<span class="ck ${colorCls}">${inner}</span>`;
+    return`<span class="ck manual-target" id="ck-${gi}" onclick="advManual(${gi})">${inner}</span>`;
+  }).join(' ');
+}
+
+function applyChunkBreaks(sentData,si,breaks){
+  if(!sentData.chunks||!sentData.chunks.length)return[sentData.original||''];
+  const words=sentData.chunks.join(' ').split(/\s+/).filter(Boolean);
+  if(!breaks||!breaks.length)return sentData.chunks;
+  const result=[];let buf=[];
+  words.forEach((w,i)=>{
+    buf.push(w);
+    if(breaks.includes(i)&&i<words.length-1){result.push(buf.join(' '));buf=[];}
+  });
+  if(buf.length)result.push(buf.join(' '));
+  return result;
+}
+
+function buildChunkInner(chunk,sentData,si){
+  if(!S.josa&&!S.eomiConn&&!S.eomiTerm)return escHtml(chunk);
+  const words=chunk.split(/\s+/);
+  const allWords=sentData.chunks?sentData.chunks.join(' ').split(/\s+/):[];
+  return words.map(w=>{
+    const wIdx=allWords.indexOf(w);
+    const tok=sentData.tokens&&sentData.tokens[wIdx]!=null?sentData.tokens[wIdx]:null;
+    if(!tok)return escHtml(w);
+    const key=si+'-'+wIdx;
+    const corr=S.corrections.tokens[key];
+    const eff=corr?{...tok,...corr}:tok;
+    return hlToken(eff,key);
+  }).join(' ');
+}
+
+function buildTokensHTML(sentData,si){
+  if(!sentData.tokens||!sentData.tokens.length)return escHtml(sentData.original||'');
+  return sentData.tokens.map((tok,ti)=>{
+    const key=si+'-'+ti;
+    const corr=S.corrections.tokens[key];
+    const eff=corr?{...tok,...corr}:tok;
+    if(eff.removed)return'';
+    return hlToken(eff,key);
+  }).filter(Boolean).join(' ');
+}
+
+function buildChunkEditHTML(sentData,si,breaks,isLastSent){
+  const words=sentData.chunks?sentData.chunks.join(' ').split(/\s+/).filter(Boolean):[];
+  let html='';
+  words.forEach((w,i)=>{
+    html+=`<span class="word-span">${escHtml(w)}</span>`;
+    const isLastWord=(i===words.length-1);
+    if(!isLastWord){
+      // 문장 내 단어 사이
+      if(breaks.includes(i)){
+        html+=`<span class="chunk-break" onclick="removeBreak(${si},${i})" title="경계 제거"></span>`;
+      } else {
+        html+=`<span class="word-gap" onclick="addBreak(${si},${i})" title="여기서 끊기"> </span>`;
+      }
+    } else if(!isLastSent){
+      // 문장 마지막 단어 뒤 — 다음 문장과의 경계
+      const hasSentBreak=(S.corrections.chunkBreaks['sb'+si]||false);
+      if(hasSentBreak){
+        html+=`<span class="chunk-break sent-break" onclick="removeSentBreak(${si})" title="문장 사이 경계 제거"></span>`;
+      } else {
+        html+=`<span class="word-gap sent-gap" onclick="addSentBreak(${si})" title="문장 사이에서 끊기"> </span>`;
+      }
+    }
+  });
+  return html;
+}
+function addSentBreak(si){
+  S.corrections.chunkBreaks['sb'+si]=true;
+  rerenderAll();
+}
+function removeSentBreak(si){
+  delete S.corrections.chunkBreaks['sb'+si];
+  rerenderAll();
+}
+
+function hlToken(tok,key){
+  if(!tok||!tok.text)return'';
+  if(tok.removed)return'';
+  const txt=tok.text;
+  // 앞/뒤 따옴표·부호 분리
+  const preMatch=txt.match(/^(['"''"「『(（\[【]*)([\s\S]*?)(['"''"」』)）\]】]*[.,!?]*)$/);
+  const pre=preMatch?preMatch[1]:'';
+  const body=preMatch?preMatch[2]:txt;
+  const suf=preMatch?preMatch[3]:'';
+
+  const hasJosa=S.josa&&tok.josa&&tok.josa!=='null'&&tok.josa!==null;
+  const hasEomi=(S.eomiConn&&tok.eomi&&tok.eomi.type==='conn')||(S.eomiTerm&&tok.eomi&&tok.eomi.type==='term');
+  const isPlain=!hasJosa&&!hasEomi;
+
+  if(hasJosa){
+    const josa=tok.josa.replace(/['"''"」』.,!?。，]+$/,'');
+    if(!josa||body.length<=josa.length)return escHtml(pre)+`<span class="tok-plain" onclick="openPopup(event,'${key}')">${escHtml(body)}</span>`+escHtml(suf);
+    const stem=body.slice(0,body.length-josa.length);
+    return escHtml(pre)+escHtml(stem)+`<span class="josa" onclick="openPopup(event,'${key}')">${escHtml(josa)}</span>`+escHtml(suf);
+  }
+  if(hasEomi){
+    const eomi=tok.eomi.text.replace(/['"''"」』.,!?。，]+$/,'');
+    if(!eomi||body.length<=eomi.length)return escHtml(pre)+`<span class="tok-plain" onclick="openPopup(event,'${key}')">${escHtml(body)}</span>`+escHtml(suf);
+    const stem=body.slice(0,body.length-eomi.length);
+    const cls=tok.eomi.type==='term'?'eomi-term':'eomi-conn';
+    return escHtml(pre)+escHtml(stem)+`<span class="${cls}" onclick="openPopup(event,'${key}')">${escHtml(eomi)}</span>`+escHtml(suf);
+  }
+  // 강조 없는 어절 — 편집모드에서 클릭 가능
+  return escHtml(pre)+`<span class="tok-plain" onclick="openPopup(event,'${key}')">${escHtml(body)}</span>`+escHtml(suf);
+}
+
+function escHtml(s){
+  if(!s)return'';
+  return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+// ── 수동 모드 포커스 ──
+function highlightManual(){
+  document.querySelectorAll('.ck.manual-target').forEach((el,i)=>{
+    el.classList.remove('done','active');
+    if(i<S.manualIdx)el.classList.add('done');
+    else if(i===S.manualIdx)el.classList.add('active');
+  });
+}
+function applyManualFocus(){
+  const out=document.getElementById('output');
+  out.classList.toggle('manual-focus-mode',S.chunkMode==='manual');
+}
+function advManual(i){
+  if(i===S.manualIdx){
+    S.manualIdx=Math.min(S.manualIdx+1,S.chunks.length-1);
+    highlightManual();
+  }
+}
+
+// ── 끊기 편집 ──
+function toggleChunkEdit(){
+  S.chunkEditMode=!S.chunkEditMode;
+  document.getElementById('edit-chunk-btn').classList.toggle('on',S.chunkEditMode);
+  document.getElementById('edit-mode-badge').classList.toggle('show',S.chunkEditMode);
+  if(S.chunkEditMode&&S.appMode==='read')setAppMode('edit');
+  rerenderAll();
+}
+function addBreak(si,wi){
+  if(!S.corrections.chunkBreaks[si])S.corrections.chunkBreaks[si]=[];
+  if(!S.corrections.chunkBreaks[si].includes(wi)){
+    S.corrections.chunkBreaks[si].push(wi);
+    S.corrections.chunkBreaks[si].sort((a,b)=>a-b);
+  }
+  rerenderAll();
+}
+function removeBreak(si,wi){
+  if(!S.corrections.chunkBreaks[si])return;
+  S.corrections.chunkBreaks[si]=S.corrections.chunkBreaks[si].filter(x=>x!==wi);
+  rerenderAll();
+}
+
+// ── 팝업 보정 ──
+function openPopup(e,key){
+  if(S.appMode!=='edit')return; // 읽기 모드면 무시
+  e.stopPropagation();
+  const parts=key.split('-');
+  const si=parseInt(parts[0]),ti=parseInt(parts[1]);
+  const sent=S.analysis&&S.analysis.sentences[si];
+  const tok=sent&&sent.tokens&&sent.tokens[ti]?sent.tokens[ti]:null;
+  if(!tok)return;
+  const corr=S.corrections.tokens[key]||{};
+  const eff={...tok,...corr};
+  S.currentPopup=key;
+
+  const popup=document.getElementById('popup');
+  document.getElementById('popup-title').textContent='"'+eff.text+'" 보정';
+
+  const curJosa=eff.josa&&eff.josa!=='null'?eff.josa:'';
+  const curEomi=eff.eomi?eff.eomi.text:'';
+  const curType=eff.eomi?eff.eomi.type:'term';
+
+  let body='';
+  body+=`<div class="popup-field-label">조사 (없으면 빈칸)</div>`;
+  body+=`<input id="popup-josa" placeholder="예: 은, 가, 에서, 를..." value="${escHtml(curJosa)}">`;
+  body+=`<div class="popup-field-label">어미 (없으면 빈칸)</div>`;
+  body+=`<input id="popup-eomi" placeholder="예: 았다, 면서, 지만..." value="${escHtml(curEomi)}">`;
+  body+=`<div class="popup-field-label">어미 종류</div>`;
+  body+=`<div class="etype-row">
+    <button class="etype-btn ${curType==='conn'?'on':''}" id="etype-conn" onclick="setEtype('conn')">연결어미</button>
+    <button class="etype-btn ${curType==='term'?'on':''}" id="etype-term" onclick="setEtype('term')">종결어미</button>
+  </div>`;
+  body+=`<div class="popup-row">
+    <button class="popup-btn primary" onclick="applyPopup()">적용</button>
+    <button class="popup-btn del" onclick="removeHL('${key}')">강조 제거</button>
+    <button class="popup-btn" onclick="closePopup()">취소</button>
+  </div>`;
+
+  document.getElementById('popup-body').innerHTML=body;
+  popup.style.display='block';
+  const rect=e.target.getBoundingClientRect();
+  const popH=popup.offsetHeight||280;
+  const popW=popup.offsetWidth||260;
+  // 아래 공간 부족하면 위로 표시
+  let top;
+  if(rect.bottom+popH+10>window.innerHeight){
+    top=rect.top+window.scrollY-popH-6;
+  } else {
+    top=rect.bottom+window.scrollY+6;
+  }
+  let left=rect.left+window.scrollX;
+  if(left+popW+4>window.innerWidth)left=window.innerWidth-popW-8;
+  popup.style.top=Math.max(window.scrollY+4,top)+'px';
+  popup.style.left=Math.max(4,left)+'px';
+}
+function setEtype(t){
+  document.getElementById('etype-conn').classList.toggle('on',t==='conn');
+  document.getElementById('etype-term').classList.toggle('on',t==='term');
+}
+function applyPopup(){
+  const key=S.currentPopup;if(!key)return;
+  const josa=document.getElementById('popup-josa').value.trim();
+  const eomi=document.getElementById('popup-eomi').value.trim();
+  const etype=document.getElementById('etype-term').classList.contains('on')?'term':'conn';
+  S.corrections.tokens[key]={
+    josa:josa||null,
+    eomi:eomi?{text:eomi,type:etype}:null,
+    removed:false
+  };
+  closePopup();rerenderAll();
+}
+function removeHL(key){
+  S.corrections.tokens[key]={josa:null,eomi:null,removed:false};
+  closePopup();rerenderAll();
+}
+function closePopup(){
+  document.getElementById('popup').style.display='none';
+  S.currentPopup=null;
+}
+document.addEventListener('click',e=>{
+  const popup=document.getElementById('popup');
+  if(popup.style.display==='block'&&!popup.contains(e.target))closePopup();
+});
+
+// ── 저장/불러오기 ──
+function saveCorrections(){
+  if(!S.analysis){alert('먼저 분석을 실행해주세요.');return;}
+  const data={
+    version:2,
+    text:document.getElementById('input-area').value.trim(),
+    corrections:S.corrections,
+    settings:{level:S.level,chunkMode:S.chunkMode,wrap:S.wrap,fontSize:S.fontSize,lineHeight:S.lineHeight}
+  };
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:'application/json'});
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);
+  a.download='보정_'+new Date().toISOString().slice(0,10)+'.json';
+  a.click();
+}
+function loadCorrections(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{
+    try{
+      const data=JSON.parse(e.target.result);
+      if(data.corrections)S.corrections=data.corrections;
+      if(data.settings){
+        if(data.settings.level)setLevel(data.settings.level);
+        if(data.settings.chunkMode)setChunkMode(data.settings.chunkMode);
+        if(data.settings.wrap)setWrap(data.settings.wrap);
+        if(data.settings.fontSize)setSize(data.settings.fontSize);
+        if(data.settings.lineHeight)setLineHeight(data.settings.lineHeight);
+      }
+      if(data.text)document.getElementById('input-area').value=data.text;
+      if(S.analysis)rerenderAll();
+      alert('보정 불러오기 완료!');
+    }catch(err){alert('파일 오류: '+err.message);}
+  };
+  r.readAsText(f,'utf-8');input.value='';
+}
+function resetCorrections(){
+  if(!confirm('모든 보정 내용을 초기화할까요?'))return;
+  S.corrections={tokens:{},chunkBreaks:{}};
+  S.chunkEditMode=false;
+  document.getElementById('edit-chunk-btn').classList.remove('on');
+  document.getElementById('edit-mode-badge').classList.remove('show');
+  rerenderAll();
+}
+function loadTxt(input){
+  const f=input.files[0];if(!f)return;
+  const r=new FileReader();
+  r.onload=e=>{document.getElementById('input-area').value=e.target.result;};
+  r.readAsText(f,'utf-8');
+}
+
+// ── UI 제어 ──
+function toggle(k){
+  S[k]=!S[k];
+  const idMap={josa:'tog-josa',eomiConn:'tog-eomi-conn',eomiTerm:'tog-eomi-term'};
+  document.getElementById(idMap[k]).classList.toggle('on',S[k]);
+  if(S.analysis)rerenderAll();
+}
+function setChunkMode(m){
+  S.chunkMode=m;
+  ['off','auto','manual'].forEach(x=>document.getElementById('cm-'+x).classList.toggle('on',x===m));
+  document.getElementById('chunk-sub').classList.toggle('show',m!=='off');
+  const ecb=document.getElementById('edit-chunk-btn');
+  if(ecb)ecb.style.display=m==='off'?'none':'inline-block';
+  const hints={off:'텍스트를 입력하고 분석하기를 누르세요',auto:'자동 모드',manual:'수동 모드 — 청크를 순서대로 클릭하세요'};
+  document.getElementById('status').textContent=hints[m];
+  if(S.analysis)rerenderAll();
+}
+function setLevel(l){
+  S.level=l;
+  [1,2,3].forEach(x=>document.getElementById('lv-'+x).classList.toggle('on',x===l));
+  const desc=['단어 하나씩 끊기','두 단어씩 끊기','어절·구 단위로 끊기'];
+  document.getElementById('level-desc').textContent=desc[l-1];
+  if(S.analysis&&S.chunkMode!=='off')
+    document.getElementById('status').textContent='레벨이 바뀌었어요 — 분석하기를 다시 눌러주세요';
+}
+function setWrap(v){
+  S.wrap=v;
+  ['normal','word','sentence'].forEach(x=>document.getElementById('wb-'+x).classList.toggle('on',x===v));
+  applyWrapStyle();
+  if(S.analysis)rerenderAll();
+}
+function setSize(v){
+  S.fontSize=parseInt(v);
+  document.getElementById('output').style.fontSize=v+'px';
+  document.getElementById('size-val').textContent=v+'px';
+}
+function setLineHeight(v){
+  S.lineHeight=parseFloat(parseFloat(v).toFixed(1));
+  document.getElementById('lh-val').textContent=S.lineHeight.toFixed(1);
+  applyLineHeightDOM();
+}
+function applyWrapStyle(){
+  const out=document.getElementById('output');
+  if(S.wrap==='word'){out.style.wordBreak='keep-all';out.style.overflowWrap='break-word';}
+  else if(S.wrap==='sentence'){out.style.wordBreak='keep-all';out.style.overflowWrap='break-word';}
+  else{out.style.wordBreak='keep-all';out.style.overflowWrap='normal';}
+}
+function applyLineHeightDOM(){
+  const out=document.getElementById('output');
+  if(S.wrap==='sentence'){
+    out.style.lineHeight='1.4';
+    const sentGap=(S.lineHeight-1.4)*S.fontSize;
+    document.querySelectorAll('.sent-block').forEach((el,i,arr)=>{
+      el.style.marginBottom=i<arr.length-1?sentGap+'px':'0';
+    });
+  } else {
+    out.style.lineHeight=String(S.lineHeight);
+  }
+}
+document.getElementById('input-area').addEventListener('keydown',e=>{
+  if(e.key==='Enter'&&e.ctrlKey)analyze();
+});
+</script>
+</body>
+</html>
