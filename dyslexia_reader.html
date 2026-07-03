@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ko">
 <head>
@@ -163,8 +164,7 @@ body.edit-mode .tok-plain:hover{background:#f0eefb;outline:1px dashed #b39ddb}
     <div class="tb-sec">
       <span class="tb-sec-label">강조</span>
       <button class="tog" id="tog-josa" onclick="toggle('josa')"><span class="dot"></span>조사</button>
-      <button class="tog" id="tog-eomi-conn" onclick="toggle('eomiConn')"><span class="dot"></span>연결어미</button>
-      <button class="tog" id="tog-eomi-term" onclick="toggle('eomiTerm')"><span class="dot"></span>종결어미</button>
+      <button class="tog" id="tog-eomi" onclick="toggle('eomi')"><span class="dot"></span>어미</button>
     </div>
     <div class="tb-sec">
       <span class="tb-sec-label">끊어읽기</span>
@@ -248,7 +248,7 @@ body.edit-mode .tok-plain:hover{background:#f0eefb;outline:1px dashed #b39ddb}
 <script>
 const S={
   apiKey:'',apiConnected:false,
-  josa:false,eomiConn:false,eomiTerm:false,
+  josa:false,eomi:false,
   chunkMode:'off',level:1,wrap:'normal',
   fontSize:18,lineHeight:2.2,
   chunks:[],manualIdx:0,
@@ -529,7 +529,7 @@ function applyChunkBreaks(sentData,si,breaks){
 }
 
 function buildChunkInner(chunk,sentData,si){
-  if(!S.josa&&!S.eomiConn&&!S.eomiTerm)return escHtml(chunk);
+  if(!S.josa&&!S.eomi)return escHtml(chunk);
   const words=chunk.split(/\s+/);
   const allWords=sentData.chunks?sentData.chunks.join(' ').split(/\s+/):[];
   return words.map(w=>{
@@ -599,7 +599,7 @@ function hlToken(tok,key){
   const suf=preMatch?preMatch[3]:'';
 
   const hasJosa=S.josa&&tok.josa&&tok.josa!=='null'&&tok.josa!==null;
-  const hasEomi=(S.eomiConn&&tok.eomi&&tok.eomi.type==='conn')||(S.eomiTerm&&tok.eomi&&tok.eomi.type==='term');
+  const hasEomi=S.eomi&&tok.eomi&&tok.eomi.text;
   const isPlain=!hasJosa&&!hasEomi;
 
   if(hasJosa){
@@ -704,18 +704,10 @@ function openPopup(e,key){
   document.getElementById('popup-body').innerHTML=body;
   popup.style.display='block';
   const rect=e.target.getBoundingClientRect();
-  const popH=popup.offsetHeight||280;
-  const popW=popup.offsetWidth||260;
-  // 아래 공간 부족하면 위로 표시
-  let top;
-  if(rect.bottom+popH+10>window.innerHeight){
-    top=rect.top+window.scrollY-popH-6;
-  } else {
-    top=rect.bottom+window.scrollY+6;
-  }
+  let top=rect.bottom+window.scrollY+6;
   let left=rect.left+window.scrollX;
-  if(left+popW+4>window.innerWidth)left=window.innerWidth-popW-8;
-  popup.style.top=Math.max(window.scrollY+4,top)+'px';
+  if(left+260>window.innerWidth)left=window.innerWidth-265;
+  popup.style.top=top+'px';
   popup.style.left=Math.max(4,left)+'px';
 }
 function setEtype(t){
@@ -801,8 +793,7 @@ function loadTxt(input){
 // ── UI 제어 ──
 function toggle(k){
   S[k]=!S[k];
-  const idMap={josa:'tog-josa',eomiConn:'tog-eomi-conn',eomiTerm:'tog-eomi-term'};
-  document.getElementById(idMap[k]).classList.toggle('on',S[k]);
+  document.getElementById('tog-'+k).classList.toggle('on',S[k]);
   if(S.analysis)rerenderAll();
 }
 function setChunkMode(m){
