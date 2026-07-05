@@ -37,6 +37,7 @@ window.fbJoin=function(code){
 window.fbPage  = p=>pub('page',p);
 window.fbLevel = l=>pub('level',l);
 window.fbRounds= arr=>pub('rounds',arr);
+window.fbReport= payload=>{ if(!SESSION)return Promise.resolve(); return push(ref(db,`sessions/${SESSION}/shoes/reports`),payload); };
 </script>
 
 <style>
@@ -154,9 +155,9 @@ input[type=text]:focus{border-color:var(--green);}
 .stat .n{font-size:26px;color:var(--green-dark);line-height:1;}
 .stat .l{font-size:12px;color:var(--gray);margin-top:3px;}
 .stat.warn .n{color:var(--danger);}
-.levelsel{display:flex;gap:8px;align-items:center;}
-.lvbtn{font-family:'Jua';border:2px solid #CDE6DF;background:#fff;border-radius:12px;padding:8px 14px;
-  font-size:15px;cursor:pointer;color:var(--green-dark);position:relative;}
+.levelsel{display:flex;gap:6px;align-items:center;flex-wrap:wrap;justify-content:flex-end;max-width:660px;}
+.lvbtn{font-family:'Jua';border:2px solid #CDE6DF;background:#fff;border-radius:12px;padding:6px 11px;
+  font-size:14px;cursor:pointer;color:var(--green-dark);position:relative;}
 .lvbtn.on{background:var(--green);color:#fff;border-color:var(--green);}
 .lvbtn.locked{opacity:.5;cursor:not-allowed;}
 .lvbtn .lock{font-size:12px;}
@@ -191,7 +192,29 @@ input[type=text]:focus{border-color:var(--green);}
 .toast.show{opacity:1;}
 .toast.good{background:var(--green);}
 
+/* 여러 주인(4·5단계) 주문 카드 */
+.target-area{flex:1;display:flex;gap:8px;align-items:stretch;overflow-x:auto;padding-bottom:2px;}
+.owner-chip{background:#fff;border-radius:14px;border:2px solid var(--gold);padding:6px 12px;display:flex;
+  align-items:center;gap:10px;box-shadow:0 3px 10px rgba(232,162,31,.15);flex:0 0 auto;transition:.15s;}
+.owner-chip.done{border-color:var(--green);background:#EAF7F1;}
+.owner-chip.active{border-color:var(--orange);box-shadow:0 0 0 3px rgba(242,153,74,.35);}
+.owner-chip .oe{font-size:30px;}
+.owner-chip .os{width:44px;height:44px;border-radius:11px;display:flex;align-items:center;justify-content:center;
+  font-size:26px;box-shadow:inset 0 0 0 2px rgba(0,0,0,.06);}
+.owner-chip .os.hidden-shoe{background:#EEE!important;color:#bbb;}
+.owner-chip .oc{font-size:14px;font-family:'Gaegu';color:var(--gray);line-height:1.2;text-align:center;}
+.owner-chip .oc b{font-size:20px;color:var(--gold-dark);display:block;}
+.owner-chip.done .oc b{color:var(--green-dark);}
+/* 5단계 학습(암기) 카드 */
+.study-pairs{display:flex;flex-wrap:wrap;gap:14px;justify-content:center;margin:6px 0 4px;}
+.study-pair{background:#fff;border-radius:14px;padding:10px 14px;display:flex;align-items:center;gap:10px;
+  box-shadow:0 3px 10px rgba(0,0,0,.1);}
+.study-pair .oe{font-size:34px;} .study-pair .eq{font-size:20px;color:var(--gray);}
+.study-pair .os{width:50px;height:50px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:30px;}
+.study-pair .cnt{font-size:16px;font-family:'Gaegu';color:var(--gold-dark);}
+
 /* ── P4 결과 ── */
+.res-card .band{font-size:13px;font-weight:bold;border-radius:99px;padding:3px 12px;display:inline-block;margin-top:8px;color:#fff;}
 .res-wrap{display:flex;gap:20px;height:100%;}
 .res-left{flex:0 0 440px;display:flex;flex-direction:column;gap:14px;}
 .res-cards{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
@@ -327,23 +350,17 @@ input[type=text]:focus{border-color:var(--green);}
 <!-- ══ P3: 게임 ══ -->
 <div class="page" data-page="3">
   <div class="topbar">
-    <div><h1>👟 내 신발 찾기</h1><div class="sub">위의 <b>내 신발</b>과 똑같은 신발을 모두 찾아 눌러요</div></div>
+    <div><h1>👟 내 신발 찾기</h1><div class="sub">위에 표시된 신발을 찾아 눌러요 · 단계가 오를수록 어려워져요</div></div>
     <div class="levelsel" id="levelSel"></div>
   </div>
   <div class="pagebody" style="display:flex;flex-direction:column;">
     <div class="game-top">
-      <div class="target-card">
-        <div style="display:flex;flex-direction:column;align-items:center;gap:4px;">
-          <div class="label">내 신발</div>
-          <div class="big-shoe" id="targetShoe">👟</div>
-        </div>
-        <div class="cnt">이 신발을<br><b id="targetTotal">0</b>개 찾아요!</div>
-      </div>
-      <div class="stats">
+      <div class="target-area" id="targetArea"></div>
+      <div class="stats" style="flex:0 0 420px;">
         <div class="stat"><div class="n" id="stFound">0</div><div class="l">찾음</div></div>
         <div class="stat warn"><div class="n" id="stFalse">0</div><div class="l">잘못 누름</div></div>
         <div class="stat"><div class="n" id="stTime">0.0</div><div class="l">걸린 시간(초)</div></div>
-        <button class="btn green" id="startBtn" onclick="prepareRound()" style="align-self:stretch;padding:0 20px;">시작 ▶</button>
+        <button class="btn green" id="startBtn" onclick="prepareRound()" style="align-self:stretch;padding:0 18px;">시작 ▶</button>
       </div>
     </div>
     <div class="board-wrap">
@@ -368,12 +385,13 @@ input[type=text]:focus{border-color:var(--green);}
     <div class="res-wrap">
       <div class="res-left">
         <div class="res-cards">
-          <div class="res-card acc"><div class="n" id="rAcc">–</div><div class="l">정반응률</div></div>
-          <div class="res-card rt"><div class="n" id="rRt">–</div><div class="l">평균 반응시간(초)</div></div>
-          <div class="res-card imp"><div class="n" id="rImp">–</div><div class="l">오경보</div><span class="tag">충동성 지표</span></div>
-          <div class="res-card inatt"><div class="n" id="rInatt">–</div><div class="l">누락</div><span class="tag">부주의 지표</span></div>
+          <div class="res-card acc"><div class="n" id="rAcc">–</div><div class="l">정반응률</div><span class="band" id="bAcc" style="display:none"></span></div>
+          <div class="res-card rt"><div class="n" id="rRt">–</div><div class="l">평균 반응시간(초)</div><span class="band" id="bRt" style="display:none"></span></div>
+          <div class="res-card imp"><div class="n" id="rImp">–</div><div class="l">오경보 · 충동성</div><span class="band" id="bImp" style="display:none"></span></div>
+          <div class="res-card inatt"><div class="n" id="rInatt">–</div><div class="l">누락 · 부주의</div><span class="band" id="bInatt" style="display:none"></span></div>
         </div>
         <div class="res-note" id="resNote">아직 기록이 없어요. 게임을 한 번 완료하면 여기에 결과가 쌓여요.</div>
+        <div style="font-size:12px;color:var(--gray);font-family:'Gaegu';text-align:right;">※ 수준 표시는 이 게임 내부 기준이며 임상 규준이 아닙니다.</div>
       </div>
       <div class="res-right">
         <h3>📁 회기별 기록</h3>
@@ -414,10 +432,23 @@ input[type=text]:focus{border-color:var(--green);}
         </div>
       </div>
       <div class="rep-right">
-        <div class="rep-msg">
+        <div class="rep-msg" style="flex:0 0 auto;">
           <h3>📩 부모님께 보낼 메시지</h3>
-          <textarea id="parentMsg" readonly></textarea>
+          <textarea id="parentMsg" readonly style="min-height:130px;"></textarea>
           <button class="btn green" onclick="copyParentMsg()" style="width:100%;">📋 메시지 복사하기</button>
+        </div>
+        <div class="rep-msg" style="flex:0 0 auto;background:#FFF6E4;">
+          <h3>✉️ 결과지 이메일로 받기</h3>
+          <div style="display:flex;gap:8px;">
+            <input id="repName" type="text" placeholder="학생 이름(선택)" style="flex:0 0 130px;font-size:16px;padding:8px 10px;">
+            <input id="repEmail" type="text" placeholder="받는 사람 이메일" style="flex:1;font-size:16px;padding:8px 10px;"
+              onkeydown="if(event.key==='Enter')sendReport()">
+          </div>
+          <div style="display:flex;gap:8px;">
+            <button class="btn orange" onclick="sendReport()" style="flex:1;">📧 결과지 보내기</button>
+            <button class="btn gray" onclick="downloadReport()" style="flex:0 0 auto;">💾 다운로드</button>
+          </div>
+          <div id="repStatus" style="font-size:14px;font-family:'Gaegu';color:var(--gray);min-height:18px;"></div>
         </div>
         <div class="disclaimer">
           ※ 이 활동은 “주의력이 좋아진다”기보다 <b>문제 해결 전략과 충동 조절 습관</b>을 훈련합니다.
@@ -489,23 +520,37 @@ function resetComic(){
 const SHOE_TYPES=['👟','👞','👠','🥾','👡','👢'];
 const TILE_COLORS=['#FFD9D9','#FFE9C2','#FFF6BF','#D6F0D2','#CDEBF5','#E0D6F5'];
 
-// 난이도 파라미터: 자극 개수 / 목표 개수 / 방해자극 유사도 / 제한시간
+const OWNERS=[
+  {emoji:'🙋', name:'나'},
+  {emoji:'🐜', name:'개미'},
+  {emoji:'🐶', name:'강아지'},
+  {emoji:'🕷️', name:'거미'},
+  {emoji:'🐰', name:'토끼'},
+];
+// 난이도: mode / 자극수 / 열수 / 주인별 개수 / 방해자극 유사도 / 제한시간 / (5단계)암기시간
 const LEVELS={
-  1:{tiles:12, targets:3, cols:4, shareRatio:0.30, time:0,  label:'1단계 · 쉬움'},
-  2:{tiles:20, targets:4, cols:5, shareRatio:0.60, time:45, label:'2단계 · 보통'},
-  3:{tiles:30, targets:5, cols:6, shareRatio:0.85, time:40, label:'3단계 · 어려움'},
+  1:{mode:'single', tiles:12, cols:4, counts:[3],       shareRatio:0.30, time:0,  label:'① 쉬움'},
+  2:{mode:'single', tiles:20, cols:5, counts:[4],       shareRatio:0.60, time:45, label:'② 보통'},
+  3:{mode:'single', tiles:30, cols:6, counts:[5],       shareRatio:0.85, time:40, label:'③ 어려움'},
+  4:{mode:'multi',  tiles:30, cols:6, counts:[1,3,2,4], shareRatio:0.70, time:70, label:'④ 여러 주인'},
+  5:{mode:'memory', tiles:30, cols:6, counts:[1,3,2,4], shareRatio:0.70, time:80, study:6, label:'⑤ 기억'},
 };
+const MAXLV=5;
+const LV_NAME={1:'1단계·쉬움',2:'2단계·보통',3:'3단계·어려움',4:'4단계·여러 주인',5:'5단계·기억'};
 let level=1, unlocked=1;
-let board=[], target=null, found=0, falseAlarm=0, roundActive=false, cooling=false;
+let orders=[];      // [{owner, shoe:{type,color}, need, found}]
+let board=[];       // [{type,color, ord}]  ord: 주문 index, 또는 -1(방해자극)
+let curOwner=0;     // memory 모드에서 지금 찾을 주인
+let totalNeed=0, found=0, falseAlarm=0, roundActive=false, cooling=false;
 let startTime=0, lastHitTime=0, rtList=[], timerId=null, timeLeft=0;
-let rounds=[];  // {level, targets, hits, false, miss, avgRt, dur, stars, ts}
+let rounds=[];  // {level, mode, targets, hits, false, miss, avgRt, dur, stars, ts}
 
 window._lLevel=l=>{ if(LEVELS[l]){ level=l; renderLevelSel(); } };
 window._lRounds=arr=>{ rounds=Array.isArray(arr)?arr:[]; if(cur===4)renderResults(); if(cur===5)renderReport(); };
 
 function renderLevelSel(){
   const el=document.getElementById('levelSel'); el.innerHTML='';
-  for(let l=1;l<=3;l++){
+  for(let l=1;l<=MAXLV;l++){
     const b=document.createElement('button');
     const locked=(l>unlocked && ROLE!=='teacher');
     b.className='lvbtn'+(l===level?' on':'')+(locked?' locked':'');
@@ -516,41 +561,66 @@ function renderLevelSel(){
 }
 
 function shoeStyle(color){ return `background:${color};`; }
-function sameShoe(a,b){ return a.type===b.type && a.color===b.color; }
-
-function makeShoe(type,color){ return {type,color}; }
+function eqShoe(a,b){ return a.type===b.type && a.color===b.color; }
 function randType(not){ let t; do{ t=SHOE_TYPES[Math.floor(Math.random()*SHOE_TYPES.length)]; }while(not&&t===not); return t; }
 function randColor(not){ let c; do{ c=TILE_COLORS[Math.floor(Math.random()*TILE_COLORS.length)]; }while(not&&c===not); return c; }
+function firstIncompleteOwner(){ for(let i=0;i<orders.length;i++) if(orders[i].found<orders[i].need) return i; return 0; }
+// 초과유혹 타일 수: 4·5단계에서 '정해진 개수만큼' 멈추는 억제·개수기억을 훈련
+function orderSurplus(cfg,need){ if(cfg.mode==='multi') return need>=3?1:0; if(cfg.mode==='memory') return need>=2?1:0; return 0; }
+
+// 주문(주인+신발+개수) 생성 — 각 주인은 서로 다른 신발(가능하면 모양도 다르게)
+function buildOrders(cfg){
+  orders=[];
+  let usedOwners=shuffle([...OWNERS]).slice(0,cfg.counts.length);
+  if(cfg.mode==='single'){ usedOwners=[OWNERS[0]]; }   // 단일 모드는 항상 '나'
+  const types=shuffle([...SHOE_TYPES]);
+  const usedShoes=[];
+  usedOwners.forEach((owner,i)=>{
+    let shoe;
+    if(i<types.length){                                // 주인마다 서로 다른 모양 우선
+      let color; do{ color=randColor(); } while(usedShoes.some(s=>s.type===types[i]&&s.color===color));
+      shoe={type:types[i], color};
+    }else{
+      do{ shoe={type:randType(), color:randColor()}; } while(usedShoes.some(s=>eqShoe(s,shoe)));
+    }
+    usedShoes.push(shoe);
+    orders.push({owner, shoe, need:cfg.counts[i], found:0});
+  });
+  totalNeed=orders.reduce((a,o)=>a+o.need,0);
+}
 
 function buildBoard(){
   const cfg=LEVELS[level];
-  target=makeShoe(randType(), randColor());
+  buildOrders(cfg);
   board=[];
-  // 목표자극
-  for(let i=0;i<cfg.targets;i++) board.push(makeShoe(target.type,target.color));
-  // 방해자극: shareRatio 비율만큼 목표와 한 속성 공유(유사·어려움), 나머지는 두 속성 모두 다름
-  const distractN=cfg.tiles-cfg.targets;
+  // 목표자극 + 초과유혹(surplus): 정해진 개수만큼만 눌러야 하므로, 일부 주인은 need보다 많은 신발이 놓임
+  let orderTiles=0;
+  orders.forEach((o,oi)=>{
+    const extra=orderSurplus(cfg,o.need);
+    for(let k=0;k<o.need+extra;k++) board.push({type:o.shoe.type,color:o.shoe.color,ord:oi});
+    orderTiles+=o.need+extra;
+  });
+  // 방해자극: 어떤 주문 신발과도 일치하지 않도록
+  const isOrderShoe=s=>orders.some(o=>eqShoe(o.shoe,s));
+  const distractN=Math.max(0, cfg.tiles-orderTiles);
   for(let i=0;i<distractN;i++){
-    let d;
-    if(Math.random()<cfg.shareRatio){
-      if(Math.random()<0.5) d=makeShoe(target.type, randColor(target.color)); // 같은 모양 다른 색
-      else                  d=makeShoe(randType(target.type), target.color);  // 같은 색 다른 모양
-    }else{
-      d=makeShoe(randType(target.type), randColor(target.color));             // 완전히 다름
-    }
-    board.push(d);
+    let d, guard=0;
+    do{
+      const ref=orders[Math.floor(Math.random()*orders.length)].shoe;
+      if(Math.random()<cfg.shareRatio){
+        d = Math.random()<0.5 ? {type:ref.type, color:randColor(ref.color)}   // 같은 모양 다른 색
+                              : {type:randType(ref.type), color:ref.color};    // 같은 색 다른 모양
+      }else{
+        d = {type:randType(ref.type), color:randColor(ref.color)};             // 완전히 다름
+      }
+    }while(isOrderShoe(d) && ++guard<40);
+    d.ord=-1; board.push(d);
   }
   shuffle(board);
-  // 목표 카드 렌더
-  const ts=document.getElementById('targetShoe');
-  ts.textContent=target.type; ts.style.cssText='';
-  ts.style.background=target.color;
-  document.getElementById('targetTotal').textContent=cfg.targets;
   // 보드 렌더
   const boardEl=document.getElementById('board');
   boardEl.style.gridTemplateColumns=`repeat(${cfg.cols},1fr)`;
-  const rows=Math.ceil(cfg.tiles/cfg.cols);
-  boardEl.style.gridTemplateRows=`repeat(${rows},1fr)`;
+  boardEl.style.gridTemplateRows=`repeat(${Math.ceil(cfg.tiles/cfg.cols)},1fr)`;
   boardEl.innerHTML='';
   board.forEach((s,i)=>{
     const el=document.createElement('div');
@@ -559,15 +629,36 @@ function buildBoard(){
     el.onclick=()=>clickShoe(i,el);
     boardEl.appendChild(el);
   });
+  renderTargetArea();
+}
+
+// 주문 카드(주인별) — memory 모드는 놀이 중 신발을 숨겨 '누구 것인지' 기억하게 함
+function renderTargetArea(){
+  const cfg=LEVELS[level];
+  const hideShoe=(cfg.mode==='memory');   // 기억 모드는 항상 신발을 가려 '누구 것인지' 회상하게 함
+  const area=document.getElementById('targetArea'); area.innerHTML='';
+  orders.forEach((o,oi)=>{
+    const done=o.found>=o.need;
+    const active=(cfg.mode==='memory' && oi===curOwner && !done && roundActive);
+    const chip=document.createElement('div');
+    chip.className='owner-chip'+(done?' done':'')+(active?' active':'');
+    const shoeCell = hideShoe ? `<div class="os hidden-shoe">❓</div>`
+                              : `<div class="os" style="background:${o.shoe.color}">${o.shoe.type}</div>`;
+    const emoji = cfg.mode==='single' ? '🙋' : o.owner.emoji;
+    const nm    = cfg.mode==='single' ? '내 신발' : o.owner.name;
+    chip.innerHTML=`<div class="oe">${emoji}</div>${shoeCell}<div class="oc">${nm}<b>${o.found}/${o.need}</b></div>`;
+    area.appendChild(chip);
+  });
 }
 
 function resetBoardIdle(){
   roundActive=false; clearInterval(timerId);
-  document.getElementById('board').innerHTML='';
+  orders=[]; document.getElementById('board').innerHTML='';
+  document.getElementById('targetArea').innerHTML='';
   document.getElementById('boardOverlay').classList.remove('hidden');
   document.getElementById('boardOverlay').innerHTML=
     '<div class="big">👟</div><h2>준비되면 <span style="color:var(--orange)">시작 ▶</span> 을 눌러요</h2>'+
-    '<p>먼저 위의 <b>내 신발</b>을 눈으로 잘 담아두세요!</p>';
+    '<p>먼저 표시된 신발을 눈으로 잘 담아두세요!</p>';
   document.getElementById('startBtn').textContent='시작 ▶';
   setStats(0,0,0);
 }
@@ -577,27 +668,47 @@ function setStats(f,fa,t){
   document.getElementById('stTime').textContent=t.toFixed(1);
 }
 
-// 먼저 생각하기 팝업 → 라운드 시작
+// 준비 단계: single/multi → 먼저 생각하기, memory → 암기(학습) 단계
 function prepareRound(){
+  found=0; falseAlarm=0; rtList=[]; roundActive=false; curOwner=0;
   buildBoard();
-  found=0; falseAlarm=0; rtList=[]; roundActive=false;
   setStats(0,0,0);
+  const cfg=LEVELS[level];
   const ov=document.getElementById('boardOverlay');
   ov.classList.remove('hidden');
-  ov.innerHTML=
-    '<div class="big">🧠</div>'+
-    '<h2>잠깐! 하나, 둘, 셋.</h2>'+
-    '<p>① 무엇을 찾지? &nbsp;→&nbsp; <b>내 신발</b> '+`<span style="display:inline-flex;width:40px;height:40px;border-radius:10px;background:${target.color};align-items:center;justify-content:center;font-size:24px;vertical-align:middle;">${target.type}</span>`+'<br>'+
-    '② 어떻게 찾지? → 왼쪽부터 하나씩<br>③ 천천히, 급하게 누르지 않기!</p>'+
-    '<button class="btn green" style="font-size:20px;padding:12px 34px;" onclick="startRound()">준비 완료! 찾기 시작 👀</button>';
+  if(cfg.mode==='memory'){
+    // ── 암기 학습 단계: 누구의 신발인지 외우기 ──
+    const pairs=orders.map(o=>
+      `<div class="study-pair"><div class="oe">${o.owner.emoji}</div><span class="eq">=</span>`+
+      `<div class="os" style="background:${o.shoe.color}">${o.shoe.type}</div>`+
+      `<div class="cnt">${o.owner.name}<br>${o.need}켤레</div></div>`).join('');
+    let n=cfg.study;
+    const paint=()=>{ ov.innerHTML=
+      '<div class="big">🧠 기억하기</div><p>누구의 신발인지 <b>외워보세요!</b></p>'+
+      `<div class="study-pairs">${pairs}</div>`+
+      `<p style="font-size:22px;">남은 시간 <b style="color:var(--orange)">${n}</b>초</p>`; };
+    paint();
+    const iv=setInterval(()=>{ n--; if(n<=0){ clearInterval(iv); startRound(); } else paint(); },1000);
+  }else{
+    // ── 먼저 생각하기 ──
+    const what = cfg.mode==='single'
+      ? `<b>내 신발</b> <span style="display:inline-flex;width:38px;height:38px;border-radius:9px;background:${orders[0].shoe.color};align-items:center;justify-content:center;font-size:22px;vertical-align:middle;">${orders[0].shoe.type}</span> ${orders[0].need}개`
+      : orders.map(o=>`${o.owner.emoji}${o.owner.name} <span style="display:inline-flex;width:32px;height:32px;border-radius:8px;background:${o.shoe.color};align-items:center;justify-content:center;font-size:18px;vertical-align:middle;">${o.shoe.type}</span>×${o.need}`).join(' &nbsp; ');
+    ov.innerHTML=
+      '<div class="big">🧠</div><h2>잠깐! 하나, 둘, 셋.</h2>'+
+      `<p>① 무엇을 찾지? → ${what}<br>② 어떻게 찾지? → 왼쪽부터 하나씩<br>③ 천천히, 급하게 누르지 않기!</p>`+
+      '<button class="btn green" style="font-size:20px;padding:12px 34px;" onclick="startRound()">준비 완료! 찾기 시작 👀</button>';
+  }
   document.getElementById('startBtn').textContent='다시 준비';
 }
 
 function startRound(){
   document.getElementById('boardOverlay').classList.add('hidden');
-  roundActive=true;
+  roundActive=true; curOwner=firstIncompleteOwner();
   startTime=performance.now(); lastHitTime=startTime;
+  renderTargetArea();
   const cfg=LEVELS[level];
+  clearInterval(timerId);
   if(cfg.time>0){
     timeLeft=cfg.time;
     timerId=setInterval(()=>{
@@ -613,37 +724,42 @@ function startRound(){
 function clickShoe(i,el){
   if(!roundActive||cooling) return;
   if(el.classList.contains('hit')) return;
-  const s=board[i];
-  if(sameShoe(s,target)){
-    // 정반응
+  const t=board[i]; const cfg=LEVELS[level];
+  let ok=false, overselect=false;
+  if(cfg.mode==='memory'){
+    ok=(t.ord===curOwner);                                        // 현재 주인의 신발이어야 정답
+  }else{
+    if(t.ord>=0 && orders[t.ord].found<orders[t.ord].need) ok=true;
+    else if(t.ord>=0) overselect=true;                            // 이미 다 찾은 주인 → 초과 선택
+  }
+  if(ok){
     el.classList.add('hit');
-    found++;
-    const now=performance.now();
-    rtList.push((now-lastHitTime)/1000);
-    lastHitTime=now;
+    orders[t.ord].found++; found++;
+    const now=performance.now(); rtList.push((now-lastHitTime)/1000); lastHitTime=now;
     document.getElementById('stFound').textContent=found;
     toast('좋아요! 잘 찾았어요 ✨',true);
-    if(found>=LEVELS[level].targets){ endRound(false); }
+    if(cfg.mode==='memory' && orders[curOwner].found>=orders[curOwner].need){ curOwner=firstIncompleteOwner(); }
+    renderTargetArea();
+    if(found>=totalNeed){ endRound(false); return; }
   }else{
-    // 오경보(충동성) → 실패 대처 자기말 + 3초 쿨다운
+    // 오경보(충동성/기억오류) → 실패 대처 자기말 + 3초 쿨다운
     falseAlarm++;
     document.getElementById('stFalse').textContent=falseAlarm;
     el.classList.add('wrong'); setTimeout(()=>el.classList.remove('wrong'),400);
-    copingCooldown();
+    copingCooldown(overselect);
   }
 }
 
-function copingCooldown(){
+function copingCooldown(overselect){
   cooling=true;
   const ov=document.getElementById('boardOverlay');
   ov.classList.remove('hidden');
+  const head = overselect ? '그 신발은 이미 다 찾았어요!' : '괜찮아, 잠깐 생각하고 다시!';
+  const sub  = overselect ? '주인마다 정해진 개수를 기억해요.'
+             : LEVELS[level].mode==='memory' ? '누구의 신발이었는지 떠올려봐요.'
+             : '찾을 신발을 다시 한 번 잘 봐요.';
   let n=3;
-  const paint=()=>{ ov.innerHTML=
-    '<div class="big">🐻🌬️</div>'+
-    '<h2>괜찮아, 잠깐 생각하고 다시!</h2>'+
-    '<p>내 신발을 다시 한 번 잘 봐요.</p>'+
-    `<div class="cooldown-num">${n}</div>`;
-  };
+  const paint=()=>{ ov.innerHTML=`<div class="big">🐻🌬️</div><h2>${head}</h2><p>${sub}</p><div class="cooldown-num">${n}</div>`; };
   paint();
   const cd=setInterval(()=>{
     n--;
@@ -655,16 +771,16 @@ function copingCooldown(){
 function endRound(byTimeout){
   roundActive=false; clearInterval(timerId);
   const cfg=LEVELS[level];
-  const miss=cfg.targets-found;                 // 누락(부주의)
+  const miss=totalNeed-found;                   // 누락(부주의)
   const dur=(performance.now()-startTime)/1000;
   const avgRt=rtList.length?(rtList.reduce((a,b)=>a+b,0)/rtList.length):0;
   const errors=falseAlarm+miss;
   const stars=errors===0?3:(errors<=2?2:1);
-  const rec={level, targets:cfg.targets, hits:found, false:falseAlarm, miss, avgRt:+avgRt.toFixed(2), dur:+dur.toFixed(1), stars, ts:isoNow()};
+  const rec={level, mode:cfg.mode, targets:totalNeed, hits:found, false:falseAlarm, miss, avgRt:+avgRt.toFixed(2), dur:+dur.toFixed(1), stars, ts:isoNow()};
   rounds.push(rec);
   if(window.fbRounds) window.fbRounds(rounds);
   // 단계 잠금 해제(다음 단계)
-  if(found>=cfg.targets && level>=unlocked && unlocked<3){ unlocked=level+1; renderLevelSel(); }
+  if(found>=totalNeed && level>=unlocked && unlocked<MAXLV){ unlocked=level+1; renderLevelSel(); }
 
   const ov=document.getElementById('boardOverlay');
   ov.classList.remove('hidden');
@@ -689,11 +805,18 @@ function toast(txt,good){
 }
 
 /* ════════ P4: 결과 ════════ */
+// 수준(규준 아님, 게임 내부 기준) 판정
+function accBand(a){ return a>=95?['매우 우수','#1F7A67']:a>=85?['우수','#2E9B84']:a>=70?['보통','#E8A21F']:['연습 필요','#E07A6A']; }
+function rtBand(rt){ if(!rt)return null; return rt<2?['빠름','#1F7A67']:rt<3.5?['양호','#2E9B84']:rt<5?['보통','#E8A21F']:['신중/느림','#E07A6A']; }
+function rateBand(r){ return r<=0?['없음','#1F7A67']:r<0.1?['낮음','#2E9B84']:r<0.25?['보통','#E8A21F']:['높음','#E07A6A']; }
+function setBand(id,band){ const el=document.getElementById(id); if(!band){el.style.display='none';return;} el.style.display='inline-block'; el.textContent=band[0]; el.style.background=band[1]; }
+
 function renderResults(){
   const body=document.getElementById('roundBody');
   if(!rounds.length){
     document.getElementById('rAcc').textContent='–'; document.getElementById('rRt').textContent='–';
     document.getElementById('rImp').textContent='–'; document.getElementById('rInatt').textContent='–';
+    ['bAcc','bRt','bImp','bInatt'].forEach(id=>document.getElementById(id).style.display='none');
     document.getElementById('resNote').textContent='아직 기록이 없어요. 게임을 한 번 완료하면 여기에 결과가 쌓여요.';
     body.innerHTML='<tr><td colspan="7" style="color:#bbb;padding:20px;">기록 없음</td></tr>';
     return;
@@ -705,10 +828,15 @@ function renderResults(){
   const rts=rounds.filter(r=>r.avgRt>0).map(r=>r.avgRt);
   const avgRt=rts.length?(rts.reduce((a,b)=>a+b,0)/rts.length):0;
   const acc=Math.round(totHit/totTgt*100);
+  const impRate=totFalse/totTgt, inattRate=totMiss/totTgt;
   document.getElementById('rAcc').textContent=acc+'%';
   document.getElementById('rRt').textContent=avgRt?avgRt.toFixed(1):'–';
   document.getElementById('rImp').textContent=totFalse;
   document.getElementById('rInatt').textContent=totMiss;
+  setBand('bAcc', accBand(acc));
+  setBand('bRt',  rtBand(avgRt));
+  setBand('bImp', rateBand(impRate));
+  setBand('bInatt', rateBand(inattRate));
   // 해석 노트
   let note='선생님 참고: ';
   const parts=[];
@@ -783,6 +911,86 @@ function copyParentMsg(){
   ta.setAttribute('readonly','');
 }
 function toastPage(txt){ alert(txt); }
+
+/* ════════ 결과지 이메일 발송 ════════ */
+// ▼▼ EmailJS 키를 넣으면 '입력한 주소로' 자동 발송됩니다(무료 계정: emailjs.com).
+//    비워두면 자동으로 [결과지 다운로드 + 메일앱 열기] 방식으로 동작합니다.
+const EMAILJS={ publicKey:'', serviceId:'', templateId:'' };
+
+function reportStats(){
+  if(!rounds.length) return null;
+  const totHit=rounds.reduce((a,r)=>a+r.hits,0);
+  const totTgt=rounds.reduce((a,r)=>a+r.targets,0);
+  const totFalse=rounds.reduce((a,r)=>a+(r.false||0),0);
+  const totMiss=rounds.reduce((a,r)=>a+(r.miss||0),0);
+  const rts=rounds.filter(r=>r.avgRt>0).map(r=>r.avgRt);
+  const avgRt=rts.length?rts.reduce((a,b)=>a+b,0)/rts.length:0;
+  const acc=Math.round(totHit/totTgt*100);
+  const maxLv=Math.max(...rounds.map(r=>r.level));
+  return {nR:rounds.length,totHit,totTgt,totFalse,totMiss,avgRt:+avgRt.toFixed(2),acc,maxLv};
+}
+function buildReportSheet(name){
+  const s=reportStats(); const dateStr=new Date().toLocaleDateString('ko-KR');
+  const L=[];
+  L.push('[집중력 원정대] 내 신발은 어디에? — 결과지');
+  L.push(`학생: ${name||'-'}   날짜: ${dateStr}`);
+  L.push('');
+  L.push('■ 요약');
+  L.push(`- 총 ${s.nR}회기 · 최고 ${LV_NAME[s.maxLv]||s.maxLv}`);
+  L.push(`- 정반응률: ${s.acc}%  (${accBand(s.acc)[0]})`);
+  L.push(`- 평균 반응시간: ${s.avgRt?s.avgRt.toFixed(1)+'초':'-'}  (${s.avgRt?rtBand(s.avgRt)[0]:'-'})`);
+  L.push(`- 오경보(충동성 지표): ${s.totFalse}회  (${rateBand(s.totFalse/s.totTgt)[0]})`);
+  L.push(`- 누락(부주의 지표): ${s.totMiss}회  (${rateBand(s.totMiss/s.totTgt)[0]})`);
+  L.push('');
+  L.push('■ 회기별 기록 (단계 · 찾음 · 오경보 · 누락 · 반응시간 · 별)');
+  rounds.forEach((r,i)=>L.push(`${i+1}. ${LV_NAME[r.level]||r.level} · ${r.hits}/${r.targets} · 오경보 ${r.false} · 누락 ${r.miss} · ${r.avgRt?r.avgRt.toFixed(1)+'s':'-'} · ${'★'.repeat(r.stars)}`));
+  L.push('');
+  L.push('■ 안내');
+  L.push('이 활동은 주의력 자체보다 「문제 해결 전략과 충동 조절 습관」을 반복 훈련합니다.');
+  L.push('※ 수준 표시는 이 게임 내부 기준이며 임상 규준이 아닙니다.');
+  return {subject:`[집중력 원정대] ${name||'학생'} 결과지 (${dateStr})`, body:L.join('\n')};
+}
+function setRepStatus(t,c){ const el=document.getElementById('repStatus'); el.textContent=t; el.style.color=c||'var(--gray)'; }
+function validEmail(e){ return /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(e); }
+function loadEmailJS(){
+  return new Promise((res,rej)=>{ if(window.emailjs)return res();
+    const s=document.createElement('script'); s.src='https://cdn.jsdelivr.net/npm/@emailjs/browser@4/dist/email.min.js';
+    s.onload=res; s.onerror=rej; document.head.appendChild(s); });
+}
+function triggerDownload(sheet){
+  const blob=new Blob([sheet.body],{type:'text/plain;charset=utf-8'});
+  const a=document.createElement('a'); a.href=URL.createObjectURL(blob);
+  a.download=sheet.subject.replace(/[^\w가-힣]+/g,'_')+'.txt'; a.click();
+  setTimeout(()=>URL.revokeObjectURL(a.href),1000);
+}
+function fallbackSend(email,sheet){
+  triggerDownload(sheet);
+  window.location.href=`mailto:${encodeURIComponent(email)}?subject=${encodeURIComponent(sheet.subject)}&body=${encodeURIComponent(sheet.body)}`;
+  setRepStatus('결과지를 저장하고 메일 앱을 열었어요. (자동발송을 원하면 EmailJS 키 설정)','#2E9B84');
+}
+function sendReport(){
+  if(!rounds.length){ setRepStatus('먼저 게임을 한 번 완료해 주세요.','#E07A6A'); return; }
+  const email=document.getElementById('repEmail').value.trim();
+  const name=document.getElementById('repName').value.trim();
+  if(!validEmail(email)){ setRepStatus('올바른 이메일 주소를 입력해 주세요.','#E07A6A'); return; }
+  const sheet=buildReportSheet(name);
+  if(window.fbReport) window.fbReport({email,name,ts:new Date().toISOString(),summary:reportStats(),body:sheet.body});
+  if(EMAILJS.publicKey && EMAILJS.serviceId && EMAILJS.templateId){
+    setRepStatus('메일 발송 중…','#2E9B84');
+    loadEmailJS()
+      .then(()=>{ window.emailjs.init(EMAILJS.publicKey);
+        return window.emailjs.send(EMAILJS.serviceId,EMAILJS.templateId,{to_email:email,to_name:name||'학부모',subject:sheet.subject,message:sheet.body}); })
+      .then(()=>setRepStatus(`✅ ${email} 으로 결과지를 보냈어요!`,'#1F7A67'))
+      .catch(err=>{ console.warn('EmailJS 실패, 대체 발송',err); fallbackSend(email,sheet); });
+  }else{
+    fallbackSend(email,sheet);
+  }
+}
+function downloadReport(){
+  if(!rounds.length){ setRepStatus('먼저 게임을 한 번 완료해 주세요.','#E07A6A'); return; }
+  triggerDownload(buildReportSheet(document.getElementById('repName').value.trim()));
+  setRepStatus('결과지를 다운로드했어요. 💾','#2E9B84');
+}
 
 /* ════════ UTIL ════════ */
 function shuffle(a){ for(let i=a.length-1;i>0;i--){ const j=Math.floor(Math.random()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
