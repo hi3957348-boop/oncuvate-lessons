@@ -527,16 +527,17 @@ const OWNERS=[
   {emoji:'🕷️', name:'거미'},
   {emoji:'🐰', name:'토끼'},
 ];
-// 난이도: mode / 자극수 / 열수 / 주인별 개수 / 방해자극 유사도 / 제한시간 / (5단계)암기시간
+// 난이도: mode / 자극수 / 열수 / 주인별 개수 / 방해자극 유사도 / 제한시간 / 초과유혹 / (기억)암기시간
 const LEVELS={
-  1:{mode:'single', tiles:12, cols:4, counts:[3],       shareRatio:0.30, time:0,  label:'① 쉬움'},
-  2:{mode:'single', tiles:20, cols:5, counts:[4],       shareRatio:0.60, time:45, label:'② 보통'},
-  3:{mode:'single', tiles:30, cols:6, counts:[5],       shareRatio:0.85, time:40, label:'③ 어려움'},
-  4:{mode:'multi',  tiles:30, cols:6, counts:[1,3,2,4], shareRatio:0.70, time:70, label:'④ 여러 주인'},
-  5:{mode:'memory', tiles:30, cols:6, counts:[1,3,2,4], shareRatio:0.70, time:80, study:6, label:'⑤ 기억'},
+  1:{mode:'single', tiles:12, cols:4, counts:[3],       shareRatio:0.30, time:0,  surplus:0, label:'① 쉬움'},
+  2:{mode:'single', tiles:20, cols:5, counts:[4],       shareRatio:0.60, time:45, surplus:0, label:'② 보통'},
+  3:{mode:'single', tiles:30, cols:6, counts:[5],       shareRatio:0.85, time:40, surplus:0, label:'③ 어려움'},
+  4:{mode:'multi',  tiles:30, cols:6, counts:[1,3,2,4], shareRatio:0.70, time:70, surplus:1, label:'④ 여러 주인'},
+  5:{mode:'memory', tiles:20, cols:5, counts:[2,3],     shareRatio:0.55, time:60, surplus:0, study:7, label:'⑤ 기억 입문'},
+  6:{mode:'memory', tiles:30, cols:6, counts:[1,3,2,4], shareRatio:0.70, time:80, surplus:1, study:7, label:'⑥ 기억'},
 };
-const MAXLV=5;
-const LV_NAME={1:'1단계·쉬움',2:'2단계·보통',3:'3단계·어려움',4:'4단계·여러 주인',5:'5단계·기억'};
+const MAXLV=6;
+const LV_NAME={1:'1단계·쉬움',2:'2단계·보통',3:'3단계·어려움',4:'4단계·여러 주인',5:'5단계·기억 입문',6:'6단계·기억'};
 let level=1, unlocked=1;
 let orders=[];      // [{owner, shoe:{type,color}, need, found}]
 let board=[];       // [{type,color, ord}]  ord: 주문 index, 또는 -1(방해자극)
@@ -565,8 +566,8 @@ function eqShoe(a,b){ return a.type===b.type && a.color===b.color; }
 function randType(not){ let t; do{ t=SHOE_TYPES[Math.floor(Math.random()*SHOE_TYPES.length)]; }while(not&&t===not); return t; }
 function randColor(not){ let c; do{ c=TILE_COLORS[Math.floor(Math.random()*TILE_COLORS.length)]; }while(not&&c===not); return c; }
 function firstIncompleteOwner(){ for(let i=0;i<orders.length;i++) if(orders[i].found<orders[i].need) return i; return 0; }
-// 초과유혹 타일 수: 4·5단계에서 '정해진 개수만큼' 멈추는 억제·개수기억을 훈련
-function orderSurplus(cfg,need){ if(cfg.mode==='multi') return need>=3?1:0; if(cfg.mode==='memory') return need>=2?1:0; return 0; }
+// 초과유혹 타일 수: surplus 단계에서 '정해진 개수만큼' 멈추는 억제·개수기억을 훈련
+function orderSurplus(cfg,need){ if(!cfg.surplus) return 0; return need>=(cfg.mode==='memory'?2:3)?1:0; }
 
 // 주문(주인+신발+개수) 생성 — 각 주인은 서로 다른 신발(가능하면 모양도 다르게)
 function buildOrders(cfg){
