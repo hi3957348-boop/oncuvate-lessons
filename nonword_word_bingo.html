@@ -70,6 +70,8 @@ body{background:var(--oc-bg);font-family:'Malgun Gothic','Segoe UI',Arial,sans-s
 .opt:hover:not(.on){border-color:var(--oc-purple-border);background:var(--oc-purple-light);}
 .word-only{display:none;}
 body.mode-word .word-only{display:inline-block;}
+.opt-row.disabled{opacity:.4;pointer-events:none;}
+.batchim-note{font-size:11px;font-weight:700;color:var(--oc-orange);margin-top:5px;min-height:14px;}
 
 .rule-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;}
 .rule{padding:10px 12px;border-radius:12px;border:1.5px solid var(--oc-border);background:var(--oc-card);cursor:pointer;transition:all .15s;text-align:left;}
@@ -252,12 +254,13 @@ body.is-host .host-only{display:block;}
       </div>
 
       <div class="set-block">
-        <div class="set-label">🧱 받침 <span class="hint">(규칙을 고르면 규칙에 맞춰 자동 설정돼요)</span></div>
+        <div class="set-label">🧱 받침 <span class="hint">(규칙·겹받침을 고르면 규칙에 맞춰 자동 설정돼요)</span></div>
         <div class="opt-row" id="optBatchim">
           <button class="opt on" data-v="none">받침 없음</button>
           <button class="opt" data-v="yes">받침 있음</button>
           <button class="opt" data-v="mix">상관없음</button>
         </div>
+        <div class="batchim-note" id="batchimNote"></div>
       </div>
 
       <div class="set-block">
@@ -369,10 +372,13 @@ const NASAL={'ㄱ':'ㅇ','ㄷ':'ㄴ','ㅂ':'ㅁ'};
 const NEUT={'ㅋ':'ㄱ','ㄲ':'ㄱ','ㅅ':'ㄷ','ㅆ':'ㄷ','ㅈ':'ㄷ','ㅊ':'ㄷ','ㅌ':'ㄷ','ㅎ':'ㄷ','ㅍ':'ㅂ'};
 /* 실제 한국어 겹받침 11개 */
 const GYEOP=['ㄳ','ㄵ','ㄶ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅄ'];
-/* 어말(1음절) 자음군 단순화 → 대표음 */
-const GYEOP_NEUT={'ㄳ':'ㄱ','ㄵ':'ㄴ','ㄶ':'ㄴ','ㄺ':'ㄱ','ㄻ':'ㅁ','ㄼ':'ㄹ','ㄽ':'ㄹ','ㄾ':'ㄹ','ㄿ':'ㅂ','ㅀ':'ㄹ','ㅄ':'ㅂ'};
-/* 비어말 겹받침 + 뒤 ㅇ모음 → 연음: [s1에 남는 받침, s2로 옮겨가는 초성]. ㅅ계열은 된소리(ㅆ), ㄶ·ㅀ은 ㅎ탈락으로 앞자음만 이동 */
-const GYEOP_LINK={'ㄳ':['ㄱ','ㅆ'],'ㄵ':['ㄴ','ㅈ'],'ㄶ':['','ㄴ'],'ㄺ':['ㄹ','ㄱ'],'ㄻ':['ㄹ','ㅁ'],'ㄼ':['ㄹ','ㅂ'],'ㄽ':['ㄹ','ㅆ'],'ㄾ':['ㄹ','ㅌ'],'ㄿ':['ㄹ','ㅍ'],'ㅀ':['','ㄹ'],'ㅄ':['ㅂ','ㅆ']};
+/* 쌍받침 ㄲ·ㅆ (사용자 요청으로 겹받침 선택지에 함께 제공) */
+const GYEOP_EXTRA=['ㄲ','ㅆ'];
+const DBL_CHIPS=GYEOP.concat(GYEOP_EXTRA);          // 선택지 전체
+/* 어말(1음절) 대표음(자음군 단순화 / 끝소리규칙) */
+const GYEOP_NEUT={'ㄳ':'ㄱ','ㄵ':'ㄴ','ㄶ':'ㄴ','ㄺ':'ㄱ','ㄻ':'ㅁ','ㄼ':'ㄹ','ㄽ':'ㄹ','ㄾ':'ㄹ','ㄿ':'ㅂ','ㅀ':'ㄹ','ㅄ':'ㅂ','ㄲ':'ㄱ','ㅆ':'ㄷ'};
+/* 비어말 겹받침 + 뒤 ㅇ모음 → 연음: [s1에 남는 받침, s2로 옮겨가는 초성]. ㅅ계열은 된소리(ㅆ), ㄶ·ㅀ은 ㅎ탈락으로 앞자음만 이동, ㄲ·ㅆ은 통째로 이동 */
+const GYEOP_LINK={'ㄳ':['ㄱ','ㅆ'],'ㄵ':['ㄴ','ㅈ'],'ㄶ':['','ㄴ'],'ㄺ':['ㄹ','ㄱ'],'ㄻ':['ㄹ','ㅁ'],'ㄼ':['ㄹ','ㅂ'],'ㄽ':['ㄹ','ㅆ'],'ㄾ':['ㄹ','ㅌ'],'ㄿ':['ㄹ','ㅍ'],'ㅀ':['','ㄹ'],'ㅄ':['ㅂ','ㅆ'],'ㄲ':['','ㄲ'],'ㅆ':['','ㅆ']};
 
 const rnd=a=>a[Math.floor(Math.random()*a.length)];
 function shuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
@@ -401,7 +407,8 @@ const RULES={
   },
   hd:{ // ㅎ탈락
     label:'ㅎ탈락',ex:'낳아 → [나아]',min:2,
-    gen(){const kind=rnd(['ㅎ','ㄶ','ㅀ']);const s1=[pickOnset(),pickVowel(),kind],s2=['ㅇ',pickVowel(),''];
+    gen(){const kinds=['ㅎ']; if(WANT.gyeop.includes('ㄶ'))kinds.push('ㄶ'); if(WANT.gyeop.includes('ㅀ'))kinds.push('ㅀ'); // 겹받침을 고른 경우에만 ㄶ·ㅀ 사용
+      const kind=rnd(kinds);const s1=[pickOnset(),pickVowel(),kind],s2=['ㅇ',pickVowel(),''];
       let p1=[s1[0],s1[1],''],p2;
       if(kind==='ㅎ')p2=['ㅇ',s2[1],''];            // 좋아→조아
       else if(kind==='ㄶ')p2=['ㄴ',s2[1],''];        // 많아→마나
@@ -542,7 +549,7 @@ const WB_RULES={
 };
 /* 겹받침 예시 단어 — rule='gyeop' (겹받침 음소 칩으로 필터) */
 const WB_GYEOP='닭=닥 값이=갑씨 앉다=안따 없다=업따 읽다=익따 삶=삼 여덟=여덜 넓다=넙따 밟다=밥따 짧다=짤따 훑다=훌따 핥다=할따 읊다=읍따 외곬=외골 여덟째=여덜째';
-function wbAnalyze(w){let n=0,hasB=false;const jamo=new Set(),gy=new Set();for(const c of w){const d=decomp(c);if(!d)continue;n++;jamo.add(d[0]);jamo.add(d[1]);if(d[2]){hasB=true;jamo.add(d[2]);if(GYEOP.includes(d[2]))gy.add(d[2]);}}return{n,hasB,jamo,gyeop:gy};}
+function wbAnalyze(w){let n=0,hasB=false;const jamo=new Set(),gy=new Set();for(const c of w){const d=decomp(c);if(!d)continue;n++;jamo.add(d[0]);jamo.add(d[1]);if(d[2]){hasB=true;jamo.add(d[2]);if(DBL_CHIPS.includes(d[2]))gy.add(d[2]);}}return{n,hasB,jamo,gyeop:gy};}
 function wbEntry(w,p,rule){const a=wbAnalyze(w);return{w,p:p||w,changed:(p||w)!==w,rule,n:a.n,hasB:a.hasB,jamo:a.jamo,gyeop:a.gyeop};}
 const WORD_BANK=(function(){
   const out=[];const seen=new Set();
@@ -606,6 +613,7 @@ function setMode(m){
     if(rh)rh.textContent='(여러 개 선택 가능 · 낱말마다 골고루 섞여요)';
     if(CFG.syllables==='any')document.querySelector('#optSyll .opt[data-v="2"]').click();
   }
+  updateBatchimAvail();
 }
 /* ---- build settings controls ---- */
 function initSettings(){
@@ -630,7 +638,7 @@ function initSettings(){
   vowP.innerHTML=vowBasic.map(c=>`<button class="ph" data-v="${c}">${c}</button>`).join('')
     +'<span style="width:100%;height:0;flex-basis:100%"></span>'
     +vowComplex.map(c=>`<button class="ph ph-cx" data-v="${c}">${c}</button>`).join('');
-  gyeopP.innerHTML=GYEOP.map(c=>`<button class="ph" data-g="${c}">${c}</button>`).join('');
+  gyeopP.innerHTML=DBL_CHIPS.map(c=>`<button class="ph" data-g="${c}">${c}</button>`).join('');
   consP.querySelectorAll('.ph').forEach(b=>b.onclick=()=>{b.classList.toggle('on');syncWant();});
   vowP.querySelectorAll('.ph').forEach(b=>b.onclick=()=>{b.classList.toggle('on');syncWant();});
   gyeopP.querySelectorAll('.ph').forEach(b=>b.onclick=()=>{b.classList.toggle('on');syncWant();});
@@ -647,11 +655,21 @@ function toggleRule(b){
     if(!rg.querySelector('.rule.on'))setChk(rg.querySelector('[data-k="none"]'),true);
   }
   CFG.rules=[...rg.querySelectorAll('.rule.on')].map(el=>el.dataset.k);
+  updateBatchimAvail();
 }
 function syncWant(){
   WANT.cons=[...document.querySelectorAll('#phonCons .ph.on')].map(b=>b.dataset.c);
   WANT.vow=[...document.querySelectorAll('#phonVow .ph.on')].map(b=>b.dataset.v);
   WANT.gyeop=[...document.querySelectorAll('#phonGyeop .ph.on')].map(b=>b.dataset.g);
+  updateBatchimAvail();
+}
+function updateBatchimAvail(){
+  // 비단어 모드에서 규칙/겹받침을 쓰면 받침은 그 규칙이 정하므로 받침 선택을 비활성화
+  const rulesOn=CFG.rules.filter(r=>r!=='none').length>0;
+  const gyOn=(WANT.gyeop||[]).length>0;
+  const disable=(MODE==='nonword')&&(rulesOn||gyOn);
+  const row=document.getElementById('optBatchim'); if(row)row.classList.toggle('disabled',disable);
+  const note=document.getElementById('batchimNote'); if(note)note.textContent=disable?'⚠ 규칙·겹받침 사용 중 — 받침은 규칙에 따라 자동으로 정해져요':'';
 }
 
 /* ---- generate & preview ---- */
@@ -678,13 +696,14 @@ function doGenerate(){
     }else{ // 조건에 맞는 낱말 + 무작위 낱말 섞기
       if(full.length===0){alert('조건에 딱 맞는 낱말이 사전에 없어요 😢 조건을 바꿔 주세요.');return;}
       const fullSet=new Set(full.map(e=>e.w));
-      let others=WORD_BANK.filter(e=>wordStructural(e,CFG)&&!fullSet.has(e.w)); // 음절수/받침만 맞는 무작위 채움
+      const allowGyeop=WANT.gyeop.length>0; // 겹받침을 안 골랐으면 무작위 채움에서도 겹받침 낱말 제외
+      // 무작위 채움: 받침·음절수 조건은 지키고, 미선택 겹받침 낱말은 제외
+      let others=WORD_BANK.filter(e=>wordStructural(e,CFG)&&!fullSet.has(e.w)&&(allowGyeop||e.gyeop.size===0));
       const minRandom=Math.max(1,Math.round(count*0.3)); // 최소 30%는 무작위로
       let nMatch=Math.min(full.length, count-minRandom); if(nMatch<0)nMatch=0;
       let nOther=count-nMatch;
       if(others.length<nOther){ nMatch=Math.min(full.length, count-others.length); nOther=count-nMatch; }
-      if(nMatch+others.length<count){ others=WORD_BANK.filter(e=>!fullSet.has(e.w)); nOther=count-nMatch; } // 구조 무시하고 아무 낱말로 채움
-      if(nMatch+others.length<count){ alert('낱말이 부족해요 😢 빙고 크기를 줄여 주세요.');return; }
+      if(nMatch+others.length<count){ alert(`조건에 맞춰 채울 낱말이 부족해요 😢 (${nMatch+others.length}/${count})\n빙고 크기를 줄이거나 받침·음절수 조건을 완화해 주세요.`);return; }
       tCount=nMatch;
       chosen=shuffle([...shuffle(full).slice(0,nMatch), ...shuffle(others).slice(0,nOther)]);
     }
