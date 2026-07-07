@@ -163,12 +163,13 @@
 
   .toolbar{
     position:sticky;bottom:0;
-    display:flex;gap:10px;
+    display:flex;flex-direction:column;gap:10px;
     padding:14px 16px;
-    background:rgba(255,255,255,.95);
+    background:rgba(255,255,255,.96);
     backdrop-filter:blur(4px);
     border-top:1px solid var(--line);
   }
+  .toolbar .row{display:flex;gap:10px;}
   .toolbar button{
     flex:1;
     border:none;
@@ -179,9 +180,15 @@
     font-family:inherit;
     cursor:pointer;
   }
+  .btn-submit{
+    background:linear-gradient(135deg,var(--oc-cyan),#12A6BC);
+    color:#fff;font-size:17px;
+    box-shadow:0 3px 10px rgba(27,188,212,.35);
+  }
+  .btn-submit:disabled{opacity:.6;cursor:default;box-shadow:none;}
   .btn-print{background:var(--oc-purple);color:#fff;}
   .btn-clear{background:#fff;color:var(--oc-purple);border:2px solid var(--oc-purple);}
-  .btn-print:active,.btn-clear:active{transform:translateY(1px);}
+  .btn-submit:active,.btn-print:active,.btn-clear:active{transform:translateY(1px);}
 
   .saved{
     text-align:center;
@@ -190,6 +197,15 @@
     padding:6px;
     min-height:20px;
   }
+  .submit-status{
+    text-align:center;
+    font-size:14px;
+    font-weight:700;
+    padding:4px 10px 0;
+    min-height:20px;
+  }
+  .submit-status.ok{color:var(--oc-success,#16A084);}
+  .submit-status.err{color:var(--oc-error,#D94444);}
 
   footer{
     text-align:center;
@@ -234,10 +250,14 @@
   <div class="questions" id="questions"></div>
 
   <div class="saved" id="saved"></div>
+  <div class="submit-status" id="submitStatus"></div>
 
   <div class="toolbar">
-    <button class="btn-print" onclick="window.print()">🖨️ 인쇄하기</button>
-    <button class="btn-clear" onclick="clearAll()">🧹 모두 지우기</button>
+    <button class="btn-submit" id="btnSubmit" onclick="submitAnswers()">📩 선생님께 제출하기</button>
+    <div class="row">
+      <button class="btn-print" onclick="window.print()">🖨️ 인쇄하기</button>
+      <button class="btn-clear" onclick="clearAll()">🧹 모두 지우기</button>
+    </div>
   </div>
 
   <footer>빨강머리 앤 · 나만의 독서 기록장</footer>
@@ -305,6 +325,78 @@
     localStorage.removeItem(KEY);
     document.querySelectorAll('textarea, #name, #date').forEach(el=> el.value='');
     savedMsg.textContent = '';
+  }
+
+  // ---- 이메일 제출 (Web3Forms) ----
+  // 아래 키를 web3forms.com에서 발급받은 액세스 키로 바꾸면 제출이 활성화됩니다.
+  const WEB3FORMS_KEY = '819bc038-aadc-4d6d-8dcb-127ff776cc4d';
+
+  function buildMessage(){
+    const nameEl = document.getElementById('name');
+    const dateEl = document.getElementById('date');
+    let msg = '📕 빨강머리 앤 독서활동 (1-9챕터)\n';
+    msg += '이름: ' + (nameEl.value || '(미기재)') + '\n';
+    msg += '날짜: ' + (dateEl.value || '(미기재)') + '\n';
+    msg += '────────────────────\n\n';
+    questions.forEach((q, i) => {
+      const n = i + 1;
+      const a = (document.querySelector('[data-key="a'+n+'"]')||{}).value || '';
+      const mq = (document.querySelector('[data-key="q'+n+'"]')||{}).value || '';
+      msg += n + '. ' + q + '\n';
+      msg += '   ✏️ 답: ' + (a.trim() || '(빈칸)') + '\n';
+      msg += '   ❓ 나의 질문: ' + (mq.trim() || '(빈칸)') + '\n\n';
+    });
+    return msg;
+  }
+
+  async function submitAnswers(){
+    const statusEl = document.getElementById('submitStatus');
+    const btn = document.getElementById('btnSubmit');
+    const nameEl = document.getElementById('name');
+
+    if (WEB3FORMS_KEY.indexOf('__') === 0){
+      statusEl.className = 'submit-status err';
+      statusEl.textContent = '⚠️ 제출 기능이 아직 설정되지 않았어요. (선생님께 문의)';
+      return;
+    }
+    if (!nameEl.value.trim()){
+      statusEl.className = 'submit-status err';
+      statusEl.textContent = '이름을 먼저 적어 주세요 🙂';
+      nameEl.focus();
+      return;
+    }
+
+    btn.disabled = true;
+    statusEl.className = 'submit-status';
+    statusEl.textContent = '제출하는 중… ⏳';
+
+    const payload = {
+      access_key: WEB3FORMS_KEY,
+      subject: '[빨강머리 앤 독서활동] ' + nameEl.value.trim() + ' 학생 제출',
+      from_name: '빨강머리 앤 독서활동',
+      name: nameEl.value.trim(),
+      message: buildMessage()
+    };
+
+    try {
+      const res = await fetch('https://api.web3forms.com/submit', {
+        method:'POST',
+        headers:{'Content-Type':'application/json','Accept':'application/json'},
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json();
+      if (data.success){
+        statusEl.className = 'submit-status ok';
+        statusEl.textContent = '✅ 제출 완료! 선생님께 잘 전달되었어요.';
+      } else {
+        throw new Error(data.message || '전송 실패');
+      }
+    } catch(err){
+      statusEl.className = 'submit-status err';
+      statusEl.textContent = '❌ 제출에 실패했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.';
+    } finally {
+      btn.disabled = false;
+    }
   }
 
   load();
