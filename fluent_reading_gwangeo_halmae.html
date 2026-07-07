@@ -60,6 +60,14 @@
   .pen.on{box-shadow:0 0 0 2px var(--accent);}
   .pen.eraser{background:repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 50%/10px 10px; display:flex; align-items:center; justify-content:center; font-size:12px;}
 
+  .roomin{border:1px solid var(--line); border-radius:9px; padding:8px 10px; font:inherit; width:96px;}
+  .roomin:focus{outline:none; border-color:var(--accent);}
+  .syncstat{font-size:12px; font-weight:800; padding:5px 9px; border-radius:8px; white-space:nowrap;}
+  .syncstat.off{color:#9a8f80; background:#f1e9db;}
+  .syncstat.wait{color:#b26a00; background:#fff0d6;}
+  .syncstat.ok{color:#1a7f37; background:#dcffe4;}
+  .syncstat.err{color:#b02a37; background:#ffe0e4;}
+
   /* ---- stage / pages ---- */
   .stage{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:0 8px 30px rgba(90,60,20,.06); overflow:hidden;}
   .pagebar{display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid var(--line); background:#fcf8f1;}
@@ -163,6 +171,17 @@
         <button class="btn" id="clearMarks">전체 지우기</button>
       </div>
     </div>
+
+    <div class="group">
+      <span class="lbl">함께 보기 · 실시간 동기화</span>
+      <div class="row">
+        <input id="roomInput" class="roomin" placeholder="방 코드" />
+        <button class="btn" id="btnConnect">연결</button>
+        <button class="btn" id="btnDisconnect" style="display:none">끊기</button>
+        <button class="btn" id="btnCopyLink">링크 복사</button>
+        <span id="syncStatus" class="syncstat off">연결 안 됨</span>
+      </div>
+    </div>
   </div>
 
   <div class="stage">
@@ -185,6 +204,7 @@
   </div>
 </div>
 
+<script src="https://unpkg.com/mqtt@5/dist/mqtt.min.js"></script>
 <script>
 const SOURCE = `
 우리 할머니는 / 해녀예요.//
@@ -353,6 +373,7 @@ function updateHighlight(){
   const total=r.max-r.min+1;
   const cur=Math.max(0, readIndex-r.min+1);
   document.getElementById('progress').textContent = `${UNIT_NAME[level]} ${cur} / ${total}`;
+  broadcast();
 }
 
 /* startAt: 'none'(아무것도 강조 안 함) | 'first' | 'last' */
@@ -392,6 +413,7 @@ reading.addEventListener('click', e=>{
       if(markerColor==='eraser') wEl.removeAttribute('data-mark');
       else if(wEl.dataset.mark===markerColor) wEl.removeAttribute('data-mark');
       else wEl.dataset.mark=markerColor;
+      broadcast();
     }
     return;
   }
@@ -411,17 +433,21 @@ document.addEventListener('keydown', e=>{
 });
 
 // 수준 선택
+function setLevel(lv){
+  level=lv;
+  [...document.getElementById('levelSeg').children].forEach(x=>x.classList.toggle('on', x.dataset.level===lv));
+  reading.classList.remove('level-word','level-chunk','level-sentence');
+  reading.classList.add('level-'+lv);
+}
 document.getElementById('levelSeg').addEventListener('click', e=>{
   const b=e.target.closest('button'); if(!b) return;
-  level=b.dataset.level;
-  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on', x===b));
-  reading.classList.remove('level-word','level-chunk','level-sentence');
-  reading.classList.add('level-'+level);
+  setLevel(b.dataset.level);
   reset();
 });
 
 // 토글
-const tog=(id,cls)=>document.getElementById(id).addEventListener('change',e=>reading.classList.toggle(cls, e.target.checked));
+function setToggle(id,on,cls){ document.getElementById(id).checked=on; reading.classList.toggle(cls,on); }
+const tog=(id,cls)=>document.getElementById(id).addEventListener('change',e=>{ reading.classList.toggle(cls, e.target.checked); broadcast(); });
 tog('tJosa','show-josa'); tog('tEomi','show-eomi'); tog('tKeep','keep-word'); tog('tSlash','show-slash');
 
 // 형광펜
@@ -435,7 +461,7 @@ document.querySelectorAll('.pen').forEach(p=>{
   });
 });
 document.querySelector('.pen[data-color="yellow"]').classList.add('on');
-document.getElementById('clearMarks').addEventListener('click',()=>wordEls.forEach(e=>e.removeAttribute('data-mark')));
+document.getElementById('clearMarks').addEventListener('click',()=>{ wordEls.forEach(e=>e.removeAttribute('data-mark')); broadcast(); });
 
 // 하단 / 쪽 이동
 document.getElementById('btnNext').addEventListener('click',next);
@@ -452,7 +478,79 @@ pages.forEach((_,i)=>{
   dotsWrap.appendChild(d);
 });
 
+/* ---------- 실시간 동기화 (MQTT over WebSocket, 공개 브로커) ---------- */
+const wordByIndex={}; wordEls.forEach(e=>wordByIndex[e.dataset.w]=e);
+let syncClient=null, myId=null, roomTopic=null, applying=false;
+
+function getState(){
+  const marks={}; wordEls.forEach(e=>{ if(e.dataset.mark) marks[e.dataset.w]=e.dataset.mark; });
+  return {
+    level, page:currentPage, readIndex,
+    josa:document.getElementById('tJosa').checked,
+    eomi:document.getElementById('tEomi').checked,
+    keep:document.getElementById('tKeep').checked,
+    slash:document.getElementById('tSlash').checked,
+    marks
+  };
+}
+function applyState(s){
+  if(!s) return;
+  applying=true;
+  try{
+    if(s.level && s.level!==level) setLevel(s.level);
+    setToggle('tJosa', !!s.josa, 'show-josa');
+    setToggle('tEomi', !!s.eomi, 'show-eomi');
+    setToggle('tKeep', !!s.keep, 'keep-word');
+    setToggle('tSlash', !!s.slash, 'show-slash');
+    wordEls.forEach(e=>e.removeAttribute('data-mark'));
+    if(s.marks) for(const k in s.marks){ if(wordByIndex[k]) wordByIndex[k].dataset.mark=s.marks[k]; }
+    if(typeof s.page==='number'){ currentPage=s.page; pages.forEach((p,i)=>p.el.classList.toggle('active', i===currentPage)); updatePageBar(); }
+    if(typeof s.readIndex==='number') readIndex=s.readIndex;
+    updateHighlight();
+  } finally { applying=false; }
+}
+function broadcast(){
+  if(applying || !syncClient || !syncClient.connected) return;
+  syncClient.publish(roomTopic, JSON.stringify({from:myId, s:getState()}), {retain:true});
+}
+function setSyncStatus(text,state){
+  const el=document.getElementById('syncStatus'); el.textContent=text; el.className='syncstat '+state;
+  const on = state==='ok'||state==='wait';
+  document.getElementById('btnConnect').style.display = on?'none':'';
+  document.getElementById('btnDisconnect').style.display = on?'':'none';
+}
+function connectRoom(room){
+  room=(room||'').trim();
+  if(!room){ setSyncStatus('방 코드 입력','err'); return; }
+  if(typeof mqtt==='undefined'){ setSyncStatus('모듈 로드 실패','err'); return; }
+  if(syncClient){ try{syncClient.end(true);}catch(e){} syncClient=null; }
+  document.getElementById('roomInput').value=room;
+  roomTopic='oncuvate/gwangeo/'+encodeURIComponent(room);
+  myId='u'+Date.now().toString(36)+Math.round(Math.random()*1e6).toString(36);
+  setSyncStatus('연결 중…','wait');
+  const c=mqtt.connect('wss://broker.emqx.io:8084/mqtt',{clientId:myId, reconnectPeriod:3000, connectTimeout:8000, clean:true});
+  c.on('connect',()=>{ setSyncStatus('연결됨 · 방 “'+room+'”','ok'); c.subscribe(roomTopic); location.hash='room='+encodeURIComponent(room); broadcast(); });
+  c.on('message',(t,p)=>{ try{ const m=JSON.parse(p.toString()); if(m.from!==myId) applyState(m.s); }catch(e){} });
+  c.on('error',()=>setSyncStatus('연결 실패','err'));
+  c.on('close',()=>{ if(syncClient) setSyncStatus('재연결 중…','wait'); });
+  syncClient=c;
+}
+function disconnectRoom(){ if(syncClient){ try{syncClient.end(true);}catch(e){} syncClient=null; } location.hash=''; setSyncStatus('연결 안 됨','off'); }
+
+document.getElementById('btnConnect').addEventListener('click',()=>connectRoom(document.getElementById('roomInput').value));
+document.getElementById('btnDisconnect').addEventListener('click',disconnectRoom);
+document.getElementById('roomInput').addEventListener('keydown',e=>{ if(e.key==='Enter') connectRoom(e.target.value); });
+document.getElementById('btnCopyLink').addEventListener('click',()=>{
+  const code=(document.getElementById('roomInput').value||'').trim();
+  const url=location.origin+location.pathname+(code?('#room='+encodeURIComponent(code)):'');
+  navigator.clipboard.writeText(url).then(()=>{ const b=document.getElementById('btnCopyLink'); const o=b.textContent; b.textContent='복사됨!'; setTimeout(()=>b.textContent=o,1200); });
+});
+
 showPage(0,'none');
+
+// 링크에 방 코드가 있으면 자동 연결 (#room=코드)
+const hashRoom=location.hash.match(/room=([^&]+)/);
+if(hashRoom){ connectRoom(decodeURIComponent(hashRoom[1])); }
 </script>
 </body>
 </html>
