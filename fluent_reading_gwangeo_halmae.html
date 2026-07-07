@@ -1,0 +1,449 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>끊어읽기 · 유창하게 읽기 — 광어 할매 이야기</title>
+<style>
+  :root{
+    --bg:#faf6ef; --card:#ffffff; --ink:#2b2622; --muted:#a99f92;
+    --line:#ece3d5; --accent:#d9542b; --accent-soft:#ffe4d6;
+    --josa:#2563eb; --eomi:#d6336c;
+    --mk-yellow:#fff29a; --mk-green:#c8f7c5; --mk-pink:#ffc8dd; --mk-blue:#c5e4ff;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0}
+  body{
+    font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
+    background:var(--bg); color:var(--ink);
+    -webkit-font-smoothing:antialiased;
+  }
+  .wrap{max-width:1000px; margin:0 auto; padding:20px 18px 90px;}
+
+  header h1{font-size:22px; margin:6px 0 2px; letter-spacing:-.3px;}
+  header p.sub{margin:0 0 14px; color:var(--muted); font-size:13px;}
+
+  /* ---- toolbar ---- */
+  .toolbar{
+    position:sticky; top:0; z-index:20;
+    background:rgba(250,246,239,.92); backdrop-filter:blur(6px);
+    border:1px solid var(--line); border-radius:16px;
+    padding:12px 14px; margin-bottom:18px;
+    display:flex; flex-wrap:wrap; gap:14px 22px; align-items:center;
+    box-shadow:0 4px 18px rgba(80,60,30,.05);
+  }
+  .group{display:flex; flex-direction:column; gap:6px;}
+  .group .lbl{font-size:11px; color:var(--muted); font-weight:700; letter-spacing:.4px;}
+  .row{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
+
+  .seg{display:inline-flex; background:#f1e9db; border-radius:10px; padding:3px;}
+  .seg button{
+    border:0; background:transparent; cursor:pointer; font:inherit; font-weight:700;
+    padding:7px 13px; border-radius:8px; color:#7d7264; transition:.15s;
+  }
+  .seg button.on{background:#fff; color:var(--accent); box-shadow:0 1px 3px rgba(0,0,0,.12);}
+
+  .toggle{display:inline-flex; align-items:center; gap:7px; cursor:pointer; font-size:13px; font-weight:600; color:#5c5347; user-select:none;}
+  .toggle input{display:none}
+  .sw{width:38px; height:22px; border-radius:22px; background:#d8cebd; position:relative; transition:.18s;}
+  .sw::after{content:""; position:absolute; top:2px; left:2px; width:18px; height:18px; border-radius:50%; background:#fff; transition:.18s; box-shadow:0 1px 2px rgba(0,0,0,.2);}
+  .toggle input:checked + .sw{background:var(--accent);}
+  .toggle input:checked + .sw::after{transform:translateX(16px);}
+
+  .btn{border:1px solid var(--line); background:#fff; cursor:pointer; font:inherit; font-weight:700; padding:8px 14px; border-radius:10px; color:#5c5347; transition:.15s;}
+  .btn:hover{border-color:var(--accent); color:var(--accent);}
+  .btn:disabled{opacity:.35; cursor:default; border-color:var(--line); color:#5c5347;}
+  .btn.primary{background:var(--accent); border-color:var(--accent); color:#fff;}
+  .btn.primary:hover{filter:brightness(1.05); color:#fff;}
+
+  .pen{width:26px; height:26px; border-radius:50%; border:2px solid #fff; cursor:pointer; box-shadow:0 0 0 1px var(--line);}
+  .pen.on{box-shadow:0 0 0 2px var(--accent);}
+  .pen.eraser{background:repeating-conic-gradient(#eee 0 25%, #fff 0 50%) 50%/10px 10px; display:flex; align-items:center; justify-content:center; font-size:12px;}
+
+  /* ---- stage / pages ---- */
+  .stage{background:var(--card); border:1px solid var(--line); border-radius:20px; box-shadow:0 8px 30px rgba(90,60,20,.06); overflow:hidden;}
+  .pagebar{display:flex; align-items:center; justify-content:space-between; padding:12px 18px; border-bottom:1px solid var(--line); background:#fcf8f1;}
+  .pagebar .pgbtn{border:1px solid var(--line); background:#fff; border-radius:9px; padding:6px 12px; font:inherit; font-weight:700; color:#5c5347; cursor:pointer;}
+  .pagebar .pgbtn:disabled{opacity:.35; cursor:default;}
+  .dots{display:flex; gap:8px; align-items:center;}
+  .dot{width:11px; height:11px; border-radius:50%; background:#e3d8c6; border:0; cursor:pointer; padding:0;}
+  .dot.on{background:var(--accent); transform:scale(1.25);}
+  .pgcount{font-weight:800; color:#7d7264; font-size:13px;}
+
+  .reading{padding:34px 36px; line-height:2.0; min-height:280px;}
+  .reading.marker-mode{cursor:crosshair}
+  .page{display:none;}
+  .page.active{display:block;}
+  .para{margin:0;}
+  /* each sentence is its own block → wrapped lines keep a comfortable minimum spacing */
+  .sentence{display:block; margin-bottom:.45em; line-height:1.95;}
+
+  .word{display:inline; padding:2px 3px; border-radius:7px; transition:color .12s, background .12s;}
+  .reading.keep-word .word{white-space:nowrap;}
+  .reading:not(.keep-word) .word{word-break:break-all;}
+
+  .chunk{display:inline; padding:2px 2px; border-radius:8px; -webkit-box-decoration-break:clone; box-decoration-break:clone; transition:color .12s, background .12s;}
+
+  /* font sizes per level */
+  .reading.level-word     .word{font-size:35px;}
+  .reading.level-chunk    .word{font-size:30px;}
+  .reading.level-sentence .word{font-size:25px;}
+  .reading.level-word{line-height:1.75;}
+
+  .slash{color:#d9cdba; padding:0 1px; font-weight:400;}
+  .reading:not(.show-slash) .slash{display:none;}
+
+  /* ---- reading highlight (grouped by unit) ---- */
+  .word.read, .chunk.read, .sentence.read{color:#bcb2a2;}
+  .word.current{color:var(--accent); font-weight:800; background:var(--accent-soft); box-shadow:inset 0 -3px 0 var(--accent);}
+  .chunk.current{color:var(--accent); font-weight:800; background:var(--accent-soft); box-shadow:inset 0 -3px 0 var(--accent);}
+  .sentence.current{color:var(--accent); font-weight:800; background:var(--accent-soft); border-radius:12px; box-shadow:inset 0 -3px 0 var(--accent); padding:4px 8px;}
+
+  /* josa / eomi emphasis */
+  .suf{border-radius:4px;}
+  .reading.show-josa .suf.josa{color:var(--josa); font-weight:800; text-decoration:underline; text-decoration-color:var(--josa); text-underline-offset:3px;}
+  .reading.show-eomi .suf.eomi{color:var(--eomi); font-weight:800; text-decoration:underline; text-decoration-color:var(--eomi); text-underline-offset:3px;}
+
+  /* highlighter marks */
+  .word[data-mark="yellow"]{background:var(--mk-yellow);}
+  .word[data-mark="green"]{background:var(--mk-green);}
+  .word[data-mark="pink"]{background:var(--mk-pink);}
+  .word[data-mark="blue"]{background:var(--mk-blue);}
+
+  /* ---- footer ---- */
+  .footbar{position:sticky; bottom:0; margin-top:18px; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;
+    background:rgba(250,246,239,.92); backdrop-filter:blur(6px); padding:12px; border-radius:16px; border:1px solid var(--line);}
+  .progress{font-weight:800; color:var(--accent); min-width:120px; text-align:center; font-variant-numeric:tabular-nums;}
+  .legend{font-size:12px; color:var(--muted); text-align:center; margin-top:10px;}
+  .legend b.j{color:var(--josa);} .legend b.e{color:var(--eomi);}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>끊어읽기 · 유창하게 읽기</h1>
+    <p class="sub">광어 할매 이야기 · 전 4쪽 — 글자를 클릭하거나 <b>다음 ▶</b> · Space · → 키로 순서대로 읽어요. 쪽 끝에서 다음을 누르면 다음 쪽으로 이어집니다.</p>
+  </header>
+
+  <div class="toolbar">
+    <div class="group">
+      <span class="lbl">수준 선택</span>
+      <div class="seg" id="levelSeg">
+        <button data-level="word" class="on">단어단위</button>
+        <button data-level="chunk">의미단위</button>
+        <button data-level="sentence">문장단위</button>
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="lbl">문법 강조</span>
+      <div class="row">
+        <label class="toggle"><input type="checkbox" id="tJosa"><span class="sw"></span>조사</label>
+        <label class="toggle"><input type="checkbox" id="tEomi"><span class="sw"></span>어미</label>
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="lbl">읽기 표시</span>
+      <div class="row">
+        <label class="toggle"><input type="checkbox" id="tKeep" checked><span class="sw"></span>단어 유지</label>
+        <label class="toggle"><input type="checkbox" id="tSlash" checked><span class="sw"></span>끊어읽기 / 표시</label>
+      </div>
+    </div>
+
+    <div class="group">
+      <span class="lbl">형광펜</span>
+      <div class="row">
+        <label class="toggle"><input type="checkbox" id="tMarker"><span class="sw"></span>펜</label>
+        <span class="pen" data-color="yellow" style="background:var(--mk-yellow)"></span>
+        <span class="pen" data-color="green" style="background:var(--mk-green)"></span>
+        <span class="pen" data-color="pink" style="background:var(--mk-pink)"></span>
+        <span class="pen" data-color="blue" style="background:var(--mk-blue)"></span>
+        <span class="pen eraser" data-color="eraser" title="지우개">⌫</span>
+        <button class="btn" id="clearMarks">전체 지우기</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="stage">
+    <div class="pagebar">
+      <button class="pgbtn" id="pgPrev">‹ 이전 쪽</button>
+      <div class="dots" id="dots"></div>
+      <span class="pgcount" id="pgCount">1 / 4쪽</span>
+      <button class="pgbtn" id="pgNext">다음 쪽 ›</button>
+    </div>
+    <div id="reading" class="reading level-word keep-word show-slash"></div>
+  </div>
+
+  <p class="legend">강조 색: <b class="j">조사</b> · <b class="e">어미</b> &nbsp;|&nbsp; 문장마다 줄간격을 넉넉히 유지해 여러 줄로 넘어가도 편하게 읽혀요.</p>
+
+  <div class="footbar">
+    <button class="btn" id="btnReset">↺ 처음</button>
+    <button class="btn" id="btnPrev">◀ 이전</button>
+    <span class="progress" id="progress">— / —</span>
+    <button class="btn primary" id="btnNext">다음 ▶</button>
+  </div>
+</div>
+
+<script>
+const SOURCE = `
+"할머니! / 물에 / 빠진 줄 / 알았잖아요!"//
+"아이고, / 이 할매는 / 용왕의 할배의 할배가 와도 / 못 잡아간다."//
+"할머니, / 오늘 많이 잡았어요?"//
+"아윤아, / 할매한테 / 오늘 무슨 일 / 있었는지 알면 / 깜짝 놀랄거라."//
+
+"할매가 / 미역 밭 가꾸러 / 드갔는데,//
+이따만 한 전복이 / 무더기로 / 있는 게 아니겠나!//
+망사리를 / 들고 가서 / 쓸어 담고 있는데 / 넓적한 광어가//
+할무니, 할무니, / 저 좀 살려 주이소.' / 하더라고.//
+우예 도와줄까 하니까 / 자기 따라 / 저 바위틈으로 가자데."
+
+할매 배가 뚱뚱해서 / 못 지나간다 했더만,//
+광어가 / 할매 주변을 / 뱅뱅 돌데.//
+그러더니 / 할매가 / 납작궁이 된 거라!//
+말 마라, / 요래요래 / 등에 아가미도 생겨서 //
+물 위로 안 가도 / 숨이 쉬어지는 거 / 아니겠나.//
+
+전복이고 나발이고 / 내는 집에 간다고 / 캤는데, / 광어 고놈 / 들은 척도 안 하데!//
+물이 뜨끈했다가 / 차가웠다가 / 몸이 늘어났다 / 줄어들었다//
+그렇게 / 한 백여덟 번 될 때쯤 / 다 왔다 카데.//
+`;
+
+/* ---------- 조사/어미 접미사 (휴리스틱, 긴 것 우선) ---------- */
+const SUFFIXES = [
+  {suf:'잖아요',t:'eomi'},{suf:'습니다',t:'eomi'},{suf:'았는데',t:'eomi'},{suf:'었는데',t:'eomi'},
+  {suf:'더라고',t:'eomi'},{suf:'았어요',t:'eomi'},{suf:'었어요',t:'eomi'},
+  {suf:'겠나',t:'eomi'},{suf:'는데',t:'eomi'},{suf:'니까',t:'eomi'},{suf:'더라',t:'eomi'},
+  {suf:'더만',t:'eomi'},{suf:'거라',t:'eomi'},{suf:'았다',t:'eomi'},{suf:'었다',t:'eomi'},
+  {suf:'다가',t:'eomi'},{suf:'다고',t:'eomi'},{suf:'아도',t:'eomi'},{suf:'어도',t:'eomi'},{suf:'와도',t:'eomi'},
+  {suf:'아요',t:'eomi'},{suf:'어요',t:'eomi'},{suf:'에요',t:'eomi'},{suf:'세요',t:'eomi'},{suf:'해서',t:'eomi'},
+  {suf:'다',t:'eomi'},{suf:'까',t:'eomi'},{suf:'네',t:'eomi'},{suf:'데',t:'eomi'},
+  {suf:'고',t:'eomi'},{suf:'서',t:'eomi'},{suf:'나',t:'eomi'},
+  {suf:'에서는',t:'josa'},{suf:'에게서',t:'josa'},{suf:'한테서',t:'josa'},
+  {suf:'까지',t:'josa'},{suf:'부터',t:'josa'},{suf:'조차',t:'josa'},{suf:'마저',t:'josa'},
+  {suf:'밖에',t:'josa'},{suf:'처럼',t:'josa'},{suf:'만큼',t:'josa'},{suf:'대로',t:'josa'},
+  {suf:'보다',t:'josa'},{suf:'한테',t:'josa'},{suf:'에게',t:'josa'},{suf:'에서',t:'josa'},
+  {suf:'으로',t:'josa'},{suf:'이나',t:'josa'},{suf:'라도',t:'josa'},
+  {suf:'은',t:'josa'},{suf:'는',t:'josa'},{suf:'이',t:'josa'},{suf:'가',t:'josa'},
+  {suf:'을',t:'josa'},{suf:'를',t:'josa'},{suf:'과',t:'josa'},{suf:'와',t:'josa'},
+  {suf:'도',t:'josa'},{suf:'만',t:'josa'},{suf:'의',t:'josa'},{suf:'에',t:'josa'},
+  {suf:'로',t:'josa'},{suf:'랑',t:'josa'},
+].sort((a,b)=>b.suf.length-a.suf.length);
+
+/* 휴리스틱 오탐 제외 (조사·어미가 아닌 어절) */
+const NO_SPLIT = new Set(['많이','이따만','아이고','따라','그러더니','우예','자기','뱅뱅','요래요래','그렇게']);
+
+const HANGUL=/[가-힣]/;
+function analyze(word){
+  let i=0; while(i<word.length && !HANGUL.test(word[i])) i++;
+  let j=word.length; while(j>0 && !HANGUL.test(word[j-1])) j--;
+  if(i>=j) return {lead:word, core:'', trail:''};
+  return {lead:word.slice(0,i), core:word.slice(i,j), trail:word.slice(j)};
+}
+function matchSuffix(core){
+  for(const {suf,t} of SUFFIXES){
+    if(core.length>suf.length && core.endsWith(suf))
+      return {stem:core.slice(0,core.length-suf.length), suf, type:t};
+  }
+  return null;
+}
+
+/* ---------- 파싱: 문단(=쪽) → 문장(//) → 의미단위(/) → 어절 ---------- */
+function parse(src){
+  const paras = src.trim().split(/\n\s*\n/);
+  let w=0,c=0,s=0;
+  const model = paras.map(p=>{
+    const text = p.replace(/\n/g,' ');
+    const sentences = text.split('//').map(t=>t.trim()).filter(Boolean).map(sent=>{
+      const sIdx=s++;
+      const chunks = sent.split('/').map(t=>t.trim()).filter(Boolean).map(chunk=>{
+        const cIdx=c++;
+        const words = chunk.split(/\s+/).filter(Boolean).map(t=>({text:t, w:w++, c:cIdx, s:sIdx}));
+        return {words, c:cIdx, s:sIdx};
+      });
+      return {chunks, s:sIdx};
+    });
+    return {sentences};
+  });
+  return {model, counts:{word:w, chunk:c, sentence:s}};
+}
+
+/* ---------- 렌더 ---------- */
+const {model} = parse(SOURCE);
+const reading = document.getElementById('reading');
+const wordEls=[], chunkEls=[], sentEls=[], pages=[];
+const el=(t,c)=>{const e=document.createElement(t); if(c)e.className=c; return e;};
+const tx=s=>document.createTextNode(s);
+
+function buildWord(word, pi){
+  const e=el('span','word');
+  e.dataset.w=word.w; e.dataset.c=word.c; e.dataset.s=word.s; e.dataset.page=pi;
+  const {lead,core,trail}=analyze(word.text);
+  if(lead) e.appendChild(tx(lead));
+  const m = (core && !NO_SPLIT.has(core)) ? matchSuffix(core) : null;
+  if(m){
+    e.appendChild(tx(m.stem));
+    const su=el('span','suf '+m.type); su.textContent=m.suf; e.appendChild(su);
+  } else if(core){
+    e.appendChild(tx(core));
+  }
+  if(trail) e.appendChild(tx(trail));
+  wordEls.push(e);
+  return e;
+}
+
+const range=arr=>({min:Math.min(...arr), max:Math.max(...arr)});
+
+model.forEach((para,pi)=>{
+  const pageEl=el('div','page');
+  const pW=[],pC=[],pS=[];
+  para.sentences.forEach(sent=>{
+    const sEl=el('div','sentence'); sEl.dataset.s=sent.s; sEl.dataset.page=pi;
+    sentEls.push(sEl); pS.push(sent.s);
+    sent.chunks.forEach((chunk,ci)=>{
+      const cEl=el('span','chunk'); cEl.dataset.c=chunk.c; cEl.dataset.page=pi;
+      chunkEls.push(cEl); pC.push(chunk.c);
+      chunk.words.forEach((word,wi)=>{
+        cEl.appendChild(buildWord(word,pi)); pW.push(word.w);
+        if(wi<chunk.words.length-1) cEl.appendChild(tx(' '));
+      });
+      sEl.appendChild(cEl);
+      if(ci<sent.chunks.length-1){
+        sEl.appendChild(tx(' '));
+        const sl=el('span','slash'); sl.textContent='/'; sEl.appendChild(sl);
+        sEl.appendChild(tx(' '));
+      }
+    });
+    pageEl.appendChild(sEl);
+  });
+  reading.appendChild(pageEl);
+  pages.push({el:pageEl, ranges:{word:range(pW), chunk:range(pC), sentence:range(pS)}});
+});
+
+/* ---------- 상태 ---------- */
+const LK={word:'w', chunk:'c', sentence:'s'};
+const UNIT_NAME={word:'어절', chunk:'의미단위', sentence:'문장'};
+let level='word';
+let currentPage=0;
+let readIndex=-1;      // 현재 쪽 안에서의 (레벨 기준) 전역 유닛 인덱스
+let markerMode=false, markerColor='yellow';
+
+function activeEls(){ return level==='word'?wordEls : level==='chunk'?chunkEls : sentEls; }
+function curRange(){ return pages[currentPage].ranges[level]; }
+
+function updateHighlight(){
+  [...wordEls,...chunkEls,...sentEls].forEach(e=>e.classList.remove('current','read'));
+  const key=LK[level];
+  activeEls().forEach(e=>{
+    if(+e.dataset.page!==currentPage) return;
+    const idx=+e.dataset[key];
+    if(idx===readIndex) e.classList.add('current');
+    else if(idx<readIndex) e.classList.add('read');
+  });
+  const r=curRange();
+  const total=r.max-r.min+1;
+  const cur=Math.max(0, readIndex-r.min+1);
+  document.getElementById('progress').textContent = `${UNIT_NAME[level]} ${cur} / ${total}`;
+}
+
+/* startAt: 'none'(아무것도 강조 안 함) | 'first' | 'last' */
+function showPage(pi, startAt){
+  currentPage=pi;
+  pages.forEach((p,i)=>p.el.classList.toggle('active', i===pi));
+  const r=curRange();
+  readIndex = startAt==='first' ? r.min : startAt==='last' ? r.max : r.min-1;
+  updatePageBar();
+  updateHighlight();
+}
+function updatePageBar(){
+  document.getElementById('pgPrev').disabled = currentPage===0;
+  document.getElementById('pgNext').disabled = currentPage===pages.length-1;
+  document.getElementById('pgCount').textContent = `${currentPage+1} / ${pages.length}쪽`;
+  [...document.getElementById('dots').children].forEach((d,i)=>d.classList.toggle('on', i===currentPage));
+}
+
+function next(){
+  const r=curRange();
+  if(readIndex<r.max){ readIndex++; updateHighlight(); }
+  else if(currentPage<pages.length-1){ showPage(currentPage+1,'first'); }
+}
+function prev(){
+  const r=curRange();
+  if(readIndex>r.min){ readIndex--; updateHighlight(); }
+  else if(readIndex===r.min){ readIndex=r.min-1; updateHighlight(); }
+  else if(currentPage>0){ showPage(currentPage-1,'last'); }
+}
+function reset(){ readIndex=curRange().min-1; updateHighlight(); }
+
+/* ---------- 상호작용 ---------- */
+reading.addEventListener('click', e=>{
+  const wEl=e.target.closest('.word');
+  if(markerMode){
+    if(wEl){
+      if(markerColor==='eraser') wEl.removeAttribute('data-mark');
+      else if(wEl.dataset.mark===markerColor) wEl.removeAttribute('data-mark');
+      else wEl.dataset.mark=markerColor;
+    }
+    return;
+  }
+  if(wEl){
+    const idx=+wEl.dataset[LK[level]];
+    if(idx===readIndex) next();
+    else { readIndex=idx; updateHighlight(); }
+  } else { next(); }
+});
+
+document.addEventListener('keydown', e=>{
+  if(e.key==='ArrowRight'||e.key===' '){ e.preventDefault(); next(); }
+  else if(e.key==='ArrowLeft'){ e.preventDefault(); prev(); }
+  else if(e.key==='Home'){ e.preventDefault(); reset(); }
+  else if(e.key==='PageDown'){ e.preventDefault(); if(currentPage<pages.length-1) showPage(currentPage+1,'none'); }
+  else if(e.key==='PageUp'){ e.preventDefault(); if(currentPage>0) showPage(currentPage-1,'none'); }
+});
+
+// 수준 선택
+document.getElementById('levelSeg').addEventListener('click', e=>{
+  const b=e.target.closest('button'); if(!b) return;
+  level=b.dataset.level;
+  [...e.currentTarget.children].forEach(x=>x.classList.toggle('on', x===b));
+  reading.classList.remove('level-word','level-chunk','level-sentence');
+  reading.classList.add('level-'+level);
+  reset();
+});
+
+// 토글
+const tog=(id,cls)=>document.getElementById(id).addEventListener('change',e=>reading.classList.toggle(cls, e.target.checked));
+tog('tJosa','show-josa'); tog('tEomi','show-eomi'); tog('tKeep','keep-word'); tog('tSlash','show-slash');
+
+// 형광펜
+const markerCb=document.getElementById('tMarker');
+markerCb.addEventListener('change',e=>{ markerMode=e.target.checked; reading.classList.toggle('marker-mode', markerMode); });
+document.querySelectorAll('.pen').forEach(p=>{
+  p.addEventListener('click',()=>{
+    markerColor=p.dataset.color;
+    document.querySelectorAll('.pen').forEach(x=>x.classList.toggle('on', x===p));
+    if(!markerMode){ markerCb.checked=true; markerMode=true; reading.classList.add('marker-mode'); }
+  });
+});
+document.querySelector('.pen[data-color="yellow"]').classList.add('on');
+document.getElementById('clearMarks').addEventListener('click',()=>wordEls.forEach(e=>e.removeAttribute('data-mark')));
+
+// 하단 / 쪽 이동
+document.getElementById('btnNext').addEventListener('click',next);
+document.getElementById('btnPrev').addEventListener('click',prev);
+document.getElementById('btnReset').addEventListener('click',reset);
+document.getElementById('pgPrev').addEventListener('click',()=>{ if(currentPage>0) showPage(currentPage-1,'none'); });
+document.getElementById('pgNext').addEventListener('click',()=>{ if(currentPage<pages.length-1) showPage(currentPage+1,'none'); });
+
+// 쪽 점(dot)
+const dotsWrap=document.getElementById('dots');
+pages.forEach((_,i)=>{
+  const d=el('button','dot'); d.title=(i+1)+'쪽';
+  d.addEventListener('click',()=>showPage(i,'none'));
+  dotsWrap.appendChild(d);
+});
+
+showPage(0,'none');
+</script>
+</body>
+</html>
