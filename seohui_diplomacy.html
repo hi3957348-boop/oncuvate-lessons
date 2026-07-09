@@ -433,6 +433,7 @@ body.act-locked.is-student .lock-mask{display:flex;}
     </div>
   </div>
 
+  <button class="rt-done" id="doneBtn" onclick="markDoneCurrent()">✅ 다 했어요</button>
   <div class="rt-deck" id="hostDeck">
     <div class="rt-t">⏱ 타이머</div>
     <div class="rt-row"><input id="rtMin" type="number" value="10" min="1" max="60"> 분 <button onclick="tStart()">▶ 시작</button></div>
@@ -442,6 +443,8 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <button class="g" id="pgLockBtn" onclick="togglePageLock()">📄 페이지잠금</button>
       <button class="g" id="actLockBtn" onclick="toggleActivityLock()">✋ 활동잠금</button>
     </div>
+    <div class="rt-dt">🙋 다 했어요 <span id="rtDoneCount">0명</span></div>
+    <div class="rt-list" id="rtDoneList"><div class="rt-empty">아직 없어요</div></div>
   </div>
 
   <div class="lock-mask" id="lockMask"><div class="lm-card">🔒 잠깐 멈춰요!<br><span style="font-size:12.5px;font-weight:600;color:#666;">선생님을 봐 주세요</span></div></div>
@@ -997,6 +1000,7 @@ function goTo(n,forced){
   document.getElementById('pg'+cur).classList.add('on');
   buildDots();
   window.scrollTo({top:0,behavior:'smooth'});
+  if(window.updateDoneLabel)window.updateDoneLabel();
   if(n===11){setTimeout(function(){if(window.initAllScratch)window.initAllScratch();if(window.initMapDraw)window.initMapDraw();},80);}
   if(IS_HOST && window._pageLockOn && window.pushControl)window.pushControl();
 }
@@ -1086,8 +1090,9 @@ function initRealtime(){
   document.body.classList.toggle('is-host', !!IS_HOST);
   document.body.classList.toggle('is-student', !IS_HOST);
   subscribeTimer();
-  if(IS_HOST){ subscribeFound(); }
+  if(IS_HOST){ subscribeFound(); subscribeDone(); }
   if(!IS_HOST){ subscribeControl(); }
+  updateDoneLabel();
 }
 function subscribeTimer(){
   if(!window._firebaseReady){ setTimeout(subscribeTimer,300); return; }
@@ -1132,7 +1137,7 @@ function markDoneCurrent(){
   window._set(window._ref(window._db, RT_PATH+'/done/'+window._clientId), {name:window.STUDENT_NAME||'학생', page:page, at:Date.now()});
   var b=document.getElementById('doneBtn'); if(b){ b.classList.add('done'); b.textContent='✅ '+page+'쪽 완료!'; setTimeout(updateDoneLabel,1500); }
 }
-function updateDoneLabel(){ var b=document.getElementById('doneBtn'); if(!b)return; var p=window._cur||1; if([1,2,3,5,7].indexOf(p)>=0){ b.style.display='none'; return; } b.style.display=''; b.classList.remove('done'); b.textContent='✅ 다 했어요 ('+p+'쪽)'; }
+function updateDoneLabel(){ var b=document.getElementById('doneBtn'); if(!b)return; var p=window._cur||1; if([4,6,8,10].indexOf(p)<0){ b.style.display='none'; return; } b.style.display=''; b.classList.remove('done'); b.textContent='✅ 다 했어요 ('+p+'쪽)'; }
 window.updateDoneLabel=updateDoneLabel; window.markDoneCurrent=markDoneCurrent;
 function subscribeDone(){ if(!window._firebaseReady){setTimeout(subscribeDone,300);return;} window._onValue(window._ref(window._db,RT_PATH+'/done'),function(s){ renderDone(s.val()||{}); }); }
 function renderDone(obj){
