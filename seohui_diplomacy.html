@@ -276,8 +276,8 @@ body.is-host .rt-deck{display:block;}
 .found-chip{background:var(--oc-success-bg);color:var(--oc-success);border:1px solid var(--oc-success);border-radius:14px;padding:3px 9px;font-size:11.5px;font-weight:700;}
 .found-empty{color:#aaa;font-size:11px;}
 /* 5x5 grid */
-.bingo-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:5px;margin-bottom:12px;}
-.bingo-cell{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--oc-border);background:var(--oc-card);display:flex;align-items:center;justify-content:center;font-size:9.5px;font-weight:700;color:var(--oc-dark);text-align:center;cursor:pointer;transition:all .2s;padding:2px;line-height:1.15;user-select:none;word-break:keep-all;}
+.bingo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
+.bingo-cell{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--oc-border);background:var(--oc-card);display:flex;align-items:center;justify-content:center;font-size:18pt;font-weight:700;color:var(--oc-dark);text-align:center;cursor:pointer;transition:all .2s;padding:3px;line-height:1.1;user-select:none;word-break:break-all;overflow:hidden;}
 .bingo-cell.joker{background:var(--oc-gold-light);border-color:var(--oc-gold);color:var(--oc-gold);}
 .bingo-cell.checked{background:var(--oc-purple);border-color:var(--oc-purple);color:#fff;}
 .bingo-cell.joker.checked{background:var(--oc-gold);border-color:var(--oc-gold);color:#fff;}
@@ -353,6 +353,11 @@ body.act-locked.is-student .lock-mask{display:flex;}
 .bingo-win h2{font-size:48px;font-weight:900;margin-bottom:12px;}
 .bingo-win p{font-size:20px;opacity:.85;margin-bottom:28px;}
 .bingo-win button{background:#fff;color:var(--oc-purple);font-size:16px;font-weight:800;padding:14px 36px;border-radius:14px;border:none;cursor:pointer;font-family:inherit;}
+.bingo-win .bw-emoji{font-size:88px;animation:bwpop .7s cubic-bezier(.2,1.4,.4,1) both;}
+.bingo-win .bw-confetti{font-size:26px;letter-spacing:6px;margin-bottom:6px;animation:bwfloat 2.4s ease-in-out infinite;}
+.bingo-win.show h2{animation:bwpop .55s ease .08s both;}
+@keyframes bwpop{0%{transform:scale(0) rotate(-25deg);}70%{transform:scale(1.25) rotate(8deg);}100%{transform:scale(1) rotate(0);}}
+@keyframes bwfloat{0%,100%{transform:translateY(0);}50%{transform:translateY(-9px);}}
 </style>
 
 <!-- Firebase -->
@@ -384,10 +389,11 @@ body.act-locked.is-student .lock-mask{display:flex;}
 
 <!-- BINGO WIN OVERLAY -->
 <div class="bingo-win" id="bingo-win">
-  <div style="font-size:72px;">🎉</div>
-  <h2>빙고!</h2>
-  <p id="bingo-win-msg">빙고를 달성했어요!</p>
-  <button onclick="document.getElementById('bingo-win').classList.remove('show')">계속하기</button>
+  <div class="bw-confetti">🎊🎉✨🎈🥳🎉🎊✨🎈🎉</div>
+  <div class="bw-emoji">🏆</div>
+  <h2 id="bingo-win-title">🎉 승리! 🎉</h2>
+  <p id="bingo-win-msg">3줄 빙고를 완성했어요!</p>
+  <button onclick="bingoWinClose()">확인</button>
 </div>
 
 <!-- LOGIN GATE -->
@@ -1091,6 +1097,7 @@ function initRealtime(){
   document.body.classList.toggle('is-student', !IS_HOST);
   subscribeTimer();
   if(IS_HOST){ subscribeFound(); subscribeDone(); }
+  subscribeWin();
   if(!IS_HOST){ subscribeControl(); }
   updateDoneLabel();
 }
@@ -1149,6 +1156,13 @@ function renderDone(obj){
   el.innerHTML=arr.map(function(s){ return '<div class="rt-drow"><span class="rt-nm">'+_esc(s.name)+'</span><span class="rt-pg">'+(s.page||1)+'쪽</span></div>'; }).join('');
 }
 window.publishFound=function(word){ if(!window._firebaseReady||!window._clientId)return; window._set(window._ref(window._db,DB_PATH+'/found/'+window._clientId),{name:window.STUDENT_NAME||'학생',word:word,at:Date.now()}); };
+/* ── 빙고 승리(3줄): 전원 화면에 축하 표시 ── */
+window.publishWin=function(name){ if(!window._firebaseReady)return; window._set(window._ref(window._db,DB_PATH+'/win'),{name:name||'학생',at:Date.now()}); };
+function subscribeWin(){ if(!window._firebaseReady){setTimeout(subscribeWin,300);return;} window._onValue(window._ref(window._db,DB_PATH+'/win'),function(s){ var w=s.val(); if(w&&w.name){ showBingoWin(w.name); } else { hideBingoWin(); } }); }
+function showBingoWin(name){ var el=document.getElementById('bingo-win'); if(!el)return; var t=document.getElementById('bingo-win-title'); if(t)t.textContent='🎉 '+name+' 승리! 🎉'; var m=document.getElementById('bingo-win-msg'); if(m)m.textContent=name+' 님이 3줄 빙고를 완성했어요! 축하합니다!'; window._bingoWon=true; el.classList.add('show'); }
+function hideBingoWin(){ var el=document.getElementById('bingo-win'); if(el)el.classList.remove('show'); window._bingoWon=false; }
+function bingoWinClose(){ if(IS_HOST && window._firebaseReady){ window._remove(window._ref(window._db,DB_PATH+'/win')); } var el=document.getElementById('bingo-win'); if(el)el.classList.remove('show'); }
+window.bingoWinClose=bingoWinClose;
 function subscribeFound(){ if(!window._firebaseReady){setTimeout(subscribeFound,300);return;} window._onValue(window._ref(window._db,DB_PATH+'/found'),function(s){ renderFound(s.val()||{}); }); }
 function renderFound(obj){
   var el=document.getElementById('found-feed'); if(!el)return;
@@ -1233,10 +1247,11 @@ function hostResetGame(){
 
 /* ── STUDENT ── */
 function buildStudentGrid(){
-  // 25 words total: shuffle all 25 BINGO_WORDS, pick 23 + 2 jokers
-  const words = shuffle(BINGO_WORDS).slice(0,23);
-  const all25 = shuffle([...words, '🤡 조커A', '🤡 조커B']);
-  studentGrid = all25.map(w=>({word:w, isJoker:w.startsWith('🤡'), checked:w.startsWith('🤡')}));
+  // 4×4 = 16 cells: 14 words + 2 jokers
+  const words = shuffle(BINGO_WORDS).slice(0,14);
+  const all16 = shuffle([...words, '🤡 조커A', '🤡 조커B']);
+  studentGrid = all16.map(w=>({word:w, isJoker:w.startsWith('🤡'), checked:w.startsWith('🤡')}));
+  window._bingoWon=false;
   renderStudentGrid();
 }
 
@@ -1254,6 +1269,7 @@ function renderStudentGrid(){
 }
 
 function tryCheck(idx){
+  if(window._bingoWon)return;
   const cell=studentGrid[idx];
   if(cell.checked)return;
   if(cell.isJoker){cell.checked=true;renderStudentGrid();return;}
@@ -1295,28 +1311,27 @@ function countBingoLines(){
   const g=studentGrid;
   let count=0;
   // rows
-  for(let r=0;r<5;r++){
-    if([0,1,2,3,4].every(c=>g[r*5+c].checked))count++;
+  for(let r=0;r<4;r++){
+    if([0,1,2,3].every(c=>g[r*4+c].checked))count++;
   }
   // cols
-  for(let c=0;c<5;c++){
-    if([0,1,2,3,4].every(r=>g[r*5+c].checked))count++;
+  for(let c=0;c<4;c++){
+    if([0,1,2,3].every(r=>g[r*4+c].checked))count++;
   }
   // diagonals
-  if([0,6,12,18,24].every(i=>g[i].checked))count++;
-  if([4,8,12,16,20].every(i=>g[i].checked))count++;
+  if([0,5,10,15].every(i=>g[i].checked))count++;
+  if([3,6,9,12].every(i=>g[i].checked))count++;
   return count;
 }
 
 function checkBingoLines(){
   const lines=countBingoLines();
   updateBingoCount();
-  if(lines>0){
-    // highlight bingo lines
-    highlightBingoLines();
-    const win=document.getElementById('bingo-win');
-    document.getElementById('bingo-win-msg').textContent=lines+'줄 빙고 달성! 🎊';
-    win.classList.add('show');
+  if(lines>0) highlightBingoLines();
+  // 3줄 완성 → 게임 종료 + 전원 화면에 승자 축하
+  if(lines>=3 && !window._bingoWon){
+    window._bingoWon=true;
+    if(window.publishWin) window.publishWin(window.STUDENT_NAME||'학생');
   }
 }
 
@@ -1324,16 +1339,16 @@ function highlightBingoLines(){
   const g=studentGrid;
   const cells=document.getElementById('student-bingo-grid').children;
   const mark=idx=>{if(cells[idx])cells[idx].classList.add('bingo-line');};
-  for(let r=0;r<5;r++){
-    if([0,1,2,3,4].every(c=>g[r*5+c].checked))
-      [0,1,2,3,4].forEach(c=>mark(r*5+c));
+  for(let r=0;r<4;r++){
+    if([0,1,2,3].every(c=>g[r*4+c].checked))
+      [0,1,2,3].forEach(c=>mark(r*4+c));
   }
-  for(let c=0;c<5;c++){
-    if([0,1,2,3,4].every(r=>g[r*5+c].checked))
-      [0,1,2,3,4].forEach(r=>mark(r*5+c));
+  for(let c=0;c<4;c++){
+    if([0,1,2,3].every(r=>g[r*4+c].checked))
+      [0,1,2,3].forEach(r=>mark(r*4+c));
   }
-  if([0,6,12,18,24].every(i=>g[i].checked))[0,6,12,18,24].forEach(mark);
-  if([4,8,12,16,20].every(i=>g[i].checked))[4,8,12,16,20].forEach(mark);
+  if([0,5,10,15].every(i=>g[i].checked))[0,5,10,15].forEach(mark);
+  if([3,6,9,12].every(i=>g[i].checked))[3,6,9,12].forEach(mark);
 }
 
 /* ── SCRATCH CARD ENGINE ── */
