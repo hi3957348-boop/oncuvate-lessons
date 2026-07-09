@@ -277,7 +277,7 @@ body.is-host .rt-deck{display:block;}
 .found-empty{color:#aaa;font-size:11px;}
 /* 5x5 grid */
 .bingo-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-bottom:12px;}
-.bingo-cell{aspect-ratio:1;border-radius:10px;border:1.5px solid var(--oc-border);background:var(--oc-card);display:flex;align-items:center;justify-content:center;font-size:18pt;font-weight:700;color:var(--oc-dark);text-align:center;cursor:pointer;transition:all .2s;padding:3px;line-height:1.1;user-select:none;word-break:break-all;overflow:hidden;}
+.bingo-cell{aspect-ratio:1/0.65;border-radius:10px;border:1.5px solid var(--oc-border);background:var(--oc-card);display:flex;align-items:center;justify-content:center;font-size:18pt;font-weight:700;color:var(--oc-dark);text-align:center;cursor:pointer;transition:background .2s,border-color .2s,color .2s;padding:3px;line-height:1.05;user-select:none;word-break:break-all;overflow:hidden;}
 .bingo-cell.joker{background:var(--oc-gold-light);border-color:var(--oc-gold);color:var(--oc-gold);}
 .bingo-cell.checked{background:var(--oc-purple);border-color:var(--oc-purple);color:#fff;}
 .bingo-cell.joker.checked{background:var(--oc-gold);border-color:var(--oc-gold);color:#fff;}
@@ -1008,6 +1008,7 @@ function goTo(n,forced){
   window.scrollTo({top:0,behavior:'smooth'});
   if(window.updateDoneLabel)window.updateDoneLabel();
   if(n===11){setTimeout(function(){if(window.initAllScratch)window.initAllScratch();if(window.initMapDraw)window.initMapDraw();},80);}
+  if(n===2){setTimeout(function(){if(window.fitBingoText)window.fitBingoText();},80);}
   if(IS_HOST && window._pageLockOn && window.pushControl)window.pushControl();
 }
 function nav(dir){goTo(cur+dir);}
@@ -1266,7 +1267,23 @@ function renderStudentGrid(){
     grid.appendChild(div);
   });
   updateBingoCount();
+  fitBingoText();
 }
+// 글자 수가 많아 칸을 넘치면 폰트를 자동으로 줄여 상자 안에 맞춘다 (기본 18pt=24px)
+function fitBingoText(){
+  const grid=document.getElementById('student-bingo-grid');
+  if(!grid || !grid.clientWidth) return;   // 화면에 보일 때만 측정
+  const cells=grid.children;
+  for(let i=0;i<cells.length;i++){
+    const el=cells[i]; let size=24, guard=0;
+    el.style.fontSize=size+'px';
+    while((el.scrollWidth>el.clientWidth+1 || el.scrollHeight>el.clientHeight+1) && size>9 && guard<40){
+      size-=1; el.style.fontSize=size+'px'; guard++;
+    }
+  }
+}
+window.fitBingoText=fitBingoText;
+window.addEventListener('resize',function(){ if(window.fitBingoText) window.fitBingoText(); });
 
 function tryCheck(idx){
   if(window._bingoWon)return;
