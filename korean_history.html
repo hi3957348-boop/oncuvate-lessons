@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온큐베이트 · 고려 시대 역사수업</title>
+<style>
+  :root{
+    --pp:#6C4CE0; --pp-d:#4E32B8; --pp-l:#F1ECFF; --pp-bd:#DcD3F7;
+    --ink:#2B2350; --gray:#8A82A8; --card:#fff; --bg:#F7F5FF; --bd:#ECE8F7;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Pretendard','Malgun Gothic',system-ui,-apple-system,sans-serif;background:var(--bg);color:var(--ink);-webkit-font-smoothing:antialiased;padding:0 18px 60px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  header{text-align:center;padding:54px 0 30px;}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:800;color:var(--pp);letter-spacing:.3px;margin-bottom:20px;background:var(--pp-l);border:1.5px solid var(--pp-bd);border-radius:30px;padding:7px 18px;}
+  h1{font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1.25;margin-bottom:12px;}
+  h1 .hl{color:var(--pp);}
+  .sub{font-size:15px;color:var(--gray);font-weight:600;line-height:1.6;}
+  .era-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+  .era{font-size:12.5px;font-weight:700;color:var(--pp-d);background:#fff;border:1.5px solid var(--pp-bd);border-radius:20px;padding:6px 14px;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:14px;}
+  @media(max-width:620px){.grid{grid-template-columns:1fr;} h1{font-size:27px;}}
+  .lesson{display:flex;flex-direction:column;background:var(--card);border:1.5px solid var(--bd);border-radius:20px;padding:22px 20px;text-decoration:none;color:inherit;transition:transform .16s,box-shadow .16s,border-color .16s;position:relative;overflow:hidden;}
+  .lesson.live:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(108,76,224,.18);border-color:var(--pp-bd);}
+  .lesson .emoji{font-size:34px;margin-bottom:12px;}
+  .lesson .no{position:absolute;top:16px;right:18px;font-size:13px;font-weight:900;color:var(--pp-l);-webkit-text-stroke:1px var(--pp-bd);}
+  .lesson h2{font-size:19px;font-weight:900;margin-bottom:6px;letter-spacing:-.4px;}
+  .lesson p{font-size:13px;color:var(--gray);font-weight:600;line-height:1.55;margin-bottom:16px;flex:1;}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .tag{font-size:11px;font-weight:700;color:var(--pp);background:var(--pp-l);border-radius:14px;padding:3px 9px;}
+  .go{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--pp);color:#fff;font-size:14px;font-weight:800;border-radius:12px;padding:11px 0;width:100%;}
+  .lesson.live:hover .go{background:var(--pp-d);}
+  .lesson.soon{opacity:.72;}
+  .lesson.soon .go{background:#E8E4F3;color:#9990BC;}
+  .lesson.soon .emoji{filter:grayscale(.4);}
+  .ribbon{position:absolute;top:14px;right:-30px;background:#B9B1D6;color:#fff;font-size:10.5px;font-weight:800;padding:3px 34px;transform:rotate(45deg);}
+  .note{margin-top:26px;background:var(--pp-l);border:1.5px solid var(--pp-bd);border-radius:16px;padding:16px 18px;font-size:13px;color:var(--pp-d);font-weight:600;line-height:1.7;}
+  .note b{font-weight:900;}
+  footer{text-align:center;margin-top:40px;font-size:12px;color:var(--gray);font-weight:600;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🏛️ Oncuvate 역사수업</div>
+    <h1>고려 시대 <span class="hl">역사 이야기</span></h1>
+    <p class="sub">읽고, 놀며, 함께 배우는 실시간 인터랙티브 수업.<br>수업을 골라 시작해 보세요.</p>
+    <div class="era-row">
+      <span class="era">📖 3단계 읽기</span>
+      <span class="era">🎮 복습 게임</span>
+      <span class="era">⏱ 실시간 타이머·잠금</span>
+      <span class="era">🗺️ 그래픽 조직자</span>
+    </div>
+  </header>
+
+  <div class="grid">
+
+    <a class="lesson live" href="seohui_diplomacy.html">
+      <span class="no">01</span>
+      <div class="emoji">🗺️</div>
+      <h2>서희의 담판</h2>
+      <p>말 한마디로 전쟁을 막고 강동 6주를 얻은 서희, 그 지혜로운 외교를 배워요.</p>
+      <div class="tags"><span class="tag">외교</span><span class="tag">거란</span><span class="tag">협상</span></div>
+      <span class="go">수업 열기 →</span>
+    </a>
+
+    <a class="lesson live" href="ganggamchan_gwiju.html">
+      <span class="no">02</span>
+      <div class="emoji">⚔️</div>
+      <h2>강감찬과 귀주대첩</h2>
+      <p>거란의 대군을 물리친 강감찬. 전략과 협력, 끝까지 포기하지 않는 용기를 배워요.</p>
+      <div class="tags"><span class="tag">귀주대첩</span><span class="tag">전략</span><span class="tag">용기</span></div>
+      <span class="go">수업 열기 →</span>
+    </a>
+
+    <div class="lesson soon">
+      <span class="ribbon">준비 중</span>
+      <span class="no">03</span>
+      <div class="emoji">👑</div>
+      <h2>광종의 개혁</h2>
+      <p>노비안검법과 과거제로 왕권을 세운 광종의 개혁 이야기.</p>
+      <div class="tags"><span class="tag">과거제</span><span class="tag">왕권</span></div>
+      <span class="go">곧 열려요</span>
+    </div>
+
+    <div class="lesson soon">
+      <span class="ribbon">준비 중</span>
+      <span class="no">04</span>
+      <div class="emoji">🐎</div>
+      <h2>고려와 거란 전쟁</h2>
+      <p>외교와 군사력을 함께 쓴 고려의 지혜로운 대응.</p>
+      <div class="tags"><span class="tag">고려</span><span class="tag">거란</span></div>
+      <span class="go">곧 열려요</span>
+    </div>
+
+    <div class="lesson soon">
+      <span class="ribbon">준비 중</span>
+      <span class="no">05</span>
+      <div class="emoji">📜</div>
+      <h2>팔만대장경</h2>
+      <p>나라를 지키려는 마음으로 새긴 팔만대장경 이야기.</p>
+      <div class="tags"><span class="tag">문화유산</span><span class="tag">불교</span></div>
+      <span class="go">곧 열려요</span>
+    </div>
+
+  </div>
+
+  <div class="note">
+    <b>💡 수업 이용 안내</b><br>
+    각 수업은 <b>강사</b>와 <b>학생</b> 모드로 나뉩니다. 강사가 타이머·페이지잠금·활동잠금으로 진행을 이끌고, 학생은 같은 링크로 접속해 이름을 입력하면 됩니다. 같은 반 학생들끼리 실시간으로 연동됩니다.
+  </div>
+
+  <footer>
+    ⓒ 2026 Oncuvate · 이 자료의 무단 복제 및 배포를 금합니다.
+  </footer>
+</div>
+</body>
+</html>
