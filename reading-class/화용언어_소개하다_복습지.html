@@ -169,7 +169,7 @@ table.hanja td.ex input::placeholder{color:#C7C2D8;}
 
   <h2 class="sec"><span class="n">5</span>한자로 배우는 낱말</h2>
   <div class="desc" id="hanjaDesc"></div>
-  <table class="hanja"><thead><tr><th style="width:16%">한자어</th><th style="width:30%">뜻</th><th>예문 (원하면 입력)</th></tr></thead><tbody id="hanjaBody"></tbody></table>
+  <table class="hanja"><thead><tr><th style="width:16%">한자어</th><th style="width:30%">뜻</th><th>내가 만든 예문</th></tr></thead><tbody id="hanjaBody"></tbody></table>
 
   <h2 class="sec"><span class="n">6</span>스스로 점검하기</h2>
   <div class="checklist" id="checklist"></div>
@@ -305,8 +305,8 @@ const SENTS=ksplitSents(L.passage);
 (function(){
   const hmap={}; L.hanja.forEach(h=>{ if(!(h.k in hmap)) hmap[h.k]=h.h; });
   const hchar=(L.hanjaName.match(/\(([^)]+)\)/)||[])[1]||''; const hread=L.hanjaName.replace(/\s*\([^)]*\)/,'');
-  document.getElementById('hanjaDesc').innerHTML=hchar+'('+hread+')이 들어간 낱말의 뜻을 읽어요. 예문은 <b>원하면</b> 칸에 입력해 보세요.';
-  document.getElementById('hanjaBody').innerHTML=L.eqn.map(e=>{ const hz=e.w.map(k=>hmap[k]||'□').join(''); const rd=e.w.join(''); return '<tr><td class="hz">'+esc(hz)+'<small>'+esc(rd)+'</small></td><td class="mean">'+esc(e.mean)+'</td><td class="ex"><input type="text" data-word="'+esc(rd)+'" placeholder="예문을 만들어 보세요 (선택)"></td></tr>'; }).join('');
+  document.getElementById('hanjaDesc').innerHTML=hchar+'('+hread+')이 들어간 낱말의 뜻을 읽고, 그 낱말을 넣어 <b>예문을 직접 만들어</b> 보세요.';
+  document.getElementById('hanjaBody').innerHTML=L.eqn.map(e=>{ const hz=e.w.map(k=>hmap[k]||'□').join(''); const rd=e.w.join(''); return '<tr><td class="hz">'+esc(hz)+'<small>'+esc(rd)+'</small></td><td class="mean">'+esc(e.mean)+'</td><td class="ex"><input type="text" data-word="'+esc(rd)+'" placeholder="예문을 만들어 보세요"></td></tr>'; }).join('');
 })();
 
 /* 6. checklist */
