@@ -1531,8 +1531,8 @@ function highlightBingoLines(){
     setTimeout(() => {
       // Patch goTo
       const _goTo = window.goTo;
-      window.goTo = function(n) {
-        _goTo(n);
+      window.goTo = function(n, forced) {
+        _goTo(n, forced);
         if (n === 9) {
           setTimeout(initAllScratch, 50);
         }
