@@ -127,6 +127,9 @@ body{background:var(--oc-bg);font-family:'Malgun Gothic','Segoe UI',Arial,sans-s
 .tool-btn.primary:hover{background:#5b4f96;}
 .done-banner{background:var(--oc-success-bg);border:1.5px solid #A9E3D5;border-radius:12px;padding:12px 14px;font-size:13px;color:var(--oc-success);font-weight:700;margin-bottom:14px;display:flex;align-items:center;gap:8px;line-height:1.5;}
 .done-banner.warn{background:var(--oc-gold-light);border-color:#F0DCA6;color:var(--oc-gold);}
+.btn-submit{padding:14px 30px;border-radius:12px;border:none;background:var(--oc-success);color:#fff;font-size:15.5px;font-weight:800;cursor:pointer;font-family:inherit;box-shadow:0 4px 14px rgba(22,160,132,.32);transition:all .2s;}
+.btn-submit:hover:not(:disabled){background:#128a72;}
+.btn-submit:disabled{opacity:.55;cursor:default;}
 
 /* print */
 #printArea{display:none;}
@@ -395,8 +398,15 @@ function renderFinal(area){
     +     '<button class="tool-btn" onclick="reloadFull()">🔄 문단에서 다시 불러오기</button>'
     +     '<button class="tool-btn" onclick="copyFull()">📋 복사하기</button>'
     +     '<button class="tool-btn" onclick="downloadFull()">💾 저장하기(txt)</button>'
-    +     '<button class="tool-btn primary" onclick="printFull()">🖨 인쇄하기</button>'
+    +     '<button class="tool-btn" onclick="printFull()">🖨 인쇄하기</button>'
     +   '</div>'
+    + '</div>'
+    + '<div class="card" style="text-align:center">'
+    +   '<div class="tag" style="justify-content:center">다 썼다면</div>'
+    +   '<div class="card-h" style="margin-bottom:6px">글을 <span class="accent">선생님께 제출</span>해요</div>'
+    +   '<div class="pgdesc" style="margin-bottom:14px">완성한 글을 선생님께 보내요. 제출한 뒤에도 글은 계속 볼 수 있어요.</div>'
+    +   '<button class="btn-submit" id="submitBtn" onclick="submitToTeacher()">📨 선생님께 제출하기</button>'
+    +   '<div id="submitStatus" style="min-height:22px;margin-top:12px;font-size:13.5px;font-weight:700"></div>'
     + '</div>'
     + bottomNav()
     + '</div>';
@@ -433,6 +443,27 @@ function printFull(){
     +'<div class="pmeta">'+(name?esc(name):'')+'</div>'
     +paras.map(p=>'<p>'+esc(p)+'</p>').join('');
   window.print();
+}
+
+/* ─────────── 선생님께 제출 (Web3Forms) ─────────── */
+const WEB3FORMS_KEY='819bc038-aadc-4d6d-8dcb-127ff776cc4d';
+function submitToTeacher(){
+  const name=load('name').trim();
+  const title=load('title').trim()||'(제목 없음)';
+  const full=load('full').trim();
+  if(!name){ toast('먼저 표지에서 이름을 써 주세요 🙏'); goTo(0); setTimeout(()=>{var el=document.getElementById('in-name'); if(el) el.focus();},480); return; }
+  if(!full){ toast('제출할 글이 없어요. 문단을 먼저 써 보세요.'); return; }
+  const btn=document.getElementById('submitBtn'), st=document.getElementById('submitStatus');
+  btn.disabled=true; st.innerHTML='<span style="color:var(--oc-gray)">제출하는 중이에요… ⏳</span>';
+  let msg='📝 어제 저녁 먹은 것 — 생활 글쓰기 (1일차)\n\n이름: '+name+'\n제목: '+title+'\n\n──── 완성된 글 ────\n'+full+'\n\n──── 문단별 답 ────\n';
+  for(let i=1;i<=QUESTIONS.length;i++){ msg+='\n['+i+'] '+QUESTIONS[i-1].q+'\n'+(load('a'+i).trim()||'(비어 있음)')+'\n'; }
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},
+    body:JSON.stringify({access_key:WEB3FORMS_KEY, subject:'[생활 글쓰기] '+name+' — '+title, from_name:'Oncuvate 글쓰기', name:name, message:msg})})
+    .then(r=>r.json()).then(d=>{
+      if(d&&d.success){ st.innerHTML='<span style="color:var(--oc-success);font-weight:800">✅ 선생님께 제출을 완료했어요!</span>'; btn.textContent='✅ 제출 완료'; }
+      else { st.innerHTML='<span style="color:var(--oc-error)">제출에 실패했어요. 잠시 후 다시 시도해 주세요.</span>'; btn.disabled=false; }
+    })
+    .catch(()=>{ st.innerHTML='<span style="color:var(--oc-error)">인터넷 연결을 확인하고 다시 시도해 주세요.</span>'; btn.disabled=false; });
 }
 
 /* ─────────── UTIL ─────────── */
