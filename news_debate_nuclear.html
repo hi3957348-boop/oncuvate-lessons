@@ -308,12 +308,47 @@ body.nav-locked .nav-bottom{display:none;}
 .star-row{display:flex;gap:6px;margin-bottom:2px;}
 .star{font-size:28px;opacity:.22;cursor:pointer;transition:all .15s;line-height:1;}
 .star.on{opacity:1;transform:scale(1.1);}
+
+/* ── 초성 퀴즈 ── */
+.cho-item{background:var(--oc-card);border:1px solid var(--oc-border);border-left:4px solid var(--oc-purple);border-radius:14px;padding:13px 15px;margin-bottom:10px;box-shadow:var(--shadow-card);transition:all .2s;}
+.cho-item.done{border-color:var(--oc-success);border-left-color:var(--oc-success);background:var(--oc-success-bg);}
+.cho-top{display:flex;align-items:center;gap:12px;flex-wrap:wrap;margin-bottom:9px;}
+.cho-cho{background:var(--oc-purple);color:#fff;font-size:20px;font-weight:900;letter-spacing:6px;padding:6px 15px;border-radius:10px;flex-shrink:0;}
+.cho-mean{font-size:13.5px;font-weight:600;color:var(--oc-dark);}
+.cho-row{display:flex;align-items:center;gap:10px;margin-bottom:8px;}
+.cho-in{flex:1;border:2px solid var(--oc-border);border-radius:10px;padding:10px 13px;font-family:inherit;font-size:16px;font-weight:700;color:var(--oc-dark);outline:none;}
+.cho-in:focus{border-color:var(--oc-purple);}
+.cho-in.ok{border-color:var(--oc-success);color:var(--oc-success);background:#fff;}
+.cho-status{font-size:20px;width:26px;text-align:center;}
+.cho-scratch-wrap{position:relative;height:42px;border-radius:10px;overflow:hidden;background:var(--oc-gold-light);border:1px dashed var(--oc-gold);}
+.cho-answer{position:absolute;inset:0;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:800;color:var(--oc-gold);}
+.cho-scratch{position:absolute;inset:0;touch-action:none;cursor:cell;}
+.cho-scratch-hint{position:absolute;right:10px;bottom:2px;font-size:9px;color:var(--oc-gray-light);pointer-events:none;}
+.cho-fb{text-align:center;font-size:14px;font-weight:800;color:var(--oc-purple);min-height:20px;margin-top:6px;}
+
+/* ── 강사 컨트롤 패널 ── */
+.host-panel{background:linear-gradient(135deg,#2E2A46,#3d3660);border-radius:var(--radius-card);padding:12px 14px;margin-bottom:12px;color:#fff;box-shadow:var(--shadow-card);}
+.hp-row{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:10px;}
+.hp-btn{background:rgba(255,255,255,0.14);border:1.5px solid rgba(255,255,255,0.28);color:#fff;font-family:inherit;font-size:13px;font-weight:800;padding:8px 14px;border-radius:10px;cursor:pointer;transition:all .15s;}
+.hp-btn:hover{background:rgba(255,255,255,0.24);}
+.hp-btn.on{background:var(--oc-gold);border-color:var(--oc-gold);color:#fff;}
+.hp-count{margin-left:auto;font-size:13px;font-weight:800;background:rgba(255,255,255,0.12);padding:6px 12px;border-radius:20px;}
+.hp-students{display:flex;flex-wrap:wrap;gap:6px;margin-bottom:10px;min-height:26px;}
+.hp-stu{background:rgba(27,188,212,0.22);border:1px solid rgba(27,188,212,0.5);color:#bdf1fa;font-size:11.5px;font-weight:700;padding:4px 10px;border-radius:20px;}
+.hp-empty{font-size:12px;color:rgba(255,255,255,0.5);}
+.hp-console-label{font-size:11px;font-weight:800;color:rgba(255,255,255,0.6);letter-spacing:.5px;margin-bottom:4px;}
+.hp-console{background:rgba(0,0,0,0.28);border-radius:10px;padding:8px 10px;height:118px;overflow-y:auto;font-family:'Consolas','Malgun Gothic',monospace;font-size:11.5px;line-height:1.7;color:#c9f0d8;}
+.hp-log{white-space:nowrap;}
+
+/* ── 활동 잠금 배너 (학생) ── */
+.act-note{display:none;position:fixed;left:50%;top:10px;transform:translateX(-50%);z-index:9998;background:var(--oc-gold);color:#fff;font-size:13px;font-weight:800;padding:9px 18px;border-radius:20px;box-shadow:0 4px 14px rgba(0,0,0,.2);align-items:center;gap:6px;}
+body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 </style>
 
 <!-- Firebase (강사→학생 워드서치 힌트 동기화) -->
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
-  import { getDatabase, ref, set, onValue } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
+  import { getDatabase, ref, set, onValue, onDisconnect } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-database.js";
   const firebaseConfig = {
     apiKey: "AIzaSyAHib_-XPXfuvhsZcPlMSnqi4O46kAR0mM",
     authDomain: "non-1-4a6f5.firebaseapp.com",
@@ -326,7 +361,7 @@ body.nav-locked .nav-bottom{display:none;}
   try{
     const app = initializeApp(firebaseConfig);
     const db  = getDatabase(app);
-    window._db=db; window._ref=ref; window._set=set; window._onValue=onValue;
+    window._db=db; window._ref=ref; window._set=set; window._onValue=onValue; window._onDisconnect=onDisconnect;
     window._firebaseReady=true;
   }catch(e){ window._firebaseReady=false; }
 </script>
@@ -377,6 +412,20 @@ body.nav-locked .nav-bottom{display:none;}
       </div>
     </div>
   </div>
+
+  <!-- 강사 컨트롤 패널 (host only) -->
+  <div class="host-panel" id="hostPanel" style="display:none;">
+    <div class="hp-row">
+      <button class="hp-btn" id="hpPageLock" onclick="toggleLock()">🔒 페이지 잠금</button>
+      <button class="hp-btn" id="hpActLock" onclick="toggleActLock()">✋ 활동 잠금</button>
+      <span class="hp-count" id="hpCount">👩‍🎓 학생 0명</span>
+    </div>
+    <div class="hp-students" id="hpStudents"><span class="hp-empty">아직 접속한 학생이 없어요</span></div>
+    <div class="hp-console-label">📋 실시간 진행상황 콘솔</div>
+    <div class="hp-console" id="hpConsole"></div>
+  </div>
+
+  <div class="act-note" id="actNote">✋ 선생님이 활동을 잠갔어요 — 잠시 기다려요</div>
 
   <!-- ════ P1 · 어휘학습 ════ -->
   <div class="pg on" id="pg1">
@@ -447,7 +496,7 @@ body.nav-locked .nav-bottom{display:none;}
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" disabled>← 이전</button>
-      <span class="nb-cnt">1 / 7</span>
+      <span class="nb-cnt">1 / 8</span>
       <button class="nb-btn nb-next" onclick="goTo(2)">다음 →</button>
     </div>
   </div>
@@ -481,7 +530,7 @@ body.nav-locked .nav-bottom{display:none;}
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" onclick="goTo(1)">← 이전</button>
-      <span class="nb-cnt">2 / 7</span>
+      <span class="nb-cnt">2 / 8</span>
       <button class="nb-btn nb-next" onclick="goTo(3)">다음 →</button>
     </div>
   </div>
@@ -516,13 +565,29 @@ body.nav-locked .nav-bottom{display:none;}
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" onclick="goTo(2)">← 이전</button>
-      <span class="nb-cnt">3 / 7</span>
+      <span class="nb-cnt">3 / 8</span>
       <button class="nb-btn nb-next" onclick="goTo(4)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P4 · 기사읽기2 (질문 하이라이트 + 님비현상 워들) ════ -->
+  <!-- ════ P4 · 초성 퀴즈 ════ -->
   <div class="pg" id="pg4">
+    <div class="card">
+      <div class="tag">초성 퀴즈</div>
+      <div class="card-h">🔤 초성을 보고 <span class="accent">낱말을 완성</span>해요</div>
+      <p class="pgdesc">초성과 뜻을 보고 칸에 <b>완성된 낱말</b>을 입력해요. 정답이면 초록색으로 바뀌어요. 잘 모를 땐 아래 회색 칸을 <b>문질러서(스크래치)</b> 정답을 확인할 수 있어요.</p>
+      <div id="choList"></div>
+      <div class="cho-fb" id="choFb"></div>
+    </div>
+    <div class="nav-bottom">
+      <button class="nb-btn nb-prev" onclick="goTo(3)">← 이전</button>
+      <span class="nb-cnt">4 / 8</span>
+      <button class="nb-btn nb-next" onclick="goTo(5)">다음 →</button>
+    </div>
+  </div>
+
+  <!-- ════ P5 · 기사읽기2 (질문 하이라이트 + 님비현상 워들) ════ -->
+  <div class="pg" id="pg5">
     <div class="card">
       <div class="tag">기사읽기 2 · 문제와 해결</div>
       <div class="card-h">🔎 질문을 누르면 <span class="accent">답이 보여요</span></div>
@@ -575,14 +640,14 @@ body.nav-locked .nav-bottom{display:none;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(3)">← 이전</button>
-      <span class="nb-cnt">4 / 7</span>
-      <button class="nb-btn nb-next" onclick="goTo(5)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(4)">← 이전</button>
+      <span class="nb-cnt">5 / 8</span>
+      <button class="nb-btn nb-next" onclick="goTo(6)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P5 · 기사·어휘퀴즈 ════ -->
-  <div class="pg" id="pg5">
+  <!-- ════ P6 · 기사·어휘퀴즈 ════ -->
+  <div class="pg" id="pg6">
     <div class="card">
       <div class="tag">기사·어휘퀴즈</div>
       <div class="card-h">🧩 퀴즈 <span class="accent">활동</span></div>
@@ -599,14 +664,14 @@ body.nav-locked .nav-bottom{display:none;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(4)">← 이전</button>
-      <span class="nb-cnt">5 / 7</span>
-      <button class="nb-btn nb-next" onclick="goTo(6)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(5)">← 이전</button>
+      <span class="nb-cnt">6 / 8</span>
+      <button class="nb-btn nb-next" onclick="goTo(7)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P6 · 기사분석 ════ -->
-  <div class="pg" id="pg6">
+  <!-- ════ P7 · 기사분석 ════ -->
+  <div class="pg" id="pg7">
     <div class="card">
       <div class="tag">기사분석</div>
       <div class="card-h">🔬 기사를 <span class="accent">분석해봐요</span></div>
@@ -645,14 +710,14 @@ body.nav-locked .nav-bottom{display:none;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(5)">← 이전</button>
-      <span class="nb-cnt">6 / 7</span>
-      <button class="nb-btn nb-next" onclick="goTo(7)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(6)">← 이전</button>
+      <span class="nb-cnt">7 / 8</span>
+      <button class="nb-btn nb-next" onclick="goTo(8)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P7 · 토론 ════ -->
-  <div class="pg" id="pg7">
+  <!-- ════ P8 · 토론 ════ -->
+  <div class="pg" id="pg8">
     <div class="card" style="padding-bottom:14px;">
       <div class="tag">토론</div>
       <div class="card-h">💬 <span class="accent">토론</span>해봐요</div>
@@ -755,8 +820,8 @@ body.nav-locked .nav-bottom{display:none;}
     <div class="callout tip">🏠 집에서 해봐요! 우리 집에 전기가 어디에서 오는지 가족과 이야기해봐요. 꼭 필요한 시설을 어디에 지어야 할지, 나라면 어떻게 정할지 말해봐요!</div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(6)">← 이전</button>
-      <span class="nb-cnt">7 / 7</span>
+      <button class="nb-btn nb-prev" onclick="goTo(7)">← 이전</button>
+      <span class="nb-cnt">8 / 8</span>
       <button class="nb-btn nb-next" disabled>수업 완료 ✓</button>
     </div>
   </div>
@@ -814,13 +879,13 @@ function enterApp(){
     document.getElementById('app').classList.add('on');
     initCardMatch();
     buildReading();
-    if(IS_HOST){ navRun=Date.now(); document.getElementById('lockBtn').style.display='inline-flex'; navPublish(); }
-    else { navSubscribe(); }
+    if(IS_HOST){ navRun=Date.now(); document.getElementById('hostPanel').style.display='block'; navPublish(); studentsSubscribe(); hostLog('👑 강사 입장'); }
+    else { STUDENT_ID='S'+Math.floor(1000+Math.random()*9000); navSubscribe(); actSubscribe(); setupStudentPresence(); pubProgress(); }
   },450);
 }
 
 /* ── NAVIGATION ── */
-const TOTAL=7;let cur=1;window._cur=1;
+const TOTAL=8;let cur=1;window._cur=1;
 let navLocked=false, navRun=null, navApplying=false;
 const NAV_DB='sisa-nuclear/nav';
 function buildDots(){
@@ -843,6 +908,8 @@ function goToInternal(n){
   window.scrollTo({top:0,behavior:'smooth'});
   if(n===2 && !wsBuilt) buildWordSearch();
   if(n===3) setTimeout(resizeHl,60);
+  if(n===4) setTimeout(setupChoScratch,60);
+  if(!IS_HOST) pubProgress();
 }
 function goTo(n){
   if(!IS_HOST && navLocked && !navApplying) return; // 학생 잠금 시 이동 불가
@@ -860,9 +927,9 @@ function navPublish(){
 function toggleLock(){
   if(!IS_HOST)return;
   navLocked=!navLocked;
-  const b=document.getElementById('lockBtn');
-  b.textContent=navLocked?'🔒 잠금 해제':'🔓 학생 잠금';
-  b.classList.toggle('locked',navLocked);
+  const b=document.getElementById('hpPageLock');
+  if(b){ b.textContent=navLocked?'🔒 페이지 잠금 해제':'🔒 페이지 잠금'; b.classList.toggle('on',navLocked); }
+  hostLog(navLocked?'📄 페이지 잠금 ON':'📄 페이지 잠금 OFF');
   navPublish();
 }
 function navSubscribe(){
@@ -1454,11 +1521,138 @@ function rateStar(id,val){
   document.querySelectorAll('#'+id+' .star').forEach((s,i)=>s.classList.toggle('on',i<val));
 }
 
+/* ════ 초성 퀴즈 (P4) ════ */
+const CHO_Q=[
+  {cho:'ㅇㅈㄹ', mean:'핵분열로 에너지를 만드는 힘', ans:'원자력'},
+  {cho:'ㅅㅈㅁ', mean:'전기를 멀리 보내는 전선과 탑 시설', ans:'송전망'},
+  {cho:'ㅇㅊ', mean:'시설·기관을 지역에 끌어오는 것', ans:'유치'},
+  {cho:'ㅈㅇㄱ', mean:'도움을 위해 주는 돈', ans:'지원금'},
+  {cho:'ㄷㅇ', mean:'찬성하고 허락하는 것', ans:'동의'},
+  {cho:'ㅎㅌ', mean:'이익으로 받는 좋은 점', ans:'혜택'},
+];
+let choDone=0;
+function buildCho(){
+  const list=document.getElementById('choList'); if(!list)return;
+  list.innerHTML=''; choDone=0;
+  CHO_Q.forEach((q,i)=>{
+    const item=document.createElement('div');
+    item.className='cho-item'; item.id='cho-'+i;
+    item.innerHTML=
+      '<div class="cho-top"><span class="cho-cho">'+q.cho+'</span><span class="cho-mean">'+q.mean+'</span></div>'+
+      '<div class="cho-row"><input class="cho-in" id="choin-'+i+'" placeholder="완성된 낱말을 입력하세요" autocomplete="off"/><span class="cho-status" id="chost-'+i+'">✏️</span></div>'+
+      '<div class="cho-scratch-wrap" id="chosw-'+i+'"><div class="cho-answer">정답 : '+q.ans+'</div><canvas class="cho-scratch" id="chosc-'+i+'"></canvas><span class="cho-scratch-hint">🪙 문질러서 정답 확인</span></div>';
+    list.appendChild(item);
+    item.querySelector('.cho-in').addEventListener('input',()=>choCheck(i));
+  });
+}
+function choCheck(i){
+  const inp=document.getElementById('choin-'+i);
+  const item=document.getElementById('cho-'+i);
+  const st=document.getElementById('chost-'+i);
+  const val=(inp.value||'').replace(/\s/g,'');
+  if(val===CHO_Q[i].ans){ item.classList.add('done'); st.textContent='✅'; inp.classList.add('ok'); }
+  else { item.classList.remove('done'); st.textContent='✏️'; inp.classList.remove('ok'); }
+  choDone=document.querySelectorAll('.cho-item.done').length;
+  document.getElementById('choFb').textContent = choDone===CHO_Q.length ? '🎉 초성 퀴즈를 모두 맞혔어요!' : ('맞힌 낱말 '+choDone+' / '+CHO_Q.length);
+  if(!IS_HOST) pubProgress();
+}
+function setupChoScratch(){
+  CHO_Q.forEach((q,i)=>{
+    const cv=document.getElementById('chosc-'+i); if(!cv||cv._init)return;
+    const wrap=document.getElementById('chosw-'+i);
+    const w=wrap.offsetWidth, h=wrap.offsetHeight; if(!w||!h)return;
+    cv.width=w; cv.height=h; cv.style.width=w+'px'; cv.style.height=h+'px';
+    const cx=cv.getContext('2d');
+    cx.fillStyle='#CFC9E0'; cx.fillRect(0,0,w,h);
+    cx.fillStyle='#8B7CC4'; cx.font='bold 13px "Malgun Gothic",sans-serif'; cx.textAlign='center'; cx.textBaseline='middle';
+    cx.fillText('🪙 여기를 문질러요', w/2, h/2);
+    cv._init=true;
+    let drawing=false;
+    function pos(e){ const r=cv.getBoundingClientRect(); return {x:(e.clientX-r.left)*(cv.width/r.width), y:(e.clientY-r.top)*(cv.height/r.height)}; }
+    function scratch(e){ if(!drawing)return; const p=pos(e); cx.globalCompositeOperation='destination-out'; cx.beginPath(); cx.arc(p.x,p.y,15,0,7); cx.fill(); }
+    cv.addEventListener('pointerdown',e=>{ e.preventDefault(); drawing=true; cv.setPointerCapture(e.pointerId); scratch(e); });
+    cv.addEventListener('pointermove',scratch);
+    const end=()=>{ if(!drawing)return; drawing=false;
+      try{ const d=cx.getImageData(0,0,cv.width,cv.height).data; let clear=0,tot=d.length/4; for(let k=3;k<d.length;k+=4){ if(d[k]===0)clear++; } if(clear/tot>0.5) cx.clearRect(0,0,cv.width,cv.height); }catch(err){}
+    };
+    cv.addEventListener('pointerup',end); cv.addEventListener('pointercancel',end);
+  });
+}
+
+/* ════ 활동 잠금 (강사 → 학생) ════ */
+let actLocked=false;
+const ACT_DB='sisa-nuclear/actlock';
+function toggleActLock(){
+  if(!IS_HOST)return;
+  actLocked=!actLocked;
+  const b=document.getElementById('hpActLock');
+  if(b){ b.textContent=actLocked?'✋ 활동 잠금 해제':'✋ 활동 잠금'; b.classList.toggle('on',actLocked); }
+  hostLog(actLocked?'✋ 활동 잠금 ON':'✋ 활동 잠금 OFF');
+  actPublish();
+}
+function actPublish(){
+  if(!IS_HOST||!window._firebaseReady)return;
+  try{ window._set(window._ref(window._db,ACT_DB),{locked:actLocked,run:navRun}); }catch(e){}
+}
+function actSubscribe(){
+  if(IS_HOST||!window._firebaseReady)return;
+  window._onValue(window._ref(window._db,ACT_DB),snap=>{
+    const v=snap.val(); if(!v)return;
+    actLocked=!!v.locked;
+    document.body.classList.toggle('act-locked',actLocked);
+    const n=document.getElementById('actNote'); if(n) n.style.display=actLocked?'flex':'none';
+  });
+}
+
+/* ════ 학생 진행상황 (강사 콘솔) ════ */
+const STU_DB='sisa-nuclear/students';
+let STUDENT_ID=null;
+function setupStudentPresence(){
+  if(IS_HOST||!window._firebaseReady||!STUDENT_ID)return;
+  try{ const r=window._ref(window._db,STU_DB+'/'+STUDENT_ID); window._onDisconnect(r).remove(); }catch(e){}
+}
+function pubProgress(){
+  if(IS_HOST||!window._firebaseReady||!STUDENT_ID)return;
+  try{ window._set(window._ref(window._db,STU_DB+'/'+STUDENT_ID),{id:STUDENT_ID,page:cur,cho:choDone,ts:Date.now()}); }catch(e){}
+}
+let _stuPrev={};
+function studentsSubscribe(){
+  if(!IS_HOST||!window._firebaseReady)return;
+  window._onValue(window._ref(window._db,STU_DB),snap=>{
+    const v=snap.val()||{};
+    renderStudents(v);
+    Object.keys(v).forEach(id=>{
+      const s=v[id], p=_stuPrev[id];
+      if(!p){ hostLog('🟢 '+id+' 입장'); }
+      else { if(p.page!==s.page) hostLog('➡️ '+id+' → '+s.page+'페이지');
+             if((p.cho||0)!==(s.cho||0)) hostLog('🔤 '+id+' 초성 '+(s.cho||0)+'/'+CHO_Q.length); }
+    });
+    Object.keys(_stuPrev).forEach(id=>{ if(!v[id]) hostLog('🔴 '+id+' 퇴장'); });
+    _stuPrev=v;
+  });
+}
+function renderStudents(v){
+  const list=Object.keys(v).map(k=>v[k]).sort((a,b)=>a.id<b.id?-1:1);
+  const cnt=document.getElementById('hpCount'); if(cnt) cnt.textContent='👩‍🎓 학생 '+list.length+'명';
+  const box=document.getElementById('hpStudents'); if(!box)return;
+  box.innerHTML = list.length ? list.map(s=>'<span class="hp-stu">'+s.id+' · '+s.page+'p · 초성'+(s.cho||0)+'/'+CHO_Q.length+'</span>').join('') : '<span class="hp-empty">아직 접속한 학생이 없어요</span>';
+}
+function hostLog(msg){
+  const c=document.getElementById('hpConsole'); if(!c)return;
+  const t=new Date(); const pad=x=>('0'+x).slice(-2);
+  const line=document.createElement('div'); line.className='hp-log';
+  line.textContent='['+pad(t.getHours())+':'+pad(t.getMinutes())+':'+pad(t.getSeconds())+'] '+msg;
+  c.appendChild(line); c.scrollTop=c.scrollHeight;
+  while(c.childNodes.length>60) c.removeChild(c.firstChild);
+  try{ console.log('[Oncuvate]',msg); }catch(e){}
+}
+
 /* ── INIT ── */
 buildArticle();
 buildSyllables();
 buildJamo();
 updateChances();
+buildCho();
 document.addEventListener('click',e=>{if(!e.target.classList.contains('hw'))document.getElementById('tooltip').style.display='none';});
 </script>
 </body>
