@@ -212,6 +212,7 @@ $('applyForm').addEventListener('submit',function(e){
   if(!email||email.indexOf('@')<0){ msg.style.color='#D8574F'; msg.textContent='보호자 이메일을 정확히 입력해 주세요.'; return; }
   if(!$('afAgree').checked){ msg.style.color='#D8574F'; msg.textContent='[필수] 개인정보 수집·이용 및 보호자 동의가 필요해요.'; return; }
   var s=getS(); var attach=(REC&&$('recInclude').checked);
+  if(attach&&REC&&REC.blob&&REC.blob.size>8000000){ attach=false; }  /* 너무 크면 첨부 제외(안전장치) */
   var fd=new FormData();
   fd.append('access_key',WEB3FORMS_KEY);
   fd.append('subject','온큐베이트 전문가 피드백 신청');
