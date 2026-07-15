@@ -1,0 +1,17 @@
+{
+ "name": "온큐베이트 리딩",
+ "short_name": "온큐리딩",
+ "description": "두루책방 그림책으로 끊어읽기·신경망 음성·유창성 테스트",
+ "start_url": "./app.html",
+ "scope": "./",
+ "display": "standalone",
+ "orientation": "portrait",
+ "background_color": "#F5F4FA",
+ "theme_color": "#6A5DA7",
+ "lang": "ko",
+ "icons": [
+   {"src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any"},
+   {"src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any"},
+   {"src": "icon-512-maskable.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable"}
+ ]
+}

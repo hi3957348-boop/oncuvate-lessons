@@ -2,6 +2,11 @@
 <html lang="ko"><head>
 <meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
 <title>두루책방 · 온큐베이트 난독 리더기</title>
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#6A5DA7">
+<link rel="apple-touch-icon" href="apple-touch-icon.png">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="온큐리딩">
 <style>
   :root{--bg:#F5F4FA;--card:#fff;--ink:#1C1A2E;--muted:#9490AA;--line:#E2DEEF;
     --purple:#6A5DA7;--cyan:#1BBCD4;--soft:#EEEBF8;}
@@ -144,4 +149,5 @@
     난독 리더기 · Oncuvate
   </footer>
 </div>
+<script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body></html>
