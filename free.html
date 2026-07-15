@@ -40,6 +40,9 @@
     :root{--bg:#17151F;--card:#211E2C;--ink:#ECEAF5;--line:#332E44;--soft:#2A2540;--muted:#9C97B4;}
     body{background:var(--bg);color:var(--ink);}
   }
+  *{-webkit-user-select:none;-moz-user-select:none;-ms-user-select:none;user-select:none;-webkit-touch-callout:none;}
+  input,textarea,select{-webkit-user-select:text;user-select:text;}
+  img{-webkit-user-drag:none;user-drag:none;}
 </style></head>
 <body>
 <div class="wrap">
@@ -156,5 +159,6 @@
     온큐리더기 by Oncuvate · 무단 도용·복제 금지
   </footer>
 </div>
+<script>document.addEventListener('contextmenu',function(e){e.preventDefault();});document.addEventListener('dragstart',function(e){e.preventDefault();});</script>
 <script>if('serviceWorker' in navigator){window.addEventListener('load',function(){navigator.serviceWorker.register('sw.js').catch(function(){});});}</script>
 </body></html>
