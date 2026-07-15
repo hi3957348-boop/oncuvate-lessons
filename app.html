@@ -47,6 +47,15 @@ td .tag{font-size:11px;font-weight:800;padding:2px 8px;border-radius:12px;backgr
 .tools{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px;}
 footer{margin-top:26px;font-size:11.5px;color:var(--muted);text-align:center;line-height:1.7;}
 .hide{display:none;}
+.ck{display:flex;gap:8px;align-items:flex-start;font-size:13px;font-weight:600;color:#5c5480;margin:9px 0;cursor:pointer;}
+.ck input{margin-top:2px;width:16px;height:16px;flex:none;}
+.rbig{font-size:52px;font-weight:900;color:var(--purple);line-height:1.05;}
+.rbig .u{font-size:17px;font-weight:800;color:var(--muted);margin-left:6px;}
+.rgrid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin:14px 0;}
+.rgrid .b{background:var(--soft);border-radius:12px;padding:12px 14px;}
+.rgrid .b .k{font-size:11px;color:var(--muted);font-weight:800;}.rgrid .b .v{font-size:20px;font-weight:900;color:var(--purple);}
+.rlist{margin:6px 0 0;padding-left:2px;}.rlist li{list-style:none;font-size:13.5px;font-weight:600;color:#5c5480;margin:5px 0;}
+.rband{display:inline-block;background:var(--soft);color:var(--purple);font-size:12px;font-weight:800;padding:4px 11px;border-radius:20px;margin-top:8px;}
 @media (prefers-color-scheme:dark){:root{--bg:#17151F;--card:#211E2C;--ink:#ECEAF5;--line:#332E44;--soft:#2A2540;--muted:#9C97B4;}body{background:var(--bg);color:var(--ink);}}
 </style></head><body>
 <div class="wrap">
@@ -55,6 +64,7 @@ footer{margin-top:26px;font-size:11.5px;color:var(--muted);text-align:center;lin
 
   <div class="tabs" id="tabs">
     <button data-r="student" class="on">🧒 학생</button>
+    <button data-r="report">📊 내 리포트</button>
     <button data-r="teacher">🧑‍🏫 교사</button>
   </div>
 
@@ -75,6 +85,26 @@ footer{margin-top:26px;font-size:11.5px;color:var(--muted);text-align:center;lin
       <div style="font-size:15px;font-weight:800;margin-bottom:6px;">준비됐어요! 🎉</div>
       <div style="font-size:13.5px;color:var(--muted);font-weight:600;margin-bottom:14px;">두루책방에서 책을 골라 읽어요. 읽기 유창성 테스트·퀴즈·게임 결과가 자동으로 저장돼서, 선생님이 볼 수 있어요.</div>
       <a class="golink" href="durubook.html"><button class="btn">📚 두루책방에서 책 고르기</button></a>
+    </div>
+  </div>
+
+  <!-- 내 리포트 -->
+  <div id="reportPane" class="hide">
+    <div id="reportBody"></div>
+    <div class="card" id="applyCard">
+      <div style="font-size:16px;font-weight:900;margin-bottom:4px;">온라인 수업에 등록하면, 이 피드백을 <span style="color:var(--purple)">매주 실시간</span>으로 받아요 🎯</div>
+      <div style="font-size:13px;color:var(--muted);font-weight:600;margin-bottom:14px;">활동 데이터를 바탕으로 온큐베이트가 <b>1:1 분석 리포트</b>를 보내드려요. 아래로 신청하세요.</div>
+      <form id="applyForm" novalidate>
+        <div class="row">
+          <div class="field"><label>보호자 이메일 *</label><input id="afEmail" type="email" placeholder="parent@example.com"></div>
+          <div class="field"><label>연락처</label><input id="afTel" type="tel" placeholder="010-0000-0000"></div>
+        </div>
+        <div class="field" style="max-width:220px"><label>아동 생년월</label><input id="afBirth" type="month"></div>
+        <label class="ck"><input type="checkbox" id="afAgree"><span><b>[필수]</b> 개인정보 수집·이용 및 (만 14세 미만) 보호자 동의</span></label>
+        <label class="ck"><input type="checkbox" id="afMkt"><span>[선택] 광고성 정보(수업·이벤트 안내) 수신 동의</span></label>
+        <div style="margin-top:12px"><button class="btn" type="submit" id="afSubmit">분석·수업 신청하기</button></div>
+        <div id="applyMsg" style="margin-top:10px;font-weight:800;"></div>
+      </form>
     </div>
   </div>
 
@@ -104,8 +134,10 @@ function esc(s){return (s==null?'':String(s)).replace(/[&<>]/g,function(c){retur
 $('tabs').addEventListener('click',function(e){var b=e.target.closest('button');if(!b)return;
   var r=b.dataset.r;[].forEach.call(this.children,function(x){x.classList.toggle('on',x===b);});
   $('studentPane').classList.toggle('hide',r!=='student');
+  $('reportPane').classList.toggle('hide',r!=='report');
   $('teacherPane').classList.toggle('hide',r!=='teacher');
   if(r==='teacher') render();
+  if(r==='report') renderReport();
 });
 
 /* 학생 */
@@ -152,6 +184,74 @@ function render(){
     var a=document.createElement('a');a.href='data:text/csv;charset=utf-8,﻿'+encodeURIComponent(head+body);a.download='oncuvate_results.csv';a.click();};
   $('clr').onclick=function(){if(confirm('이 기기에 저장된 결과를 모두 지울까요? (데모용)')){localStorage.removeItem(LS_R);render();}};
 }
+/* 내 리포트 (즉석 분석) */
+function fband(s){ if(s==null)return ''; if(s<=80)return '유창성 연습이 더 필요한 단계'; if(s<=140)return '초등 저학년 수준'; if(s<=200)return '초2~3 수준'; if(s<=260)return '초3~4 평균 수준'; if(s<=320)return '초5~6 평균 수준'; return '중학생 이상 수준'; }
+function renderReport(){
+  var all=getR(); var body=$('reportBody');
+  if(!all.length){ body.innerHTML='<div class="card"><div class="empty">아직 활동 기록이 없어요.<br>학생 탭에서 이름을 정하고 두루책방에서 읽어 보면, 여기에 리포트가 만들어져요.</div></div>'; return; }
+  function pick(t){return all.filter(function(x){return x.t===t;}).sort(function(a,b){return a.ts-b.ts;});}
+  function avg(a){return a.length?Math.round(a.reduce(function(s,x){return s+x.value;},0)/a.length):null;}
+  var fl=pick('fluency'), qz=pick('quiz'), gm=pick('game');
+  var books={}; all.forEach(function(x){books[x.book]=1;});
+  var flLast=fl.length?fl[fl.length-1].value:null, flAvg=avg(fl);
+  var trend=fl.length>=2?(fl[fl.length-1].value-fl[0].value):null;
+  var qAvg=avg(qz), gAvg=avg(gm);
+  var str=[], tip=[];
+  if(flLast!=null){ if(flLast>=200)str.push('또래 평균 이상으로 유창하게 읽어요'); else if(flLast<=100)tip.push('매일 5분 소리 내어 읽기로 읽기 속도를 키워요'); }
+  if(trend!=null&&trend>0)str.push('읽기 속도가 점점 빨라지고 있어요 (+'+trend+')');
+  if(qAvg!=null){ if(qAvg>=80)str.push('내용 이해(퀴즈)가 아주 좋아요'); else if(qAvg<60)tip.push('읽은 뒤 "무슨 이야기였지?"를 한 문장으로 말해 봐요'); }
+  if(gm.length&&gAvg>=80)str.push('듣고 고르기·순서 게임 정확도가 높아요');
+  if(!str.length)str.push('끝까지 도전하는 힘이 좋아요');
+  if(!tip.length)tip.push('다양한 책으로 꾸준히 읽으면 더 좋아져요');
+  var s=getS();
+  body.innerHTML='<div class="card">'
+    +'<div style="font-size:13px;color:var(--muted);font-weight:800">'+(s&&s.name?esc(s.name)+' 님의 ':'')+'읽기 리포트</div>'
+    +'<div class="rbig">'+(flLast!=null?flLast:'-')+'<span class="u">음절/분</span></div>'
+    +(flLast!=null?'<div class="rband">'+fband(flLast)+'</div>':'')
+    +'<div class="rgrid">'
+      +'<div class="b"><div class="k">평균 유창성</div><div class="v">'+(flAvg!=null?flAvg:'-')+'</div></div>'
+      +'<div class="b"><div class="k">퀴즈 정답률</div><div class="v">'+(qAvg!=null?qAvg+'%':'-')+'</div></div>'
+      +'<div class="b"><div class="k">게임 정확도</div><div class="v">'+(gAvg!=null?gAvg+'%':'-')+'</div></div>'
+      +'<div class="b"><div class="k">읽은 책</div><div class="v">'+Object.keys(books).length+'권</div></div>'
+      +'<div class="b"><div class="k">활동 기록</div><div class="v">'+all.length+'회</div></div></div>'
+    +'<div style="font-weight:900;margin:6px 0 2px">✨ 강점</div><ul class="rlist">'+str.map(function(x){return '<li>• '+esc(x)+'</li>';}).join('')+'</ul>'
+    +'<div style="font-weight:900;margin:12px 0 2px">💡 이렇게 도와줘요</div><ul class="rlist">'+tip.map(function(x){return '<li>• '+esc(x)+'</li>';}).join('')+'</ul>'
+    +'</div>';
+}
+function reportSummary(){
+  var all=getR(); if(!all.length) return '(활동 기록 없음)';
+  function pick(t){return all.filter(function(x){return x.t===t;});}
+  function avg(a){return a.length?Math.round(a.reduce(function(s,x){return s+x.value;},0)/a.length):'-';}
+  var books={}; all.forEach(function(x){books[x.book]=1;});
+  var fl=pick('fluency');
+  return '유창성 최근 '+(fl.length?fl[fl.length-1].value:'-')+' 음절/분, 평균 '+avg(fl)
+    +' / 퀴즈 평균 '+avg(pick('quiz'))+'% / 게임 평균 '+avg(pick('game'))+'%'
+    +' / 읽은 책 '+Object.keys(books).length+'권 / 활동 '+all.length+'회';
+}
+/* 분석·수업 신청 → Web3Forms */
+var WEB3FORMS_KEY='819bc038-aadc-4d6d-8dcb-127ff776cc4d';
+$('applyForm').addEventListener('submit',function(e){
+  e.preventDefault();
+  var msg=$('applyMsg');
+  var email=$('afEmail').value.trim();
+  if(!email||email.indexOf('@')<0){ msg.style.color='#D8574F'; msg.textContent='보호자 이메일을 정확히 입력해 주세요.'; return; }
+  if(!$('afAgree').checked){ msg.style.color='#D8574F'; msg.textContent='[필수] 개인정보 수집·이용 및 보호자 동의가 필요해요.'; return; }
+  var s=getS();
+  var payload={ access_key:WEB3FORMS_KEY, subject:'온큐베이트 리딩 분석·수업 신청',
+    from_name:'온큐베이트 리딩 체험', email:email,
+    학생이름:(s&&s.name)||'(미입력)', 보호자연락처:$('afTel').value.trim()||'(미입력)',
+    아동생년월:$('afBirth').value||'(미입력)', 광고수신동의:($('afMkt').checked?'동의':'미동의'),
+    message:'[분석·수업 신청]\n보호자 이메일: '+email+'\n연락처: '+($('afTel').value.trim()||'-')
+      +'\n아동 생년월: '+($('afBirth').value||'-')+'\n광고수신: '+($('afMkt').checked?'동의':'미동의')
+      +'\n\n[활동 데이터]\n'+reportSummary() };
+  $('afSubmit').disabled=true; msg.style.color='var(--muted)'; msg.textContent='전송 중…';
+  fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify(payload)})
+    .then(function(r){return r.json();}).then(function(j){
+      $('afSubmit').disabled=false;
+      if(j.success){ msg.style.color='#2F9E7B'; msg.textContent='✅ 신청 완료! 곧 분석 리포트를 보내드릴게요.'; $('applyForm').reset(); }
+      else { msg.style.color='#D8574F'; msg.textContent='전송에 실패했어요. 잠시 후 다시 시도해 주세요.'; }
+    }).catch(function(){ $('afSubmit').disabled=false; msg.style.color='#D8574F'; msg.textContent='네트워크 오류. 잠시 후 다시 시도해 주세요.'; });
+});
 </script>
 <div id="pwaBar" style="display:none;position:fixed;left:0;right:0;bottom:0;padding:12px 16px;background:#6A5DA7;color:#fff;font-weight:800;text-align:center;box-shadow:0 -4px 14px rgba(0,0,0,.18);z-index:99;font-size:13.5px">
   <span id="pwaMsg">📲 홈 화면에 <b>온큐리딩</b> 앱으로 추가하세요</span>
