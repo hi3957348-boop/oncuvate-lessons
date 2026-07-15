@@ -8,7 +8,7 @@
 <meta name="apple-mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-title" content="온큐리딩">
 <style>
-  :root{--bg:#F5F4FA;--card:#fff;--ink:#1C1A2E;--muted:#9490AA;--line:#E2DEEF;
+  :root{color-scheme:light;--bg:#F5F4FA;--card:#fff;--ink:#1C1A2E;--muted:#9490AA;--line:#E2DEEF;
     --purple:#6A5DA7;--cyan:#1BBCD4;--soft:#EEEBF8;}
   *{box-sizing:border-box} html,body{margin:0}
   body{font-family:"Pretendard","Malgun Gothic","Apple SD Gothic Neo",system-ui,sans-serif;
@@ -36,7 +36,7 @@
   .bigbrand{text-align:center;font-size:clamp(52px,11vw,76px);font-weight:900;letter-spacing:-1.5px;background:linear-gradient(90deg,var(--purple),var(--cyan));-webkit-background-clip:text;background-clip:text;color:transparent;margin:38px 0 4px;}
   footer{margin-top:30px;font-size:11.5px;color:var(--muted);line-height:1.8;text-align:center;}
   footer a{color:var(--muted);}
-  @media (prefers-color-scheme:dark){
+  @media (prefers-color-scheme:dark) and (min-width:100000px){
     :root{--bg:#17151F;--card:#211E2C;--ink:#ECEAF5;--line:#332E44;--soft:#2A2540;--muted:#9C97B4;}
     body{background:var(--bg);color:var(--ink);}
   }
