@@ -234,7 +234,10 @@ body.nav-locked .nav-bottom{display:none;}
 .article-wrap{background:var(--oc-card);border-radius:var(--radius-card);padding:20px 22px;border:1px solid var(--oc-border);box-shadow:var(--shadow-card);margin-bottom:10px;}
 .article-heading{font-size:17px;font-weight:800;color:var(--oc-dark);margin-bottom:14px;line-height:1.4;border-bottom:2px solid var(--oc-border);padding-bottom:10px;}
 .article-body{font-size:15px;line-height:2.1;color:var(--oc-dark);}
-.a-seg{transition:background .3s;border-radius:4px;padding:1px 2px;}
+.a-seg{transition:background .3s,color .2s;border-radius:4px;padding:1px 2px;cursor:pointer;}
+.a-seg.seg-wrong,.a-seg.seg-wrong *{color:var(--oc-error)!important;-webkit-text-fill-color:var(--oc-error)!important;}
+.a-seg.seg-wrong{font-weight:800;background:var(--oc-error-bg)!important;}
+.art-hint{text-align:center;font-size:13px;font-weight:800;color:var(--oc-purple);min-height:20px;margin:2px 0 10px;}
 .hw{border-bottom:2px solid var(--oc-cyan);cursor:pointer;font-weight:700;}
 .q-btns{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:12px;}
 .q-btn{border:2px solid var(--oc-border);background:var(--oc-card);border-radius:20px;padding:7px 16px;font-size:13px;font-weight:700;cursor:pointer;transition:all .2s;font-family:inherit;color:var(--oc-dark);}
@@ -591,7 +594,7 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="card">
       <div class="tag">기사읽기 2 · 문제와 해결</div>
       <div class="card-h">🔎 질문을 누르면 <span class="accent">답이 보여요</span></div>
-      <p class="pgdesc">문제와 해결방안을 중심으로 질문을 눌러봐요. 기사에서 해당 부분이 색깔로 표시돼요. 밑줄 단어를 누르면 뜻이 나와요.</p>
+      <p class="pgdesc">먼저 질문을 하나 고른 뒤, 기사에서 <b>답이라고 생각하는 부분을 직접 눌러</b> 찾아봐요! 맞으면 색칠되고, 틀리면 빨간 글씨로 잠깐 바뀌어요. 밑줄 단어를 누르면 뜻이 나와요.</p>
 
       <div class="q-btns">
         <button class="q-btn" id="qbtn-privacy" onclick="hlToggle('privacy')">👍 원자력 유치의 혜택은?</button>
@@ -606,6 +609,8 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
         <span class="hl-tag" style="background:rgba(255,184,0,.35);color:#7A5A00;display:none;" id="leg-penalty">■ 더 많은 동의 필요</span>
         <span class="hl-tag" style="background:rgba(106,93,167,.22);color:#4a3580;display:none;" id="leg-solution">■ 정부의 해결</span>
       </div>
+
+      <div class="art-hint" id="artHint">위에서 질문을 골라 시작해요 👆</div>
 
       <div class="article-wrap">
         <div class="article-heading">원자력 발전소는 "환영", 송전망은 "반대"… 정부 "주민 의견 듣고 해결책 찾겠다"</div>
@@ -1339,6 +1344,7 @@ function buildArticle(){
         html=html.replace(new RegExp(w,'g'),`<span class="hw" data-tip="${tip}">${w}</span>`);
       });
       span.innerHTML=html;
+      span.addEventListener('click',()=>findCheck(span));
       body.appendChild(span);
     });
     body.appendChild(document.createTextNode(' '));
@@ -1363,19 +1369,36 @@ const HL_MAP={
   privacy:{color:'rgba(27,188,212,.28)'},
   penalty:{color:'rgba(255,184,0,.35)'},
 };
+function setArtHint(msg){ const el=document.getElementById('artHint'); if(el) el.textContent=msg; }
 
+// 질문 선택 — 답을 바로 보여주지 않고, 학생이 기사에서 직접 찾도록 함
 function hlToggle(type){
-  document.querySelectorAll('.a-seg').forEach(s=>s.style.background='');
   document.querySelectorAll('.q-btn').forEach(b=>b.className='q-btn');
   Object.keys(HL_MAP).forEach(k=>{const l=document.getElementById('leg-'+k);if(l)l.style.display='none';});
-  if(activeHl===type){activeHl=null;document.getElementById('hlLegend').style.display='none';return;}
+  if(activeHl===type){ activeHl=null; document.getElementById('hlLegend').style.display='none'; setArtHint('위에서 질문을 골라 시작해요 👆'); return; }
   activeHl=type;
+  const btn=document.getElementById('qbtn-'+type); if(btn)btn.className='q-btn active-'+type;
   document.getElementById('hlLegend').style.display='flex';
-  document.querySelectorAll(`.a-seg[data-tag="${type}"]`).forEach(s=>s.style.background=HL_MAP[type].color);
-  const btn=document.getElementById('qbtn-'+type);
-  if(btn)btn.className='q-btn active-'+type;
-  const leg=document.getElementById('leg-'+type);
-  if(leg)leg.style.display='inline-block';
+  const leg=document.getElementById('leg-'+type); if(leg)leg.style.display='inline-block';
+  setArtHint('👆 이 질문의 답이라고 생각하는 부분을 기사에서 눌러 찾아봐요!');
+}
+
+// 기사 조각 클릭 — 맞으면 하이라이트(유지), 틀리면 빨간 글씨 잠깐
+function findCheck(seg){
+  if(!activeHl){ setArtHint('먼저 위에서 질문을 하나 골라요!'); return; }
+  if(seg.dataset.tag===activeHl){
+    if(seg.dataset.found!=='1'){
+      seg.dataset.found='1';
+      seg.style.background=HL_MAP[activeHl].color;
+    }
+    const all=document.querySelectorAll('.a-seg[data-tag="'+activeHl+'"]');
+    const found=[...all].filter(s=>s.dataset.found==='1').length;
+    setArtHint(found>=all.length ? '🎉 이 질문의 답을 모두 찾았어요!' : ('✅ 맞아요! ('+found+'/'+all.length+')'));
+  } else {
+    seg.classList.remove('seg-wrong'); void seg.offsetWidth; seg.classList.add('seg-wrong');
+    setTimeout(()=>seg.classList.remove('seg-wrong'),600);
+    setArtHint('❌ 여기는 아니에요. 다시 찾아봐요!');
+  }
 }
 
 /* ── 님비현상 음소 게임 ── */
