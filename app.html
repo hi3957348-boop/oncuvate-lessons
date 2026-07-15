@@ -93,6 +93,7 @@ img{-webkit-user-drag:none;user-drag:none;pointer-events:auto;}
     <div class="vhead"><button class="back" data-go="home">‹ 홈</button><div class="vtitle">읽기 레포트</div></div>
     <div class="card"><div class="field" style="margin:0;max-width:260px"><label>이름 (선택 · 기록에 표시)</label><input id="nameInput" placeholder="이름" maxlength="20"></div></div>
     <div id="reportBody"></div>
+    <div id="recList"></div>
     <div class="card" style="text-align:center">
       <div style="font-weight:900;font-size:15px;margin-bottom:4px">전문가의 맞춤 피드백을 받아보세요</div>
       <div class="p" style="margin-bottom:12px">읽기 기록을 바탕으로 1:1 분석 리포트를 보내드려요.</div>
@@ -164,8 +165,35 @@ $('nameInput').addEventListener('change',function(){ localStorage.setItem(LS_S, 
 
 /* 리포트 */
 function fband(s){ if(s==null)return ''; if(s<=80)return '유창성 연습이 더 필요한 단계'; if(s<=140)return '초등 저학년 수준'; if(s<=200)return '초2~3 수준'; if(s<=260)return '초3~4 평균 수준'; if(s<=320)return '초5~6 평균 수준'; return '중학생 이상 수준'; }
+function loadRecList(){
+  var host=$('recList'); if(!host) return; host.innerHTML='';
+  try{ var q=indexedDB.open('oncuvate',1);
+    q.onupgradeneeded=function(){ try{q.result.createObjectStore('rec');}catch(e){} };
+    q.onsuccess=function(){ try{ var db=q.result; if(!db.objectStoreNames.contains('rec')) return;
+      var items=[]; var cur=db.transaction('rec','readonly').objectStore('rec').openCursor();
+      cur.onsuccess=function(e){ var c=e.target.result;
+        if(c){ if(c.key!=='latest'&&c.value&&c.value.blob) items.push(c.value); c.continue(); }
+        else{ renderRecs(items); } };
+    }catch(e){} };
+  }catch(e){}
+  function renderRecs(items){
+    if(!items.length) return;
+    items.sort(function(a,b){return b.ts-a.ts;});
+    var html='<div class="card"><div style="font-weight:900;margin-bottom:8px">🎧 내 읽기 녹음</div>'
+      +'<div style="font-size:12px;color:var(--muted);font-weight:700;margin-bottom:10px">유창성 테스트에서 읽은 내 목소리를 다시 들어볼 수 있어요.</div>';
+    items.forEach(function(r){ var url=URL.createObjectURL(r.blob); var d=new Date(r.ts||0);
+      var ds=(d.getMonth()+1)+'월 '+d.getDate()+'일';
+      html+='<div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin:9px 0;padding-bottom:9px;border-bottom:1px solid var(--line)">'
+        +'<span style="font-size:12.5px;font-weight:800;color:#5c5480;min-width:110px">'+esc(r.book||'읽기')+'</span>'
+        +'<span style="font-size:11.5px;color:var(--muted);font-weight:700">'+ds+'</span>'
+        +'<audio controls src="'+url+'" style="height:36px;flex:1;min-width:180px"></audio></div>';
+    });
+    html+='</div>'; host.innerHTML=html;
+  }
+}
 function renderReport(){
   var all=getR(); var body=$('reportBody');
+  loadRecList();
   if(!all.length){ body.innerHTML='<div class="card"><div class="empty">아직 활동 기록이 없어요.<br>두루책방에서 책을 읽어 보면 여기에 리포트가 만들어져요.</div></div>'; return; }
   function pick(t){return all.filter(function(x){return x.t===t;}).sort(function(a,b){return a.ts-b.ts;});}
   function avg(a){return a.length?Math.round(a.reduce(function(s,x){return s+x.value;},0)/a.length):null;}
