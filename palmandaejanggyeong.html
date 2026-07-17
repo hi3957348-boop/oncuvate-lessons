@@ -157,6 +157,21 @@ body{background:var(--oc-bg);font-family:'Malgun Gothic','Segoe UI',Arial,sans-s
 .qz-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #C99E00;}
 .qz-fb{margin-top:12px;text-align:center;border-radius:10px;font-weight:700;}
 .qz-fb.fb-neu{background:rgba(255,255,255,.16);color:#EFE8FB;border:none;}
+/* 한 문제씩 진행 + 스크래치 힌트 */
+.qz-card{display:none;}
+.qz-card.qz-active{display:block;}
+.qz-hintwrap{margin:16px auto 0;max-width:470px;text-align:center;}
+.qz-hintlabel{font-size:12px;font-weight:800;color:#FFCD1D;margin-bottom:7px;letter-spacing:.5px;}
+.qz-hint{display:inline-block;cursor:crosshair;max-width:100%;}
+.qz-hint .scratch-text-layer{display:inline-block;white-space:normal;background:#FFF7DC;color:#7A5A00;border:1.5px solid #F0D98A;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;line-height:1.55;text-align:center;max-width:440px;}
+.qz-hint .scratch-canvas{border-radius:12px;}
+.qz-cardfb{margin-top:12px;text-align:center;font-weight:800;min-height:20px;font-size:14px;}
+.qz-cardfb.fb-good{color:#8FF3B0;}
+.qz-cardfb.fb-bad{color:#FFB0B0;}
+.qz-done{display:none;margin-top:12px;border-radius:20px;padding:28px 18px;text-align:center;color:#fff;background-color:#552C8F;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px;box-shadow:0 8px 22px rgba(74,42,142,.34);}
+.qz-done h3{font-size:22px;font-weight:900;margin-bottom:6px;}
+.qz-done p{color:#E4D8F7;font-size:14px;margin-bottom:15px;}
+.qz-done button{border:none;border-radius:12px;padding:11px 24px;font-family:inherit;font-weight:900;font-size:14px;color:#4E2A8E;background:#FFCD1D;cursor:pointer;box-shadow:0 4px 0 #C99E00;}
 .cho-input-row{display:flex;gap:8px;align-items:center;}
 .cho-input{flex:1;padding:11px 14px;border-radius:10px;border:1.5px solid var(--oc-border);background:#fff;font-size:16px;font-weight:600;color:var(--oc-dark);font-family:inherit;outline:none;transition:border-color .2s;}
 .cho-input:focus{border-color:var(--oc-purple-mid);}
@@ -624,10 +639,14 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="qz-question">고려에 큰 어려움을 준 외세의 침입은?</div>
       <div class="qz-cho"><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㄱ</span></div>
       <div class="qz-answer">
-        <input class="qz-input" id="c1" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(1)"/>
-        <button class="qz-btn" onclick="checkCho(1)">확인</button>
+        <input class="qz-input" id="c1" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(1,0)"/>
+        <button class="qz-btn" onclick="qzCheck(1,0)">확인</button>
       </div>
-      <div class="fb fb-neu qz-fb" id="cfb1">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려는 오랫동안 몽골의 침입과 간섭을 받았어요."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb1"></div>
     </div>
     <div class="qz-card">
       <div class="qz-top"><span>PART 1</span><span>2 / 3</span></div>
@@ -635,10 +654,14 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="qz-question">고려 사람들이 나라를 지켜 줄 것이라 믿었던 종교적 힘은?</div>
       <div class="qz-cho"><span class="qz-cho-box">ㅂ</span><span class="qz-cho-box">ㅊ</span><span class="qz-cho-box">ㄴ</span></div>
       <div class="qz-answer">
-        <input class="qz-input" id="c2" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(2)"/>
-        <button class="qz-btn" onclick="checkCho(2)">확인</button>
+        <input class="qz-input" id="c2" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(2,1)"/>
+        <button class="qz-btn" onclick="qzCheck(2,1)">확인</button>
       </div>
-      <div class="fb fb-neu qz-fb" id="cfb2">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려 사람들은 부처님의 힘으로 나라를 지키려 했어요."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb2"></div>
     </div>
     <div class="qz-card">
       <div class="qz-top"><span>PART 1</span><span>3 / 3</span></div>
@@ -646,10 +669,19 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="qz-question">불교 경전을 나무판에 새겨 보관한 것의 이름은?</div>
       <div class="qz-cho"><span class="qz-cho-box">ㅍ</span><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㄷ</span><span class="qz-cho-box">ㅈ</span><span class="qz-cho-box">ㄱ</span></div>
       <div class="qz-answer">
-        <input class="qz-input" id="c3" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(3)"/>
-        <button class="qz-btn" onclick="checkCho(3)">확인</button>
+        <input class="qz-input" id="c3" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(3,2)"/>
+        <button class="qz-btn" onclick="qzCheck(3,2)">확인</button>
       </div>
-      <div class="fb fb-neu qz-fb" id="cfb3">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="불교 경전을 나무판에 새긴 것이 바로 팔만대장경이에요."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb3"></div>
+    </div>
+    <div class="qz-done" id="qz-done">
+      <h3>🎉 초성 퀴즈 완료!</h3>
+      <p>파트 1 핵심 단어를 모두 맞혔어요. 잘했어요!</p>
+      <button onclick="qzInit4()">🔄 다시 풀기</button>
     </div>
   </div>
 
@@ -951,6 +983,7 @@ function goTo(n,forced){
   window.scrollTo({top:0,behavior:'smooth'});
   if(window.updateDoneLabel)window.updateDoneLabel();
   if(n===11){setTimeout(function(){if(window.initOrganizer)window.initOrganizer();},90);}
+  if(n===4){setTimeout(function(){if(window.qzInit4)window.qzInit4();},70);}
   if(IS_HOST && window._pageLockOn && window.pushControl)window.pushControl();
 }
 function nav(dir){goTo(cur+dir);}
@@ -972,6 +1005,39 @@ function checkCho(n){
     setTimeout(()=>{fb.textContent='단어를 입력하고 확인을 눌러요!';fb.className='fb fb-neu';},2000);
   }
 }
+
+/* ── P4 초성 퀴즈: 한 문제씩 진행 + 스크래치 힌트 ── */
+function qzCheck(n, idx){
+  var el=document.getElementById('c'+n), fb=document.getElementById('cfb'+n);
+  var v=norm(el.value);
+  if(!v){ fb.textContent='❗ 정답을 입력해 주세요.'; fb.className='qz-cardfb fb-bad'; return; }
+  var ok=v===norm(ANS[n])||(ALTS[n]||[]).some(function(a){return v===norm(a);});
+  if(ok){
+    fb.textContent='✅ 정답! 다음 문제로 넘어가요…'; fb.className='qz-cardfb fb-good'; el.disabled=true;
+    setTimeout(function(){ qzGo(idx+1); }, 1000);
+  } else {
+    fb.textContent='❌ 아쉬워요! 힌트를 긁어 보고 다시 도전!'; fb.className='qz-cardfb fb-bad';
+  }
+}
+function qzGo(idx){
+  var pg=document.getElementById('pg4'); if(!pg) return;
+  var cards=pg.querySelectorAll('.qz-card'), done=document.getElementById('qz-done');
+  if(idx>=cards.length){ cards.forEach(function(c){c.classList.remove('qz-active');}); if(done)done.style.display='block'; return; }
+  if(done)done.style.display='none';
+  cards.forEach(function(c,i){ c.classList.toggle('qz-active', i===idx); });
+  if(window.initAllScratch) setTimeout(window.initAllScratch, 60);   // 보이는 카드의 스크래치 생성
+  var inp=cards[idx].querySelector('.qz-input'); if(inp) setTimeout(function(){ try{inp.focus();}catch(e){} }, 130);
+}
+function qzInit4(){
+  var pg=document.getElementById('pg4'); if(!pg) return;
+  pg.querySelectorAll('.qz-card').forEach(function(c){
+    var inp=c.querySelector('.qz-input'); if(inp){ inp.disabled=false; inp.value=''; }
+    var fb=c.querySelector('.qz-cardfb'); if(fb){ fb.textContent=''; fb.className='qz-cardfb'; }
+    var sw=c.querySelector('.scratch-wrap'); if(sw && sw._resetScratch) sw._resetScratch();
+  });
+  qzGo(0);
+}
+window.qzCheck=qzCheck; window.qzGo=qzGo; window.qzInit4=qzInit4;
 
 /* ── REVEAL ── */
 function toggleReveal(el){el.classList.toggle('open');}
@@ -1367,6 +1433,8 @@ function highlightBingoLines(){
   function buildScratchCard(wrap) {
     const word = wrap.dataset.word;
     if (!word) return;
+    const eraser = parseInt(wrap.dataset.eraser) || ERASER_SIZE;   // 요소별 지우개 크기
+    const reveal = parseFloat(wrap.dataset.reveal) || REVEAL_THRESHOLD;
 
     // Create text layer (hidden behind canvas)
     const textLayer = document.createElement('span');
@@ -1378,6 +1446,7 @@ function highlightBingoLines(){
     requestAnimationFrame(() => {
       const w = textLayer.offsetWidth;
       const h = textLayer.offsetHeight;
+      if (!w || !h) { textLayer.remove(); wrap._initialized = false; return; }  // 숨김 상태면 보일 때 다시 만든다
 
       // Create canvas that overlays the word.
       // The text layer stays in normal flow so the box always sizes to the
@@ -1451,14 +1520,14 @@ function highlightBingoLines(){
         // continuous stroke so dragging erases a smooth path (no gaps)
         ctx.lineCap = 'round';
         ctx.lineJoin = 'round';
-        ctx.lineWidth = ERASER_SIZE;
+        ctx.lineWidth = eraser;
         ctx.beginPath();
         ctx.moveTo(lastX === null ? x : lastX, lastY === null ? y : lastY);
         ctx.lineTo(x, y);
         ctx.stroke();
         // round dab so a single tap also erases
         ctx.beginPath();
-        ctx.arc(x, y, ERASER_SIZE / 2, 0, Math.PI * 2);
+        ctx.arc(x, y, eraser / 2, 0, Math.PI * 2);
         ctx.fill();
         ctx.globalCompositeOperation = 'source-over';
         lastX = x; lastY = y;
@@ -1474,7 +1543,7 @@ function highlightBingoLines(){
           if (pixels[i] < 128) transparent++;
         }
         const ratio = transparent / (pixels.length / 4);
-        if (ratio > REVEAL_THRESHOLD) {
+        if (ratio > reveal) {
           revealed = true;
           canvas.style.transition = 'opacity 0.4s ease';
           canvas.style.opacity = '0';
