@@ -311,12 +311,10 @@ body.nav-locked .nb-prev,body.nav-locked .nb-next{visibility:hidden}
 .iss-side{position:absolute;top:29%;height:59%;border:none;background:transparent;cursor:pointer;border-radius:20px;transition:box-shadow .15s;padding:0}
 .iss-side.L{left:6.5%;width:40.5%}
 .iss-side.R{left:53%;width:41%}
-.iss-side:not(:disabled):hover{box-shadow:0 0 0 4px rgba(255,255,255,.7)}
-.iss-side.mine{box-shadow:0 0 0 5px #ffd66b,0 0 22px rgba(255,214,107,.7)}
-.iss-side.win{box-shadow:0 0 0 6px #2ec16b,0 0 26px rgba(46,193,107,.6)}
-.iss-cnt{position:absolute;top:5%;left:50%;transform:translateX(-50%);background:#0b2a6b;color:#fff;font-weight:800;font-size:clamp(12px,1.8vw,20px);padding:3px 13px;border-radius:16px;min-width:30px;display:none}
-.iss-side.show-cnt .iss-cnt{display:block}
-.iss-badge{position:absolute;top:38%;left:50%;transform:translate(-50%,-50%) rotate(-8deg);background:#2ec16b;color:#fff;font-size:clamp(14px,2.6vw,26px);font-weight:900;padding:6px 16px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none}
+.iss-side:not(:disabled):hover{background:rgba(255,255,255,.12)}
+.iss-check{position:absolute;top:47%;left:50%;transform:translate(-50%,-50%);width:clamp(48px,11vw,100px);height:clamp(48px,11vw,100px);border-radius:50%;background:rgba(46,193,107,.95);color:#fff;font-size:clamp(30px,7vw,64px);font-weight:900;line-height:1;align-items:center;justify-content:center;display:none;box-shadow:0 5px 18px rgba(0,0,0,.35);border:5px solid #fff}
+.iss-side.picked .iss-check{display:flex}
+.iss-badge{position:absolute;top:14%;left:50%;transform:translate(-50%,-50%) rotate(-7deg);background:#2ec16b;color:#fff;font-size:clamp(13px,2.4vw,24px);font-weight:900;padding:6px 16px;border-radius:14px;box-shadow:0 4px 14px rgba(0,0,0,.3);display:none;white-space:nowrap}
 .iss-side.win .iss-badge{display:block}
 .iss-status{text-align:center;font-weight:700;color:var(--oc-purple);min-height:22px;margin:8px 0}
 .iss-board{max-width:520px;margin:12px auto 0;background:#fff;border:1px solid var(--oc-border);border-radius:14px;padding:12px 16px}
@@ -950,8 +948,8 @@ function Piss(){return `<section class="page" data-i="6">${head(6)}
  <div class="prompt">🤝 <b>일심동체 게임!</b> 위 상황에서 <b>인사할래요!</b>(왼쪽) / <b>지나갈래요</b>(오른쪽) 중 하나를 골라요. <b>더 많은 친구가 고른 쪽</b>이 정답! 정답을 고른 친구는 <b>+1점</b>이에요.</div>
  <div class="iss-stage" id="iss-stage" style="background-image:url('${(window.IMG&&IMG.issBg)||''}')">
    <div class="iss-title" id="iss-title">상황을 기다려요…</div>
-   <button class="iss-side L" id="issL" onclick="issVote(0)"><span class="iss-badge">정답! +1</span><span class="iss-cnt" id="issCntL">0</span></button>
-   <button class="iss-side R" id="issR" onclick="issVote(1)"><span class="iss-badge">정답! +1</span><span class="iss-cnt" id="issCntR">0</span></button>
+   <button class="iss-side L" id="issL" onclick="issVote(0)"><span class="iss-badge">정답! +1</span><span class="iss-check">✓</span></button>
+   <button class="iss-side R" id="issR" onclick="issVote(1)"><span class="iss-badge">정답! +1</span><span class="iss-check">✓</span></button>
  </div>
  <div class="iss-status" id="iss-status"></div>
  ${IS_HOST?`<div class="ttt-cons" id="iss-cons" style="display:block">
@@ -992,20 +990,19 @@ function renderIss(){
   const q=issState.q, obj=issVotesAll['q'+q]||{}, phase=issState.phase;
   const cL=Object.values(obj).filter(s=>s===0).length, cR=Object.values(obj).filter(s=>s===1).length;
   const win = cL>cR?0:(cR>cL?1:-1);
+  const voted=Object.keys(obj).length;
   const mine = obj[SID];
   document.getElementById('iss-title').textContent = (phase==='idle')?'▶ 강사가 시작하면 상황이 나와요':
     (phase==='done')?'게임 끝! 🏆 점수를 확인해요':ISSQ[q].t;
   const L=document.getElementById('issL'), R=document.getElementById('issR');
   L.className='iss-side L'; R.className='iss-side R';
-  document.getElementById('issCntL').textContent=cL; document.getElementById('issCntR').textContent=cR;
-  const showCnt = (phase==='result')||IS_HOST;   // 결과 공개 후 모두에게, 강사는 항상
-  if(showCnt){L.classList.add('show-cnt');R.classList.add('show-cnt');}
-  if(!IS_HOST&&phase==='vote'){ if(mine===0)L.classList.add('mine'); if(mine===1)R.classList.add('mine'); }
+  // 내 선택만 체크표시 (득표수는 아무에게도 표시하지 않음)
+  if(!IS_HOST&&(phase==='vote'||phase==='result')){ if(mine===0)L.classList.add('picked'); if(mine===1)R.classList.add('picked'); }
   if(phase==='result'){ if(win===0||win===-1)L.classList.add('win'); if(win===1||win===-1)R.classList.add('win'); }
-  // status line
+  // status line (표 수 비공개)
   const st=document.getElementById('iss-status');
-  if(st){ if(phase==='vote')st.textContent=IS_HOST?`투표 중… (인사 ${cL} · 지나 ${cR})`:(mine==null?'👇 하나를 골라요!':(mine===0?'✅ 인사할래요! 선택':'✅ 지나갈래요 선택'));
-    else if(phase==='result')st.innerHTML=win===-1?'🤝 동점! 모두 +1점':`🎉 정답은 <b>${win===0?'인사할래요!':'지나갈래요'}</b> (${win===0?cL:cR}명) — 고른 친구 +1점`;
+  if(st){ if(phase==='vote')st.textContent=IS_HOST?`투표 중… (${voted}명 선택 완료)`:(mine==null?'👇 하나를 골라요!':'✅ 선택했어요! 결과를 기다려요');
+    else if(phase==='result')st.innerHTML=win===-1?'🤝 동점! 모두 +1점':`🎉 정답은 <b>${win===0?'인사할래요!':'지나갈래요'}</b> — 고른 친구 +1점`;
     else st.textContent=''; }
   // done + markDone
   if(phase==='result'&&q===ISSQ.length-1&&!IS_HOST)markDone(6);
