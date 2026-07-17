@@ -651,12 +651,12 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="qz-question">고려에 큰 어려움을 준 외세의 침입은?</div>
       <div class="qz-cho"><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㄱ</span></div>
       <div class="qz-answer">
-        <input class="qz-input" id="c1" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(1,0)"/>
-        <button class="qz-btn" onclick="qzCheck(1,0)">확인</button>
+        <input class="qz-input" id="c1" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(1,0,'pg4')"/>
+        <button class="qz-btn" onclick="qzCheck(1,0,'pg4')">확인</button>
       </div>
       <div class="qz-hintwrap">
         <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
-        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려는 오랫동안 몽골의 침입과 간섭을 받았어요."></span>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려는 ___의 침입으로 큰 어려움을 겪었다."></span>
       </div>
       <div class="qz-cardfb" id="cfb1"></div>
     </div>
@@ -666,12 +666,12 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="qz-question">고려 사람들이 나라를 지켜 줄 것이라 믿었던 종교적 힘은?</div>
       <div class="qz-cho"><span class="qz-cho-box">ㅂ</span><span class="qz-cho-box">ㅊ</span><span class="qz-cho-box">ㄴ</span></div>
       <div class="qz-answer">
-        <input class="qz-input" id="c2" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(2,1)"/>
-        <button class="qz-btn" onclick="qzCheck(2,1)">확인</button>
+        <input class="qz-input" id="c2" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(2,1,'pg4')"/>
+        <button class="qz-btn" onclick="qzCheck(2,1,'pg4')">확인</button>
       </div>
       <div class="qz-hintwrap">
         <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
-        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려 사람들은 부처님의 힘으로 나라를 지키려 했어요."></span>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려 사람들은 ___의 힘으로 나라를 지키려 했다."></span>
       </div>
       <div class="qz-cardfb" id="cfb2"></div>
     </div>
@@ -681,26 +681,19 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="qz-question">불교 경전을 나무판에 새겨 보관한 것의 이름은?</div>
       <div class="qz-cho"><span class="qz-cho-box">ㅍ</span><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㄷ</span><span class="qz-cho-box">ㅈ</span><span class="qz-cho-box">ㄱ</span></div>
       <div class="qz-answer">
-        <input class="qz-input" id="c3" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(3,2)"/>
-        <button class="qz-btn" onclick="qzCheck(3,2)">확인</button>
+        <input class="qz-input" id="c3" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(3,2,'pg4')"/>
+        <button class="qz-btn" onclick="qzCheck(3,2,'pg4')">확인</button>
       </div>
       <div class="qz-hintwrap">
         <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
-        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="불교 경전을 나무판에 새긴 것이 바로 팔만대장경이에요."></span>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="불교 경전을 나무판에 새긴 것이 _____이다."></span>
       </div>
       <div class="qz-cardfb" id="cfb3"></div>
     </div>
     <div class="qz-done" id="qz-done">
       <h3>🎉 초성 퀴즈 완료!</h3>
       <p>파트 1 핵심 단어를 모두 맞혔어요. 잘했어요!</p>
-      <button onclick="qzInit4()">🔄 다시 풀기</button>
-    </div>
-    <div class="qz-pop" id="qz-pop">
-      <div class="qz-pop-card">
-        <div class="qz-pop-emoji">🎉</div>
-        <div class="qz-pop-title">정답!</div>
-        <div class="qz-pop-word" id="qz-pop-word"></div>
-      </div>
+      <button onclick="qzInitPage('pg4')">🔄 다시 풀기</button>
     </div>
   </div>
 
@@ -737,32 +730,55 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="card-h">파트 2 <span class="accent">핵심 단어</span></div>
       <p class="pgdesc">초성을 보고 파트 2에서 배운 단어를 써 보세요!</p>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">팔만대장경은 약 몇 장의 나무판으로 만들어졌나요?</div>
-      <div class="cho-hint">8 ㅁ ㅈ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c4" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(4)"/>
-        <button class="cho-btn" onclick="checkCho(4)">확인</button>
+        <div class="qz-card">
+      <div class="qz-top"><span>PART 2</span><span>1 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:04</span></div>
+      <div class="qz-question">불교 경전을 한 글자씩 새긴, 나무로 된 판은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㄴ</span><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㅍ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c4" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(4,0,'pg6')"/>
+        <button class="qz-btn" onclick="qzCheck(4,0,'pg6')">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb4">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="불교 경전을 ___에 한 글자씩 새겼다."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb4"></div>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">팔만대장경을 만들 때 중요하게 여긴 것은?</div>
-      <div class="cho-hint">ㄲ ㄲ ㅎ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c5" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(5)"/>
-        <button class="cho-btn" onclick="checkCho(5)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 2</span><span>2 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:05</span></div>
+      <div class="qz-question">글자가 틀리지 않도록 다한 것은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅈ</span><span class="qz-cho-box">ㅅ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c5" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(5,1,'pg6')"/>
+        <button class="qz-btn" onclick="qzCheck(5,1,'pg6')">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb5">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="글자가 틀리지 않도록 __을 다해 만들었다."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb5"></div>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">팔만대장경이 뛰어난 이유는 무엇 때문인가요?</div>
-      <div class="cho-hint">ㄱ ㅅ ㄱ ㅈ ㅅ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c6" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(6)"/>
-        <button class="cho-btn" onclick="checkCho(6)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 2</span><span>3 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:06</span></div>
+      <div class="qz-question">팔만대장경이 보여 주는 고려의 뛰어난 것은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㄱ</span><span class="qz-cho-box">ㅅ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c6" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(6,2,'pg6')"/>
+        <button class="qz-btn" onclick="qzCheck(6,2,'pg6')">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb6">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="팔만대장경은 고려의 뛰어난 __을 보여 준다."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb6"></div>
+    </div>
+    <div class="qz-done">
+      <h3>🎉 파트 2 완료!</h3>
+      <p>핵심 단어를 모두 맞혔어요. 잘했어요!</p>
+      <button onclick="qzInitPage('pg6')">🔄 다시 풀기</button>
     </div>
   </div>
 
@@ -796,34 +812,59 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="card-h">파트 3 <span class="accent">핵심 단어</span></div>
       <p class="pgdesc">초성을 보고 파트 3에서 배운 단어를 써 보세요!</p>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">팔만대장경에 담긴 고려 사람들의 마음은?</div>
-      <div class="cho-hint">ㄱ ㅈ ㅎ ㅁ ㅇ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c7" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(7)"/>
-        <button class="cho-btn" onclick="checkCho(7)">확인</button>
+        <div class="qz-card">
+      <div class="qz-top"><span>PART 3</span><span>1 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:07</span></div>
+      <div class="qz-question">팔만대장경에 담긴, 나라를 지키려는 간절한 것은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㅇ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c7" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(7,0,'pg8')"/>
+        <button class="qz-btn" onclick="qzCheck(7,0,'pg8')">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb7">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="나라를 지키려는 간절한 __이 담겨 있다."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb7"></div>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">오늘날 팔만대장경이 인정받는 범위는?</div>
-      <div class="cho-hint">ㅅ ㄱ ㅈ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c8" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(8)"/>
-        <button class="cho-btn" onclick="checkCho(8)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 3</span><span>2 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:08</span></div>
+      <div class="qz-question">오늘날 팔만대장경이 인정받는 범위는? (○○적)</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅅ</span><span class="qz-cho-box">ㄱ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c8" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(8,1,'pg8')"/>
+        <button class="qz-btn" onclick="qzCheck(8,1,'pg8')">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb8">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="팔만대장경은 오늘날 __적으로 인정받는다."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb8"></div>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">팔만대장경은 어떤 종류의 유산인가요?</div>
-      <div class="cho-hint">ㅁ ㅎ ㅇ ㅅ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c9" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(9)"/>
-        <button class="cho-btn" onclick="checkCho(9)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 3</span><span>3 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:09</span></div>
+      <div class="qz-question">팔만대장경은 고려의 소중한 무엇인가요?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㅎ</span><span class="qz-cho-box">ㅇ</span><span class="qz-cho-box">ㅅ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c9" placeholder="정답 입력" onkeydown="if(event.key==='Enter')qzCheck(9,2,'pg8')"/>
+        <button class="qz-btn" onclick="qzCheck(9,2,'pg8')">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb9">단어를 입력하고 확인을 눌러요!</div>
+      <div class="qz-hintwrap">
+        <div class="qz-hintlabel">🪙 힌트 — 긁어서 확인!</div>
+        <span class="scratch-wrap qz-hint" data-eraser="9" data-reveal="0.7" data-word="고려의 뛰어난 기술을 보여 주는 소중한 ____이다."></span>
+      </div>
+      <div class="qz-cardfb" id="cfb9"></div>
+    </div>
+    <div class="qz-done">
+      <h3>🎉 파트 3 완료!</h3>
+      <p>핵심 단어를 모두 맞혔어요. 잘했어요!</p>
+      <button onclick="qzInitPage('pg8')">🔄 다시 풀기</button>
     </div>
   </div>
+
+  <div class="qz-pop" id="qz-pop"><div class="qz-pop-card"><div class="qz-pop-emoji">🎉</div><div class="qz-pop-title">정답!</div><div class="qz-pop-word" id="qz-pop-word"></div></div></div>
 
   <!-- ════ P9 · 게임 링크 ════ -->
   <div class="pg" id="pg9">
@@ -1002,15 +1043,15 @@ function goTo(n,forced){
   window.scrollTo({top:0,behavior:'smooth'});
   if(window.updateDoneLabel)window.updateDoneLabel();
   if(n===11){setTimeout(function(){if(window.initOrganizer)window.initOrganizer();},90);}
-  if(n===4){setTimeout(function(){if(window.qzInit4)window.qzInit4();},70);}
+  if(n===4||n===6||n===8){setTimeout(function(){if(window.qzInitPage)window.qzInitPage('pg'+n);},70);}
   if(IS_HOST && window._pageLockOn && window.pushControl)window.pushControl();
 }
 function nav(dir){goTo(cur+dir);}
 buildDots();
 
 /* ── CHOSUNG ── */
-const ANS={1:'몽골',2:'부처님',3:'팔만대장경',4:'8만 장',5:'꼼꼼함',6:'기술과 정성',7:'간절한 마음',8:'세계적',9:'문화유산'};
-const ALTS={4:['8만장'],5:['정성','꼼꼼함(정성)'],6:['기술과정성'],7:['간절한마음']};
+const ANS={1:'몽골',2:'부처님',3:'팔만대장경',4:'나무판',5:'정성',6:'기술',7:'마음',8:'세계',9:'문화유산'};
+const ALTS={};
 function norm(s){return s.replace(/\s/g,'').toLowerCase();}
 function checkCho(n){
   const el=document.getElementById('c'+n);
@@ -1026,7 +1067,7 @@ function checkCho(n){
 }
 
 /* ── P4 초성 퀴즈: 한 문제씩 진행 + 스크래치 힌트 ── */
-function qzCheck(n, idx){
+function qzCheck(n, idx, pg){
   var el=document.getElementById('c'+n), fb=document.getElementById('cfb'+n);
   var v=norm(el.value);
   if(!v){ fb.textContent='❗ 정답을 입력해 주세요.'; fb.className='qz-cardfb fb-bad'; return; }
@@ -1034,10 +1075,26 @@ function qzCheck(n, idx){
   if(ok){
     fb.textContent='✅ 정답!'; fb.className='qz-cardfb fb-good'; el.disabled=true;
     qzPop(ANS[n]);
-    setTimeout(function(){ qzPopHide(); qzGo(idx+1); }, 1400);
-  } else {
-    fb.textContent='❌ 아쉬워요! 힌트를 긁어 보고 다시 도전!'; fb.className='qz-cardfb fb-bad';
-  }
+    setTimeout(function(){ qzPopHide(); qzGo(pg, idx+1); }, 1400);
+  } else { fb.textContent='❌ 아쉬워요! 힌트를 긁어 보고 다시 도전!'; fb.className='qz-cardfb fb-bad'; }
+}
+function qzGo(pgId, idx){
+  var pg=document.getElementById(pgId); if(!pg) return;
+  var cards=pg.querySelectorAll('.qz-card'), done=pg.querySelector('.qz-done');
+  if(idx>=cards.length){ cards.forEach(function(c){c.classList.remove('qz-active');}); if(done)done.style.display='block'; return; }
+  if(done)done.style.display='none';
+  cards.forEach(function(c,i){ c.classList.toggle('qz-active', i===idx); });
+  if(window.initAllScratch) setTimeout(window.initAllScratch, 60);
+  var inp=cards[idx].querySelector('.qz-input'); if(inp) setTimeout(function(){ try{inp.focus();}catch(e){} }, 130);
+}
+function qzInitPage(pgId){
+  var pg=document.getElementById(pgId); if(!pg) return;
+  pg.querySelectorAll('.qz-card').forEach(function(c){
+    var inp=c.querySelector('.qz-input'); if(inp){ inp.disabled=false; inp.value=''; }
+    var fb=c.querySelector('.qz-cardfb'); if(fb){ fb.textContent=''; fb.className='qz-cardfb'; }
+    var sw=c.querySelector('.scratch-wrap'); if(sw && sw._resetScratch) sw._resetScratch();
+  });
+  qzGo(pgId, 0);
 }
 function qzPop(word){
   var pop=document.getElementById('qz-pop'); if(!pop) return;
@@ -1045,34 +1102,11 @@ function qzPop(word){
   var card=pop.querySelector('.qz-pop-card');
   card.querySelectorAll('.cf').forEach(function(e){ e.remove(); });
   var em=['🎉','✨','🎊','⭐','💛','🩵','🌟'];
-  for(var i=0;i<12;i++){
-    var s=document.createElement('span'); s.className='cf'; s.textContent=em[i%em.length];
-    s.style.left=(4+Math.random()*92)+'%'; s.style.animationDelay=(Math.random()*0.35)+'s';
-    card.appendChild(s);
-  }
+  for(var i=0;i<12;i++){ var s=document.createElement('span'); s.className='cf'; s.textContent=em[i%em.length]; s.style.left=(4+Math.random()*92)+'%'; s.style.animationDelay=(Math.random()*0.35)+'s'; card.appendChild(s); }
   pop.classList.add('show');
 }
 function qzPopHide(){ var pop=document.getElementById('qz-pop'); if(pop) pop.classList.remove('show'); }
-window.qzPop=qzPop; window.qzPopHide=qzPopHide;
-function qzGo(idx){
-  var pg=document.getElementById('pg4'); if(!pg) return;
-  var cards=pg.querySelectorAll('.qz-card'), done=document.getElementById('qz-done');
-  if(idx>=cards.length){ cards.forEach(function(c){c.classList.remove('qz-active');}); if(done)done.style.display='block'; return; }
-  if(done)done.style.display='none';
-  cards.forEach(function(c,i){ c.classList.toggle('qz-active', i===idx); });
-  if(window.initAllScratch) setTimeout(window.initAllScratch, 60);   // 보이는 카드의 스크래치 생성
-  var inp=cards[idx].querySelector('.qz-input'); if(inp) setTimeout(function(){ try{inp.focus();}catch(e){} }, 130);
-}
-function qzInit4(){
-  var pg=document.getElementById('pg4'); if(!pg) return;
-  pg.querySelectorAll('.qz-card').forEach(function(c){
-    var inp=c.querySelector('.qz-input'); if(inp){ inp.disabled=false; inp.value=''; }
-    var fb=c.querySelector('.qz-cardfb'); if(fb){ fb.textContent=''; fb.className='qz-cardfb'; }
-    var sw=c.querySelector('.scratch-wrap'); if(sw && sw._resetScratch) sw._resetScratch();
-  });
-  qzGo(0);
-}
-window.qzCheck=qzCheck; window.qzGo=qzGo; window.qzInit4=qzInit4;
+window.qzCheck=qzCheck; window.qzGo=qzGo; window.qzInitPage=qzInitPage; window.qzPop=qzPop; window.qzPopHide=qzPopHide;
 
 /* ── REVEAL ── */
 function toggleReveal(el){el.classList.toggle('open');}
