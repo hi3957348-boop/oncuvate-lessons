@@ -308,6 +308,7 @@ body.nav-locked .nb-prev,body.nav-locked .nb-next{visibility:hidden}
 /* S07 일심동체 게임 */
 .iss-stage{position:relative;width:100%;max-width:820px;margin:8px auto;aspect-ratio:2800/1600;background-size:100% 100%;background-repeat:no-repeat;border-radius:14px;overflow:hidden;box-shadow:0 10px 30px rgba(0,0,0,.2)}
 .iss-title{position:absolute;left:8%;top:8.5%;width:84%;height:10.5%;display:flex;align-items:center;justify-content:center;color:#fff;font-weight:800;font-size:clamp(13px,2.5vw,27px);text-align:center;line-height:1.2;padding:0 8px}
+.iss-timer{position:absolute;top:5.5%;right:2.5%;width:clamp(34px,6vw,58px);height:clamp(34px,6vw,58px);border-radius:50%;background:#ff4d7e;color:#fff;font-weight:900;font-size:clamp(16px,3vw,30px);align-items:center;justify-content:center;display:none;box-shadow:0 3px 12px rgba(0,0,0,.35);border:3px solid #fff;z-index:3}
 .iss-side{position:absolute;top:29%;height:59%;border:none;background:transparent;cursor:pointer;border-radius:20px;transition:box-shadow .15s;padding:0}
 .iss-side.L{left:6.5%;width:40.5%}
 .iss-side.R{left:53%;width:41%}
@@ -944,10 +945,20 @@ const ISSQ=[
  {t:"횡단보도에서 만난 친구 어머니"},
 ];
 let issState={q:0,phase:'idle',awarded:{}}, issVotesAll={}, issScore={};
+const ISS_SEC=5; let issTimer=null, issTimerTs=0;
+function issRemain(){ if(!issState.ts)return ISS_SEC; return Math.max(0,ISS_SEC-Math.floor((Date.now()-issState.ts)/1000)); }
+function issTimeUp(){ return issState.ts&&(Date.now()-issState.ts)>=ISS_SEC*1000; }
+function stopIssTimer(){ if(issTimer){clearInterval(issTimer);issTimer=null;} }
+function startIssTimer(){ stopIssTimer(); issTimerTs=issState.ts;
+  issTimer=setInterval(()=>{ const el=document.getElementById('iss-timer'); const r=issRemain();
+    if(el){el.style.display='flex';el.textContent=r>0?r:'⏰';}
+    if(r<=0){ stopIssTimer(); renderIss(); if(IS_HOST&&issState.phase==='vote')issReveal(); }
+  },250); }
 function Piss(){return `<section class="page" data-i="6">${head(6)}
  <div class="prompt">🤝 <b>일심동체 게임!</b> 위 상황에서 <b>인사할래요!</b>(왼쪽) / <b>지나갈래요</b>(오른쪽) 중 하나를 골라요. <b>더 많은 친구가 고른 쪽</b>이 정답! 정답을 고른 친구는 <b>+1점</b>이에요.</div>
  <div class="iss-stage" id="iss-stage" style="background-image:url('${(window.IMG&&IMG.issBg)||''}')">
    <div class="iss-title" id="iss-title">상황을 기다려요…</div>
+   <div class="iss-timer" id="iss-timer"></div>
    <button class="iss-side L" id="issL" onclick="issVote(0)"><span class="iss-badge">정답! +1</span><span class="iss-check">✓</span></button>
    <button class="iss-side R" id="issR" onclick="issVote(1)"><span class="iss-badge">정답! +1</span><span class="iss-check">✓</span></button>
  </div>
@@ -962,10 +973,10 @@ function Piss(){return `<section class="page" data-i="6">${head(6)}
  <div class="iss-board"><h3>🏆 이름별 점수</h3><div id="iss-lead"><div class="mut">아직 점수가 없어요.</div></div></div>
 </section>`;}
 function wireIss(){renderIss();}
-function issVote(side){ if(IS_HOST||issState.phase!=='vote')return;
+function issVote(side){ if(IS_HOST||issState.phase!=='vote'||issTimeUp())return;
   if(fbOn())fbSet('iss/votes/q'+issState.q+'/'+SID,side);
   else { issVotesAll['q'+issState.q]=Object.assign({},issVotesAll['q'+issState.q],{[SID]:side}); renderIss(); } }
-function issStart(){ if(!IS_HOST)return; issState.phase='vote'; if(fbOn())fbSet('iss/state',issState); renderIss(); }
+function issStart(){ if(!IS_HOST)return; issState.phase='vote'; issState.ts=Date.now(); if(fbOn())fbSet('iss/state',issState); renderIss(); }
 function issReveal(){ if(!IS_HOST)return; const q='q'+issState.q, obj=issVotesAll[q]||{};
   let cL=0,cR=0; Object.keys(obj).forEach(k=>{obj[k]===0?cL++:obj[k]===1?cR++:0;});
   const win = cL>cR?0:(cR>cL?1:-1);
@@ -975,11 +986,11 @@ function issReveal(){ if(!IS_HOST)return; const q='q'+issState.q, obj=issVotesAl
       if(gain){const nm=(studentsCache[sid]||{}).name||'익명'; const cur=ns[sid]||{name:nm,pts:0};
         ns[sid]={name:nm,pts:(cur.pts||0)+gain};}});
     issState.awarded[q]=true; issScore=ns; if(fbOn())fbSet('iss/score',ns); }
-  issState.phase='result'; if(fbOn())fbSet('iss/state',issState); renderIss(); }
-function issNext(){ if(!IS_HOST)return;
-  if(issState.q<ISSQ.length-1){issState.q++; issState.phase='vote';} else {issState.phase='done';}
+  stopIssTimer(); issState.phase='result'; if(fbOn())fbSet('iss/state',issState); renderIss(); }
+function issNext(){ if(!IS_HOST)return; stopIssTimer();
+  if(issState.q<ISSQ.length-1){issState.q++; issState.phase='vote'; issState.ts=Date.now();} else {issState.phase='done';}
   if(fbOn())fbSet('iss/state',issState); renderIss(); }
-function issReset(){ if(!IS_HOST)return; issState={q:0,phase:'idle',awarded:{}}; issVotesAll={}; issScore={};
+function issReset(){ if(!IS_HOST)return; stopIssTimer(); issState={q:0,phase:'idle',awarded:{}}; issVotesAll={}; issScore={};
   if(fbOn()){fbSet('iss/state',issState);fbSet('iss/votes',null);fbSet('iss/score',null);} renderIss(); }
 function applyIss(v){ v=v||{};
   issState=v.state||{q:0,phase:'idle',awarded:{}};
@@ -999,9 +1010,17 @@ function renderIss(){
   // 내 선택만 체크표시 (득표수는 아무에게도 표시하지 않음)
   if(!IS_HOST&&(phase==='vote'||phase==='result')){ if(mine===0)L.classList.add('picked'); if(mine===1)R.classList.add('picked'); }
   if(phase==='result'){ if(win===0||win===-1)L.classList.add('win'); if(win===1||win===-1)R.classList.add('win'); }
+  // 타이머 (5초 카운트다운)
+  const tel=document.getElementById('iss-timer'); const up=issTimeUp(); const rem=issRemain();
+  if(phase==='vote'){ if(tel){tel.style.display='flex';tel.textContent=up?'⏰':rem;}
+    if(!issTimer||issTimerTs!==issState.ts) startIssTimer(); }
+  else { stopIssTimer(); if(tel)tel.style.display='none'; }
   // status line (표 수 비공개)
   const st=document.getElementById('iss-status');
-  if(st){ if(phase==='vote')st.textContent=IS_HOST?`투표 중… (${voted}명 선택 완료)`:(mine==null?'👇 하나를 골라요!':'✅ 선택했어요! 결과를 기다려요');
+  if(st){ if(phase==='vote'){
+      if(up)st.textContent='⏰ 시간 종료! 결과를 확인해요';
+      else st.textContent=IS_HOST?`⏱ ${rem}초 · ${voted}명 선택 완료`:(mine==null?`⏱ ${rem}초 안에 골라요!`:'✅ 선택했어요! 바꿔도 돼요');
+    }
     else if(phase==='result')st.innerHTML=win===-1?'🤝 동점! 모두 +1점':`🎉 정답은 <b>${win===0?'인사할래요!':'지나갈래요'}</b> — 고른 친구 +1점`;
     else st.textContent=''; }
   // done + markDone
