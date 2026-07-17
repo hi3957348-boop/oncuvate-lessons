@@ -142,6 +142,21 @@ body{background:var(--oc-bg);font-family:'Malgun Gothic','Segoe UI',Arial,sans-s
 .cho-card{background:var(--oc-card);border:1px solid var(--oc-border);border-radius:14px;padding:18px 16px;margin-bottom:10px;}
 .cho-question{font-size:15px;font-weight:600;color:var(--oc-dark);margin-bottom:10px;line-height:1.6;}
 .cho-hint{display:inline-flex;align-items:center;gap:4px;background:var(--oc-purple);color:#fff;font-size:20px;font-weight:900;padding:8px 16px;border-radius:10px;letter-spacing:4px;margin-bottom:12px;}
+/* ── QUIZ02 게임쇼 템플릿 스타일 초성 카드 ── */
+.qz-card{position:relative;margin-top:12px;border-radius:20px;padding:16px 16px 18px;color:#fff;overflow:hidden;background-color:#552C8F;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px;box-shadow:0 8px 22px rgba(74,42,142,.34);}
+.qz-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;letter-spacing:1.2px;color:#D8C9EF;}
+.qz-badge{text-align:center;font-size:23px;font-weight:900;letter-spacing:1px;margin:8px 0 12px;}
+.qz-badge .q{color:#FF66C4;}.qz-badge .n{color:#FFCD1D;}
+.qz-question{text-align:center;font-size:18px;font-weight:800;line-height:1.5;color:#fff;margin:2px 6px 16px;text-shadow:0 2px 6px rgba(0,0,0,.28);}
+.qz-cho{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:16px;}
+.qz-cho-box{width:54px;height:54px;border-radius:14px;background:#FAFAFA;color:#3A2168;font-size:29px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 rgba(0,0,0,.20);}
+.qz-answer{display:flex;gap:8px;max-width:440px;margin:0 auto;}
+.qz-input{flex:1;min-width:0;border:none;border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px;font-weight:700;color:#3A2168;background:#fff;}
+.qz-input:focus{outline:3px solid #FFCD1D;}
+.qz-btn{border:none;border-radius:12px;padding:12px 20px;font-family:inherit;font-size:15px;font-weight:900;color:#4E2A8E;background:#FFCD1D;cursor:pointer;box-shadow:0 4px 0 #C99E00;flex:0 0 auto;}
+.qz-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #C99E00;}
+.qz-fb{margin-top:12px;text-align:center;border-radius:10px;font-weight:700;}
+.qz-fb.fb-neu{background:rgba(255,255,255,.16);color:#EFE8FB;border:none;}
 .cho-input-row{display:flex;gap:8px;align-items:center;}
 .cho-input{flex:1;padding:11px 14px;border-radius:10px;border:1.5px solid var(--oc-border);background:#fff;font-size:16px;font-weight:600;color:var(--oc-dark);font-family:inherit;outline:none;transition:border-color .2s;}
 .cho-input:focus{border-color:var(--oc-purple-mid);}
@@ -603,32 +618,38 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <div class="card-h">파트 1 <span class="accent">핵심 단어</span></div>
       <p class="pgdesc">초성을 보고 파트 1에서 배운 단어를 써 보세요!</p>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">고려에 큰 어려움을 준 외세의 침입은?</div>
-      <div class="cho-hint">ㅁ ㄱ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c1" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(1)"/>
-        <button class="cho-btn" onclick="checkCho(1)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 1</span><span>1 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:01</span></div>
+      <div class="qz-question">고려에 큰 어려움을 준 외세의 침입은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㄱ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c1" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(1)"/>
+        <button class="qz-btn" onclick="checkCho(1)">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb1">단어를 입력하고 확인을 눌러요!</div>
+      <div class="fb fb-neu qz-fb" id="cfb1">단어를 입력하고 확인을 눌러요!</div>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">고려 사람들이 나라를 지켜 줄 것이라 믿었던 종교적 힘은?</div>
-      <div class="cho-hint">ㅂ ㅊ ㄴ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c2" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(2)"/>
-        <button class="cho-btn" onclick="checkCho(2)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 1</span><span>2 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:02</span></div>
+      <div class="qz-question">고려 사람들이 나라를 지켜 줄 것이라 믿었던 종교적 힘은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅂ</span><span class="qz-cho-box">ㅊ</span><span class="qz-cho-box">ㄴ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c2" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(2)"/>
+        <button class="qz-btn" onclick="checkCho(2)">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb2">단어를 입력하고 확인을 눌러요!</div>
+      <div class="fb fb-neu qz-fb" id="cfb2">단어를 입력하고 확인을 눌러요!</div>
     </div>
-    <div class="cho-card">
-      <div class="cho-question">불교 경전을 나무판에 새겨 보관한 것의 이름은?</div>
-      <div class="cho-hint">ㅍ ㅁ ㄷ ㅈ ㄱ</div>
-      <div class="cho-input-row">
-        <input class="cho-input" id="c3" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(3)"/>
-        <button class="cho-btn" onclick="checkCho(3)">확인</button>
+    <div class="qz-card">
+      <div class="qz-top"><span>PART 1</span><span>3 / 3</span></div>
+      <div class="qz-badge"><span class="q">QUIZ</span><span class="n">:03</span></div>
+      <div class="qz-question">불교 경전을 나무판에 새겨 보관한 것의 이름은?</div>
+      <div class="qz-cho"><span class="qz-cho-box">ㅍ</span><span class="qz-cho-box">ㅁ</span><span class="qz-cho-box">ㄷ</span><span class="qz-cho-box">ㅈ</span><span class="qz-cho-box">ㄱ</span></div>
+      <div class="qz-answer">
+        <input class="qz-input" id="c3" placeholder="정답 입력" onkeydown="if(event.key==='Enter')checkCho(3)"/>
+        <button class="qz-btn" onclick="checkCho(3)">확인</button>
       </div>
-      <div class="fb fb-neu" id="cfb3">단어를 입력하고 확인을 눌러요!</div>
+      <div class="fb fb-neu qz-fb" id="cfb3">단어를 입력하고 확인을 눌러요!</div>
     </div>
   </div>
 
