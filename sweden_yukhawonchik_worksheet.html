@@ -108,9 +108,11 @@ const ARTICLES=[
   {
     title:'스웨덴, 해외입양 제도를 다시 생각하다',
     paras:[
-      "스웨덴은 아이들의 권리를 중요하게 생각하는 나라입니다. 그런데 최근 스웨덴 조사위원회는 해외입양 제도를 크게 바꾸자고 제안했습니다.",
-      "조사 결과, 지난 수십 년 동안 일부 해외입양에서 서류가 거짓으로 작성되거나 부모의 동의가 제대로 이루어지지 않은 사례가 있었다고 밝혔습니다. 또 입양을 관리하는 기관이 이런 문제를 충분히 막지 못한 점도 확인되었습니다.",
-      "그래서 앞으로는 해외입양을 대부분 중단하고, 대신 아이가 자신의 가족과 지역사회에서 안전하게 자랄 수 있도록 돕는 일을 더 중요하게 생각하자고 권고했습니다. 또한 해외입양을 간 사람들에게는 가족을 찾거나 상담을 받을 수 있도록 지원을 늘리자고 제안했습니다. 이 소식은 해외입양 제도가 정말 아이들에게 가장 좋은 방법인지 다시 생각해 보게 합니다."
+      "복지 제도가 잘 갖추어진 나라로 알려진 스웨덴이 해외입양 제도를 크게 바꾸자는 권고를 발표해 세계의 관심을 받고 있습니다. 스웨덴 조사위원회는 약 70년 동안 이루어진 해외입양을 조사한 뒤, 앞으로는 해외입양 중개를 대부분 중단하는 것이 좋다고 정부에 제안했습니다.",
+      "조사 결과, 과거 일부 해외입양에서는 입양 서류가 사실과 다르게 작성되거나 친부모가 충분히 설명을 듣지 못한 채 동의한 사례가 있었습니다. 또 아이를 보호하고 입양 과정을 관리해야 하는 기관들도 이런 문제를 제대로 막지 못한 것으로 나타났습니다. 조사위원회는 이러한 일이 여러 나라에서 오랫동안 반복되었다고 설명했습니다.",
+      "위원회는 해외입양이 이루어질 때 아이보다 입양을 원하는 어른들의 요구가 더 중요하게 여겨질 위험이 있다고 지적했습니다. 또한 입양을 많이 보내려는 분위기가 생기면 불법적인 방법이 사용될 가능성도 커질 수 있다고 보았습니다. 그래서 아이를 다른 나라로 보내기 전에, 먼저 자신의 가족이나 친척, 또는 자신이 살던 지역사회에서 안전하게 자랄 수 있는 방법을 충분히 찾아야 한다고 강조했습니다.",
+      "앞으로 스웨덴은 해외입양을 간 사람들을 위한 지원도 늘릴 계획입니다. 가족을 찾을 수 있도록 돕거나, 상담을 받을 수 있게 하고, 자신의 출생과 관련된 정보를 확인할 수 있도록 지원하는 방안도 제안했습니다. 이미 해외입양을 간 사람들의 어려움도 함께 해결하자는 뜻입니다.",
+      "이번 권고는 한국에도 많은 생각거리를 주고 있습니다. 우리나라도 오랫동안 많은 아이들이 해외로 입양된 나라 가운데 하나이기 때문입니다. 해외입양이 정말 아이에게 가장 좋은 선택인지, 그리고 아이의 권리를 가장 먼저 생각하고 있는지 다시 살펴보아야 한다는 목소리가 커지고 있습니다. 이번 스웨덴의 결정은 아동복지에서 가장 중요한 것은 아이가 안전하고 사랑받는 환경에서 자라는 것이라는 점을 다시 생각하게 합니다."
     ],
     q:['이 기사의 주요 대상은?','언제 있었던 일인가?','어디에서 일어난 일인가?','무엇을 하자고 제안했나?','어떻게 바꾸자고 했나?','왜 바꾸자고 했나?']
   }
@@ -247,6 +249,66 @@ function submitWork(btn){
   }).catch(()=>{btn.disabled=false;fb.style.color='#D94444';fb.textContent='네트워크 오류로 전송하지 못했어요. 다시 시도해 주세요.';});
 }
 
+function build(){
+  const root=document.getElementById('pages');
+  const art=ARTICLES[0], p=0;
+  state[p]={cat:0,erase:false};
+  const HEAD='<div class="head"><div class="head-title"><img class="logo" src="'+LOGO+'"><div><h1>기사 읽고 육하원칙으로 정리하기</h1><div class="sub">누가 · 언제 · 어디서 · 무엇을 · 어떻게 · 왜</div></div></div><div class="namebox"><label>이름 <input type="text"></label><label>날짜 <input type="text"></label></div></div>';
+  const FOOT='<div class="footer-note">© 2026 Oncuvate · 기사 읽고 육하원칙으로 정리하기 · 무단 배포 금지</div>';
+  const chips=CATS.map((c,i)=>'<button class="hl-chip" data-role="sel" data-p="'+p+'" data-cat="'+i+'" style="background:'+c.c+'">'+c.em+' '+c.n+'</button>').join('');
+  const article='<div class="art" data-p="'+p+'"><div class="art-title">'+esc(art.title)+'</div>'+
+    art.paras.map(par=>'<p class="art-p">'+par.split(' ').map(w=>'<span class="hw">'+esc(w)+'</span>').join(' ')+'</p>').join('')+'</div>';
+  const grid=CATS.map((c,i)=>
+    '<div class="wq-row">'+
+      '<button class="wq-swatch" data-role="sel" data-p="'+p+'" data-cat="'+i+'" style="background:'+c.c+'"><span class="em">'+c.em+'</span>'+c.n+'<span class="en">'+c.en+'</span></button>'+
+      '<div class="wq-body"><div class="wq-q">'+esc(art.q[i])+'</div><input class="wq-in" type="text"></div>'+
+    '</div>').join('');
+  const pg1=document.createElement('div'); pg1.className='page';
+  pg1.innerHTML=HEAD+
+    '<h2 class="sec"><span class="n">1</span>기사 읽고 형광펜으로 표시하기</h2>'+
+    '<div class="desc">아래에서 <b>형광펜 색</b>을 고른 뒤, 기사에서 그 질문의 <b>답이 되는 부분</b>을 끌어서 칠해요. (다음 장 ② 표의 색 단추를 눌러도 형광펜이 바뀌어요.)</div>'+
+    '<div class="hl-bar">'+chips+'<button class="hl-erase" data-p="'+p+'">🧽 지우개</button><button class="hl-clear" data-p="'+p+'">🧹 전체 지우기</button><span class="hl-now" data-p="'+p+'"></span></div>'+
+    article+FOOT;
+  const pg2=document.createElement('div'); pg2.className='page';
+  pg2.innerHTML=HEAD+
+    '<h2 class="sec"><span class="n">2</span>육하원칙으로 정리하기</h2>'+
+    '<div class="desc">앞 장 기사에서 칠한 형광펜 색과 같은 칸에, 질문의 답을 문장으로 써요.</div>'+
+    grid+
+    '<h2 class="sec"><span class="n">3</span>간결하게 요약하기</h2>'+
+    '<div class="desc">위 내용을 바탕으로 이 기사를 <b>2~3문장</b>으로 짧게 요약해 보세요.</div>'+
+    '<textarea class="sum-box" rows="4"></textarea>'+FOOT;
+  root.appendChild(pg1); root.appendChild(pg2);
+  wire();
+  refresh(p);
+}
+function submitWork(btn){
+  const nb=document.querySelectorAll('.namebox input');
+  const name=(nb[0]&&nb[0].value||'').trim();
+  const date=(nb[1]&&nb[1].value||'').trim();
+  const fb=document.getElementById('submitFb');
+  if(!name){fb.style.color='#D94444';fb.textContent='먼저 이름을 적어 주세요.';if(nb[0])nb[0].focus();return;}
+  const art=ARTICLES[0];
+  let msg='[기사 읽고 육하원칙으로 정리하기]\n'+art.title+'\n이름: '+name+'   날짜: '+(date||'-')+'\n\n';
+  [...document.querySelectorAll('.wq-row')].forEach((row,ri)=>{
+    const c=CATS[ri];
+    const inp=row.querySelector('.wq-in');
+    const ans=(inp&&inp.value||'').trim();
+    const hl=[...document.querySelectorAll('.art .hw')].filter(w=>+w.dataset.cat===ri).map(w=>w.textContent).join(' ');
+    msg+=' · '+c.n+'('+c.en+'): '+(ans||'(미작성)');
+    if(hl)msg+='   [형광펜: '+hl+']';
+    msg+='\n';
+  });
+  const sb=document.querySelector('.sum-box');
+  msg+=' · 요약: '+((sb&&sb.value||'').trim()||'(미작성)')+'\n';
+  btn.disabled=true;fb.style.color='var(--purple)';fb.textContent='제출 중...';
+  fetch('https://api.web3forms.com/submit',{
+    method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},
+    body:JSON.stringify({access_key:WEB3FORMS_KEY,subject:'[온큐베이트] 기사 육하원칙 활동지 - '+name,from_name:'Oncuvate 활동지',name:name,message:msg})
+  }).then(r=>r.json()).then(d=>{
+    if(d.success){fb.style.color='#16A084';fb.textContent='✅ 제출 완료! 선생님께 전송되었어요.';}
+    else{btn.disabled=false;fb.style.color='#D94444';fb.textContent='제출 실패: '+(d.message||'다시 시도해 주세요.');}
+  }).catch(()=>{btn.disabled=false;fb.style.color='#D94444';fb.textContent='네트워크 오류로 전송하지 못했어요. 다시 시도해 주세요.';});
+}
 build();
 </script>
 </body>
