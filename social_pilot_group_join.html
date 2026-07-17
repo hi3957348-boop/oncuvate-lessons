@@ -343,13 +343,14 @@ body.nav-locked .nb-prev,body.nav-locked .nb-next{visibility:hidden}
 .nj-result{text-align:center;font-weight:800;color:var(--oc-purple);min-height:24px;margin:8px 0;font-size:15px}
 /* S09 마음 보석 카드 */
 .mc-stage{position:relative;width:100%;max-width:860px;margin:8px auto;aspect-ratio:2800/1600;background-size:100% 100%;background-repeat:no-repeat;border-radius:12px;overflow:hidden}
-.mc-card{position:absolute;top:52%;width:14%;aspect-ratio:390/634;perspective:1000px;cursor:pointer}
-.mc-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d;filter:drop-shadow(0 5px 12px rgba(0,0,0,.3))}
-.mc-card.flip .mc-inner{transform:rotateY(180deg)}
+.mc-card{position:absolute;top:52%;width:14%;aspect-ratio:390/634;cursor:pointer}
+.mc-inner{position:relative;width:100%;height:100%;transition:transform .18s ease-in}
 .mc-card:not(.flip):hover .mc-inner{transform:translateY(-4px)}
-.mc-face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:10px;background-size:100% 100%;background-repeat:no-repeat}
-.mc-reveal{transform:rotateY(180deg);display:flex;align-items:center;justify-content:center}
+.mc-face{position:absolute;inset:0;border-radius:10px;background-size:100% 100%;background-repeat:no-repeat;box-shadow:0 5px 12px rgba(0,0,0,.3)}
+.mc-reveal{display:none;align-items:center;justify-content:center}
 .mc-reveal span{color:#4a3410;font-weight:800;font-size:clamp(9px,1.35vw,14px);text-align:center;line-height:1.35;padding:0 12%}
+@keyframes mcflip{0%{transform:scaleX(1)}48%{transform:scaleX(.06)}52%{transform:scaleX(.06)}100%{transform:scaleX(1)}}
+.mc-inner.flipping{animation:mcflip .42s ease-in-out}
 </style>
 
 <!-- ================= GATE ================= -->
@@ -1132,10 +1133,10 @@ function renderNj(){
 
 /* ---- S09 마음 보석 카드 (뒤집으면 노란 카드에 문장 → 다른 사람의 마음 추측) ---- */
 const MCARD=[
- {x:19.8, s:'친구가 아끼던 물건을 잃어버렸어요.\n어떤 마음일까요?'},
- {x:35.8, s:'친구가 달리기에서 1등을 했어요.\n어떤 마음일까요?'},
- {x:52.3, s:'소풍 전날 비가 온다는 소식을 들었어요.\n친구는 어떤 마음일까요?'},
- {x:66.0, s:'친구가 다른 학교로 전학을 가요.\n어떤 마음일까요?'},
+ {x:20.0, s:'친구가 아끼던 물건을 잃어버렸어요.\n어떤 마음일까요?'},
+ {x:35.5, s:'친구가 달리기에서 1등을 했어요.\n어떤 마음일까요?'},
+ {x:51.1, s:'소풍 전날 비가 온다는 소식을 들었어요.\n친구는 어떤 마음일까요?'},
+ {x:66.1, s:'친구가 다른 학교로 전학을 가요.\n어떤 마음일까요?'},
 ];
 let mindState={flipped:{}};
 function Pmc(){return `<section class="page" data-i="8">${head(8)}
@@ -1161,7 +1162,15 @@ function applyMind(v){ v=v||{}; mindState={flipped:v.flipped||{}}; renderMc(); }
 function renderMc(){
   const st=document.querySelector('.mc-stage'); if(!st)return;
   document.querySelectorAll('.mc-card').forEach(card=>{const i=+card.dataset.i;
-    card.className='mc-card'+(mindState.flipped[i]?' flip':'');});
+    const f=!!mindState.flipped[i], was=card.dataset.f==='1';
+    const cover=card.querySelector('.mc-cover'),reveal=card.querySelector('.mc-reveal'),inner=card.querySelector('.mc-inner');
+    card.classList.toggle('flip',f);
+    const setFaces=()=>{cover.style.display=f?'none':'block';reveal.style.display=f?'flex':'none';};
+    if(f!==was){ card.dataset.f=f?'1':'';
+      inner.classList.remove('flipping'); void inner.offsetWidth; inner.classList.add('flipping');
+      setTimeout(setFaces,190); setTimeout(()=>inner.classList.remove('flipping'),440);
+    } else setFaces();
+  });
   if(Object.keys(mindState.flipped).some(k=>mindState.flipped[k])&&!IS_HOST)markDone(8);
 }
 
