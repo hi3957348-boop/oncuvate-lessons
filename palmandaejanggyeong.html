@@ -172,6 +172,18 @@ body{background:var(--oc-bg);font-family:'Malgun Gothic','Segoe UI',Arial,sans-s
 .qz-done h3{font-size:22px;font-weight:900;margin-bottom:6px;}
 .qz-done p{color:#E4D8F7;font-size:14px;margin-bottom:15px;}
 .qz-done button{border:none;border-radius:12px;padding:11px 24px;font-family:inherit;font-weight:900;font-size:14px;color:#4E2A8E;background:#FFCD1D;cursor:pointer;box-shadow:0 4px 0 #C99E00;}
+/* 정답 축하 팝업 */
+.qz-pop{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;background:rgba(40,20,80,.45);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+.qz-pop.show{display:flex;}
+.qz-pop-card{position:relative;background:#fff;border-radius:24px;padding:26px 36px;text-align:center;box-shadow:0 18px 48px rgba(0,0,0,.32);animation:qzpop .5s cubic-bezier(.2,1.55,.4,1) both;overflow:visible;}
+.qz-pop-emoji{font-size:58px;line-height:1;animation:qzbounce .6s ease infinite alternate;}
+.qz-pop-title{font-size:32px;font-weight:900;color:#4E2A8E;margin-top:4px;letter-spacing:-.5px;}
+.qz-pop-word{font-size:17px;font-weight:800;color:#7A5A00;background:#FFF3CC;border-radius:12px;padding:6px 16px;margin-top:12px;display:inline-block;}
+.qz-pop-word:empty{display:none;}
+.qz-pop .cf{position:absolute;top:-12px;font-size:20px;pointer-events:none;animation:qzfall 1.2s ease-out forwards;}
+@keyframes qzpop{0%{transform:scale(0) rotate(-14deg);}100%{transform:scale(1) rotate(0);}}
+@keyframes qzbounce{from{transform:translateY(0);}to{transform:translateY(-9px);}}
+@keyframes qzfall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(150px) rotate(240deg);opacity:0;}}
 .cho-input-row{display:flex;gap:8px;align-items:center;}
 .cho-input{flex:1;padding:11px 14px;border-radius:10px;border:1.5px solid var(--oc-border);background:#fff;font-size:16px;font-weight:600;color:var(--oc-dark);font-family:inherit;outline:none;transition:border-color .2s;}
 .cho-input:focus{border-color:var(--oc-purple-mid);}
@@ -683,6 +695,13 @@ body.act-locked.is-student .lock-mask{display:flex;}
       <p>파트 1 핵심 단어를 모두 맞혔어요. 잘했어요!</p>
       <button onclick="qzInit4()">🔄 다시 풀기</button>
     </div>
+    <div class="qz-pop" id="qz-pop">
+      <div class="qz-pop-card">
+        <div class="qz-pop-emoji">🎉</div>
+        <div class="qz-pop-title">정답!</div>
+        <div class="qz-pop-word" id="qz-pop-word"></div>
+      </div>
+    </div>
   </div>
 
   <!-- ════ P5 · 파트2 끊어읽기 ════ -->
@@ -1013,12 +1032,28 @@ function qzCheck(n, idx){
   if(!v){ fb.textContent='❗ 정답을 입력해 주세요.'; fb.className='qz-cardfb fb-bad'; return; }
   var ok=v===norm(ANS[n])||(ALTS[n]||[]).some(function(a){return v===norm(a);});
   if(ok){
-    fb.textContent='✅ 정답! 다음 문제로 넘어가요…'; fb.className='qz-cardfb fb-good'; el.disabled=true;
-    setTimeout(function(){ qzGo(idx+1); }, 1000);
+    fb.textContent='✅ 정답!'; fb.className='qz-cardfb fb-good'; el.disabled=true;
+    qzPop(ANS[n]);
+    setTimeout(function(){ qzPopHide(); qzGo(idx+1); }, 1400);
   } else {
     fb.textContent='❌ 아쉬워요! 힌트를 긁어 보고 다시 도전!'; fb.className='qz-cardfb fb-bad';
   }
 }
+function qzPop(word){
+  var pop=document.getElementById('qz-pop'); if(!pop) return;
+  var wd=document.getElementById('qz-pop-word'); if(wd) wd.textContent = word ? ('정답: '+word) : '';
+  var card=pop.querySelector('.qz-pop-card');
+  card.querySelectorAll('.cf').forEach(function(e){ e.remove(); });
+  var em=['🎉','✨','🎊','⭐','💛','🩵','🌟'];
+  for(var i=0;i<12;i++){
+    var s=document.createElement('span'); s.className='cf'; s.textContent=em[i%em.length];
+    s.style.left=(4+Math.random()*92)+'%'; s.style.animationDelay=(Math.random()*0.35)+'s';
+    card.appendChild(s);
+  }
+  pop.classList.add('show');
+}
+function qzPopHide(){ var pop=document.getElementById('qz-pop'); if(pop) pop.classList.remove('show'); }
+window.qzPop=qzPop; window.qzPopHide=qzPopHide;
 function qzGo(idx){
   var pg=document.getElementById('pg4'); if(!pg) return;
   var cards=pg.querySelectorAll('.qz-card'), done=document.getElementById('qz-done');
