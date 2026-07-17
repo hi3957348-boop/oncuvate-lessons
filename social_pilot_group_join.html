@@ -327,8 +327,8 @@ body.nav-locked .nb-prev,body.nav-locked .nb-next{visibility:hidden}
 .iss-rank .pt{font-weight:800;color:var(--oc-purple)}
 /* S08 놓지마 정신줄 (돌림판 + 6색 플립카드) */
 .nj-stage{position:relative;width:100%;max-width:860px;margin:8px auto;aspect-ratio:2800/1600;background-size:100% 100%;background-repeat:no-repeat;border-radius:12px;overflow:hidden}
-.nj-wheelwrap{position:absolute;left:7%;top:26%;width:29.6%;aspect-ratio:1}
-.nj-wheel{width:100%;height:100%;transition:transform 3.4s cubic-bezier(.15,.7,.2,1);will-change:transform;filter:drop-shadow(0 6px 14px rgba(0,0,0,.22))}
+.nj-wheelwrap{position:absolute;left:7%;top:calc(26% + 30px);width:29.6%;aspect-ratio:1}
+.nj-wheel{width:100%;height:100%;transition:transform 3.4s cubic-bezier(.15,.7,.2,1);will-change:transform;filter:saturate(.78) drop-shadow(0 6px 14px rgba(0,0,0,.18))}
 .nj-ptr{position:absolute;top:-8%;left:50%;transform:translateX(-50%);color:#222;font-size:clamp(20px,4vw,42px);line-height:1;z-index:2;text-shadow:0 2px 4px rgba(0,0,0,.3)}
 .nj-card{position:absolute;width:22%;height:20%;perspective:900px;cursor:default}
 .nj-card-inner{position:relative;width:100%;height:100%;transition:transform .6s;transform-style:preserve-3d}
@@ -337,7 +337,7 @@ body.nav-locked .nb-prev,body.nav-locked .nb-next{visibility:hidden}
 .nj-card.ready .nj-front{box-shadow:0 0 0 5px #fff,0 0 22px 6px #ffe066;animation:njp 1s infinite}
 @keyframes njp{50%{box-shadow:0 0 0 5px #fff,0 0 30px 10px #ffd11a}}
 .nj-face{position:absolute;inset:0;-webkit-backface-visibility:hidden;backface-visibility:hidden;border-radius:16px;display:flex;align-items:center;justify-content:center;box-shadow:0 5px 14px rgba(0,0,0,.22)}
-.nj-front{color:#fff;font-size:clamp(24px,5vw,46px);font-weight:900;text-shadow:0 2px 5px rgba(0,0,0,.25)}
+.nj-front{color:rgba(255,255,255,.72);font-size:clamp(22px,4vw,38px);font-weight:700}
 .nj-back{transform:rotateY(180deg);background:#fff;border:4px solid;padding:8px}
 .nj-back span{font-weight:800;color:#241a4d;font-size:clamp(12px,2vw,21px);text-align:center;line-height:1.25}
 .nj-result{text-align:center;font-weight:800;color:var(--oc-purple);min-height:24px;margin:8px 0;font-size:15px}
@@ -1057,23 +1057,24 @@ function renderIss(){
 
 /* ---- S08 놓지마 정신줄 (돌림판 → 같은 색 제시어 카드 플립 → 주제 유지 대화) ---- */
 const NJC={
- red:   {a:30, hex:'#ee1c24', ko:'🔴 빨강', w:'내가 좋아하는 음식'},
- orange:{a:90, hex:'#f7941e', ko:'🟠 주황', w:'주말에 있었던 일'},
- yellow:{a:150,hex:'#ffd11a', ko:'🟡 노랑', w:'내가 좋아하는 놀이'},
- green: {a:210,hex:'#1e8c32', ko:'🟢 초록', w:'좋아하는 동물'},
- blue:  {a:270,hex:'#2525e0', ko:'🔵 파랑', w:'커서 되고 싶은 것'},
- purple:{a:330,hex:'#a01ee6', ko:'🟣 보라', w:'우리 반 자랑거리'},
+ red:   {a:30, hex:'#e08a8a', ko:'빨강', w:'내가 좋아하는 음식'},
+ orange:{a:90, hex:'#e6ac70', ko:'주황', w:'주말에 있었던 일'},
+ yellow:{a:150,hex:'#dcc274', ko:'노랑', w:'내가 좋아하는 놀이'},
+ green: {a:210,hex:'#77b59a', ko:'초록', w:'좋아하는 동물'},
+ blue:  {a:270,hex:'#7d97cf', ko:'파랑', w:'커서 되고 싶은 것'},
+ purple:{a:330,hex:'#9585c4', ko:'보라', w:'우리 반 자랑거리'},
 };
 const NJORD=['red','orange','yellow','green','blue','purple'];
 const NJPOS={red:[49,25],orange:[73,25],yellow:[49,50],green:[73,50],blue:[49,75],purple:[73,75]};
 let njState={rot:0,color:'',flipped:{}};
+let njSpinning=false, njLastRot=0, njSpinTimer=null;
 function Pnj(){return `<section class="page" data-i="7">${head(7)}
  <div class="prompt">🌀 <b>놓지마 정신줄!</b> 돌림판을 돌려 색이 나오면, <b>같은 색 카드</b>를 눌러 뒤집어요. 나온 <b>제시어</b>로 <b>주제를 놓치지 않고</b> 이야기를 이어가요! (한 사람씩 그 주제로 한 문장씩)</div>
  <div class="nj-stage" style="background-image:url('${(window.IMG&&IMG.njBg)||''}')">
    <div class="nj-wheelwrap"><div class="nj-ptr">▼</div><img class="nj-wheel" id="nj-wheel" src="${(window.IMG&&IMG.njWheel)||''}" alt="돌림판"></div>
    ${NJORD.map(c=>{const o=NJC[c],p=NJPOS[c];return `<div class="nj-card" data-c="${c}" style="left:${p[0]}%;top:${p[1]}%" onclick="njFlip('${c}')">
      <div class="nj-card-inner">
-       <div class="nj-face nj-front" style="background:${o.hex}">❓</div>
+       <div class="nj-face nj-front" style="background:${o.hex}">?</div>
        <div class="nj-face nj-back" style="border-color:${o.hex}"><span>${o.w}</span></div>
      </div></div>`;}).join('')}
  </div>
@@ -1091,18 +1092,24 @@ function applyNj(v){ v=v||{}; njState={rot:v.rot||0,color:v.color||'',flipped:v.
 function njSpin(){ if(!IS_HOST)return; const c=NJORD[Math.floor(Math.random()*NJORD.length)];
   const a=NJC[c].a, target=(360-a)%360, prev=njState.rot, cur=((prev%360)+360)%360;
   njState.rot = prev + 360*4 + (((target-cur)%360)+360)%360; njState.color=c; njPub(); }
-function njFlip(c){ if(njState.color!==c && !njState.flipped[c])return;
+function njFlip(c){ if(njSpinning)return; if(njState.color!==c && !njState.flipped[c])return;
   njState.flipped=Object.assign({},njState.flipped,{[c]:!njState.flipped[c]}); njPub(); }
-function njReset(){ if(!IS_HOST)return; njState={rot:0,color:'',flipped:{}}; njPub(); }
+function njReset(){ if(!IS_HOST)return; njState={rot:0,color:'',flipped:{}}; njSpinning=false; clearTimeout(njSpinTimer); njPub(); }
 function renderNj(){
   const wh=document.getElementById('nj-wheel'); if(!wh)return;
+  // 새 스핀 감지 → 돌림판이 멈출 때까지(≈3.5s) 강조를 미룸
+  if(njState.color && njState.rot!==njLastRot){
+    njLastRot=njState.rot; njSpinning=true; clearTimeout(njSpinTimer);
+    njSpinTimer=setTimeout(()=>{njSpinning=false; renderNj();}, 3500);
+  } else if(!njState.color){ njLastRot=njState.rot; njSpinning=false; }
   wh.style.transform='rotate('+njState.rot+'deg)';
   document.querySelectorAll('.nj-card').forEach(card=>{const c=card.dataset.c;
-    const flipped=!!njState.flipped[c], ready=njState.color===c&&!flipped;
+    const flipped=!!njState.flipped[c], ready=njState.color===c&&!flipped&&!njSpinning;
     card.className='nj-card'+(flipped?' flip':'')+(ready?' ready':'');
   });
   const res=document.getElementById('nj-result');
   if(res){ if(!njState.color)res.textContent='🌀 강사가 돌림판을 돌리면 색이 나와요';
+    else if(njSpinning)res.textContent='🌀 돌림판이 돌아가는 중…';
     else res.innerHTML=`🎯 <b>${NJC[njState.color].ko}</b> 색이 나왔어요! <b>${NJC[njState.color].ko} 카드</b>를 눌러 뒤집고 그 주제로 이야기해요`; }
   if(Object.keys(njState.flipped).some(k=>njState.flipped[k])&&!IS_HOST)markDone(7);
 }
