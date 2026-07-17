@@ -1238,5 +1238,40 @@ window.Oc=(function(){
   });
 })();
 </script>
+<script>/*OC_LISTEN2*/
+(function(){
+  if(typeof startGame!=='function'||typeof playTimed!=='function') return;
+  var GAME2=[{"t":"심부름해서","d":["슴부름해서","심보름해서","심부림해서","심부름헤서","심부름해사","짐부름해서"]},{"t":"분식집에서","d":["본식집에서","분슥집에서","분식즙에서","분식집애서","분식집에사","문식집에서"]},{"t":"편의점에서","d":["편의잠에서","편의점애서","편의점에사","편의덤에서","편의점에저","편의첨에서"]},{"t":"문방구에서","d":["몬방구에서","문벙구에서","문방고에서","문방구애서","문방구에사","분방구에서"]},{"t":"생일이에요","d":["생일이지요","생일이거든","생일이네요","셍일이에요","생을이에요","생일으에요"]},{"t":"모았어요","d":["모았었지요","모았거든요","모았네요","무았어요","모었어요","모았아요"]},{"t":"원이에요","d":["원이지요","원이거든","원이네요","원으에요","원이애요","월이에요"]},{"t":"좋을까요","d":["줗을까요","좋일까요","좋을꺼요","돟을까요","촣을까요","좋은까요"]},{"t":"떡꼬치를","d":["떡꼬치는","떡꼬치가","딱꼬치를","떡꾸치를","떡꼬츠를","떡꼬치릴"]},{"t":"장난감이","d":["장난감은","장난감을","정난감이","장넌감이","장난검이","장난감으"]}];
+  if(!GAME2||!GAME2.length) return;
+  var DN={none:2,mid:3,hard:4}, ROUNDS=Math.min(10,GAME2.length);
+  var g2=null;
+  var _origReset=resetSession; resetSession=function(){ _origReset(); g2=null; };
+  function newSet(){ return {order:shuffle(GAME2.map(function(_,i){return i;})).slice(0,ROUNDS), i:0}; }
+  startGame=function(){
+    gStop(); feedback('',''); nextEl.style.display='none'; playEl.textContent='🔊 다시 듣기';
+    if(!g2) g2=newSet();
+    if(g2.i>=g2.order.length){
+      boardEl.className='gboard';
+      boardEl.innerHTML='<div class="listening">🎉 '+ROUNDS+'문제 모두 끝냈어요!<br><span class="lsub">잠시 후 새 문제로 다시 시작해요</span></div>';
+      setInstruct('아주 잘했어요! 👏'); scoreEl.textContent=sCorrect; progEl.textContent='완료 '+ROUNDS+' / '+ROUNDS;
+      g2=newSet(); setTimeout(function(){ if(gMode==='listen'&&!gReporting&&gameModeEl.style.display!=='none') startGame(); },1700); return;
+    }
+    var item=GAME2[g2.order[g2.i]];
+    var n=DN[gTrap]||2;
+    var ds=shuffle(item.d.slice()).slice(0,n);
+    var opts=shuffle([{t:item.t,ok:1}].concat(ds.map(function(x){return {t:x,ok:0};})));
+    boardEl.className='gboard tiles'; boardEl.innerHTML='';
+    opts.forEach(function(o){ var b=document.createElement('button'); b.className='gtile wordtile'; b.textContent=o.t;
+      b.onclick=function(){ if(b.disabled)return;
+        if(o.ok){ recordRT(); b.classList.add('gfound'); b.disabled=true; sCorrect++; feedback('🎉 맞았어요!','ok');
+          scoreEl.textContent=sCorrect; g2.i++; setTimeout(startGame,750);
+        } else { sWrong++; b.classList.add('gno'); feedback('아니에요, 🔊 다시 듣기를 눌러 잘 들어봐요','no'); setTimeout(function(){b.classList.remove('gno');},450); } };
+      boardEl.appendChild(b); });
+    setInstruct('소리를 잘 듣고, 방해 낱말 사이에서 <b>들은 낱말</b>을 고르세요 (방해 '+n+'개)');
+    progEl.textContent='문제 '+(g2.i+1)+' / '+ROUNDS; scoreEl.textContent=sCorrect;
+    playTimed(item.t); playEl.onclick=function(){ playTimed(item.t); };
+  };
+})();
+</script>
 </body>
 </html>
