@@ -229,7 +229,7 @@ body.nav-locked .nav-bottom{display:none;}
 .wd-board{display:flex;flex-direction:column;gap:8px;}
 @media(min-width:620px){
   .wd-stage{aspect-ratio:3675 / 2100;padding:0;}
-  .wd-board{position:absolute;left:6%;right:6%;top:16.5%;bottom:6%;justify-content:center;overflow:hidden;gap:6px;}
+  .wd-board{position:absolute;left:6%;right:6%;top:16.5%;bottom:4%;justify-content:center;overflow:hidden;gap:6px;transform:translateY(40px);}
 }
 .wd-stage .wd-cols{align-items:center;gap:14px;}
 .wd-stage .sy-row{margin:4px 0 2px;gap:7px;}
@@ -248,7 +248,7 @@ body.nav-locked .nav-bottom{display:none;}
 .wd-target-label{margin-top:14px;}
 .wd-mean{background:rgba(255,255,255,.88);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:600;color:var(--oc-dark);line-height:1.6;}
 .wd-cand-label{text-align:center;}
-.wd-hostctl{display:none;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px;background:rgba(255,255,255,.92);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:800;color:var(--oc-purple);}
+.wd-hostctl{display:none;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:2px;background:var(--oc-purple-light);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:9px 12px;font-size:13px;font-weight:800;color:var(--oc-purple);}
 .wd-hostctl button{width:30px;height:30px;border:none;border-radius:8px;background:var(--oc-purple);color:#fff;font-size:18px;font-weight:900;cursor:pointer;font-family:inherit;line-height:1;}
 .wd-hostctl .wd-reset{width:auto;padding:0 14px;height:32px;font-size:13px;background:var(--oc-cyan);}
 #wdMaxN{min-width:22px;text-align:center;font-size:16px;color:var(--oc-dark);}
@@ -726,7 +726,6 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
         <div class="wd-board">
         <div class="wd-cols">
           <div class="wd-left">
-            <div class="wd-mean-label">📖 이 낱말의 뜻</div>
             <div class="wd-mean">꼭 필요한 시설이지만 "우리 집 근처엔 안 돼!" 하고 반대하는 마음이에요. 송전망을 반대하는 이유와 관련이 깊어요!</div>
             <div class="wd-target-label">🎯 목표 낱말</div>
             <div class="sy-row" id="syRow"></div>
@@ -738,14 +737,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
           </div>
         </div>
         <div class="jm-status" id="jmStatus">음소를 눌러 다 함께 낱말을 완성해요!</div>
-        <div class="wd-hostctl" id="wdHostCtl">
-          <span>👑 학생당 기회</span>
-          <button onclick="jmSetMax(-1)">−</button>
-          <span id="wdMaxN">4</span>
-          <button onclick="jmSetMax(1)">+</button>
-          <button class="wd-reset" onclick="resetWordle()">↺ 새로 시작</button>
         </div>
-        </div>
+      </div>
+      <div class="wd-hostctl" id="wdHostCtl">
+        <span>👑 학생당 기회</span>
+        <button onclick="jmSetMax(-1)">−</button>
+        <span id="wdMaxN">4</span>
+        <button onclick="jmSetMax(1)">+</button>
+        <button class="wd-reset" onclick="resetWordle()">↺ 새로 시작</button>
       </div>
     </div>
 
