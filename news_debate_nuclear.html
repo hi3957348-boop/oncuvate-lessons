@@ -211,7 +211,16 @@ body.nav-locked .nav-bottom{display:none;}
 .sy-slot.rev{border-style:solid;border-color:var(--oc-purple);background:var(--oc-purple-light);animation:fi .3s ease;}
 .sy-slot.none{visibility:hidden;}
 .sy-guide{text-align:center;font-size:11.5px;font-weight:700;color:var(--oc-gray-light);margin-bottom:10px;}
-.jm-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;justify-content:center;margin:16px 0 10px;max-width:340px;margin-left:auto;margin-right:auto;}
+.jm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;justify-content:center;margin:0 auto;max-width:262px;}
+/* ── 낱말 챌린지 스테이지 (배경 이미지) ── */
+.wd-stage{position:relative;width:100%;background:url("word_challenge_bg.jpg") top center/100% 100% no-repeat;border-radius:14px;padding:12% 6% 6%;box-sizing:border-box;margin-bottom:10px;}
+@media(min-width:620px){.wd-stage{padding:10.5% 6% 5%;}}
+.wd-cols{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;justify-content:center;}
+.wd-left{flex:1 1 210px;min-width:190px;}
+.wd-right{flex:1 1 240px;display:flex;flex-direction:column;align-items:center;}
+.wd-mean-label,.wd-target-label,.wd-cand-label{font-size:12px;font-weight:800;color:var(--oc-purple);margin-bottom:6px;letter-spacing:.3px;}
+.wd-target-label{margin-top:14px;}
+.wd-mean{background:rgba(255,255,255,.88);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:600;color:var(--oc-dark);line-height:1.65;}
 .jm-btn{width:100%!important;}
 .jm-chances{text-align:center;font-size:13px;font-weight:800;color:var(--oc-gold);min-height:20px;margin-bottom:6px;letter-spacing:1px;}
 .jm-chances.low{color:var(--oc-error);}
@@ -677,20 +686,30 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
   <!-- ════ P6 · 님비현상 워들 ════ -->
   <div class="pg" id="pg6">
     <div class="card">
-      <div class="tag">낱말 워들</div>
+      <div class="tag">낱말 챌린지</div>
       <div class="card-h">🎯 음소를 모아 <span class="accent">낱말을 완성</span>해요</div>
-      <p class="pgdesc">네 글자의 빈칸이 있어요. 각 칸은 <strong>초성·중성</strong>으로 나뉘어요. 아래에서 맞는 음소를 누르면 그 음소가 들어가는 자리에 나타나요!</p>
-      <div class="info-box">💡 힌트 : 꼭 필요한 시설이지만 "우리 집 근처엔 안 돼!" 하고 반대하는 마음이에요. 송전망을 반대하는 이유와 관련이 깊어요!</div>
-
-      <div class="sy-row" id="syRow"></div>
-      <div class="sy-guide">위 칸: 초성(왼쪽)·중성(오른쪽) / 아래 칸: 종성(받침)</div>
-      <div class="jm-chances" id="jmChances"></div>
-      <div class="jm-grid" id="jmGrid"></div>
-      <div class="jm-status" id="jmStatus">음소를 눌러 빈칸을 채워봐요! (기회는 9번!)</div>
-      <div style="text-align:center;"><button class="btn-ghost" id="wordleRetry" onclick="resetWordle()" style="display:none;margin-top:8px;">↺ 다시 도전</button></div>
-      <div class="wd-legend">
-        <span><span class="wd-chip" style="background:var(--oc-success);"></span>낱말에 있는 음소</span>
-        <span><span class="wd-chip" style="background:var(--oc-gray-light);"></span>없는 음소</span>
+      <p class="pgdesc">왼쪽 <b>뜻</b>을 보고, 오른쪽 <b>후보 음소</b>를 눌러 목표 낱말을 완성해요!</p>
+      <div class="wd-stage">
+        <div class="wd-cols">
+          <div class="wd-left">
+            <div class="wd-mean-label">📖 이 낱말의 뜻</div>
+            <div class="wd-mean">꼭 필요한 시설이지만 "우리 집 근처엔 안 돼!" 하고 반대하는 마음이에요. 송전망을 반대하는 이유와 관련이 깊어요!</div>
+            <div class="wd-target-label">🎯 목표 낱말</div>
+            <div class="sy-row" id="syRow"></div>
+            <div class="sy-guide">위 칸: 초성(왼쪽)·중성(오른쪽) / 아래 칸: 종성(받침)</div>
+            <div class="jm-chances" id="jmChances"></div>
+          </div>
+          <div class="wd-right">
+            <div class="wd-cand-label">🔤 후보 음소</div>
+            <div class="jm-grid" id="jmGrid"></div>
+          </div>
+        </div>
+        <div class="jm-status" id="jmStatus">음소를 눌러 빈칸을 채워봐요! (기회는 9번!)</div>
+        <div style="text-align:center;"><button class="btn-ghost" id="wordleRetry" onclick="resetWordle()" style="display:none;margin-top:8px;">↺ 다시 도전</button></div>
+        <div class="wd-legend">
+          <span><span class="wd-chip" style="background:var(--oc-success);"></span>낱말에 있는 음소</span>
+          <span><span class="wd-chip" style="background:var(--oc-gray-light);"></span>없는 음소</span>
+        </div>
       </div>
     </div>
 
@@ -1427,7 +1446,7 @@ function findCheck(seg){
 const SY_SLOTS=[['ㄴ','ㅣ','ㅁ'],['ㅂ','ㅣ',''],['ㅎ','ㅕ','ㄴ'],['ㅅ','ㅏ','ㅇ']];
 const SY_CHARS=['님','비','현','상'];
 const JM_CORRECT=['ㄴ','ㅣ','ㅁ','ㅂ','ㅎ','ㅕ','ㅅ','ㅏ','ㅇ'];
-const JM_WRONG=['ㄱ','ㄷ','ㅈ','ㅗ','ㅜ','ㅓ'];
+const JM_WRONG=['ㄱ','ㄷ','ㅈ','ㅗ','ㅜ','ㅓ','ㅐ'];
 const JM_MAX=JM_CORRECT.length; // 기회 = 정답 음소 수(9)
 let jmHits=0,jmMiss=0,jmChances=JM_MAX,jmOver=false;
 
