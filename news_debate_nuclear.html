@@ -168,6 +168,18 @@ body.nav-locked .nav-bottom{display:none;}
 .ws-cell.selecting{background:#D4EEF8;border-color:var(--oc-cyan);}
 .ws-cell.found{background:linear-gradient(135deg,var(--oc-cyan),var(--oc-purple));color:#fff;border-color:transparent;}
 .ws-cell.missed{background:var(--oc-error-bg);border-color:var(--oc-error);color:var(--oc-error);}
+/* ── 워드서치 스테이지 (배경 이미지 · 좌판/우힌트) ── */
+.ws-stage{position:relative;width:100%;aspect-ratio:3675 / 2100;background:url("wordsearch_bg.jpg") center/100% 100% no-repeat;border-radius:14px;margin-bottom:10px;overflow:hidden;}
+.ws-grid-zone{position:absolute;left:4%;top:22%;width:50%;height:66%;display:flex;align-items:center;justify-content:center;}
+.ws-grid-zone .ws-grid{display:grid!important;grid-template-columns:repeat(7,1fr);gap:2.5%;height:100%;width:auto;aspect-ratio:1;max-width:100%;background:rgba(255,255,255,.93)!important;padding:2.5%!important;border-radius:12px!important;border:none!important;box-shadow:0 4px 14px rgba(0,0,0,.25)!important;box-sizing:border-box;}
+.ws-grid-zone .ws-cell{width:auto!important;height:auto!important;aspect-ratio:1;font-size:clamp(10px,2.4vw,18px)!important;border-radius:6px;}
+.ws-hint-zone{position:absolute;left:57%;top:31%;width:38%;height:42%;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:1.5%;text-align:center;}
+.ws-wait{font-size:clamp(11px,2.2vw,15px);font-weight:800;color:#0d5e6e;line-height:1.6;}
+.ws-hint-zone .ws-current{background:transparent!important;border:none!important;box-shadow:none!important;padding:0!important;margin:0!important;width:100%;text-align:center;}
+.ws-hint-zone .ws-cur-num{display:block;font-size:clamp(9px,1.8vw,12px);font-weight:800;color:#0d6b8a;margin-bottom:5px;}
+.ws-hint-zone .ws-word-cho{display:inline-block;margin-bottom:8px;font-size:clamp(14px,3.2vw,22px);}
+.ws-hint-zone .ws-word-mean{display:block;color:#0c2733;min-width:0;font-size:clamp(11px,2.4vw,15px);flex:none;}
+.ws-hint-zone .ws-timer-row{margin-top:10px;}
 #wsFeedback{text-align:center;font-size:15px;font-weight:800;color:var(--oc-purple);margin-top:8px;min-height:22px;}
 
 /* ── 유창하게 읽기 ── */
@@ -572,25 +584,27 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="card">
       <div class="tag">워드서치</div>
       <div class="card-h">🔍 숨은 낱말을 <span class="accent">찾아요</span></div>
-      <p class="pgdesc">선생님이 힌트를 한 개씩 열어줘요. 뜻과 초성을 보고 판에서 드래그로 낱말을 찾아봐요! (가로·세로)</p>
+      <p class="pgdesc">왼쪽 판에서 낱말을 찾아요. 오른쪽 <b>말풍선</b>에 뜻과 초성 힌트가 나와요! (가로·세로 드래그)</p>
       <div class="ws-progress" id="wsProgress"></div>
-      <div class="callout info" id="wsWait" style="display:none;text-align:center;">⏳ 선생님이 힌트를 열어줄 때까지 기다려요!</div>
-      <div class="ws-current" id="wsCurrent">
-        <div class="ws-cur-top">
-          <span class="ws-cur-num" id="wsCurNum">1 / 6</span>
-          <span class="ws-word-cho" id="wsCurCho"></span>
-          <span class="ws-word-mean" id="wsCurMean"></span>
-        </div>
-        <div class="ws-timer-row" id="wsTimerRow">
-          <div class="ws-time-track"><div class="ws-time-bar" id="wsTimeBar"></div></div>
-          <span class="ws-time-num" id="wsTimeNum">30초</span>
+      <div class="ws-stage">
+        <div class="ws-grid-zone"><div class="ws-grid" id="wsGrid"></div></div>
+        <div class="ws-hint-zone">
+          <div class="ws-wait" id="wsWait" style="display:none;">⏳ 선생님이 힌트를<br>열 때까지 기다려요!</div>
+          <div class="ws-current" id="wsCurrent">
+            <span class="ws-cur-num" id="wsCurNum">1 / 6</span>
+            <span class="ws-word-cho" id="wsCurCho"></span>
+            <span class="ws-word-mean" id="wsCurMean"></span>
+            <div class="ws-timer-row" id="wsTimerRow">
+              <div class="ws-time-track"><div class="ws-time-bar" id="wsTimeBar"></div></div>
+              <span class="ws-time-num" id="wsTimeNum">30초</span>
+            </div>
+          </div>
         </div>
       </div>
-      <div style="display:flex;gap:8px;">
-        <button class="btn-primary" id="wsStartBtn" onclick="startWs()" style="margin-bottom:12px;display:none;">▶ 낱말 찾기 시작! (단어당 30초)</button>
-        <button class="btn-primary" id="wsNextBtn" onclick="wsHostNext()" style="margin-bottom:12px;display:none;background:var(--oc-cyan);">⏭ 다음 힌트</button>
+      <div style="display:flex;gap:8px;justify-content:center;">
+        <button class="btn-primary" id="wsStartBtn" onclick="startWs()" style="margin-bottom:12px;display:none;max-width:340px;">▶ 낱말 찾기 시작! (단어당 30초)</button>
+        <button class="btn-primary" id="wsNextBtn" onclick="wsHostNext()" style="margin-bottom:12px;display:none;background:var(--oc-cyan);max-width:340px;">⏭ 다음 힌트</button>
       </div>
-      <div class="ws-grid-wrap"><div class="ws-grid" id="wsGrid"></div></div>
       <div id="wsFeedback"></div>
     </div>
 
@@ -1225,7 +1239,7 @@ function buildWordSearch(){
 
   const el=document.getElementById('wsGrid');
   wsGridEl=el;
-  el.style.gridTemplateColumns=`repeat(${WS_SIZE},42px)`;
+  el.style.gridTemplateColumns=`repeat(${WS_SIZE},1fr)`;
   el.innerHTML='';
   for(let r=0;r<WS_SIZE;r++)for(let c=0;c<WS_SIZE;c++){
     const cell=document.createElement('div');
