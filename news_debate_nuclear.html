@@ -213,15 +213,20 @@ body.nav-locked .nav-bottom{display:none;}
 .sy-guide{text-align:center;font-size:11.5px;font-weight:700;color:var(--oc-gray-light);margin-bottom:10px;}
 .jm-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;justify-content:center;margin:0 auto;max-width:262px;}
 /* ── 낱말 챌린지 스테이지 (배경 이미지) ── */
-.wd-stage{position:relative;width:100%;background:url("word_challenge_bg.jpg") top center/100% 100% no-repeat;border-radius:14px;padding:12% 6% 6%;box-sizing:border-box;margin-bottom:10px;}
-@media(min-width:620px){.wd-stage{padding:10.5% 6% 5%;}}
+.wd-stage{position:relative;width:100%;background:url("word_challenge_bg.jpg") top center/100% 100% no-repeat;border-radius:14px;padding:15% 7% 8%;box-sizing:border-box;margin-bottom:10px;}
+@media(min-width:620px){.wd-stage{padding:12.5% 8% 7%;}}
 .wd-cols{display:flex;gap:18px;flex-wrap:wrap;align-items:flex-start;justify-content:center;}
 .wd-left{flex:1 1 210px;min-width:190px;}
 .wd-right{flex:1 1 240px;display:flex;flex-direction:column;align-items:center;}
 .wd-mean-label,.wd-target-label,.wd-cand-label{font-size:12px;font-weight:800;color:var(--oc-purple);margin-bottom:6px;letter-spacing:.3px;}
 .wd-target-label{margin-top:14px;}
-.wd-mean{background:rgba(255,255,255,.88);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:600;color:var(--oc-dark);line-height:1.65;}
-.jm-btn{width:100%!important;}
+.wd-mean{background:rgba(255,255,255,.88);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:12px 14px;font-size:13.5px;font-weight:600;color:var(--oc-dark);line-height:1.6;}
+.wd-cand-label{text-align:center;}
+.wd-hostctl{display:none;align-items:center;justify-content:center;gap:8px;flex-wrap:wrap;margin-top:12px;background:rgba(255,255,255,.92);border:1.5px solid var(--oc-purple-border);border-radius:12px;padding:8px 12px;font-size:13px;font-weight:800;color:var(--oc-purple);}
+.wd-hostctl button{width:30px;height:30px;border:none;border-radius:8px;background:var(--oc-purple);color:#fff;font-size:18px;font-weight:900;cursor:pointer;font-family:inherit;line-height:1;}
+.wd-hostctl .wd-reset{width:auto;padding:0 14px;height:32px;font-size:13px;background:var(--oc-cyan);}
+#wdMaxN{min-width:22px;text-align:center;font-size:16px;color:var(--oc-dark);}
+.jm-btn{width:100%!important;height:auto!important;aspect-ratio:1;border-radius:14px!important;box-shadow:0 2px 6px rgba(106,93,167,.15);}
 .jm-chances{text-align:center;font-size:13px;font-weight:800;color:var(--oc-gold);min-height:20px;margin-bottom:6px;letter-spacing:1px;}
 .jm-chances.low{color:var(--oc-error);}
 .jm-btn{width:56px;height:56px;border:2px solid var(--oc-border);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:24px;font-weight:900;background:var(--oc-card);color:var(--oc-dark);cursor:pointer;transition:all .2s;font-family:inherit;}
@@ -688,7 +693,7 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="card">
       <div class="tag">낱말 챌린지</div>
       <div class="card-h">🎯 음소를 모아 <span class="accent">낱말을 완성</span>해요</div>
-      <p class="pgdesc">왼쪽 <b>뜻</b>을 보고, 오른쪽 <b>후보 음소</b>를 눌러 목표 낱말을 완성해요!</p>
+      <p class="pgdesc">왼쪽 <b>뜻</b>을 보고 오른쪽 <b>후보 음소</b>를 눌러, 친구들과 <b>다 함께</b> 낱말을 완성해요! (기회는 학생당 기본 4번)</p>
       <div class="wd-stage">
         <div class="wd-cols">
           <div class="wd-left">
@@ -704,11 +709,13 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
             <div class="jm-grid" id="jmGrid"></div>
           </div>
         </div>
-        <div class="jm-status" id="jmStatus">음소를 눌러 빈칸을 채워봐요! (기회는 9번!)</div>
-        <div style="text-align:center;"><button class="btn-ghost" id="wordleRetry" onclick="resetWordle()" style="display:none;margin-top:8px;">↺ 다시 도전</button></div>
-        <div class="wd-legend">
-          <span><span class="wd-chip" style="background:var(--oc-success);"></span>낱말에 있는 음소</span>
-          <span><span class="wd-chip" style="background:var(--oc-gray-light);"></span>없는 음소</span>
+        <div class="jm-status" id="jmStatus">음소를 눌러 다 함께 낱말을 완성해요!</div>
+        <div class="wd-hostctl" id="wdHostCtl">
+          <span>👑 학생당 기회</span>
+          <button onclick="jmSetMax(-1)">−</button>
+          <span id="wdMaxN">4</span>
+          <button onclick="jmSetMax(1)">+</button>
+          <button class="wd-reset" onclick="resetWordle()">↺ 새로 시작</button>
         </div>
       </div>
     </div>
@@ -932,9 +939,9 @@ function enterApp(){
     document.getElementById('app').classList.add('on');
     initCardMatch();
     buildReading();
-    if(IS_HOST){ navRun=Date.now(); document.getElementById('hostPanel').style.display='block'; document.getElementById('piClearBtn').style.display='inline-block'; navPublish(); studentsSubscribe(); hostLog('👑 강사 입장'); }
+    if(IS_HOST){ navRun=Date.now(); document.getElementById('hostPanel').style.display='block'; document.getElementById('piClearBtn').style.display='inline-block'; document.getElementById('wdHostCtl').style.display='flex'; navPublish(); studentsSubscribe(); hostLog('👑 강사 입장'); }
     else { STUDENT_ID='S'+Math.floor(1000+Math.random()*9000); navSubscribe(); actSubscribe(); setupStudentPresence(); pubProgress(); }
-    boardSubscribe();
+    boardSubscribe(); wordleSubscribe();
   },450);
 }
 
@@ -1447,8 +1454,9 @@ const SY_SLOTS=[['ㄴ','ㅣ','ㅁ'],['ㅂ','ㅣ',''],['ㅎ','ㅕ','ㄴ'],['ㅅ',
 const SY_CHARS=['님','비','현','상'];
 const JM_CORRECT=['ㄴ','ㅣ','ㅁ','ㅂ','ㅎ','ㅕ','ㅅ','ㅏ','ㅇ'];
 const JM_WRONG=['ㄱ','ㄷ','ㅈ','ㅗ','ㅜ','ㅓ','ㅐ'];
-const JM_MAX=JM_CORRECT.length; // 기회 = 정답 음소 수(9)
-let jmHits=0,jmMiss=0,jmChances=JM_MAX,jmOver=false;
+const WD_DB='sisa-nuclear/wordle';
+let jmMax=4, jmUsed=0, jmRunSeen=null, jmRevealed={}, jmDone=false;
+function jmLeft(){ return Math.max(0, jmMax - jmUsed); }
 
 function buildSyllables(){
   const row=document.getElementById('syRow');
@@ -1486,67 +1494,73 @@ function buildJamo(){
   bank.forEach(({j,ok})=>{
     const b=document.createElement('button');
     b.className='jm-btn';b.textContent=j;
-    b.onclick=()=>pickJamo(b,ok);
+    b.dataset.ph=j; b.dataset.ok=ok?'1':'0';
+    b.onclick=()=>pickJamo(b);
     g.appendChild(b);
   });
-}
-function jmStatusText(){
-  let t='정답 음소 '+jmHits+' / '+JM_CORRECT.length+' 찾음';
-  if(jmMiss)t+=' · 오답 '+jmMiss+'개';
-  return t;
 }
 function updateChances(){
   const el=document.getElementById('jmChances');
   if(!el)return;
-  el.textContent='남은 기회 '+'●'.repeat(Math.max(0,jmChances))+'○'.repeat(JM_MAX-Math.max(0,jmChances))+' ('+Math.max(0,jmChances)+'/'+JM_MAX+')';
-  el.classList.toggle('low',jmChances<=2);
+  const left=jmLeft();
+  el.textContent='남은 기회 '+'●'.repeat(left)+'○'.repeat(Math.max(0,jmMax-left))+' ('+left+' / '+jmMax+')';
+  el.classList.toggle('low',left<=1);
 }
-function pickJamo(b,ok){
-  if(b.disabled||jmOver)return;
-  b.disabled=true;
-  jmChances--;
-  updateChances();
-  const st=document.getElementById('jmStatus');
-  if(ok){
-    b.classList.add('hit');jmHits++;
-    const j=b.textContent;
-    document.querySelectorAll('.sy-slot[data-j="'+j+'"]').forEach(s=>{
-      s.classList.add('rev');s.textContent=j;
-    });
-    document.querySelectorAll('.sy-box').forEach(box=>{
-      const slots=box.querySelectorAll('.sy-slot[data-j]');
-      if([...slots].every(s=>s.classList.contains('rev')))box.classList.add('done');
-    });
-    const total=document.querySelectorAll('.sy-slot[data-j]').length;
-    const rev=document.querySelectorAll('.sy-slot.rev').length;
-    if(rev>=total){
-      jmOver=true;
-      st.textContent='🏆 낱말 완성! "'+SY_CHARS.join('')+'"';
-      document.getElementById('wdBig').style.display='block';
-      return;
-    } else {
-      st.textContent='✅ 있어요! '+jmStatusText();
-    }
+function applyRevealed(){
+  document.querySelectorAll('#syRow .sy-slot[data-j]').forEach(s=>{
+    if(jmRevealed[s.dataset.j]){ s.classList.add('rev'); s.textContent=s.dataset.j; }
+    else { s.classList.remove('rev'); s.textContent=''; }
+  });
+  document.querySelectorAll('#syRow .sy-box').forEach(box=>{
+    const slots=box.querySelectorAll('.sy-slot[data-j]');
+    box.classList.toggle('done',[...slots].every(s=>s.classList.contains('rev')));
+  });
+  const total=document.querySelectorAll('#syRow .sy-slot[data-j]').length;
+  const rev=document.querySelectorAll('#syRow .sy-slot.rev').length;
+  const st=document.getElementById('jmStatus'), big=document.getElementById('wdBig');
+  if(total>0 && rev>=total){
+    jmDone=true;
+    if(st) st.textContent='🏆 다 함께 낱말을 완성했어요! "'+SY_CHARS.join('')+'"';
+    if(big) big.style.display='block';
   } else {
-    b.classList.add('miss');jmMiss++;
-    st.textContent='❌ 없는 음소예요. '+jmStatusText();
-  }
-  if(jmChances<=0){
-    jmOver=true;
-    st.textContent='😢 기회를 다 썼어요! 정답은 "'+SY_CHARS.join('')+'"였어요.';
-    document.getElementById('wdBig').style.display='block';
-    document.querySelectorAll('#jmGrid .jm-btn').forEach(x=>x.disabled=true);
-    document.getElementById('wordleRetry').style.display='inline-block';
+    jmDone=false;
+    if(big) big.style.display='none';
+    if(st) st.textContent = jmLeft()>0 ? ('🔤 '+rev+' / '+total+' 발견 · 내 남은 기회 '+jmLeft()) : ('내 기회를 다 썼어요! 친구들이 이어서 풀어요 ('+rev+' / '+total+')');
   }
 }
-function resetWordle(){
-  jmHits=0;jmMiss=0;jmChances=JM_MAX;jmOver=false;
-  document.getElementById('wdBig').style.display='none';
-  document.getElementById('wordleRetry').style.display='none';
-  document.getElementById('jmStatus').textContent='음소를 눌러 빈칸을 채워봐요!';
-  buildSyllables();
-  buildJamo();
+function pickJamo(b){
+  if(jmDone) return;
+  const ph=b.dataset.ph, ok=b.dataset.ok==='1';
+  if(ok && jmRevealed[ph]) return;               // 이미 발견됨 → 무시(기회 안 씀)
+  if(jmLeft()<=0){ const st=document.getElementById('jmStatus'); if(st) st.textContent='내 기회를 다 썼어요! 친구들이 이어서 풀어요.'; return; }
+  jmUsed++;                                        // 맞든 틀리든 기회 1 소모 (틀려도 표시 없음)
+  if(ok){ jmRevealed[ph]=true; if(window._firebaseReady){ try{ window._set(window._ref(window._db,WD_DB+'/revealed/'+ph),true); }catch(e){} } }
+  applyRevealed(); updateChances();
+}
+function resetWordle(){        // 강사 전용 · 새로 시작
+  if(!IS_HOST) return;
+  jmRevealed={}; jmDone=false; jmUsed=0;
+  if(window._firebaseReady){ try{ window._set(window._ref(window._db,WD_DB),{run:Date.now(),maxChances:jmMax,revealed:null}); }catch(e){} }
+  applyRevealed(); updateChances();
+  if(typeof hostLog==='function') hostLog('🔤 낱말 챌린지 새로 시작');
+}
+function jmSetMax(delta){       // 강사 전용 · 학생당 기회 조정
+  if(!IS_HOST) return;
+  jmMax=Math.max(1,Math.min(12,jmMax+delta));
+  const n=document.getElementById('wdMaxN'); if(n) n.textContent=jmMax;
+  if(window._firebaseReady){ try{ window._set(window._ref(window._db,WD_DB+'/maxChances'),jmMax); }catch(e){} }
   updateChances();
+}
+function wordleSubscribe(){
+  if(!window._firebaseReady){ applyRevealed(); updateChances(); return; }
+  window._onValue(window._ref(window._db,WD_DB),snap=>{
+    const v=snap.val()||{};
+    if(v.run!==jmRunSeen){ jmRunSeen=v.run; jmUsed=0; }   // 새 라운드 → 내 기회 리셋
+    jmMax=(typeof v.maxChances==='number')?v.maxChances:4;
+    jmRevealed=v.revealed||{};
+    const n=document.getElementById('wdMaxN'); if(n) n.textContent=jmMax;
+    applyRevealed(); updateChances();
+  });
 }
 
 /* ── QUIZ LINK ── */
