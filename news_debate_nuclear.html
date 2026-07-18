@@ -229,9 +229,11 @@ body.nav-locked .nav-bottom{display:none;}
 .wd-board{display:flex;flex-direction:column;gap:8px;}
 @media(min-width:620px){
   .wd-stage{aspect-ratio:3675 / 2100;padding:0;}
-  .wd-board{position:absolute;left:6%;right:6%;top:16.5%;bottom:4%;justify-content:center;overflow:hidden;gap:6px;transform:translateY(40px);}
+  .wd-board{position:absolute;left:6%;right:6%;top:24%;bottom:5%;justify-content:flex-start;overflow:hidden;gap:6px;padding-top:1%;}
 }
-.wd-stage .wd-cols{align-items:center;gap:14px;}
+.wd-stage .wd-cols{align-items:flex-start;gap:14px;}
+.wd-stage .wd-left{text-align:center;}
+.wd-stage .wd-mean{max-width:262px;margin:0 auto;text-align:left;}
 .wd-stage .sy-row{margin:4px 0 2px;gap:7px;}
 .wd-stage .sy-box{width:clamp(48px,12.5vw,60px);height:auto;aspect-ratio:8 / 9;padding:5px;}
 .wd-stage .sy-slot{font-size:clamp(12px,3.2vw,17px);}
@@ -730,7 +732,6 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
             <div class="wd-target-label">🎯 목표 낱말</div>
             <div class="sy-row" id="syRow"></div>
             <div class="sy-guide">위 칸: 초성(왼쪽)·중성(오른쪽) / 아래 칸: 종성(받침)</div>
-            <div class="jm-chances" id="jmChances"></div>
           </div>
           <div class="wd-right">
             <div class="jm-grid" id="jmGrid"></div>
