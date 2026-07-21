@@ -437,6 +437,33 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 .pi-ctext{flex:1;min-width:140px;border:2px solid var(--oc-border);border-radius:10px;padding:9px 11px;font-family:inherit;font-size:13px;color:var(--oc-dark);outline:none;}
 .pi-ctext:focus,.pi-cname:focus{border-color:var(--oc-purple);}
 .pi-cbtn{background:var(--oc-purple);color:#fff;border:none;border-radius:10px;padding:9px 16px;font-family:inherit;font-size:14px;font-weight:800;cursor:pointer;}
+
+/* ── 낱말 매칭 직소 퍼즐 ── */
+.jig-cols{display:grid;grid-template-columns:1fr 1fr;gap:11px 28px;}
+.jig-col{display:flex;flex-direction:column;gap:11px;}
+.jig-p{position:relative;border:2.5px solid var(--oc-purple-border);border-radius:12px;padding:13px 12px;font-weight:700;cursor:pointer;background:#fff;transition:all .16s;user-select:none;line-height:1.45;}
+.jig-p.w{background:var(--oc-purple-light);border-color:var(--oc-purple);color:var(--oc-purple);font-size:15px;font-weight:800;text-align:center;}
+.jig-p.w::after{content:'';position:absolute;right:-11px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:var(--oc-purple-light);border:2.5px solid var(--oc-purple);clip-path:inset(0 0 0 42%);}
+.jig-p.m{font-size:12.5px;color:var(--oc-dark);}
+.jig-p.m::before{content:'';position:absolute;left:-11px;top:50%;transform:translateY(-50%);width:18px;height:18px;border-radius:50%;background:var(--oc-card);border:2.5px solid var(--oc-purple-border);clip-path:inset(0 58% 0 0);}
+.jig-p.sel{border-color:var(--oc-cyan);background:#E3F8FB;box-shadow:0 0 0 3px rgba(27,188,212,.18);}
+.jig-p.sel::after,.jig-p.sel::before{border-color:var(--oc-cyan);background:#E3F8FB;}
+.jig-p.bad{border-color:var(--oc-error);background:var(--oc-error-bg);animation:jigShake .42s;}
+@keyframes jigShake{0%,100%{transform:none}25%{transform:translateX(-6px)}75%{transform:translateX(6px)}}
+.jig-p.gone{opacity:0;transform:scale(.5);pointer-events:none;transition:all .28s;}
+.jig-done-label{font-size:12px;font-weight:800;color:var(--oc-success);margin:14px 0 8px;}
+.jig-done{display:flex;flex-direction:column;gap:9px;}
+.jig-pair{display:flex;align-items:stretch;animation:jigSnap .45s cubic-bezier(.3,1.6,.5,1);}
+.jig-pair .jp-w{background:var(--oc-success-bg);border:2.5px solid var(--oc-success);border-right:none;border-radius:12px 0 0 12px;padding:11px 14px;font-size:14px;font-weight:800;color:var(--oc-success);display:flex;align-items:center;justify-content:center;min-width:96px;}
+.jig-pair .jp-m{background:#fff;border:2.5px solid var(--oc-success);border-left:2.5px dashed var(--oc-success);border-radius:0 12px 12px 0;padding:11px 13px;font-size:12.5px;font-weight:600;flex:1;display:flex;align-items:center;line-height:1.5;}
+@keyframes jigSnap{0%{transform:scale(.84);opacity:0}55%{transform:scale(1.07)}100%{transform:scale(1);opacity:1}}
+.jig-fb{text-align:center;font-size:14px;font-weight:800;color:var(--oc-purple);min-height:22px;margin-top:12px;}
+.jig-pop{display:none;position:fixed;inset:0;z-index:10001;align-items:center;justify-content:center;pointer-events:none;}
+.jig-pop.on{display:flex;}
+.jig-pop-box{background:linear-gradient(135deg,var(--oc-purple),var(--oc-cyan));color:#fff;border-radius:22px;padding:26px 34px;text-align:center;box-shadow:0 14px 44px rgba(0,0,0,.32);animation:jigPopIn .38s cubic-bezier(.3,1.7,.5,1);}
+.jig-pop-emoji{font-size:46px;line-height:1;margin-bottom:8px;}
+.jig-pop-msg{font-size:19px;font-weight:800;}
+@keyframes jigPopIn{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
 </style>
 
 <!-- Firebase (강사→학생 워드서치 힌트 동기화) -->
@@ -577,26 +604,37 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
       </div>
     </div>
 
-    <!-- 카드 매칭 -->
-    <div class="card">
-      <div class="tag">낱말 매칭</div>
-      <div class="card-h">🃏 단어와 뜻을 <span class="accent">짝지어요</span></div>
-      <p class="pgdesc">단어 카드를 누르고, 어울리는 뜻 카드를 눌러요. 짝이 맞으면 카드가 사라지고 아래에 정리돼요!</p>
-      <div class="cm-board" id="cmBoard"></div>
-      <div class="cm-done-label" id="cmDoneLabel" style="display:none;">✅ 완성한 낱말</div>
-      <div class="cm-done" id="cmDone"></div>
-      <div class="cm-fb" id="cmFb"></div>
-    </div>
-
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" disabled>← 이전</button>
-      <span class="nb-cnt">1 / 9</span>
+      <span class="nb-cnt">1 / 10</span>
       <button class="nb-btn nb-next" onclick="goTo(2)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P2 · 워드서치 ════ -->
+  <!-- ════ P2 · 낱말 매칭 (직소 퍼즐) ════ -->
   <div class="pg" id="pg2">
+    <div class="card">
+      <div class="tag">낱말 매칭</div>
+      <div class="card-h">🧩 단어와 뜻을 <span class="accent">맞춰요</span></div>
+      <p class="pgdesc">왼쪽 <b>단어 조각</b>을 누르고, 어울리는 <b>뜻 조각</b>을 눌러요. 맞으면 <b>찰칵!</b> 하고 두 조각이 하나로 합체돼요.</p>
+      <div class="jig-cols">
+        <div class="jig-col" id="jigW"></div>
+        <div class="jig-col" id="jigM"></div>
+      </div>
+      <div class="jig-done-label" id="jigDoneLabel" style="display:none;">🧩 합체한 조각</div>
+      <div class="jig-done" id="jigDone"></div>
+      <div class="jig-fb" id="jigFb"></div>
+    </div>
+
+    <div class="nav-bottom">
+      <button class="nb-btn nb-prev" onclick="goTo(1)">← 이전</button>
+      <span class="nb-cnt">2 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(3)">다음 →</button>
+    </div>
+  </div>
+
+  <!-- ════ P3 · 워드서치 ════ -->
+  <div class="pg" id="pg3">
     <div class="card">
       <div class="tag">워드서치</div>
       <div class="card-h">🔍 숨은 낱말을 <span class="accent">찾아요</span></div>
@@ -625,14 +663,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(1)">← 이전</button>
-      <span class="nb-cnt">2 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(3)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(2)">← 이전</button>
+      <span class="nb-cnt">3 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(4)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P3 · 기사읽기1 (유창하게 읽기) ════ -->
-  <div class="pg" id="pg3">
+  <!-- ════ P4 · 기사읽기1 (유창하게 읽기) ════ -->
+  <div class="pg" id="pg4">
     <div class="card">
       <div class="tag">기사읽기 1 · 유창하게 읽기</div>
       <div class="card-h">📖 기사를 <span class="accent">끊어</span> 읽어요</div>
@@ -660,14 +698,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(2)">← 이전</button>
-      <span class="nb-cnt">3 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(4)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(3)">← 이전</button>
+      <span class="nb-cnt">4 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(5)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P4 · 초성 퀴즈 ════ -->
-  <div class="pg" id="pg4">
+  <!-- ════ P5 · 초성 퀴즈 ════ -->
+  <div class="pg" id="pg5">
     <div class="card">
       <div class="tag">초성 퀴즈</div>
       <div class="card-h">🔤 초성을 보고 <span class="accent">낱말을 완성</span>해요</div>
@@ -676,14 +714,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
       <div class="cho-fb" id="choFb"></div>
     </div>
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(3)">← 이전</button>
-      <span class="nb-cnt">4 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(5)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(4)">← 이전</button>
+      <span class="nb-cnt">5 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(6)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P5 · 기사읽기2 (질문 하이라이트) ════ -->
-  <div class="pg" id="pg5">
+  <!-- ════ P6 · 기사읽기2 (질문 하이라이트) ════ -->
+  <div class="pg" id="pg6">
     <div class="card">
       <div class="tag">기사읽기 2 · 문제와 해결</div>
       <div class="card-h">🔎 질문을 누르면 <span class="accent">답이 보여요</span></div>
@@ -712,14 +750,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(4)">← 이전</button>
-      <span class="nb-cnt">5 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(6)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(5)">← 이전</button>
+      <span class="nb-cnt">6 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(7)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P6 · 복지제도 낱말 챌린지 ════ -->
-  <div class="pg" id="pg6">
+  <!-- ════ P7 · 복지제도 낱말 챌린지 ════ -->
+  <div class="pg" id="pg7">
     <div class="card">
       <div class="tag">낱말 챌린지</div>
       <div class="card-h">🎯 음소를 모아 <span class="accent">낱말을 완성</span>해요</div>
@@ -757,14 +795,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(5)">← 이전</button>
-      <span class="nb-cnt">6 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(7)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(6)">← 이전</button>
+      <span class="nb-cnt">7 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(8)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P7 · 기사·어휘퀴즈 ════ -->
-  <div class="pg" id="pg7">
+  <!-- ════ P8 · 기사·어휘퀴즈 ════ -->
+  <div class="pg" id="pg8">
     <div class="card">
       <div class="tag">기사·어휘퀴즈</div>
       <div class="card-h">🧩 퀴즈 <span class="accent">활동</span></div>
@@ -781,14 +819,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(6)">← 이전</button>
-      <span class="nb-cnt">7 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(8)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(7)">← 이전</button>
+      <span class="nb-cnt">8 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(9)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P8 · 기사분석 ════ -->
-  <div class="pg" id="pg8">
+  <!-- ════ P9 · 기사분석 ════ -->
+  <div class="pg" id="pg9">
     <div class="card">
       <div class="tag">기사분석</div>
       <div class="card-h">🔬 기사를 <span class="accent">분석해봐요</span></div>
@@ -827,14 +865,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(7)">← 이전</button>
-      <span class="nb-cnt">8 / 9</span>
-      <button class="nb-btn nb-next" onclick="goTo(9)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(8)">← 이전</button>
+      <span class="nb-cnt">9 / 10</span>
+      <button class="nb-btn nb-next" onclick="goTo(10)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P9 · 토론 ════ -->
-  <div class="pg" id="pg9">
+  <!-- ════ P10 · 토론 ════ -->
+  <div class="pg" id="pg10">
     <div class="card" style="padding-bottom:14px;">
       <div class="tag">토론</div>
       <div class="card-h">💬 <span class="accent">토론</span>해봐요</div>
@@ -892,8 +930,8 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="callout tip">🏠 집에서 해봐요! 우리 가족이 나라에서 받는 도움에는 어떤 것이 있는지 이야기해봐요. 더 필요한 도움은 무엇일지도 말해봐요!</div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(8)">← 이전</button>
-      <span class="nb-cnt">9 / 9</span>
+      <button class="nb-btn nb-prev" onclick="goTo(9)">← 이전</button>
+      <span class="nb-cnt">10 / 10</span>
       <button class="nb-btn nb-next" disabled>수업 완료 ✓</button>
     </div>
   </div>
@@ -913,6 +951,8 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
       </div>
     </div>
   </div>
+
+  <div class="jig-pop" id="jigPop"><div class="jig-pop-box"><div class="jig-pop-emoji">🎉</div><div class="jig-pop-msg" id="jigPopMsg">정답이에요!</div></div></div>
 
   <div class="footer">
     <img id="footer-logo" src="" alt="Oncuvate"/>
@@ -965,7 +1005,7 @@ function enterApp(){
   setTimeout(()=>{
     g.style.display='none';
     document.getElementById('app').classList.add('on');
-    initCardMatch();
+    initJigsaw();
     buildReading();
     if(IS_HOST){ navRun=Date.now(); document.getElementById('hostPanel').style.display='block'; document.getElementById('piClearBtn').style.display='inline-block'; document.getElementById('wdHostCtl').style.display='flex'; navPublish(); studentsSubscribe(); hostLog('👑 강사 입장'); }
     else { STUDENT_ID='S'+Math.floor(1000+Math.random()*9000); navSubscribe(); actSubscribe(); setupStudentPresence(); pubProgress(); }
@@ -974,7 +1014,7 @@ function enterApp(){
 }
 
 /* ── NAVIGATION ── */
-const TOTAL=9;let cur=1;window._cur=1;
+const TOTAL=10;let cur=1;window._cur=1;
 let navLocked=false, navRun=null, navApplying=false;
 const NAV_DB='sisa-childsupport/nav';
 function buildDots(){
@@ -995,9 +1035,9 @@ function goToInternal(n){
   document.getElementById('pg'+cur).classList.add('on');
   buildDots();
   window.scrollTo({top:0,behavior:'smooth'});
-  if(n===2 && !wsBuilt) buildWordSearch();
-  if(n===3) setTimeout(resizeHl,60);
-  if(n===4) setTimeout(setupChoScratch,60);
+  if(n===3 && !wsBuilt) buildWordSearch();
+  if(n===4) setTimeout(resizeHl,60);
+  if(n===5) setTimeout(setupChoScratch,60);
   if(!IS_HOST) pubProgress();
 }
 function goTo(n){
@@ -1849,6 +1889,65 @@ function hostLog(msg){
   c.appendChild(line); c.scrollTop=c.scrollHeight;
   while(c.childNodes.length>60) c.removeChild(c.firstChild);
   try{ console.log('[Oncuvate]',msg); }catch(e){}
+}
+
+/* ════ 낱말 매칭 · 직소 퍼즐 (P2) ════ */
+let jigSel=null, jigDone=0;
+const JIG_CHEERS=['정답이에요! 최고예요! 🎉','찰칵! 딱 맞았어요! 👏','잘했어요! 완벽해요! ⭐','맞았어요! 대단해요! 🙌','정답! 척척박사네요! 💯'];
+function jigShuffle(a){a=a.slice();for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;}
+function initJigsaw(){
+  const W=document.getElementById('jigW'), M=document.getElementById('jigM');
+  if(!W||!M)return;
+  W.innerHTML=''; M.innerHTML=''; jigSel=null; jigDone=0;
+  document.getElementById('jigDone').innerHTML='';
+  document.getElementById('jigDoneLabel').style.display='none';
+  document.getElementById('jigFb').textContent='';
+  jigShuffle(CM_ITEMS.map((it,i)=>({t:it.w,id:i}))).forEach(o=>{
+    const d=document.createElement('div'); d.className='jig-p w'; d.textContent=o.t; d.dataset.id=o.id;
+    d.onclick=()=>jigPickW(d); W.appendChild(d);
+  });
+  jigShuffle(CM_ITEMS.map((it,i)=>({t:it.m,id:i}))).forEach(o=>{
+    const d=document.createElement('div'); d.className='jig-p m'; d.textContent=o.t; d.dataset.id=o.id;
+    d.onclick=()=>jigPickM(d); M.appendChild(d);
+  });
+}
+function jigPickW(el){
+  if(el.classList.contains('gone'))return;
+  document.querySelectorAll('#jigW .jig-p').forEach(x=>x.classList.remove('sel'));
+  el.classList.add('sel'); jigSel=el;
+}
+function jigPickM(el){
+  if(el.classList.contains('gone'))return;
+  const fb=document.getElementById('jigFb');
+  if(!jigSel){ fb.textContent='먼저 왼쪽 단어 조각을 골라요!'; return; }
+  if(jigSel.dataset.id===el.dataset.id){
+    const w=jigSel, m=el, id=+el.dataset.id;
+    w.classList.remove('sel'); w.classList.add('gone'); m.classList.add('gone');
+    jigSel=null; jigDone++;
+    setTimeout(()=>{
+      const pair=document.createElement('div'); pair.className='jig-pair';
+      pair.innerHTML='<div class="jp-w">'+CM_ITEMS[id].w+'</div><div class="jp-m">'+CM_ITEMS[id].m+'</div>';
+      document.getElementById('jigDone').appendChild(pair);
+      document.getElementById('jigDoneLabel').style.display='block';
+    },270);
+    jigCheer();
+    fb.textContent = jigDone===CM_ITEMS.length ? '🎉 모든 조각을 맞췄어요!' : ('맞춘 조각 '+jigDone+' / '+CM_ITEMS.length);
+    if(!IS_HOST && typeof pubProgress==='function') pubProgress();
+  } else {
+    const a=jigSel,b=el;
+    a.classList.add('bad'); b.classList.add('bad');
+    setTimeout(()=>{a.classList.remove('bad');b.classList.remove('bad');},430);
+    a.classList.remove('sel'); jigSel=null;
+    fb.textContent='❌ 짝이 아니에요. 다시 골라봐요!';
+  }
+}
+function jigCheer(){
+  const p=document.getElementById('jigPop'), m=document.getElementById('jigPopMsg');
+  if(!p)return;
+  m.textContent = (jigDone===CM_ITEMS.length) ? '모두 완성! 정말 잘했어요! 🏆' : JIG_CHEERS[Math.floor(Math.random()*JIG_CHEERS.length)];
+  p.classList.add('on');
+  clearTimeout(window._jigT);
+  window._jigT=setTimeout(()=>p.classList.remove('on'),1150);
 }
 
 /* ── INIT ── */
