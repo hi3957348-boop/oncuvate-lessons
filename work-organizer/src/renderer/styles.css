@@ -190,3 +190,34 @@ input { font-family: inherit; }
 .modal-body input:focus, .modal-body select:focus, .modal-body textarea:focus { border-color: var(--accent); }
 .modal-foot { display: flex; justify-content: flex-end; gap: 8px; padding: 12px 18px; border-top: 1px solid var(--line); }
 [hidden] { display: none !important; }
+
+/* 큰 오버레이 */
+.modal.big { width: 860px; max-width: 94vw; }
+.big-title { display: flex; align-items: center; justify-content: space-between; }
+.big-body { max-height: 74vh; overflow: auto; }
+
+/* 버전 비교 */
+.cmp-controls { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 6px; }
+.cmp-controls select { border: 1px solid var(--line); border-radius: 7px; padding: 6px 9px; font-size: 12.5px; background: var(--bg-window); color: var(--ink); }
+.cmp-arrow { color: var(--ink-faint); font-weight: 700; }
+.cmp-legend { margin-left: auto; font-size: 11px; color: var(--ink-faint); display: flex; gap: 12px; }
+.cmp-legend .k { padding: 1px 6px; border-radius: 4px; font-weight: 700; }
+.diff-view { border: 1px solid var(--line); border-radius: 9px; padding: 14px 16px; font-size: 13.5px; line-height: 1.8; background: var(--bg-window); white-space: pre-wrap; word-break: break-word; }
+.diff-add { background: rgba(47,125,66,.18); color: var(--good); border-radius: 3px; padding: 0 2px; font-weight: 600; }
+.diff-del { background: rgba(192,57,43,.15); color: var(--danger); border-radius: 3px; padding: 0 2px; text-decoration: line-through; }
+.diff-none { color: var(--ink-faint); font-size: 12.5px; padding: 20px; text-align: center; }
+.cmp-summ { display: flex; gap: 16px; font-size: 12px; color: var(--ink-soft); margin: 10px 2px 14px; }
+.cmp-summ b { color: var(--ink); }
+
+/* 관계도 그래프 */
+.graph-wrap { position: relative; }
+.graph-legend { display: flex; gap: 16px; font-size: 11.5px; color: var(--ink-soft); margin-bottom: 8px; align-items: center; }
+.graph-legend .lg { display: inline-flex; align-items: center; gap: 5px; }
+.graph-legend .sw { width: 22px; height: 0; border-top: 2px solid var(--ref); }
+.graph-legend .sw.in { border-top-color: var(--accent); }
+.graph-svg { width: 100%; height: 460px; display: block; background: var(--bg-window); border: 1px solid var(--line); border-radius: 10px; }
+.gnode { cursor: pointer; }
+.gnode rect { transition: filter .12s; }
+.gnode:hover rect { filter: brightness(1.06); }
+.gnode text { font-family: var(--font); pointer-events: none; }
+.ghint { font-size: 11.5px; color: var(--ink-faint); margin-top: 8px; text-align: center; }

@@ -17,6 +17,7 @@
       <button id="btnAddNotebook" class="qbtn">＋ 노트북</button>
       <button id="btnAttach" class="qbtn">📎 문서 첨부</button>
       <button id="btnAddRef" class="qbtn">🔗 참조 연결</button>
+      <button id="btnGraph" class="qbtn">🕸 관계도</button>
       <button id="btnImport" class="qbtn">↧ 가져오기</button>
       <button id="btnExport" class="qbtn primary">↥ 공유 파일 내보내기</button>
     </div>
@@ -56,6 +57,14 @@
 
   <!-- 참조 호버 미리보기 팝업 (전역 1개, JS로 위치 이동) -->
   <div id="refPop" class="refcard" hidden></div>
+
+  <!-- 큰 오버레이 (관계도 / 버전 비교) -->
+  <div id="bigWrap" class="modal-wrap" hidden>
+    <div class="modal big">
+      <div class="modal-title big-title"><span id="bigTitle"></span><button id="bigClose" class="tool" style="font-size:15px">✕</button></div>
+      <div id="bigBody" class="modal-body big-body"></div>
+    </div>
+  </div>
 
   <!-- 모달 -->
   <div id="modalWrap" class="modal-wrap" hidden>

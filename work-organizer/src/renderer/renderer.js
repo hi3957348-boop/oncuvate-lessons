@@ -117,10 +117,14 @@ function sampleData() {
                     body: '연차유급휴가는 근로기준법 제60조에 따라 산정하며, 1년간 80% 이상 출근한 근로자에게 15일을 부여한다.\n\n제12조(연차휴가의 산정) ① 사용자는 1년간 8할 이상 출근한 근로자에게 15일의 유급휴가를 준다. 〔ref:' + pgRule31 + '|취업규칙 제31조〕\n\n가산휴가의 총 한도는 25일로 한다. 회계연도 기준 산정 시 입사 첫해는 〔ref:' + pgSalary + '|급여·보수규정 부칙3〕의 비례산정 방식을 함께 적용한다.',
                     currentVersion: 4,
                     history: [
-                      { version: 4, date: '2026-07-01', author: '김OO', kind: '개정', summary: '가산휴가 한도 20일 → 25일 상향. 개정 근로기준법 반영.' },
-                      { version: 3, date: '2025-01-15', author: '이OO', kind: '개정', summary: '회계연도 기준 비례산정 조항(제12조④) 신설.' },
-                      { version: 2, date: '2023-04-01', author: '이OO', kind: '개정', summary: '1개월 개근 시 1일 부여 조항 문구 정비. 대법원 판례 반영.' },
-                      { version: 1, date: '2021-07-01', author: '총무팀', kind: '제정', summary: '최초 제정.' },
+                      { version: 4, date: '2026-07-01', author: '김OO', kind: '개정', summary: '가산휴가 한도 20일 → 25일 상향. 개정 근로기준법 반영.',
+                        body: '연차유급휴가는 근로기준법 제60조에 따라 산정하며, 1년간 80% 이상 출근한 근로자에게 15일을 부여한다. 가산휴가의 총 한도는 25일로 한다. 회계연도 기준 산정 시 입사 첫해는 급여·보수규정 부칙3의 비례산정 방식을 함께 적용한다.' },
+                      { version: 3, date: '2025-01-15', author: '이OO', kind: '개정', summary: '회계연도 기준 비례산정 조항(제12조④) 신설.',
+                        body: '연차유급휴가는 근로기준법 제60조에 따라 산정하며, 1년간 80% 이상 출근한 근로자에게 15일을 부여한다. 가산휴가의 총 한도는 20일로 한다. 회계연도 기준 산정 시 입사 첫해는 비례산정 방식을 적용한다.' },
+                      { version: 2, date: '2023-04-01', author: '이OO', kind: '개정', summary: '1개월 개근 시 1일 부여 조항 문구 정비. 대법원 판례 반영.',
+                        body: '연차유급휴가는 근로기준법 제60조에 따라 산정하며, 1년간 80% 이상 출근한 근로자에게 15일을 부여한다. 가산휴가의 총 한도는 20일로 한다.' },
+                      { version: 1, date: '2021-07-01', author: '총무팀', kind: '제정', summary: '최초 제정.',
+                        body: '연차유급휴가는 근로기준법에 따라 산정하며, 1년간 개근한 근로자에게 15일을 부여한다.' },
                     ],
                     attachments: [
                       { id: 'at_s1', name: '개정법률_20260701.pdf', size: 2516582, storedPath: '(샘플)', linkedVersion: 4 },
@@ -373,6 +377,7 @@ function renderEditor() {
     <textarea id="bodyEdit" class="body-edit" hidden></textarea>
 
     <div class="section-label hist"><span class="pip"></span> 변경 히스토리 <span class="rule"></span>
+      ${(pg.history || []).length > 1 ? '<button class="add-inline" id="btnCompare">⇄ 버전 비교</button>' : ''}
       <button class="add-inline" id="btnAddHist">＋ 개정 기록</button></div>
     <div class="timeline">${histHtml || '<div class="prose-note">기록이 없습니다.</div>'}</div>
 
@@ -415,6 +420,7 @@ function wireEditor(pg) {
   };
 
   $('btnAddHist').onclick = () => addHistory(pg);
+  if ($('btnCompare')) $('btnCompare').onclick = () => openCompare(pg);
   $('btnInsertRef').onclick = () => insertRefIntoBody(pg);
 
   $('doc').querySelectorAll('[data-del-attach]').forEach(b => b.onclick = () => {
@@ -467,7 +473,7 @@ function addPage(subId) {
   prompt2('새 페이지', '페이지(조문) 제목', '').then(title => {
     if (!title) return;
     const pg = { id: genId('pg'), title, basis: '', status: '현행', owner: '', body: '', currentVersion: 1,
-      history: [{ version: 1, date: today(), author: '', kind: '제정', summary: '최초 작성.' }], attachments: [], refs: [] };
+      history: [{ version: 1, date: today(), author: '', kind: '제정', summary: '최초 작성.', body: '' }], attachments: [], refs: [] };
     sub.pages.push(pg); sel.pageId = pg.id; render(); scheduleSave();
   });
 }
@@ -494,15 +500,134 @@ async function delNode(kind, id) {
   render(); scheduleSave();
 }
 
-// 개정 이력 추가 → 버전 +1
+// 개정 이력 추가 → 버전 +1 (현재 본문을 스냅샷으로 보존)
 async function addHistory(pg) {
   const summary = await prompt2(`개정 기록 (v${(pg.currentVersion || 1) + 1})`, '개정 내용 요약', '');
   if (!summary) return;
   const author = await prompt2('담당자', '개정 담당자', pg.owner || '');
   pg.currentVersion = (pg.currentVersion || 1) + 1;
-  pg.history.unshift({ version: pg.currentVersion, date: today(), author: author || '', kind: '개정', summary });
+  pg.history.unshift({ version: pg.currentVersion, date: today(), author: author || '', kind: '개정', summary, body: pg.body || '' });
   renderEditor(); renderPageList(); scheduleSave();
 }
+
+// ============================================================================
+// 버전 비교 (단어 단위 diff)
+// ============================================================================
+function stripTokens(s) { return String(s || '').replace(REF_TOKEN, '$2'); }
+
+// LCS 기반 토큰 diff → [{t:'eq'|'add'|'del', v}]
+function wordDiff(aStr, bStr) {
+  const a = stripTokens(aStr).split(/(\s+)/).filter(x => x !== '');
+  const b = stripTokens(bStr).split(/(\s+)/).filter(x => x !== '');
+  const n = a.length, m = b.length;
+  const dp = Array.from({ length: n + 1 }, () => new Int32Array(m + 1));
+  for (let i = n - 1; i >= 0; i--)
+    for (let j = m - 1; j >= 0; j--)
+      dp[i][j] = a[i] === b[j] ? dp[i + 1][j + 1] + 1 : Math.max(dp[i + 1][j], dp[i][j + 1]);
+  const out = []; let i = 0, j = 0;
+  while (i < n && j < m) {
+    if (a[i] === b[j]) { out.push({ t: 'eq', v: a[i] }); i++; j++; }
+    else if (dp[i + 1][j] >= dp[i][j + 1]) { out.push({ t: 'del', v: a[i] }); i++; }
+    else { out.push({ t: 'add', v: b[j] }); j++; }
+  }
+  while (i < n) out.push({ t: 'del', v: a[i++] });
+  while (j < m) out.push({ t: 'add', v: b[j++] });
+  return out;
+}
+
+function diffHtml(aStr, bStr) {
+  if (!aStr && !bStr) return '<div class="diff-none">두 버전 모두 본문 스냅샷이 없습니다.</div>';
+  const parts = wordDiff(aStr, bStr);
+  let adds = 0, dels = 0;
+  const html = parts.map(p => {
+    if (p.t === 'eq') return esc(p.v);
+    if (p.t === 'add') { adds++; return `<span class="diff-add">${esc(p.v)}</span>`; }
+    dels++; return `<span class="diff-del">${esc(p.v)}</span>`;
+  }).join('');
+  return `<div class="cmp-summ"><span>추가 <b style="color:var(--good)">+${adds}</b></span><span>삭제 <b style="color:var(--danger)">−${dels}</b></span></div><div class="diff-view">${html || '<span style="color:var(--ink-faint)">변경 없음</span>'}</div>`;
+}
+
+function openCompare(pg) {
+  const hist = pg.history || [];
+  const opts = hist.map(h => `<option value="${h.version}">v${h.version} · ${esc(h.date)}${h.body ? '' : ' (스냅샷 없음)'}</option>`).join('');
+  const newer = hist[0].version, older = hist[1] ? hist[1].version : hist[0].version;
+  openBig('버전 비교 — ' + pg.title, `
+    <div class="cmp-controls">
+      <span>이전</span>
+      <select id="cmpFrom">${opts}</select>
+      <span class="cmp-arrow">→</span>
+      <span>이후</span>
+      <select id="cmpTo">${opts}</select>
+      <span class="cmp-legend"><span class="k diff-del">삭제</span><span class="k diff-add">추가</span></span>
+    </div>
+    <div id="cmpResult"></div>
+  `);
+  const fromSel = $('cmpFrom'), toSel = $('cmpTo');
+  fromSel.value = String(older); toSel.value = String(newer);
+  const draw = () => {
+    const fa = hist.find(h => String(h.version) === fromSel.value);
+    const tb = hist.find(h => String(h.version) === toSel.value);
+    $('cmpResult').innerHTML = diffHtml(fa && fa.body, tb && tb.body);
+  };
+  fromSel.onchange = draw; toSel.onchange = draw; draw();
+}
+
+// ============================================================================
+// 참조 관계도 (SVG)
+// ============================================================================
+function openGraph() {
+  const f = sel.pageId && findPage(sel.pageId);
+  if (!f) { toast('먼저 페이지를 선택하세요.'); return; }
+  const center = f.pg;
+  const outs = [], ins = [];
+  for (const r of (center.refs || [])) {
+    const tid = r.dir === 'in' ? r.sourceId : r.targetId;
+    const tp = findPage(tid); if (!tp) continue;
+    (r.dir === 'in' ? ins : outs).push({ page: tp.pg, label: r.label });
+  }
+  const W = 820, H = 460, cx = W / 2, cy = H / 2;
+  const NW = 168, NH = 46;
+  const node = (x, y, title, sub, id, fill, stroke) =>
+    `<g class="gnode" ${id ? `data-goto="${esc(id)}"` : ''}>
+       <rect x="${x - NW / 2}" y="${y - NH / 2}" width="${NW}" height="${NH}" rx="9" fill="${fill}" stroke="${stroke}" stroke-width="1.5"/>
+       <text x="${x}" y="${y - 3}" text-anchor="middle" font-size="12.5" font-weight="700" fill="var(--ink)">${esc(title.length > 16 ? title.slice(0, 15) + '…' : title)}</text>
+       <text x="${x}" y="${y + 13}" text-anchor="middle" font-size="10" fill="var(--ink-faint)">${esc(sub)}</text>
+     </g>`;
+  const edge = (x1, y1, x2, y2, color) =>
+    `<line x1="${x1}" y1="${y1}" x2="${x2}" y2="${y2}" stroke="${color}" stroke-width="2" marker-end="url(#arrow-${color === 'var(--accent)' ? 'in' : 'out'})"/>`;
+
+  const colY = (n, i) => H * (i + 1) / (n + 1);
+  let svg = '';
+  // 왼쪽: 나를 참조하는 페이지(in) → 나
+  ins.forEach((r, i) => { const y = colY(ins.length, i); svg += edge(150 + NW / 2, y, cx - NW / 2, cy, 'var(--accent)'); });
+  outs.forEach((r, i) => { const y = colY(outs.length, i); svg += edge(cx + NW / 2, cy, W - 150 - NW / 2, y, 'var(--ref)'); });
+  ins.forEach((r, i) => { const y = colY(ins.length, i); svg += node(150, y, r.page.title, '참조함 →', r.page.id, 'var(--bg-panel)', 'var(--accent)'); });
+  outs.forEach((r, i) => { const y = colY(outs.length, i); svg += node(W - 150, y, r.page.title, '← 참조됨', r.page.id, 'var(--bg-panel)', 'var(--ref)'); });
+  svg += node(cx, cy, center.title, '현재 규정 · v' + (center.currentVersion || 1), null, 'var(--accent-soft)', 'var(--accent)');
+  if (!ins.length && !outs.length) svg += `<text x="${cx}" y="${cy + 60}" text-anchor="middle" font-size="12" fill="var(--ink-faint)">연결된 참조가 없습니다. 「🔗 참조 연결」로 관계를 만들어 보세요.</text>`;
+
+  openBig('참조 관계도 — ' + center.title, `
+    <div class="graph-legend">
+      <span class="lg"><span class="sw in"></span> 이 규정을 참조하는 곳(역참조)</span>
+      <span class="lg"><span class="sw"></span> 이 규정이 참조하는 곳</span>
+    </div>
+    <svg class="graph-svg" viewBox="0 0 ${W} ${H}">
+      <defs>
+        <marker id="arrow-out" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--ref)"/></marker>
+        <marker id="arrow-in" markerWidth="9" markerHeight="9" refX="7" refY="4.5" orient="auto"><path d="M0,0 L9,4.5 L0,9 z" fill="var(--accent)"/></marker>
+      </defs>
+      ${svg}
+    </svg>
+    <div class="ghint">노드를 클릭하면 해당 규정으로 이동합니다.</div>
+  `);
+  $('bigBody').querySelectorAll('.gnode[data-goto]').forEach(g => g.addEventListener('click', () => {
+    sel.pageId = g.dataset.goto; closeBig(); render();
+  }));
+}
+
+// ---- 큰 오버레이 열고 닫기 ---------------------------------------------------
+function openBig(title, html) { $('bigTitle').textContent = title; $('bigBody').innerHTML = html; $('bigWrap').hidden = false; }
+function closeBig() { $('bigWrap').hidden = true; $('bigBody').innerHTML = ''; }
 
 // 본문에 참조 삽입 + refs 등록
 async function insertRefIntoBody(pg) {
@@ -692,6 +817,10 @@ function bindGlobal() {
   $('btnImport').onclick = doImport;
   $('btnAttach').onclick = doAttach;
   $('btnAddRef').onclick = addRefStandalone;
+  $('btnGraph').onclick = openGraph;
+  $('bigClose').onclick = closeBig;
+  $('bigWrap').addEventListener('click', (e) => { if (e.target.id === 'bigWrap') closeBig(); });
+  document.addEventListener('keydown', (e) => { if (e.key === 'Escape') { closeBig(); if (!$('modalWrap').hidden) $('modalCancel').click(); } });
   $('searchInput').oninput = renderPageList;
   $('btnAddPage').onclick = () => { const sub = currentSub(); if (sub) addPage(sub.id); else toast('하위주제를 먼저 만드세요.'); };
 
