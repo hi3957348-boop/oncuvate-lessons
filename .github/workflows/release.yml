@@ -1,0 +1,48 @@
+name: Release Windows Portable
+
+# 포터블 exe 를 빌드하여 GitHub Release 로 게시합니다(공개 다운로드 + 앱 "업데이트 확인" 연동).
+# - v* 태그 push 로 트리거하거나
+# - workflow_dispatch 로 version 을 입력해 수동 트리거(릴리스 액션이 해당 태그를 생성)
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+    inputs:
+      version:
+        description: '릴리스 버전 태그 (예: v0.1.0)'
+        required: true
+        default: 'v0.1.0'
+
+permissions:
+  contents: write
+
+jobs:
+  release:
+    runs-on: windows-latest
+    defaults:
+      run:
+        working-directory: work-organizer
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build portable exe
+        run: npm run build:win
+
+      - name: Publish GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          files: work-organizer/dist/*.exe
+          name: 업무정리 ${{ github.event.inputs.version || github.ref_name }}
+          tag_name: ${{ github.event.inputs.version || github.ref_name }}
+          target_commitish: ${{ github.sha }}
+          generate_release_notes: true
