@@ -12,6 +12,8 @@
   },
   "author": "",
   "license": "MIT",
+  "repository": "https://github.com/hi3957348-boop/oncuvate-lessons",
+  "updateRepo": "hi3957348-boop/oncuvate-lessons",
   "devDependencies": {
     "electron": "^31.0.0",
     "electron-builder": "^24.13.3"
@@ -32,6 +34,7 @@
       "allowToChangeInstallationDirectory": true
     },
     "win": {
+      "icon": "build/icon.ico",
       "target": [
         "portable"
       ]

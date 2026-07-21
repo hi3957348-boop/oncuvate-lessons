@@ -63,6 +63,8 @@ const Store = {
     });
   },
   openAttachment(p) { if (hasElectron) window.owp.openAttachment(p); },
+  async checkUpdate() { if (hasElectron) return await window.owp.checkUpdate(); return { hasUpdate: false, reason: 'browser' }; },
+  openExternal(url) { if (hasElectron) window.owp.openExternal(url); else window.open(url, '_blank'); },
 };
 
 // ---- 유틸 -------------------------------------------------------------------
@@ -114,7 +116,7 @@ function sampleData() {
                   {
                     id: pgYeoncha, title: '연차유급휴가 산정기준',
                     basis: '근로기준법 제60조', status: '현행', owner: '총무팀 김OO',
-                    body: '연차유급휴가는 근로기준법 제60조에 따라 산정하며, 1년간 80% 이상 출근한 근로자에게 15일을 부여한다.\n\n제12조(연차휴가의 산정) ① 사용자는 1년간 8할 이상 출근한 근로자에게 15일의 유급휴가를 준다. 〔ref:' + pgRule31 + '|취업규칙 제31조〕\n\n가산휴가의 총 한도는 25일로 한다. 회계연도 기준 산정 시 입사 첫해는 〔ref:' + pgSalary + '|급여·보수규정 부칙3〕의 비례산정 방식을 함께 적용한다.',
+                    body: '# 개요\n연차유급휴가는 **근로기준법 제60조**에 따라 산정하며, 1년간 80% 이상 출근한 근로자에게 **15일**을 부여한다.\n\n# 산정 방식\n- 1년간 8할 이상 출근 시 15일 부여 〔ref:' + pgRule31 + '|취업규칙 제31조〕\n- 계속근로 1년 미만: 1개월 개근마다 1일 부여\n- 3년 이상 계속근로: 매 2년마다 1일 가산\n\n가산휴가의 총 한도는 **25일**로 한다. 회계연도 기준 산정 시 입사 첫해는 〔ref:' + pgSalary + '|급여·보수규정 부칙3〕의 비례산정 방식을 함께 적용한다.',
                     currentVersion: 4,
                     history: [
                       { version: 4, date: '2026-07-01', author: '김OO', kind: '개정', summary: '가산휴가 한도 20일 → 25일 상향. 개정 근로기준법 반영.',
@@ -305,17 +307,36 @@ function renderPageList() {
   }
 }
 
-function bodyToHtml(text) {
-  // 참조 토큰 → 호버 링크, 나머지는 escape + 줄바꿈
-  let out = ''; let last = 0; const s = text || '';
+// 인라인: escape → **굵게** 처리 (참조 토큰은 escape 전에 분리)
+function fmtInline(escaped) {
+  return escaped.replace(/\*\*([^*\n]+)\*\*/g, '<strong>$1</strong>');
+}
+function renderInline(str) {
+  let out = ''; let last = 0; const s = str || '';
   REF_TOKEN.lastIndex = 0; let m;
   while ((m = REF_TOKEN.exec(s))) {
-    out += esc(s.slice(last, m.index));
+    out += fmtInline(esc(s.slice(last, m.index)));
     out += `<a class="reflink" data-reftarget="${esc(m[1])}" data-dir="out">${esc(m[2] || '참조')}</a>`;
     last = m.index + m[0].length;
   }
-  out += esc(s.slice(last));
-  return out.replace(/\n/g, '<br>');
+  out += fmtInline(esc(s.slice(last)));
+  return out;
+}
+// 블록: # 제목, - 목록, 빈 줄, 문단
+function bodyToHtml(text) {
+  const s = text || '';
+  const lines = s.split('\n');
+  let html = ''; let inList = false;
+  const closeList = () => { if (inList) { html += '</ul>'; inList = false; } };
+  for (const line of lines) {
+    if (/^#\s+/.test(line)) { closeList(); html += `<h3 class="body-h">${renderInline(line.replace(/^#\s+/, ''))}</h3>`; continue; }
+    if (/^[-*]\s+/.test(line)) { if (!inList) { html += '<ul class="body-ul">'; inList = true; } html += `<li>${renderInline(line.replace(/^[-*]\s+/, ''))}</li>`; continue; }
+    closeList();
+    if (line.trim() === '') html += '<div class="body-gap"></div>';
+    else html += `<div>${renderInline(line)}</div>`;
+  }
+  closeList();
+  return html;
 }
 
 function renderEditor() {
@@ -371,8 +392,16 @@ function renderEditor() {
       <label>담당 <input id="fOwner" value="${esc(pg.owner || '')}" placeholder="담당자" /></label>
     </div>
 
-    <div class="section-label" style="color:var(--accent)"><span class="pip" style="background:var(--accent)"></span> 본문 <span class="rule"></span>
-      <button class="add-inline" id="btnInsertRef" style="color:var(--ref);border-color:var(--ref)">＋ 본문에 참조 삽입</button></div>
+    <div class="section-label" style="color:var(--accent)"><span class="pip" style="background:var(--accent)"></span> 본문 <span class="rule"></span></div>
+    <div class="body-toolbar">
+      <button class="fmt" data-fmt="bold" title="굵게"><b>B</b></button>
+      <button class="fmt" data-fmt="h" title="제목">H</button>
+      <button class="fmt" data-fmt="ul" title="목록">• 목록</button>
+      <span class="tb-sep"></span>
+      <button class="fmt ref" id="btnInsertRef" title="본문에 참조 삽입">🔗 참조 삽입</button>
+      <span style="flex:1"></span>
+      <span class="tb-hint">**굵게** · # 제목 · - 목록</span>
+    </div>
     <div id="bodyView" class="body-edit" style="cursor:text" title="클릭하여 편집">${bodyToHtml(pg.body) || '<span style="color:var(--ink-faint)">본문을 입력하려면 클릭하세요…</span>'}</div>
     <textarea id="bodyEdit" class="body-edit" hidden></textarea>
 
@@ -423,12 +452,48 @@ function wireEditor(pg) {
   if ($('btnCompare')) $('btnCompare').onclick = () => openCompare(pg);
   $('btnInsertRef').onclick = () => insertRefIntoBody(pg);
 
+  // 서식 툴바
+  $('doc').querySelectorAll('.fmt[data-fmt]').forEach(b => b.onclick = () => applyFmt(pg, b.dataset.fmt));
+
   $('doc').querySelectorAll('[data-del-attach]').forEach(b => b.onclick = () => {
     pg.attachments = pg.attachments.filter(a => a.id !== b.dataset.delAttach); renderEditor(); scheduleSave();
   });
   $('doc').querySelectorAll('[data-del-ref]').forEach(b => b.onclick = () => {
     pg.refs.splice(Number(b.dataset.delRef), 1); renderEditor(); scheduleSave();
   });
+}
+
+// 편집모드 진입(뷰→텍스트영역)
+function ensureBodyEdit() {
+  const view = $('bodyView'), edit = $('bodyEdit'), pg = findPage(sel.pageId).pg;
+  if (edit.hidden) { edit.value = pg.body || ''; view.hidden = true; edit.hidden = false; }
+  edit.focus();
+  return edit;
+}
+
+// 서식 적용 (선택 영역에 마크다운식 마커)
+function applyFmt(pg, kind) {
+  const edit = ensureBodyEdit();
+  const s = edit.selectionStart, e = edit.selectionEnd, v = edit.value;
+  const sel0 = v.slice(s, e);
+  let ns, caretA, caretB;
+  if (kind === 'bold') {
+    const t = sel0 || '굵게';
+    ns = v.slice(0, s) + '**' + t + '**' + v.slice(e);
+    caretA = s + 2; caretB = caretA + t.length;
+  } else {
+    // 줄 단위 접두어 (제목 '# ', 목록 '- ')
+    const prefix = kind === 'h' ? '# ' : '- ';
+    const lineStart = v.lastIndexOf('\n', s - 1) + 1;
+    const lineEnd = v.indexOf('\n', e); const end = lineEnd === -1 ? v.length : lineEnd;
+    const block = v.slice(lineStart, end);
+    const newBlock = block.split('\n').map(l => l.startsWith(prefix) ? l : prefix + l).join('\n');
+    ns = v.slice(0, lineStart) + newBlock + v.slice(end);
+    caretA = lineStart; caretB = lineStart + newBlock.length;
+  }
+  edit.value = ns; pg.body = ns;
+  edit.setSelectionRange(caretA, caretB); edit.focus();
+  scheduleSave();
 }
 
 function crumbQuick() {
@@ -863,5 +928,19 @@ async function boot() {
   const paths = await Store.paths();
   $('statMode').textContent = (hasElectron ? '완전 포터블 · ' : '브라우저 미리보기 · ') + (paths.dataDir || '');
   if (!loaded) scheduleSave(); // 최초 실행 시 샘플 저장
+
+  // 업데이트 확인 (데스크톱 앱에서만, 실패해도 조용히 무시)
+  if (hasElectron) {
+    try {
+      const u = await Store.checkUpdate();
+      if (u && u.hasUpdate) {
+        const chip = $('statUpdate');
+        chip.hidden = false;
+        chip.textContent = `🔔 새 버전 v${u.latest} — 클릭`;
+        chip.style.cursor = 'pointer';
+        chip.onclick = () => Store.openExternal(u.url || '');
+      }
+    } catch (_) {}
+  }
 }
 document.addEventListener('DOMContentLoaded', boot);

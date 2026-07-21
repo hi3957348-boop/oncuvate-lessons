@@ -12,6 +12,8 @@ contextBridge.exposeInMainWorld('owp', {
   addAttachment: () => ipcRenderer.invoke('attachment:add'),
   openAttachment: (p) => ipcRenderer.invoke('attachment:open', p),
   revealData: () => ipcRenderer.invoke('data:reveal'),
+  openExternal: (url) => ipcRenderer.invoke('external:open', url),
+  checkUpdate: () => ipcRenderer.invoke('update:check'),
   onMenu: (channel, cb) => {
     const valid = ['menu:export', 'menu:import'];
     if (valid.includes(channel)) ipcRenderer.on(channel, () => cb());

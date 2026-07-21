@@ -3,6 +3,10 @@
 const { app, BrowserWindow, ipcMain, dialog, Menu, shell } = require('electron');
 const path = require('path');
 const fs = require('fs');
+const https = require('https');
+
+let pkg = { version: app.getVersion(), updateRepo: '' };
+try { pkg = require('../package.json'); } catch (_) {}
 
 /**
  * 완전 포터블 데이터 경로 결정
@@ -126,6 +130,46 @@ function registerIpc() {
     return { error: '파일을 찾을 수 없습니다.' };
   });
   ipcMain.handle('data:reveal', () => { shell.openPath(DATA_DIR); return { ok: true }; });
+  ipcMain.handle('external:open', (_e, url) => { if (/^https?:\/\//.test(url || '')) shell.openExternal(url); return { ok: true }; });
+
+  // 업데이트 확인 (완전 포터블: GitHub 최신 릴리스와 버전 비교 → 수동 교체 안내)
+  ipcMain.handle('update:check', () => checkUpdate());
+}
+
+function cmpVer(a, b) {
+  const pa = String(a).replace(/^v/, '').split('.').map(Number);
+  const pb = String(b).replace(/^v/, '').split('.').map(Number);
+  for (let i = 0; i < 3; i++) { const d = (pa[i] || 0) - (pb[i] || 0); if (d) return d > 0 ? 1 : -1; }
+  return 0;
+}
+
+function checkUpdate() {
+  const current = app.getVersion();
+  const repo = pkg.updateRepo;
+  if (!repo) return Promise.resolve({ current, hasUpdate: false, reason: 'no-repo' });
+  return new Promise((resolve) => {
+    const req = https.get({
+      host: 'api.github.com',
+      path: `/repos/${repo}/releases/latest`,
+      headers: { 'User-Agent': 'work-organizer', 'Accept': 'application/vnd.github+json' },
+      timeout: 6000,
+    }, (res) => {
+      let data = '';
+      res.on('data', (c) => { data += c; });
+      res.on('end', () => {
+        if (res.statusCode === 404) return resolve({ current, hasUpdate: false, reason: 'no-release' });
+        if (res.statusCode !== 200) return resolve({ current, hasUpdate: false, reason: 'http-' + res.statusCode });
+        try {
+          const j = JSON.parse(data);
+          const latest = (j.tag_name || j.name || '').replace(/^v/, '');
+          const hasUpdate = latest && cmpVer(latest, current) > 0;
+          resolve({ current, latest, hasUpdate, url: j.html_url });
+        } catch (e) { resolve({ current, hasUpdate: false, reason: 'parse' }); }
+      });
+    });
+    req.on('error', () => resolve({ current, hasUpdate: false, reason: 'network' }));
+    req.on('timeout', () => { req.destroy(); resolve({ current, hasUpdate: false, reason: 'timeout' }); });
+  });
 }
 
 // ---- 창 및 앱 수명주기 -----------------------------------------------------
@@ -140,6 +184,7 @@ function createWindow() {
     minHeight: 600,
     backgroundColor: '#202027',
     title: '업무정리',
+    icon: path.join(__dirname, '..', 'build', process.platform === 'win32' ? 'icon.ico' : 'icon.png'),
     webPreferences: {
       preload: path.join(__dirname, 'preload.js'),
       contextIsolation: true,
@@ -181,6 +226,25 @@ function buildMenu() {
         { type: 'separator' },
         { role: 'resetZoom', label: '기본 배율' }, { role: 'zoomIn', label: '확대' }, { role: 'zoomOut', label: '축소' },
         { role: 'togglefullscreen', label: '전체화면' },
+      ],
+    },
+    {
+      label: '도움말',
+      submenu: [
+        { label: '업데이트 확인', click: async () => {
+          const r = await checkUpdate();
+          if (r.hasUpdate) {
+            const { response } = await dialog.showMessageBox(mainWindow, {
+              type: 'info', buttons: ['다운로드 페이지 열기', '닫기'], defaultId: 0,
+              title: '업데이트', message: `새 버전 v${r.latest} 이(가) 있습니다.`,
+              detail: `현재 버전: v${r.current}\n포터블 버전은 새 exe로 교체하면 업데이트됩니다.`,
+            });
+            if (response === 0 && r.url) shell.openExternal(r.url);
+          } else {
+            dialog.showMessageBox(mainWindow, { type: 'info', title: '업데이트', message: '현재 최신 버전입니다.', detail: `버전 v${r.current}` });
+          }
+        } },
+        { label: '릴리스 페이지 열기', click: () => pkg.updateRepo && shell.openExternal(`https://github.com/${pkg.updateRepo}/releases`) },
       ],
     },
   ];

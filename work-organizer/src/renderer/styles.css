@@ -117,8 +117,21 @@ input { font-family: inherit; }
 .section-label .add-inline { border: 1px solid currentColor; background: none; color: inherit; font-size: 10px; font-weight: 700; padding: 2px 8px; border-radius: 12px; opacity: .85; }
 .section-label .add-inline:hover { opacity: 1; }
 
+.body-toolbar { display: flex; align-items: center; gap: 5px; margin-bottom: 8px; }
+.fmt { border: 1px solid var(--line); background: var(--bg-window); color: var(--ink-soft); font-size: 12px; padding: 5px 9px; border-radius: 6px; min-width: 30px; }
+.fmt:hover { background: var(--bg-hover); color: var(--accent); border-color: var(--accent-soft); }
+.fmt.ref { color: var(--ref); border-color: var(--ref); }
+.fmt.ref:hover { background: var(--ref-bg); }
+.tb-sep { width: 1px; height: 18px; background: var(--line); margin: 0 3px; }
+.tb-hint { font-size: 11px; color: var(--ink-faint); }
 .body-edit { width: 100%; min-height: 150px; border: 1px solid var(--line); border-radius: 8px; padding: 13px 15px; font-size: 13.5px; line-height: 1.72; color: var(--ink); background: var(--bg-window); resize: vertical; outline: none; font-family: inherit; }
 .body-edit:focus { border-color: var(--accent-soft); box-shadow: 0 0 0 3px var(--accent-soft); }
+#bodyView .body-h { font-size: 15.5px; font-weight: 700; margin: 10px 0 5px; color: var(--ink); }
+#bodyView .body-ul { margin: 4px 0 4px 4px; padding-left: 20px; }
+#bodyView .body-ul li { margin: 2px 0; }
+#bodyView .body-gap { height: 9px; }
+#bodyView strong { font-weight: 700; color: var(--ink); }
+#bodyView > div { margin: 1px 0; }
 
 /* history timeline */
 .timeline { border-left: 2px solid var(--line); margin-left: 6px; padding-left: 20px; display: flex; flex-direction: column; gap: 14px; }
@@ -179,6 +192,8 @@ input { font-family: inherit; }
 .status .spacer { flex: 1; }
 .status .chip { display: inline-flex; align-items: center; gap: 5px; }
 .status .chip.saving { color: #ffe08a; }
+.status .chip.update { background: rgba(255,255,255,.16); padding: 1px 9px; border-radius: 10px; font-weight: 700; }
+.status .chip.update:hover { background: rgba(255,255,255,.28); }
 
 /* modal */
 .modal-wrap { position: fixed; inset: 0; background: rgba(10,12,20,.42); display: grid; place-items: center; z-index: 300; }
