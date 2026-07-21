@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온큐베이트 · 언어로 풀어내는 수학</title>
+<style>
+  :root{
+    --bl:#4A78C4; --bl-d:#2F5599; --bl-l:#EBF1FB; --bl-bd:#D3E0F4;
+    --or:#E58A4E; --or-l:#FFF3E8;
+    --ink:#33405A; --gray:#7C879B; --card:#fff; --bg:#F7F9FC; --bd:#E8EDF5;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Pretendard','Malgun Gothic',system-ui,-apple-system,sans-serif;background:var(--bg);
+    color:var(--ink);-webkit-font-smoothing:antialiased;padding:0 18px 60px;}
+  .wrap{max-width:880px;margin:0 auto;}
+  header{text-align:center;padding:54px 0 26px;}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:800;color:var(--bl);
+    letter-spacing:.3px;margin-bottom:20px;background:var(--bl-l);border:1.5px solid var(--bl-bd);
+    border-radius:20px;padding:7px 16px;}
+  h1{font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1.25;margin-bottom:12px;}
+  h1 .hl{color:var(--bl);}
+  .sub{font-size:15px;color:var(--gray);font-weight:600;line-height:1.6;}
+  .era-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+  .era{font-size:12.5px;font-weight:700;color:var(--bl-d);background:#fff;border:1.5px solid var(--bl-bd);
+    border-radius:20px;padding:6px 14px;}
+
+  .why{margin:26px 0 8px;background:#fff;border:1.5px solid var(--bd);border-radius:20px;padding:20px 22px;}
+  .why h3{font-size:16px;font-weight:900;margin-bottom:8px;color:var(--bl-d);}
+  .why p{font-size:13.5px;color:var(--gray);font-weight:600;line-height:1.75;}
+  .why .code{display:inline-block;background:var(--bl-l);border-radius:8px;padding:1px 8px;font-weight:800;}
+  .why .a{color:var(--bl);font-weight:900;} .why .b{color:var(--or);font-weight:900;}
+
+  .cat{margin-top:34px;}
+  .cat-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;}
+  .cat-head .ico{font-size:24px;}
+  .cat-head h2{font-size:21px;font-weight:900;letter-spacing:-.5px;}
+  .cat-head .cnt{font-size:12px;font-weight:800;color:var(--bl);background:var(--bl-l);border-radius:20px;padding:4px 11px;}
+  .grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  @media(max-width:620px){.grid{grid-template-columns:1fr;} h1{font-size:27px;}}
+  .lesson{position:relative;display:flex;flex-direction:column;background:var(--card);border:1.5px solid var(--bd);
+    border-radius:20px;padding:22px 20px;text-decoration:none;color:inherit;transition:transform .16s,box-shadow .16s,border-color .16s;overflow:hidden;}
+  .lesson.live:hover{transform:translateY(-4px);box-shadow:0 14px 34px rgba(74,120,196,.18);border-color:var(--bl-bd);}
+  .lesson .emoji{font-size:34px;margin-bottom:12px;}
+  .lesson .no{position:absolute;top:16px;right:18px;font-size:13px;font-weight:900;color:var(--bl-l);
+    -webkit-text-stroke:1px var(--bl-bd);}
+  .lesson h3{font-size:19px;font-weight:900;margin-bottom:6px;letter-spacing:-.4px;}
+  .lesson p{font-size:13px;color:var(--gray);font-weight:600;line-height:1.55;margin-bottom:16px;flex:1;}
+  .tags{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:16px;}
+  .tag{font-size:11px;font-weight:700;color:var(--bl);background:var(--bl-l);border-radius:14px;padding:3px 9px;}
+  .tag.o{color:var(--or);background:var(--or-l);}
+  .go{display:inline-flex;align-items:center;justify-content:center;gap:6px;background:var(--bl);color:#fff;
+    font-size:14px;font-weight:800;border-radius:12px;padding:11px 0;width:100%;}
+  .lesson.live:hover .go{background:var(--bl-d);}
+  .lesson.soon{opacity:.72;}
+  .lesson.soon .go{background:#E7EBF2;color:#98A2B3;}
+  .lesson.soon .emoji{filter:grayscale(.5);}
+  .ribbon{position:absolute;top:14px;right:-30px;background:#B4BECD;color:#fff;font-size:10.5px;font-weight:800;
+    padding:3px 34px;transform:rotate(45deg);}
+  .note{margin-top:30px;background:var(--bl-l);border:1.5px solid var(--bl-bd);border-radius:16px;padding:16px 18px;
+    font-size:13px;color:var(--bl-d);font-weight:600;line-height:1.7;}
+  .note b{font-weight:900;}
+  footer{text-align:center;margin-top:40px;font-size:12px;color:var(--gray);font-weight:600;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🔢 Oncuvate 수학수업</div>
+    <h1>언어로 풀어내는 <span class="hl">수학</span></h1>
+    <p class="sub">계산을 빨리 하는 수업이 아니라, 수학이 <b>무슨 말인지</b> 이해하는 수업.<br>
+      난산증·수학 불안이 있는 아이도 눈으로 보고 입으로 말하며 배웁니다.</p>
+    <div class="era-row">
+      <span class="era">🎛 조작하는 시뮬레이션</span>
+      <span class="era">🗣 우리말·영어 수학 언어</span>
+      <span class="era">🎨 일관된 색 코딩</span>
+      <span class="era">⏱ 실시간 잠금·판서·리포트</span>
+    </div>
+  </header>
+
+  <div class="why">
+    <h3>수업을 관통하는 한 가지 약속</h3>
+    <p>모든 수업에서 <span class="code"><span class="a">파란 숫자</span></span>는 <b>몇 묶음(몇 번)</b>,
+      <span class="code"><span class="b">주황 숫자</span></span>는 <b>한 묶음의 크기</b>를 뜻합니다.
+      숫자의 자리가 아니라 <b>역할</b>을 색으로 기억하게 해서, 식을 읽는 순간 그림이 떠오르도록 합니다.
+      같은 그림을 “<span class="a">3</span>번 <span class="b">2</span>를”, “<span class="a">3</span>묶음 <span class="b">2</span>씩”,
+      “<span class="a">3</span> times <span class="b">2</span>”, “<span class="a">3</span> groups of <span class="b">2</span>”로
+      바꿔 말하는 연습이 수업의 뼈대입니다.</p>
+  </div>
+
+  <!-- ===== 곱셈 ===== -->
+  <section class="cat">
+    <div class="cat-head"><span class="ico">✖️</span><h2>곱셈</h2><span class="cnt">1회차 공개</span></div>
+    <div class="grid">
+      <a class="lesson live" href="math_language_multiplication_01.html">
+        <span class="no">01</span>
+        <div class="emoji">🧩</div>
+        <h3>곱셈은 반복해서 더하기</h3>
+        <p>묶음을 직접 놓아 덧셈식을 키우고, 슬라이더 하나로 같은 그림을 여섯 가지 수학 언어로 바꿔 말해 봅니다.
+          퍼즐·배열 회전·생활 문제까지 10화면.</p>
+        <div class="tags">
+          <span class="tag">언어 변환기</span><span class="tag o">직소 퍼즐</span>
+          <span class="tag">교환법칙</span><span class="tag o">생활 문제</span>
+        </div>
+        <span class="go">수업 시작하기 →</span>
+      </a>
+
+      <div class="lesson soon">
+        <span class="ribbon">준비 중</span>
+        <div class="emoji">🔢</div>
+        <h3>곱셈구구로 가는 길</h3>
+        <p>배열(array)과 뛰어 세기를 연결해 구구단을 외우기 전에 ‘보이게’ 만드는 수업.</p>
+        <div class="tags"><span class="tag">배열</span><span class="tag o">뛰어 세기</span></div>
+        <span class="go">준비 중</span>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 앞으로 열릴 카테고리 ===== -->
+  <section class="cat">
+    <div class="cat-head"><span class="ico">🗂</span><h2>다음 카테고리</h2><span class="cnt">준비 중</span></div>
+    <div class="grid">
+      <div class="lesson soon">
+        <span class="ribbon">준비 중</span>
+        <div class="emoji">➗</div>
+        <h3>나눗셈</h3>
+        <p>“똑같이 나누기”와 “몇 묶음인지 알아내기”를 다른 말로 구분해 봅니다.</p>
+        <div class="tags"><span class="tag">등분제·포함제</span></div>
+        <span class="go">준비 중</span>
+      </div>
+      <div class="lesson soon">
+        <span class="ribbon">준비 중</span>
+        <div class="emoji">➕</div>
+        <h3>덧셈과 뺄셈</h3>
+        <p>모으기·가르기·비교하기를 문장으로 말하며 수 감각을 세웁니다.</p>
+        <div class="tags"><span class="tag">수 감각</span></div>
+        <span class="go">준비 중</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="note">
+    <b>선생님께.</b> 모든 수업은 링크 하나로 함께 들어옵니다. 선생님은 게이트에서 <b>선생님 입장</b>을 선택하세요.
+    <b>화면 동기화</b>를 켜면 페이지·활동 잠금이 자동으로 걸리고, 선생님이 활동을 조작하거나 <b>판서</b>하는 모습이
+    학생 화면에 실시간으로 나타납니다. 학생별 정답률·반응속도·오답노트는 리포트에서 확인할 수 있어요.<br>
+    ⚠️ 파일을 내려받아 직접 열면 동기화가 되지 않습니다. 반드시 이 웹 주소로 열어 주세요.
+  </div>
+
+  <footer>
+    © ONCUVATE · 언어로 풀어내는 수학<br>
+    난산증·수학 학습장애 아동을 위한 실시간 인터랙티브 수업
+  </footer>
+</div>
+</body>
+</html>
