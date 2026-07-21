@@ -638,7 +638,7 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="card">
       <div class="tag">워드서치</div>
       <div class="card-h">🔍 숨은 낱말을 <span class="accent">찾아요</span></div>
-      <p class="pgdesc">왼쪽 판에서 낱말을 찾아요. 오른쪽 <b>말풍선</b>에 뜻과 초성 힌트가 나와요! (가로·세로 드래그)</p>
+      <p class="pgdesc">오른쪽 <b>말풍선</b>의 뜻과 초성을 보고, 왼쪽 판에서 <b>글자를 하나씩 눌러</b> 낱말을 찾아요! (잘못 눌렀으면 다시 눌러 취소)</p>
       <div class="ws-progress" id="wsProgress"></div>
       <div class="ws-stage">
         <div class="ws-grid-zone"><div class="ws-grid" id="wsGrid"></div></div>
@@ -1309,43 +1309,42 @@ function buildWordSearch(){
     wsSubscribe();
   }
 
-  function markFound(sel){
-    const cw=wsCurrentWord();
-    if(!cw)return;
-    const rev=sel.split('').reverse().join('');
-    if(sel===cw.word||rev===cw.word){
-      const match=wsGridData.placed.find(p=>p.word===cw.word);
-      if(match)wsWin(match);
-    } else if(sel.length>1){
-      document.getElementById('wsFeedback').textContent='❌ 그 낱말이 아니에요. 힌트를 다시 봐요!';
-    }
-  }
-  function tracePath(r,c){
+  // ── 음절을 하나씩 클릭해서 낱말 찾기 ──
+  function wsClearSel(){
     el.querySelectorAll('.ws-cell.selecting').forEach(x=>x.classList.remove('selecting'));
-    const dr=Math.sign(r-wsStart.r),dc=Math.sign(c-wsStart.c);
-    if(dr&&dc)return;
-    wsCurPath=[];let cr=wsStart.r,cc=wsStart.c;
-    while(true){
-      wsCurPath.push({r:cr,c:cc});
-      el.querySelector(`.ws-cell[data-r="${cr}"][data-c="${cc}"]`)?.classList.add('selecting');
-      if(cr===r&&cc===c)break;
-      cr+=dr;cc+=dc;
-    }
-  }
-  function endSelect(){
-    if(!wsSelecting)return;wsSelecting=false;
-    const sel=wsCurPath.map(({r,c})=>wsGridData.grid[r][c]).join('');
-    el.querySelectorAll('.ws-cell.selecting').forEach(x=>x.classList.remove('selecting'));
-    markFound(sel);
     wsCurPath=[];
   }
-
-  el.addEventListener('mousedown',e=>{if(!wsCurrentWord())return;const t=e.target.closest('.ws-cell');if(t){wsSelecting=true;wsStart={r:+t.dataset.r,c:+t.dataset.c};wsCurPath=[wsStart];t.classList.add('selecting');}});
-  el.addEventListener('mouseover',e=>{if(!wsSelecting)return;const t=e.target.closest('.ws-cell');if(!t)return;tracePath(+t.dataset.r,+t.dataset.c);});
-  document.addEventListener('mouseup',endSelect);
-  el.addEventListener('touchstart',e=>{if(!wsCurrentWord())return;const t=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);if(t?.classList.contains('ws-cell')){wsSelecting=true;wsStart={r:+t.dataset.r,c:+t.dataset.c};wsCurPath=[wsStart];t.classList.add('selecting');}},{passive:true});
-  el.addEventListener('touchmove',e=>{if(!wsSelecting)return;const t=document.elementFromPoint(e.touches[0].clientX,e.touches[0].clientY);if(t?.classList.contains('ws-cell'))tracePath(+t.dataset.r,+t.dataset.c);},{passive:true});
-  el.addEventListener('touchend',endSelect,{passive:true});
+  function wsCheckPick(){
+    const cw=wsCurrentWord(); if(!cw)return;
+    const fb=document.getElementById('wsFeedback');
+    const letters=wsCurPath.map(({r,c})=>wsGridData.grid[r][c]).join('');
+    if(wsCurPath.length<cw.word.length){
+      fb.textContent = wsCurPath.length ? ('고른 글자 : '+letters+'  ('+wsCurPath.length+' / '+cw.word.length+')') : '';
+      return;
+    }
+    const match=wsGridData.placed.find(p=>p.word===cw.word);
+    const picked=new Set(wsCurPath.map(({r,c})=>r+','+c));
+    const target=new Set((match?match.cells:[]).map(({r,c})=>r+','+c));
+    const same = picked.size===target.size && [...target].every(k=>picked.has(k));
+    if(same){ wsClearSel(); wsWin(match); }
+    else{
+      const cells=wsCurPath.map(({r,c})=>el.querySelector('.ws-cell[data-r="'+r+'"][data-c="'+c+'"]'));
+      cells.forEach(c=>c&&c.classList.add('missed'));
+      setTimeout(()=>cells.forEach(c=>c&&c.classList.remove('missed')),520);
+      wsClearSel();
+      fb.textContent='❌ 아니에요. 글자를 하나씩 다시 눌러봐요!';
+    }
+  }
+  el.addEventListener('click',e=>{
+    if(!wsCurrentWord())return;
+    const t=e.target.closest('.ws-cell'); if(!t)return;
+    if(t.classList.contains('found'))return;
+    const r=+t.dataset.r, c=+t.dataset.c;
+    const i=wsCurPath.findIndex(p=>p.r===r&&p.c===c);
+    if(i>=0){ wsCurPath.splice(i,1); t.classList.remove('selecting'); }   // 다시 누르면 취소
+    else { wsCurPath.push({r,c}); t.classList.add('selecting'); }
+    wsCheckPick();
+  });
 }
 
 /* ════ 기사읽기1 · 유창하게 읽기 (passage 파싱 + 조사/어미 자동감지) ════ */
