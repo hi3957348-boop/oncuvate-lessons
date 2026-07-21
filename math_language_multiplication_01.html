@@ -469,14 +469,14 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
       <div class="kicker">ONCUVATE · 수학 언어 탐험대</div>
       <h1>곱하기는<br>‘반복해서 더하기’예요</h1>
       <div class="lead">답을 빨리 맞히는 시간이 아니에요.<br>곱셈이 <b>무슨 뜻인지</b> 눈으로 보고, 입으로 말해 보는 시간이에요.</div>
-      <div style="font-size:40px;margin-top:10px">🔵🔵 ➕ 🔵🔵 ➕ 🔵🔵 = 3 × 2</div>
+      <div style="font-size:40px;margin-top:10px">🔵🔵 ➕ 🔵🔵 ➕ 🔵🔵 = 2 × 3</div>
       <div class="goal-row">
         <div class="goal-chip"><div class="n">목표 1</div><div class="g">묶음을 만들며 “반복해서 더하기”를 몸으로 알기</div></div>
-        <div class="goal-chip"><div class="n">목표 2</div><div class="g">3 × 2 를 <b>네 가지 말</b>로 바꿔 말하기</div></div>
+        <div class="goal-chip"><div class="n">목표 2</div><div class="g">2 × 3 을 <b>네 가지 우리말</b>로 바꿔 말하기</div></div>
         <div class="goal-chip"><div class="n">목표 3</div><div class="g">그림 → 식, 식 → 그림 서로 오가기</div></div>
       </div>
       <div style="margin-top:18px;font-size:14px;color:var(--oc-ink2)">
-        <b style="color:var(--g-count)">파란 숫자</b>는 <b>몇 묶음(몇 번)</b>, <b style="color:var(--g-size)">주황 숫자</b>는 <b>한 묶음의 크기</b>예요. 색이 계속 같아요!
+        <b style="color:var(--g-size)">주황 숫자</b>는 <b>한 묶음의 크기</b>, <b style="color:var(--g-count)">파란 숫자</b>는 <b>몇 묶음(몇 배)</b>이에요.<br>곱셈식은 <b>주황 × 파랑</b> 순서로 씁니다. 색이 계속 같아요!
       </div>
     </div>
     <div class="nav"><button class="prev" disabled>이전</button><button class="next" onclick="go(1)">시작해요 →</button></div>
@@ -493,7 +493,7 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
           <div class="arrow-lab">씨앗 묶음</div>
         </div>
         <div style="font-size:34px;color:var(--oc-ink2)">➡</div>
-        <div id="p1task" style="font-size:40px;font-weight:900;color:var(--g-count)">3 ×</div>
+        <div id="p1task" style="font-size:30px;font-weight:900"></div>
       </div>
       <div class="groupwrap" id="p1groups"></div>
       <div class="addline" id="p1add">&nbsp;</div>
@@ -516,27 +516,27 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
       <div class="pg-desc">막대를 움직이면 그림과 <b>말</b>이 함께 바뀌어요. 같은 그림을 여러 가지 말로 부를 수 있어요.</div>
       <div class="mission" id="p2mission"></div>
       <div class="sim-controls">
-        <div class="slider-row">
-          <span class="lab num-a">묶음 수 (몇 번)</span>
-          <button class="stepbtn" onclick="p2Step('a',-1)">−</button>
-          <input type="range" id="p2a" min="1" max="10" value="3" oninput="p2Draw(true)">
-          <button class="stepbtn" onclick="p2Step('a',1)">+</button>
-          <span class="val num-a" id="p2av">3</span>
-        </div>
         <div class="slider-row b">
-          <span class="lab num-b">한 묶음 크기</span>
+          <span class="lab num-b">한 묶음 크기 (앞 수)</span>
           <button class="stepbtn" onclick="p2Step('b',-1)">−</button>
           <input type="range" id="p2b" min="1" max="10" value="2" oninput="p2Draw(true)">
           <button class="stepbtn" onclick="p2Step('b',1)">+</button>
           <span class="val num-b" id="p2bv">2</span>
         </div>
+        <div class="slider-row">
+          <span class="lab num-a">몇 묶음 · 몇 배 (뒤 수)</span>
+          <button class="stepbtn" onclick="p2Step('a',-1)">−</button>
+          <input type="range" id="p2a" min="1" max="10" value="3" oninput="p2Draw(true)">
+          <button class="stepbtn" onclick="p2Step('a',1)">+</button>
+          <span class="val num-a" id="p2av">3</span>
+        </div>
       </div>
       <div class="groupwrap" id="p2groups" style="margin-top:8px"></div>
       <div class="langgrid">
-        <div class="langcard" onclick="p2Say('ko1')"><span class="lc-tag lc-ko">우리말 · 반복</span><div class="lc-txt" id="p2ko1"></div></div>
-        <div class="langcard" onclick="p2Say('ko2')"><span class="lc-tag lc-ko">우리말 · 묶음</span><div class="lc-txt" id="p2ko2"></div></div>
-        <div class="langcard" onclick="p2Say('en1')"><span class="lc-tag lc-en">영어 · times</span><div class="lc-txt" id="p2en1"></div></div>
-        <div class="langcard" onclick="p2Say('en2')"><span class="lc-tag lc-en">영어 · groups of</span><div class="lc-txt" id="p2en2"></div></div>
+        <div class="langcard" onclick="p2Say('ko2')"><span class="lc-tag lc-ko">묶음으로</span><div class="lc-txt" id="p2ko2"></div></div>
+        <div class="langcard" onclick="p2Say('bae')"><span class="lc-tag lc-ko">배(倍)로</span><div class="lc-txt" id="p2bae"></div></div>
+        <div class="langcard" onclick="p2Say('ko1')"><span class="lc-tag lc-en">더하기로</span><div class="lc-txt" id="p2ko1"></div></div>
+        <div class="langcard" onclick="p2Say('read')"><span class="lc-tag lc-en">읽는 법</span><div class="lc-txt" id="p2read"></div></div>
         <div class="langcard" onclick="p2Say('add')"><span class="lc-tag lc-add">덧셈식</span><div class="lc-txt" id="p2add" style="font-size:19px"></div></div>
         <div class="langcard" onclick="p2Say('mul')"><span class="lc-tag lc-mul">곱셈식</span><div class="lc-txt" id="p2mul"></div></div>
       </div>
@@ -588,10 +588,10 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
   <section class="pg" data-title="그림을 식으로">
     <div class="card">
       <div class="pg-head"><span class="step-pill">활동 4</span><span class="pg-title">그림을 곱셈식으로 써요</span></div>
-      <div class="pg-desc"><b class="num-a">묶음 수</b>를 먼저, <b class="num-b">한 묶음 크기</b>를 그 다음에 써요.</div>
+      <div class="pg-desc"><b class="num-b">한 묶음 크기</b>를 먼저, <b class="num-a">묶음 수(몇 배)</b>를 그 다음에 써요.</div>
       <div class="groupwrap" id="p5groups"></div>
       <div class="eqinput" style="margin-top:14px">
-        <input class="a" id="p5a" inputmode="numeric" maxlength="2"> × <input class="b" id="p5b" inputmode="numeric" maxlength="2"> = <input id="p5c" inputmode="numeric" maxlength="3">
+        <input class="b" id="p5b" inputmode="numeric" maxlength="2"> × <input class="a" id="p5a" inputmode="numeric" maxlength="2"> = <input id="p5c" inputmode="numeric" maxlength="3">
       </div>
       <div class="row" style="margin-top:14px">
         <button class="big-btn" onclick="p5Check()">확인</button>
@@ -664,8 +664,8 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
         <div style="font-size:16px;font-weight:800;color:var(--oc-blue-d)" id="p9msg"></div>
       </div>
       <div class="recap">
-        <span class="num-a">3</span> × <span class="num-b">2</span> 는<br>
-        “<span class="num-a">3</span>번 <span class="num-b">2</span>를” = “<span class="num-a">3</span>묶음 <span class="num-b">2</span>씩” = “<span class="num-a">3</span> times <span class="num-b">2</span>” = “<span class="num-a">3</span> groups of <span class="num-b">2</span>”
+        <span class="num-b">2</span> × <span class="num-a">3</span> 은<br>
+        “<span class="num-b">2</span>씩 <span class="num-a">3</span>묶음” = “<span class="num-b">2</span>의 <span class="num-a">3</span>배” = “<span class="num-b">2</span>를 <span class="num-a">3</span>번 더하기” = “<span class="num-b">2</span> 곱하기 <span class="num-a">3</span>”
       </div>
       <div class="self-check" id="p9self"></div>
       <div class="row" style="margin-top:14px"><button class="speak-btn" onclick="p9Say()">🔊 오늘의 문장 말하기</button></div>
@@ -692,6 +692,9 @@ const SINO=['영','일','이','삼','사','오','육','칠','팔','구'];
 function sinoLast(n){ n=Math.abs(Math.round(n)); if(n>=10 && n%10===0) return '십'; return SINO[n%10]; }
 function hasJong(ch){ const c=ch.charCodeAt(0)-0xAC00; return c>=0 && c<11172 && (c%28)!==0; }
 function eul(n){ return hasJong(sinoLast(n))?'을':'를'; }
+/* 한국 교과서 관례: 곱셈식은 '한 묶음 크기 × 몇 배' 순서로 쓴다 (2씩 3묶음 = 2 × 3) */
+function EQ(a,b){ return '<span class="num-b">'+b+'</span> × <span class="num-a">'+a+'</span>'; }
+function eqTxt(a,b){ return b+' × '+a; }
 function say(text, lang){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text);
   u.lang=lang||'ko-KR'; u.rate=0.88; speechSynthesis.speak(u);}catch(e){} }
 
@@ -746,7 +749,7 @@ let p1i=0, p1n=0, p1done=new Set();
 function initP1(){ p1i=0; p1n=0; p1done.clear(); p1Load(); }
 function p1Load(){ const t=P1[p1i]; p1n=0;
   el('p1seed').innerHTML=pips(t.b);
-  el('p1task').innerHTML='<span class="num-a">'+t.a+'</span> ×';
+  el('p1task').innerHTML='<span class="num-b">'+t.b+'</span>씩 <span class="num-a">'+t.a+'</span>묶음';
   el('p1fb').textContent=''; el('p1fb').className='feedback';
   p1Render(); p1Prog(); markQ();
 }
@@ -761,9 +764,9 @@ function p1Add(){ const t=P1[p1i];
   if(p1n>=t.a){ el('p1fb').textContent='앗, 묶음이 너무 많아요! 되돌리기를 눌러요 ↩'; el('p1fb').className='feedback bad'; sfx('no'); recWrong('repeat',t.a+'×'+t.b); return; }
   p1n++; sfx('tick'); p1Render();
   if(p1n===t.a){
-    el('p1fb').innerHTML='🎉 <span class="num-b">'+t.b+'</span>'+eul(t.b)+' <span class="num-a">'+t.a+'</span>번 반복해서 더했어요 = <span class="num-a">'+t.a+'</span> × <span class="num-b">'+t.b+'</span> = '+(t.a*t.b);
+    el('p1fb').innerHTML='🎉 <span class="num-b">'+t.b+'</span>'+eul(t.b)+' <span class="num-a">'+t.a+'</span>번 더했어요 = '+EQ(t.a,t.b)+' = '+(t.a*t.b);
     el('p1fb').className='feedback good'; sfx('ok');
-    say(t.b+eul(t.b)+' '+t.a+'번 반복해서 더하면, '+t.a+'곱하기 '+t.b+'는 '+(t.a*t.b));
+    say(t.b+eul(t.b)+' '+t.a+'번 더하면, '+t.b+' 곱하기 '+t.a+'는 '+(t.a*t.b));
     if(!p1done.has(p1i)){ p1done.add(p1i); bump(); recCorrect('repeat',rtNow()); }
     setTimeout(()=>{ if(p1i<P1.length-1){ p1i++; p1Load(); } else { el('p1fb').textContent='🌟 모두 만들었어요! 다음으로 가요'; } },1800);
   }
@@ -774,9 +777,9 @@ function p1Prog(){ el('p1prog').textContent='문제 '+(p1i+1)+' / '+P1.length+' 
 
 /* ================= P2 언어 변환기 ================= */
 const P2M=[
-  {a:3,b:5,txt:'“3 groups of 5”가 되게 만들어 보세요'},
-  {a:4,b:2,txt:'“2를 4번 반복해서 더하기”를 만들어 보세요'},
-  {a:6,b:3,txt:'“6묶음 3씩”을 만들어 보세요'}
+  {a:3,b:5,txt:'“5씩 3묶음”이 되게 만들어 보세요'},
+  {a:4,b:2,txt:'“2를 4번 더하기”를 만들어 보세요'},
+  {a:6,b:3,txt:'“3의 6배”를 만들어 보세요'}
 ];
 let p2mi=0, p2done=new Set();
 function initP2(){ p2mi=0; p2done.clear(); el('p2mission').textContent=P2M[0].txt; p2Draw(false); p2Prog(); }
@@ -786,30 +789,29 @@ function p2Draw(user){ const {a,b}=p2Val();
   el('p2av').textContent=a; el('p2bv').textContent=b;
   renderGroups(el('p2groups'),a,b);
   const A='<span class="num-a">'+a+'</span>', B='<span class="num-b">'+b+'</span>';
-  el('p2ko1').innerHTML=A+'번 '+B+eul(b);
-  el('p2ko2').innerHTML=A+'묶음 '+B+'씩';
-  el('p2en1').innerHTML=A+' times '+B;
-  el('p2en2').innerHTML=A+' groups of '+B;
+  el('p2ko1').innerHTML=B+eul(b)+' '+A+'번 더하기';
+  el('p2ko2').innerHTML=B+'씩 '+A+'묶음';
+  el('p2bae').innerHTML=B+'의 '+A+'배';
+  el('p2read').innerHTML=B+' 곱하기 '+A;
   el('p2add').innerHTML=Array(a).fill('<span class="num-b">'+b+'</span>').join(' + ');
-  el('p2mul').innerHTML=A+' × '+B+' = '+(a*b);
+  el('p2mul').innerHTML=EQ(a,b)+' = '+(a*b);
   if(user && IS_HOST && simSync) publishSim();
 }
 function p2Say(k){ const {a,b}=p2Val();
-  if(k==='ko1') say(a+'번 '+b+eul(b));
-  else if(k==='ko2') say(a+'묶음 '+b+'씩');
-  else if(k==='en1') say(a+' times '+b,'en-US');
-  else if(k==='en2') say(a+' groups of '+b,'en-US');
-  else if(k==='add') say(b+eul(b)+' '+a+'번 더하기');
-  else say(a+' 곱하기 '+b+'는 '+(a*b));
+  if(k==='ko1'||k==='add') say(b+eul(b)+' '+a+'번 더하기');
+  else if(k==='ko2') say(b+'씩 '+a+'묶음');
+  else if(k==='bae') say(b+'의 '+a+'배');
+  else if(k==='read') say(b+' 곱하기 '+a);
+  else say(b+' 곱하기 '+a+'는 '+(a*b));
 }
 function p2Check(){ const {a,b}=p2Val(); const m=P2M[p2mi];
   if(a===m.a && b===m.b){
-    el('p2fb').innerHTML='🎉 맞아요! 같은 그림을 네 가지 말로 부를 수 있어요.'; el('p2fb').className='feedback good'; sfx('ok');
+    el('p2fb').innerHTML='🎉 맞아요! 같은 그림을 네 가지 우리말로 부를 수 있어요.'; el('p2fb').className='feedback good'; sfx('ok');
     if(!p2done.has(p2mi)){ p2done.add(p2mi); bump(); recCorrect('lang',rtNow()); }
     setTimeout(()=>{ if(p2mi<P2M.length-1){ p2mi++; el('p2mission').textContent=P2M[p2mi].txt; el('p2fb').textContent=''; markQ(); }
       else el('p2fb').textContent='🌟 변환기 미션 완료!'; p2Prog(); },1600);
   }else{
-    el('p2fb').innerHTML='조금 달라요. <b>앞 숫자</b>는 묶음 수, <b>뒤 숫자</b>는 한 묶음 크기예요.'; el('p2fb').className='feedback bad'; sfx('no');
+    el('p2fb').innerHTML='조금 달라요. <b class="num-b">앞 숫자</b>는 한 묶음 크기, <b class="num-a">뒤 숫자</b>는 몇 묶음이에요.'; el('p2fb').className='feedback bad'; sfx('no');
     recWrong('lang',m.a+'×'+m.b+'→'+a+'×'+b);
   }
 }
@@ -835,9 +837,9 @@ function p3Check(){ const it=P3[p3i];
   const boxes=document.querySelectorAll('#p3baskets .basket');
   if(same){
     boxes.forEach(x=>x.classList.add('ok'));
-    el('p3eq').innerHTML='<span class="num-a">'+it.g+'</span>묶음 <span class="num-b">'+p3b[0]+'</span>씩 = <span class="num-a">'+it.g+'</span> × <span class="num-b">'+p3b[0]+'</span> = '+it.t;
+    el('p3eq').innerHTML='<span class="num-b">'+p3b[0]+'</span>씩 <span class="num-a">'+it.g+'</span>묶음 = '+EQ(it.g,p3b[0])+' = '+it.t;
     el('p3fb').textContent='🎉 모두 같은 크기예요! 그래서 곱셈으로 쓸 수 있어요.'; el('p3fb').className='feedback good'; sfx('ok');
-    say(it.g+'묶음 '+p3b[0]+'씩, '+it.g+' 곱하기 '+p3b[0]+'는 '+it.t);
+    say(p3b[0]+'씩 '+it.g+'묶음, '+p3b[0]+' 곱하기 '+it.g+'는 '+it.t);
     if(!p3done.has(p3i)){ p3done.add(p3i); bump(); recCorrect('equal',rtNow()); }
     setTimeout(()=>{ if(p3i<P3.length-1){ p3i++; p3Load(); } else el('p3fb').textContent='🌟 모두 성공!'; },1900);
   }else{
@@ -850,16 +852,16 @@ function p3Check(){ const it=P3[p3i];
 function p3Prog(){ el('p3prog').textContent='문제 '+(p3i+1)+' / '+P3.length+' · 성공 '+p3done.size; }
 
 /* ================= P4 짝 맞추기 ================= */
-const P4=[{a:3,b:2,k:'ko1'},{a:4,b:5,k:'en2'},{a:2,b:6,k:'add'},{a:5,b:3,k:'ko2'},{a:7,b:2,k:'en1'},{a:3,b:4,k:'pic'}];
+const P4=[{a:3,b:2,k:'ko1'},{a:4,b:5,k:'ko2'},{a:2,b:6,k:'add'},{a:5,b:3,k:'bae'},{a:7,b:2,k:'read'},{a:3,b:4,k:'pic'}];
 function miniPic(a,b){ let s='<span class="mini">';
   for(let i=0;i<a;i++) s+='<span class="mgrp'+(b===1?' one':'')+'">'+'<i></i>'.repeat(b)+'</span>';
   return s+'</span>'; }
 function langText(a,b,k){
   if(k==='pic') return miniPic(a,b);
-  if(k==='ko1') return a+'번 '+b+eul(b);
-  if(k==='ko2') return a+'묶음 '+b+'씩';
-  if(k==='en1') return a+' times '+b;
-  if(k==='en2') return a+' groups of '+b;
+  if(k==='ko1') return b+eul(b)+' '+a+'번 더하기';
+  if(k==='ko2') return b+'씩 '+a+'묶음';
+  if(k==='bae') return b+'의 '+a+'배';
+  if(k==='read') return b+' 곱하기 '+a;
   return Array(a).fill(b).join(' + ');
 }
 const PAIR_COLORS=['#E58A4E','#5FAE93','#7E6BC4','#4A78C4','#D2688A','#3FA3B8'];
@@ -872,7 +874,7 @@ function initP4(){ p4done=0; p4laid=false; p4drag=null;
   el('p4boxGrid').innerHTML='<span class="pb-empty">맞춘 퍼즐이 여기에 모여요</span>';
   el('p4fb').textContent=''; el('p4fb').className='feedback'; p4Prog();
   const wrap=el('p4pool'); wrap.innerHTML='';
-  const items=[]; P4.forEach((x,i)=>{ items.push({i,side:'L',txt:x.a+' × '+x.b}); items.push({i,side:'R',txt:langText(x.a,x.b,x.k)}); });
+  const items=[]; P4.forEach((x,i)=>{ items.push({i,side:'L',txt:eqTxt(x.a,x.b)}); items.push({i,side:'R',txt:langText(x.a,x.b,x.k)}); });
   items.sort(()=>Math.random()-0.5);
   items.forEach(it=>{ const d=document.createElement('div');
     d.className='tile '+it.side+(P4[it.i].k==='pic'&&it.side==='R'?' pic':'');
@@ -941,7 +943,7 @@ function p4Snap(a,b){ const L=a.dataset.side==='L'?a:b, R=a.dataset.side==='L'?b
   if(!SYNC_APPLY){ bump(); recCorrect('match',rtNow()); }   /* 선생님 화면을 따라 붙은 건 점수로 세지 않는다 */
   const it=P4[idx];
   el('p4fb').innerHTML='🧩 찰칵! 같은 뜻이에요.'; el('p4fb').className='feedback good';
-  say(it.a+' 곱하기 '+it.b+'는 '+langText(it.a,it.b,(it.k==='en1'||it.k==='en2'||it.k==='pic')?'ko2':it.k));
+  say(it.b+' 곱하기 '+it.a+'는 '+langText(it.a,it.b,it.k==='pic'?'ko2':it.k));
   setTimeout(()=>{ [L,R].forEach(n=>n.classList.add('fly'));
     setTimeout(()=>{ L.remove(); R.remove();
       const grid=el('p4boxGrid'); const empty=grid.querySelector('.pb-empty'); if(empty) empty.remove();
@@ -971,19 +973,19 @@ function p5Check(){ const t=P5[p5i]; const a=+el('p5a').value, b=+el('p5b').valu
   el('p5b').classList.toggle('ok',okB); el('p5b').classList.toggle('no',!okB);
   el('p5c').classList.toggle('ok',okC); el('p5c').classList.toggle('no',!okC);
   if(okA&&okB&&okC){
-    el('p5fb').innerHTML='🎉 <span class="num-a">'+t.a+'</span>묶음 <span class="num-b">'+t.b+'</span>씩 = '+(t.a*t.b);
+    el('p5fb').innerHTML='🎉 <span class="num-b">'+t.b+'</span>씩 <span class="num-a">'+t.a+'</span>묶음 = '+(t.a*t.b);
     el('p5fb').className='feedback good'; sfx('ok');
     if(!p5done.has(p5i)){ p5done.add(p5i); bump(); recCorrect('write',rtNow()); }
     setTimeout(()=>{ if(p5i<P5.length-1){ p5i++; p5Load(); } else el('p5fb').textContent='🌟 다 썼어요!'; },1500);
   }else{
-    el('p5fb').innerHTML='초록 칸만 맞아요. <b class="num-a">묶음이 몇 개</b>인지 먼저 세어 봐요.';
+    el('p5fb').innerHTML='초록 칸만 맞아요. <b class="num-b">한 묶음에 몇 개</b>인지 먼저 세어 봐요.';
     el('p5fb').className='feedback bad'; sfx('no'); recWrong('write',t.a+'×'+t.b);
   }
 }
 function p5Hint(){ const t=P5[p5i];
   el('p5fb').innerHTML='💡 동그라미(묶음)가 <b class="num-a">'+t.a+'</b>개, 한 묶음 안에 구슬이 <b class="num-b">'+t.b+'</b>개예요.';
   el('p5fb').className='feedback'; }
-function p5Say(){ const t=P5[p5i]; say(t.a+'묶음 '+t.b+'씩'); }
+function p5Say(){ const t=P5[p5i]; say(t.b+'씩 '+t.a+'묶음'); }
 function p5Prog(){ el('p5prog').textContent='문제 '+(p5i+1)+' / '+P5.length+' · 완성 '+p5done.size; }
 
 /* ================= P6 순서 바꾸기 ================= */
@@ -996,14 +998,14 @@ function p6Render(){ const t=P6[p6i]; const r=p6flip? t.b:t.a, c=p6flip? t.a:t.b
   /* 줄(묶음)마다 색을 번갈아 칠해서 "한 줄 = 한 묶음"이 눈에 보이게 한다 */
   let s=''; for(let i=0;i<r;i++){ for(let j=0;j<c;j++) s+='<div class="pip row'+(i%2)+'"></div>'; }
   box.innerHTML=s;
-  el('p6lab').innerHTML='<span class="num-a">'+r+'</span>줄에 <span class="num-b">'+c+'</span>개씩 &nbsp;→&nbsp; <span class="num-a">'+r+'</span> × <span class="num-b">'+c+'</span>';
+  el('p6lab').innerHTML='한 줄에 <span class="num-b">'+c+'</span>개씩 <span class="num-a">'+r+'</span>줄 &nbsp;→&nbsp; '+EQ(r,c);
 }
 function p6Rotate(){ p6flip=!p6flip; const box=el('p6arr'); box.style.transform='rotate(90deg)';
   setTimeout(()=>{ box.style.transition='none'; box.style.transform='none'; p6Render(); setTimeout(()=>box.style.transition='transform .6s ease',50); },600); }
 function p6Ans(same){ const t=P6[p6i];
-  if(same){ el('p6fb').innerHTML='🎉 맞아요! <span class="num-a">'+t.a+'</span>×<span class="num-b">'+t.b+'</span> = <span class="num-b">'+t.b+'</span>×<span class="num-a">'+t.a+'</span> = '+(t.a*t.b)+' — 말은 달라도 개수는 그대로!';
+  if(same){ el('p6fb').innerHTML='🎉 맞아요! '+EQ(t.a,t.b)+' = '+EQ(t.b,t.a)+' = '+(t.a*t.b)+' — 말은 달라도 개수는 그대로!';
     el('p6fb').className='feedback good'; sfx('ok');
-    say(t.a+'곱하기'+t.b+'와 '+t.b+'곱하기'+t.a+'는 개수가 같아요');
+    say(t.b+' 곱하기 '+t.a+'와 '+t.a+' 곱하기 '+t.b+'는 개수가 같아요');
     if(!p6done.has(p6i)){ p6done.add(p6i); bump(); recCorrect('comm',rtNow()); }
     setTimeout(()=>{ if(p6i<P6.length-1){ p6i++; p6Load(); } else el('p6fb').textContent='🌟 모두 확인했어요!'; },2000);
   }else{ el('p6fb').textContent='구슬을 한 번 세어 볼까요? 돌려도 하나도 빠지지 않았어요.'; el('p6fb').className='feedback bad'; sfx('no'); recWrong('comm',t.a+'×'+t.b); }
@@ -1012,19 +1014,19 @@ function p6Prog(){ el('p6prog').textContent='문제 '+(p6i+1)+' / '+P6.length+' 
 
 /* ================= P7 문장 완성 ================= */
 const P7=[
-  {a:4,b:7,form:'ko1'},{a:3,b:6,form:'ko2'},{a:5,b:2,form:'en2'},{a:2,b:9,form:'en1'}
+  {a:4,b:7,form:'ko1'},{a:3,b:6,form:'ko2'},{a:5,b:2,form:'bae'},{a:2,b:9,form:'read'}
 ];
 let p7i=0, p7slot=0, p7fill=[null,null], p7done=new Set();
 function initP7(){ p7i=0; p7done.clear(); p7Load(); }
-function p7Tail(f,b){ return f==='ko1'?['번 ',eul(b)]:f==='ko2'?['묶음 ','씩']:f==='en1'?[' times ','']:[' groups of ','']; }
+function p7Tail(f,b){ return f==='ko1'?[eul(b)+' ','번 더하기']:f==='ko2'?['씩 ','묶음']:f==='bae'?['의 ','배']:[' 곱하기 ','']; }
 function p7Load(){ p7slot=0; p7fill=[null,null]; p7Render();
   const t=P7[p7i]; const pool=[t.a,t.b,t.a+1,t.b+2,Math.max(1,t.a-1)].filter((v,i,s)=>s.indexOf(v)===i).sort(()=>Math.random()-0.5);
   el('p7chips').innerHTML=pool.map(v=>'<button class="chip" onclick="p7Put('+v+',this)">'+v+'</button>').join('');
   el('p7fb').textContent=''; el('p7fb').className='feedback'; p7Prog(); markQ();
 }
-function p7Render(){ const t=P7[p7i]; const tail=p7Tail(t.form, p7fill[1]===null? t.b : p7fill[1]);
+function p7Render(){ const t=P7[p7i]; const tail=p7Tail(t.form, p7fill[0]===null? t.b : p7fill[0]);
   const s1=p7fill[0]===null?'?':p7fill[0], s2=p7fill[1]===null?'?':p7fill[1];
-  el('p7box').innerHTML='<span class="num-a">'+t.a+'</span> × <span class="num-b">'+t.b+'</span> &nbsp;=&nbsp; '+
+  el('p7box').innerHTML=EQ(t.a,t.b)+' &nbsp;=&nbsp; '+
     '<span class="blank'+(p7slot===0?' on':'')+(p7fill[0]!==null?' ok':'')+'" onclick="p7Slot(0)">'+s1+'</span>'+tail[0]+
     '<span class="blank'+(p7slot===1?' on':'')+(p7fill[1]!==null?' ok':'')+'" onclick="p7Slot(1)">'+s2+'</span>'+tail[1];
 }
@@ -1032,20 +1034,20 @@ function p7Slot(i){ p7slot=i; p7Render(); }
 function p7Put(v,btn){ const t=P7[p7i]; p7fill[p7slot]=v; btn.classList.add('used');
   p7slot = p7slot===0?1:0; p7Render();
   if(p7fill[0]!==null&&p7fill[1]!==null){
-    if(p7fill[0]===t.a&&p7fill[1]===t.b){
+    if(p7fill[0]===t.b&&p7fill[1]===t.a){
       el('p7fb').textContent='🎉 문장이 완성됐어요!'; el('p7fb').className='feedback good'; sfx('ok'); p7Say();
       if(!p7done.has(p7i)){ p7done.add(p7i); bump(); recCorrect('fill',rtNow()); }
       setTimeout(()=>{ if(p7i<P7.length-1){ p7i++; p7Load(); } else el('p7fb').textContent='🌟 문장을 다 만들었어요!'; },2000);
     }else{
-      el('p7fb').innerHTML='곱셈식의 <b class="num-a">앞 숫자</b>가 먼저 와요. 다시 해볼까요?'; el('p7fb').className='feedback bad'; sfx('no');
-      recWrong('fill',t.a+'×'+t.b);
+      el('p7fb').innerHTML='곱셈식의 <b class="num-b">앞 숫자(한 묶음 크기)</b>가 먼저 와요. 다시 해볼까요?'; el('p7fb').className='feedback bad'; sfx('no');
+      recWrong('fill',eqTxt(t.a,t.b));
       setTimeout(()=>{ p7fill=[null,null]; p7slot=0; document.querySelectorAll('#p7chips .chip').forEach(c=>c.classList.remove('used')); p7Render(); },900);
     }
   }
 }
-function p7Say(){ const t=P7[p7i]; const f=P7[p7i].form;
-  if(f==='ko1') say(t.a+'번 '+t.b+eul(t.b)); else if(f==='ko2') say(t.a+'묶음 '+t.b+'씩');
-  else if(f==='en1') say(t.a+' times '+t.b,'en-US'); else say(t.a+' groups of '+t.b,'en-US'); }
+function p7Say(){ const t=P7[p7i]; const f=t.form;
+  if(f==='ko1') say(t.b+eul(t.b)+' '+t.a+'번 더하기'); else if(f==='ko2') say(t.b+'씩 '+t.a+'묶음');
+  else if(f==='bae') say(t.b+'의 '+t.a+'배'); else say(t.b+' 곱하기 '+t.a); }
 function p7Prog(){ el('p7prog').textContent='문장 '+(p7i+1)+' / '+P7.length+' · 완성 '+p7done.size; }
 
 /* ================= P8 생활 문제 ================= */
@@ -1059,15 +1061,15 @@ let p8i=0, p8done=new Set();
 function initP8(){ p8i=0; p8done.clear(); p8Load(); }
 function p8Load(){ const t=P8[p8i]; el('p8story').innerHTML=t.s;
   renderGroups(el('p8pic'),t.a,t.b);
-  const right=t.a+' × '+t.b;
+  const right=eqTxt(t.a,t.b);
   const opts=[right, t.b+' + '+t.a, (t.a+t.b)+' × 1', t.a+' + '+t.b].filter((v,i,s)=>s.indexOf(v)===i).sort(()=>Math.random()-0.5);
   el('p8opts').innerHTML=opts.map(o=>'<button class="optbtn" onclick="p8Ans(this,\''+o+'\')">'+o+'</button>').join('');
   el('p8fb').textContent=''; el('p8fb').className='feedback'; p8Prog(); markQ();
 }
-function p8Ans(btn,val){ const t=P8[p8i]; const right=t.a+' × '+t.b;
+function p8Ans(btn,val){ const t=P8[p8i]; const right=eqTxt(t.a,t.b);
   if(val===right){ btn.classList.add('ok');
-    el('p8fb').innerHTML='🎉 <span class="num-a">'+t.a+'</span>묶음 <span class="num-b">'+t.b+'</span>씩 = '+(t.a*t.b)+'개!';
-    el('p8fb').className='feedback good'; sfx('ok'); say(t.a+'묶음 '+t.b+'씩은 '+(t.a*t.b)+'개');
+    el('p8fb').innerHTML='🎉 <span class="num-b">'+t.b+'</span>씩 <span class="num-a">'+t.a+'</span>묶음 = '+(t.a*t.b)+'개!';
+    el('p8fb').className='feedback good'; sfx('ok'); say(t.b+'씩 '+t.a+'묶음은 '+(t.a*t.b)+'개');
     if(!p8done.has(p8i)){ p8done.add(p8i); bump(); recCorrect('story',rtNow()); }
     setTimeout(()=>{ if(p8i<P8.length-1){ p8i++; p8Load(); } else el('p8fb').textContent='🌟 이야기를 다 풀었어요!'; },2000);
   }else{ btn.classList.add('no'); setTimeout(()=>btn.classList.remove('no'),500);
@@ -1078,7 +1080,7 @@ function p8Say(){ const t=P8[p8i]; say(el('p8story').textContent); }
 function p8Prog(){ el('p8prog').textContent='문제 '+(p8i+1)+' / '+P8.length+' · 성공 '+p8done.size; }
 
 /* ================= P9 마무리 ================= */
-const SELF=['곱셈이 “반복해서 더하기”라는 걸 알았어요','3 × 2를 우리말로 말할 수 있어요','3 × 2를 영어로 말할 수 있어요'];
+const SELF=['곱셈이 “반복해서 더하기”라는 걸 알았어요','2 × 3을 “2씩 3묶음”이라고 말할 수 있어요','2 × 3을 “2의 3배”라고 말할 수 있어요'];
 function p9Render(){
   const total=SESSION.c;
   el('p9score').textContent=total;
@@ -1094,7 +1096,7 @@ function p9Render(){
 }
 function p9Star(i,n){ const wrap=document.querySelector('.stars[data-i="'+i+'"]');
   wrap.querySelectorAll('.star').forEach((s,k)=>s.classList.toggle('lit',k<n)); sfx('tick'); }
-function p9Say(){ say('3 곱하기 2는, 3번 2를, 3묶음 2씩, 쓰리 타임즈 투, 쓰리 그룹스 오브 투'); }
+function p9Say(){ say('2 곱하기 3은, 2씩 3묶음, 2의 3배, 2를 3번 더하기'); }
 
 /* ================= 판서(화이트보드) =================
    좌표는 화면 폭으로 나눈 비율(0~1)로 저장 → 선생님·학생 화면 크기가 달라도 같은 위치에 그려진다.
@@ -1226,7 +1228,7 @@ function startStatePump(){ setInterval(()=>publishState(false),350); }
 function applyActState(st){ SYNC_APPLY=true; try{
   /* P1 묶음 놓기 */
   if(st.p1 && (st.p1.i!==p1i || st.p1.n!==p1n)){ p1i=st.p1.i; const t=P1[p1i];
-    el('p1seed').innerHTML=pips(t.b); el('p1task').innerHTML='<span class="num-a">'+t.a+'</span> ×';
+    el('p1seed').innerHTML=pips(t.b); el('p1task').innerHTML='<span class="num-b">'+t.b+'</span>씩 <span class="num-a">'+t.a+'</span>묶음';
     p1n=st.p1.n; p1Render(); }
   /* P2 변환기 */
   if(st.p2){ el('p2a').value=st.p2.a; el('p2b').value=st.p2.b; p2Draw(false);

@@ -399,6 +399,14 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
 .qsub{text-align:center;font-size:14.5px;font-weight:800;color:var(--oc-ink2);margin-bottom:8px}
 .zerocard{background:#F3F0FA;border:2px solid var(--oc-lilac);border-radius:16px;padding:14px 16px;
   font-size:15.5px;font-weight:800;color:#5B4B8A;line-height:1.6;text-align:center;margin-top:12px}
+/* 그림 2지선다 (활동 2) */
+.pickbtn.pic{padding:14px 10px}
+.picopt{display:flex;flex-direction:column;align-items:center;gap:8px}
+.miniwrap{display:flex;gap:8px;flex-wrap:wrap;justify-content:center}
+.miniwrap .grp{padding:8px 10px;grid-template-columns:repeat(2,18px);gap:4px;min-width:52px;min-height:52px}
+.miniwrap .grp.one{grid-template-columns:18px}
+.miniwrap .pip{width:18px;height:18px}
+.picopt .cap2{font-size:15px;font-weight:900;color:var(--oc-ink2)}
 </style>
 <script type="module">
   import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
@@ -503,23 +511,25 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
   <section class="pg on" data-title="표지">
     <div class="cover">
       <div class="kicker">ONCUVATE · 언어로 풀어내는 수학</div>
-      <h1>3 × 2 는<br>“<span class="num-b">2</span>의 <span class="num-a">3</span>배”예요</h1>
+      <h1><span class="num-b">2</span> × <span class="num-a">3</span> 은<br>“<span class="num-b">2</span>의 <span class="num-a">3</span>배”예요</h1>
       <div class="lead">곱하기를 한자로는 <b>배(倍)</b>라고 해요. “거듭된다”는 뜻이에요.<br>
         오늘은 같은 식을 <b>‘배’라는 말</b>로 바꿔 말해 봅니다.</div>
       <div class="flipbox" style="margin-top:14px">
-        <span class="fx"><span class="num-a">3</span> × <span class="num-b">2</span></span>
-        <span class="swap">⇄</span>
+        <span class="fx"><span class="num-b">2</span>씩 <span class="num-a">3</span>묶음</span>
+        <span class="swap">=</span>
         <span class="fx"><span class="num-b">2</span>의 <span class="num-a">3</span>배</span>
+        <span class="swap">=</span>
+        <span class="fx"><span class="num-b">2</span> × <span class="num-a">3</span></span>
       </div>
-      <div class="flipnote">✋ 조심! ‘배’로 말할 때는 <b>두 숫자의 순서가 바뀝니다.</b></div>
+      <div class="flipnote">✋ <b>앞 수</b>는 한 묶음 크기, <b>뒤 수</b>는 몇 배. 순서가 바뀌면 <b>그림이 달라집니다.</b></div>
       <div class="goal-row">
         <div class="goal-chip"><div class="n">목표 1</div><div class="g">“1배 → 2배 → 3배” 늘어나는 모습을 눈으로 보기</div></div>
-        <div class="goal-chip"><div class="n">목표 2</div><div class="g">식 ↔ 배 표현을 <b>순서를 바꿔</b> 옮기기</div></div>
+        <div class="goal-chip"><div class="n">목표 2</div><div class="g">같은 답이어도 <b>그림이 다르다</b>는 걸 구분하기</div></div>
         <div class="goal-chip"><div class="n">목표 3</div><div class="g">동물의 다리·날개 수를 곱셈으로 세기</div></div>
       </div>
       <div style="margin-top:16px;font-size:14px;color:var(--oc-ink2)">
-        색 약속은 그대로예요 — <b style="color:var(--g-count)">파란 숫자</b>는 <b>몇 배(몇 묶음)</b>,
-        <b style="color:var(--g-size)">주황 숫자</b>는 <b>무엇을(한 묶음 크기)</b>.
+        색 약속은 그대로예요 — <b style="color:var(--g-size)">주황 숫자</b>는 <b>한 묶음 크기(앞 수)</b>,
+        <b style="color:var(--g-count)">파란 숫자</b>는 <b>몇 배(뒤 수)</b>.
       </div>
     </div>
     <div class="nav"><button class="prev" disabled>이전</button><button class="next" onclick="go(1)">시작해요 →</button></div>
@@ -536,7 +546,7 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
           <div class="arrow-lab">1배 (씨앗)</div>
         </div>
         <div style="font-size:34px;color:var(--oc-ink2)">➡</div>
-        <div id="p1task" style="font-size:32px;font-weight:900;color:var(--g-count)"></div>
+        <div id="p1task" style="font-size:30px;font-weight:900"></div>
       </div>
       <div class="groupwrap" id="p1groups"></div>
       <div class="addline" id="p1add">&nbsp;</div>
@@ -556,33 +566,33 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
   <section class="pg" data-title="배 변환기">
     <div class="card">
       <div class="pg-head"><span class="step-pill">시뮬레이션</span><span class="pg-title">배(倍) 변환기</span></div>
-      <div class="pg-desc">막대를 움직이면 그림과 말이 함께 바뀌어요. <b>곱셈식과 배 표현은 순서가 반대</b>라는 걸 눈으로 확인해요.</div>
+      <div class="pg-desc">막대를 움직이면 그림과 말이 함께 바뀌어요. <b>앞 수</b>와 <b>뒤 수</b>가 하는 일을 확인해요.</div>
       <div class="mission" id="p2mission"></div>
       <div class="sim-controls">
-        <div class="slider-row">
-          <span class="lab num-a">몇 배 (몇 묶음)</span>
-          <button class="stepbtn" onclick="p2Step('a',-1)">−</button>
-          <input type="range" id="p2a" min="1" max="10" value="3" oninput="p2Draw(true)">
-          <button class="stepbtn" onclick="p2Step('a',1)">+</button>
-          <span class="val num-a" id="p2av">3</span>
-        </div>
         <div class="slider-row b">
-          <span class="lab num-b">무엇을 (한 묶음)</span>
+          <span class="lab num-b">한 묶음 크기 (앞 수)</span>
           <button class="stepbtn" onclick="p2Step('b',-1)">−</button>
           <input type="range" id="p2b" min="1" max="10" value="2" oninput="p2Draw(true)">
           <button class="stepbtn" onclick="p2Step('b',1)">+</button>
           <span class="val num-b" id="p2bv">2</span>
         </div>
+        <div class="slider-row">
+          <span class="lab num-a">몇 배 (뒤 수)</span>
+          <button class="stepbtn" onclick="p2Step('a',-1)">−</button>
+          <input type="range" id="p2a" min="1" max="10" value="3" oninput="p2Draw(true)">
+          <button class="stepbtn" onclick="p2Step('a',1)">+</button>
+          <span class="val num-a" id="p2av">3</span>
+        </div>
       </div>
       <div class="flipbox">
-        <span class="fx" id="p2fx1"></span><span class="swap">⇄</span><span class="fx" id="p2fx2"></span>
+        <span class="fx" id="p2fx1"></span><span class="swap">=</span><span class="fx" id="p2fx2"></span>
       </div>
       <div class="groupwrap" id="p2groups"></div>
       <div class="langgrid">
         <div class="langcard" onclick="p2Say('mul')"><span class="lc-tag lc-mul">곱셈식</span><div class="lc-txt" id="p2mul"></div></div>
-        <div class="langcard" onclick="p2Say('bae')"><span class="lc-tag lc-add">배(倍)</span><div class="lc-txt" id="p2bae"></div></div>
-        <div class="langcard" onclick="p2Say('en1')"><span class="lc-tag lc-en">영어 · times</span><div class="lc-txt" id="p2en1"></div></div>
-        <div class="langcard" onclick="p2Say('ko2')"><span class="lc-tag lc-ko">우리말 · 묶음</span><div class="lc-txt" id="p2ko2"></div></div>
+        <div class="langcard" onclick="p2Say('bae')"><span class="lc-tag lc-add">배(倍)로</span><div class="lc-txt" id="p2bae"></div></div>
+        <div class="langcard" onclick="p2Say('ko2')"><span class="lc-tag lc-ko">묶음으로</span><div class="lc-txt" id="p2ko2"></div></div>
+        <div class="langcard" onclick="p2Say('read')"><span class="lc-tag lc-ko">읽는 법</span><div class="lc-txt" id="p2read"></div></div>
         <div class="langcard" onclick="p2Say('add')"><span class="lc-tag lc-add">덧셈식</span><div class="lc-txt" id="p2add" style="font-size:19px"></div></div>
         <div class="langcard" onclick="p2Say('val')"><span class="lc-tag lc-ko">값</span><div class="lc-txt" id="p2val"></div></div>
       </div>
@@ -593,13 +603,13 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
     <div class="nav"><button class="prev" onclick="go(1)">이전</button><button class="next" onclick="go(3)">다음 →</button></div>
   </section>
 
-  <!-- ===== P3 순서 뒤집기 ===== -->
-  <section class="pg" data-title="순서 뒤집기">
+  <!-- ===== P3 같은 값, 다른 그림 ===== -->
+  <section class="pg" data-title="같은 값 다른 그림">
     <div class="card">
-      <div class="pg-head"><span class="step-pill">활동 2</span><span class="pg-title">순서를 바꿔 말해요</span></div>
-      <div class="pg-desc">아래 곱셈식을 <b>배(倍)</b>로 바르게 옮긴 것을 고르세요. 두 숫자의 <b>순서</b>를 잘 보세요!</div>
-      <div class="eqline" id="p3q" style="font-size:40px;margin:10px 0 4px"></div>
-      <div class="groupwrap" id="p3pic"></div>
+      <div class="pg-head"><span class="step-pill">활동 2</span><span class="pg-title">답은 같아도 그림은 달라요</span></div>
+      <div class="pg-desc">아래 식에 <b>맞는 그림</b>을 고르세요. 두 그림의 <b>개수는 똑같지만</b> 묶음이 달라요!</div>
+      <div class="eqline" id="p3q" style="font-size:40px;margin:10px 0 2px"></div>
+      <div class="qsub" id="p3sub"></div>
       <div class="pick2" id="p3opts"></div>
       <div class="row" style="margin-top:12px"><button class="speak-btn" onclick="p3Say()">🔊 식 읽어주기</button></div>
       <div class="feedback" id="p3fb"></div>
@@ -628,7 +638,7 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
   <section class="pg" data-title="동물 도감">
     <div class="card">
       <div class="pg-head"><span class="step-pill">활동 4</span><span class="pg-title">한 마리에 몇 개일까?</span></div>
-      <div class="pg-desc">동물을 눌러 <b>한 마리의 개수</b>를 확인해요. 이 수가 곱셈의 <b class="num-b">주황 숫자</b>가 됩니다.</div>
+      <div class="pg-desc">동물을 눌러 <b>한 마리의 개수</b>를 확인해요. 이 수가 곱셈식의 <b class="num-b">앞 수(주황)</b>가 됩니다.</div>
       <div class="zoo" id="p5zoo"></div>
       <div class="feedback" id="p5fb"></div>
       <div class="progress-mini" id="p5prog"></div>
@@ -640,12 +650,12 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
   <section class="pg" data-title="동물 곱셈">
     <div class="card">
       <div class="pg-head"><span class="step-pill">활동 5</span><span class="pg-title">동물의 수를 곱셈으로 세요</span></div>
-      <div class="pg-desc"><b class="num-a">몇 마리</b>인지 먼저, <b class="num-b">한 마리에 몇 개</b>인지 그 다음에 써요.</div>
+      <div class="pg-desc"><b class="num-b">한 마리에 몇 개</b>인지 먼저, <b class="num-a">몇 마리</b>인지 그 다음에 써요.</div>
       <div class="qhead" id="p6q"></div>
       <div class="qrow" id="p6pic"></div>
       <div class="qsub" id="p6sub"></div>
       <div class="eqinput">
-        <input class="a" id="p6a" inputmode="numeric" maxlength="2"> × <input class="b" id="p6b" inputmode="numeric" maxlength="2"> = <input id="p6c" inputmode="numeric" maxlength="3">
+        <input class="b" id="p6b" inputmode="numeric" maxlength="2"> × <input class="a" id="p6a" inputmode="numeric" maxlength="2"> = <input id="p6c" inputmode="numeric" maxlength="3">
       </div>
       <div class="row" style="margin-top:14px">
         <button class="big-btn" onclick="p6Check()">확인</button>
@@ -666,7 +676,7 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
       <div class="qhead" id="p7q"></div>
       <div class="qrow" id="p7pic"></div>
       <div class="pick2" id="p7opts"></div>
-      <div class="zerocard" id="p7note">🐟 물고기에게는 날개가 없어요. 그래도 “없다”를 <b>0</b>이라는 수로 쓸 수 있어요.</div>
+      <div class="zerocard" id="p7note"></div>
       <div class="feedback" id="p7fb"></div>
       <div class="progress-mini" id="p7prog"></div>
     </div>
@@ -677,7 +687,7 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
   <section class="pg" data-title="배 문장 완성">
     <div class="card">
       <div class="pg-head"><span class="step-pill">활동 7</span><span class="pg-title">배 문장을 완성해요</span></div>
-      <div class="pg-desc">빈칸을 눌러 고른 뒤, 아래 카드에서 알맞은 수를 눌러요. <b>순서</b>를 조심하세요!</div>
+      <div class="pg-desc">빈칸을 눌러 고른 뒤, 아래 카드에서 알맞은 수를 눌러요.</div>
       <div class="fillbox" id="p8box"></div>
       <div class="chips" id="p8chips"></div>
       <div class="row" style="margin-top:14px"><button class="speak-btn" onclick="p8Say()">🔊 문장 듣기</button></div>
@@ -698,9 +708,9 @@ body.sim-synced .sim-controls{pointer-events:none;opacity:.75}
         <div style="font-size:16px;font-weight:800;color:var(--oc-blue-d)" id="p9msg"></div>
       </div>
       <div class="recap">
-        <span class="num-a">3</span> × <span class="num-b">2</span> 는<br>
-        “<span class="num-b">2</span>의 <span class="num-a">3</span>배” = “<span class="num-a">3</span>묶음 <span class="num-b">2</span>씩” = “<span class="num-a">3</span> times <span class="num-b">2</span>”<br>
-        <span style="font-size:14px;color:var(--oc-coral)">배로 말할 땐 순서가 바뀐다는 것, 잊지 마세요!</span>
+        <span class="num-b">2</span> × <span class="num-a">3</span> 은<br>
+        “<span class="num-b">2</span>의 <span class="num-a">3</span>배” = “<span class="num-b">2</span>씩 <span class="num-a">3</span>묶음” = “<span class="num-b">2</span>를 <span class="num-a">3</span>번 더하기”<br>
+        <span style="font-size:14px;color:var(--oc-coral)">앞 수는 한 묶음 크기, 뒤 수는 몇 배!</span>
       </div>
       <div class="self-check" id="p9self"></div>
       <div class="row" style="margin-top:14px"><button class="speak-btn" onclick="p9Say()">🔊 오늘의 문장 말하기</button></div>
@@ -727,6 +737,9 @@ const SINO=['영','일','이','삼','사','오','육','칠','팔','구'];
 function sinoLast(n){ n=Math.abs(Math.round(n)); if(n>=10 && n%10===0) return '십'; return SINO[n%10]; }
 function hasJong(ch){ const c=ch.charCodeAt(0)-0xAC00; return c>=0 && c<11172 && (c%28)!==0; }
 function eul(n){ return hasJong(sinoLast(n))?'을':'를'; }
+/* 한국 교과서 관례: 곱셈식은 '한 묶음 크기 × 몇 배' 순서로 쓴다 (2씩 3묶음 = 2 × 3) */
+function EQ(a,b){ return '<span class="num-b">'+b+'</span> × <span class="num-a">'+a+'</span>'; }
+function eqTxt(a,b){ return b+' × '+a; }
 function say(text, lang){ try{ speechSynthesis.cancel(); const u=new SpeechSynthesisUtterance(text);
   u.lang=lang||'ko-KR'; u.rate=0.88; speechSynthesis.speak(u);}catch(e){} }
 
@@ -793,12 +806,12 @@ function p1Render(){ const t=P1[p1i]; let s='';
   el('p1eq').innerHTML = p1n? '<span class="num-b">'+t.b+'</span>의 <span class="num-a">'+p1n+'</span>배 = '+(t.b*p1n) : '&nbsp;';
 }
 function p1Add(){ const t=P1[p1i];
-  if(p1n>=t.a){ el('p1fb').textContent='앗, '+t.a+'배를 넘었어요! 되돌리기를 눌러요 ↩'; el('p1fb').className='feedback bad'; sfx('no'); recWrong('bae',t.a+'배 '+t.b); return; }
+  if(p1n>=t.a){ el('p1fb').textContent='앗, '+t.a+'배를 넘었어요! 되돌리기를 눌러요 ↩'; el('p1fb').className='feedback bad'; sfx('no'); recWrong('bae',t.b+'의 '+t.a+'배'); return; }
   p1n++; sfx('tick'); p1Render();
   if(p1n===t.a){
-    el('p1fb').innerHTML='🎉 <span class="num-b">'+t.b+'</span>의 <span class="num-a">'+t.a+'</span>배 = <span class="num-a">'+t.a+'</span> × <span class="num-b">'+t.b+'</span> = '+(t.a*t.b);
+    el('p1fb').innerHTML='🎉 <span class="num-b">'+t.b+'</span>의 <span class="num-a">'+t.a+'</span>배 = '+EQ(t.a,t.b)+' = '+(t.a*t.b);
     el('p1fb').className='feedback good'; sfx('ok');
-    say(t.b+'의 '+t.a+'배는, '+t.a+' 곱하기 '+t.b+', '+(t.a*t.b));
+    say(t.b+'의 '+t.a+'배는, '+t.b+' 곱하기 '+t.a+', '+(t.a*t.b));
     if(!p1done.has(p1i)){ p1done.add(p1i); bump(); recCorrect('bae',rtNow()); }
     setTimeout(()=>{ if(p1i<P1.length-1){ p1i++; p1Load(); } else el('p1fb').textContent='🌟 모두 만들었어요! 다음으로 가요'; },1800);
   }
@@ -810,8 +823,8 @@ function p1Prog(){ el('p1prog').textContent='문제 '+(p1i+1)+' / '+P1.length+' 
 /* ---------- P2 배 변환기 ---------- */
 const P2M=[
   {a:3,b:5,txt:'“5의 3배”가 되게 만들어 보세요'},
-  {a:4,b:2,txt:'“2의 4배”를 만들어 보세요'},
-  {a:6,b:3,txt:'곱셈식 “6 × 3”을 만들어 보세요'}
+  {a:4,b:2,txt:'“2씩 4묶음”을 만들어 보세요'},
+  {a:6,b:3,txt:'곱셈식 “3 × 6”을 만들어 보세요'}
 ];
 let p2mi=0, p2done=new Set();
 function initP2(){ p2mi=0; p2done.clear(); el('p2mission').textContent=P2M[0].txt; p2Draw(false); p2Prog(); }
@@ -822,73 +835,76 @@ function p2Draw(user){ const {a,b}=p2Val();
   const A='<span class="num-a">'+a+'</span>', B='<span class="num-b">'+b+'</span>';
   let s=''; for(let i=0;i<a;i++) s+='<div class="bstep">'+groupHTML(b)+'<span class="cap">'+(i+1)+'배</span></div>';
   el('p2groups').innerHTML=s;
-  el('p2fx1').innerHTML=A+' × '+B;
+  el('p2fx1').innerHTML=B+'씩 '+A+'묶음';
   el('p2fx2').innerHTML=B+'의 '+A+'배';
-  el('p2mul').innerHTML=A+' × '+B;
+  el('p2mul').innerHTML=EQ(a,b);
   el('p2bae').innerHTML=B+'의 '+A+'배';
-  el('p2en1').innerHTML=A+' times '+B;
-  el('p2ko2').innerHTML=A+'묶음 '+B+'씩';
+  el('p2ko2').innerHTML=B+'씩 '+A+'묶음';
+  el('p2read').innerHTML=B+' 곱하기 '+A;
   el('p2add').innerHTML=Array(a).fill('<span class="num-b">'+b+'</span>').join(' + ');
-  el('p2val').innerHTML=A+' × '+B+' = '+(a*b);
+  el('p2val').innerHTML=EQ(a,b)+' = '+(a*b);
   if(user && IS_HOST && simSync) publishSim();
 }
 function p2Say(k){ const {a,b}=p2Val();
   if(k==='bae') say(b+'의 '+a+'배');
-  else if(k==='en1') say(a+' times '+b,'en-US');
-  else if(k==='ko2') say(a+'묶음 '+b+'씩');
+  else if(k==='ko2') say(b+'씩 '+a+'묶음');
+  else if(k==='read') say(b+' 곱하기 '+a);
   else if(k==='add') say(b+eul(b)+' '+a+'번 더하기');
-  else if(k==='val') say(a+' 곱하기 '+b+'는 '+(a*b));
-  else say(a+' 곱하기 '+b);
+  else if(k==='val') say(b+' 곱하기 '+a+'는 '+(a*b));
+  else say(b+' 곱하기 '+a);
 }
 function p2Check(){ const {a,b}=p2Val(); const m=P2M[p2mi];
   if(a===m.a && b===m.b){
-    el('p2fb').innerHTML='🎉 맞아요! 곱셈식과 배 표현은 <b>순서가 반대</b>예요.'; el('p2fb').className='feedback good'; sfx('ok');
+    el('p2fb').innerHTML='🎉 맞아요! 같은 그림을 여러 가지 우리말로 부를 수 있어요.'; el('p2fb').className='feedback good'; sfx('ok');
     if(!p2done.has(p2mi)){ p2done.add(p2mi); bump(); recCorrect('convert',rtNow()); }
     setTimeout(()=>{ if(p2mi<P2M.length-1){ p2mi++; el('p2mission').textContent=P2M[p2mi].txt; el('p2fb').textContent=''; markQ(); }
       else el('p2fb').textContent='🌟 변환기 미션 완료!'; p2Prog(); },1600);
   }else{
-    el('p2fb').innerHTML='조금 달라요. “<b>△의 ○배</b>”에서 <b>○</b>가 파란 숫자(몇 배)예요.'; el('p2fb').className='feedback bad'; sfx('no');
+    el('p2fb').innerHTML='조금 달라요. “<b class="num-b">△</b>의 <b class="num-a">○</b>배”에서 <b class="num-b">△</b>가 한 묶음 크기예요.'; el('p2fb').className='feedback bad'; sfx('no');
     recWrong('convert',m.b+'의 '+m.a+'배');
   }
 }
 function p2Prog(){ el('p2prog').textContent='미션 '+Math.min(p2mi+1,P2M.length)+' / '+P2M.length+' · 성공 '+p2done.size; }
 
-/* ---------- P3 순서 뒤집기 ---------- */
+/* ---------- P3 같은 값, 다른 그림 ---------- */
 const P3=[{a:3,b:2},{a:5,b:4},{a:2,b:7},{a:6,b:3},{a:4,b:9}];
 let p3i=0, p3done=new Set();
 function initP3(){ p3i=0; p3done.clear(); p3Load(); }
+function p3PicHTML(size,cnt){ let s='<div class="miniwrap">';
+  for(let i=0;i<cnt;i++) s+=groupHTML(size);
+  return s+'</div>'; }
 function p3Load(){ const t=P3[p3i];
-  el('p3q').innerHTML='<span class="num-a">'+t.a+'</span> × <span class="num-b">'+t.b+'</span>';
-  let s=''; for(let i=0;i<t.a;i++) s+=groupHTML(t.b); el('p3pic').innerHTML=s;
-  const right='<span class="num-b">'+t.b+'</span>의 <span class="num-a">'+t.a+'</span>배';
-  const wrong='<span class="num-a">'+t.a+'</span>의 <span class="num-b">'+t.b+'</span>배';
+  el('p3q').innerHTML=EQ(t.a,t.b);
+  el('p3sub').innerHTML='“<b class="num-b">'+t.b+'</b>의 <b class="num-a">'+t.a+'</b>배”에 맞는 그림은?';
+  const right='<div class="picopt">'+p3PicHTML(t.b,t.a)+'<span class="cap2">'+t.b+'씩 '+t.a+'묶음</span></div>';
+  const wrong='<div class="picopt">'+p3PicHTML(t.a,t.b)+'<span class="cap2">'+t.a+'씩 '+t.b+'묶음</span></div>';
   const opts=Math.random()<0.5?[[right,1],[wrong,0]]:[[wrong,0],[right,1]];
-  el('p3opts').innerHTML=opts.map(o=>'<button class="pickbtn" onclick="p3Ans(this,'+o[1]+')">'+o[0]+'</button>').join('');
+  el('p3opts').innerHTML=opts.map(o=>'<button class="pickbtn pic" onclick="p3Ans(this,'+o[1]+')">'+o[0]+'</button>').join('');
   el('p3fb').textContent=''; el('p3fb').className='feedback'; p3Prog(); markQ();
 }
 function p3Ans(btn,ok){ const t=P3[p3i];
   if(ok){ btn.classList.add('ok');
-    el('p3fb').innerHTML='🎉 맞아요! <span class="num-b">'+t.b+'</span>가 <span class="num-a">'+t.a+'</span>번 거듭되었어요.';
-    el('p3fb').className='feedback good'; sfx('ok'); say(t.b+'의 '+t.a+'배');
-    if(!p3done.has(p3i)){ p3done.add(p3i); bump(); recCorrect('order',rtNow()); }
-    setTimeout(()=>{ if(p3i<P3.length-1){ p3i++; p3Load(); } else el('p3fb').textContent='🌟 순서를 모두 맞혔어요!'; },1800);
+    el('p3fb').innerHTML='🎉 맞아요! <span class="num-b">'+t.b+'</span>개짜리 묶음이 <span class="num-a">'+t.a+'</span>개예요.';
+    el('p3fb').className='feedback good'; sfx('ok'); say(t.b+'의 '+t.a+'배, '+t.b+'씩 '+t.a+'묶음');
+    if(!p3done.has(p3i)){ p3done.add(p3i); bump(); recCorrect('picture',rtNow()); }
+    setTimeout(()=>{ if(p3i<P3.length-1){ p3i++; p3Load(); } else el('p3fb').textContent='🌟 그림을 모두 찾았어요!'; },1900);
   }else{ btn.classList.add('no'); setTimeout(()=>btn.classList.remove('no'),500);
-    el('p3fb').innerHTML='순서가 바뀌었어요. 묶음 <b class="num-b">안의 수</b>가 먼저 나와요 → “'+t.b+'의 …배”';
-    el('p3fb').className='feedback bad'; sfx('no'); recWrong('order',t.a+'×'+t.b); }
+    el('p3fb').innerHTML='개수는 같지만 묶음이 달라요! <b class="num-b">'+t.b+'</b>개씩 묶은 그림을 찾아요.';
+    el('p3fb').className='feedback bad'; sfx('no'); recWrong('picture',eqTxt(t.a,t.b)); }
 }
-function p3Say(){ const t=P3[p3i]; say(t.a+' 곱하기 '+t.b); }
+function p3Say(){ const t=P3[p3i]; say(t.b+' 곱하기 '+t.a+', '+t.b+'의 '+t.a+'배'); }
 function p3Prog(){ el('p3prog').textContent='문제 '+(p3i+1)+' / '+P3.length+' · 맞힘 '+p3done.size; }
 
 /* ---------- P4 배 퍼즐 ---------- */
-const P4=[{a:3,b:2,k:'bae'},{a:4,b:5,k:'en1'},{a:2,b:6,k:'add'},{a:5,b:3,k:'bae'},{a:7,b:2,k:'ko2'},{a:3,b:4,k:'pic'}];
+const P4=[{a:3,b:2,k:'bae'},{a:4,b:5,k:'ko2'},{a:2,b:6,k:'add'},{a:5,b:3,k:'bae'},{a:7,b:2,k:'read'},{a:3,b:4,k:'pic'}];
 function miniPic(a,b){ let s='<span class="mini">';
   for(let i=0;i<a;i++) s+='<span class="mgrp'+(b===1?' one':'')+'">'+'<i></i>'.repeat(b)+'</span>';
   return s+'</span>'; }
 function langText(a,b,k){
   if(k==='pic') return miniPic(a,b);
   if(k==='bae') return b+'의 '+a+'배';
-  if(k==='ko2') return a+'묶음 '+b+'씩';
-  if(k==='en1') return a+' times '+b;
+  if(k==='ko2') return b+'씩 '+a+'묶음';
+  if(k==='read') return b+' 곱하기 '+a;
   return Array(a).fill(b).join(' + ');
 }
 const PAIR_COLORS=['#E58A4E','#5FAE93','#7E6BC4','#4A78C4','#D2688A','#3FA3B8'];
@@ -901,7 +917,7 @@ function initP4(){ p4done=0; p4laid=false; p4drag=null;
   el('p4boxGrid').innerHTML='<span class="pb-empty">맞춘 퍼즐이 여기에 모여요</span>';
   el('p4fb').textContent=''; el('p4fb').className='feedback'; p4Prog();
   const wrap=el('p4pool'); wrap.innerHTML='';
-  const items=[]; P4.forEach((x,i)=>{ items.push({i,side:'L',txt:x.a+' × '+x.b}); items.push({i,side:'R',txt:langText(x.a,x.b,x.k)}); });
+  const items=[]; P4.forEach((x,i)=>{ items.push({i,side:'L',txt:eqTxt(x.a,x.b)}); items.push({i,side:'R',txt:langText(x.a,x.b,x.k)}); });
   items.sort(()=>Math.random()-0.5);
   items.forEach(it=>{ const d=document.createElement('div');
     d.className='tile '+it.side+(P4[it.i].k==='pic'&&it.side==='R'?' pic':'');
@@ -970,7 +986,7 @@ function p4Snap(a,b){ const L=a.dataset.side==='L'?a:b, R=a.dataset.side==='L'?b
   if(!SYNC_APPLY){ bump(); recCorrect('match',rtNow()); }   /* 선생님 화면을 따라 붙은 건 점수로 세지 않는다 */
   const it=P4[idx];
   el('p4fb').innerHTML='🧩 찰칵! 같은 뜻이에요.'; el('p4fb').className='feedback good';
-  say(it.a+' 곱하기 '+it.b+'는 '+langText(it.a,it.b,(it.k==='en1'||it.k==='en2'||it.k==='pic')?'ko2':it.k));
+  say(it.b+' 곱하기 '+it.a+'는 '+langText(it.a,it.b,it.k==='pic'?'ko2':it.k));
   setTimeout(()=>{ [L,R].forEach(n=>n.classList.add('fly'));
     setTimeout(()=>{ L.remove(); R.remove();
       const grid=el('p4boxGrid'); const empty=grid.querySelector('.pb-empty'); if(empty) empty.remove();
@@ -1038,12 +1054,12 @@ function p6Check(){ const x=P6[p6i]; const a=+el('p6a').value, b=+el('p6b').valu
     if(!p6done.has(p6i)){ p6done.add(p6i); bump(); recCorrect('animal',rtNow()); }
     setTimeout(()=>{ if(p6i<P6.length-1){ p6i++; p6Load(); } else el('p6fb').textContent='🌟 동물 문제를 다 풀었어요!'; },1600);
   }else{
-    el('p6fb').innerHTML='초록 칸만 맞아요. <b class="num-a">몇 '+p6Unit(x)+'</b>인지 먼저 세어 봐요.';
+    el('p6fb').innerHTML='초록 칸만 맞아요. <b class="num-b">한 '+p6Unit(x)+'에 몇 개</b>인지 먼저 봐요.';
     el('p6fb').className='feedback bad'; sfx('no'); recWrong('animal',x.n+' '+x.cnt+p6Unit(x));
   }
 }
 function p6Hint(){ const x=P6[p6i];
-  el('p6fb').innerHTML='💡 '+x.n+'가 <b class="num-a">'+x.cnt+'</b>'+p6Unit(x)+', 한 '+p6Unit(x)+'에 '+x.p+'가 <b class="num-b">'+x.per+'</b>개예요.';
+  el('p6fb').innerHTML='💡 한 '+p6Unit(x)+'에 '+x.p+'가 <b class="num-b">'+x.per+'</b>개, '+x.n+'가 <b class="num-a">'+x.cnt+'</b>'+p6Unit(x)+'예요.';
   el('p6fb').className='feedback'; }
 function p6Say(){ const x=P6[p6i]; say(x.n+' '+x.cnt+p6Unit(x)+'의 '+x.p+' 수'); }
 function p6Prog(){ el('p6prog').textContent='문제 '+(p6i+1)+' / '+P6.length+' · 완성 '+p6done.size; }
@@ -1052,12 +1068,12 @@ function p6Prog(){ el('p6prog').textContent='문제 '+(p6i+1)+' / '+P6.length+' 
 const P7=[
   {n:'물고기',e:'🐟',p:'날개',per:0,cnt:2,note:'🐟 물고기에게는 날개가 없어요. 한 마리에 0개면, 몇 마리가 있어도 <b>0</b>이에요.'},
   {n:'지렁이',e:'🪱',p:'다리',per:0,cnt:10,note:'🪱 지렁이도 다리가 없어요. 10마리가 모여도 다리는 <b>0</b>개!'},
-  {n:'고양이',e:'🐈',p:'심장',per:1,cnt:8,note:'🐈 한 마리에 1개면, 마리 수가 그대로 답이 돼요. 8 × 1 = <b>8</b>'}
+  {n:'고양이',e:'🐈',p:'심장',per:1,cnt:8,note:'🐈 한 마리에 1개면, 마리 수가 그대로 답이 돼요. 1 × 8 = <b>8</b>'}
 ];
 let p7i=0, p7done=new Set();
 function initP7(){ p7i=0; p7done.clear(); p7Load(); }
 function p7Load(){ const x=P7[p7i];
-  el('p7q').innerHTML=x.n+' <span class="num-a">'+x.cnt+'</span>마리의 '+x.p+' 수 = <span class="num-a">'+x.cnt+'</span> × <span class="num-b">'+x.per+'</span> = ?';
+  el('p7q').innerHTML=x.n+' <span class="num-a">'+x.cnt+'</span>마리의 '+x.p+' 수 = '+EQ(x.cnt,x.per)+' = ?';
   el('p7pic').innerHTML=Array(Math.min(x.cnt,10)).fill('<span>'+x.e+'</span>').join('');
   el('p7note').innerHTML='어떤 답일까요? 먼저 골라 보세요.';
   const right=x.cnt*x.per;
@@ -1070,12 +1086,12 @@ function p7Load(){ const x=P7[p7i];
 function p7Ans(btn,v){ const x=P7[p7i]; const right=x.cnt*x.per;
   if(v===right){ btn.classList.add('ok'); el('p7note').innerHTML=x.note;
     el('p7fb').textContent='🎉 맞아요!'; el('p7fb').className='feedback good'; sfx('ok');
-    say(x.cnt+' 곱하기 '+x.per+'는 '+right);
+    say(x.per+' 곱하기 '+x.cnt+'는 '+right);
     if(!p7done.has(p7i)){ p7done.add(p7i); bump(); recCorrect('zeroone',rtNow()); }
     setTimeout(()=>{ if(p7i<P7.length-1){ p7i++; p7Load(); } else el('p7fb').textContent='🌟 0과 1의 비밀을 알았어요!'; },2400);
   }else{ btn.classList.add('no'); setTimeout(()=>btn.classList.remove('no'),500);
     el('p7fb').innerHTML='다시 볼까요? 한 마리에 <b class="num-b">'+x.per+'</b>개예요.';
-    el('p7fb').className='feedback bad'; sfx('no'); recWrong('zeroone',x.cnt+'×'+x.per); }
+    el('p7fb').className='feedback bad'; sfx('no'); recWrong('zeroone',eqTxt(x.cnt,x.per)); }
 }
 function p7Prog(){ el('p7prog').textContent='문제 '+(p7i+1)+' / '+P7.length+' · 맞힘 '+p7done.size; }
 
@@ -1090,7 +1106,7 @@ function p8Load(){ p8slot=0; p8fill=[null,null]; p8Render();
 }
 function p8Render(){ const t=P8[p8i];
   const s1=p8fill[0]===null?'?':p8fill[0], s2=p8fill[1]===null?'?':p8fill[1];
-  el('p8box').innerHTML='<span class="num-a">'+t.a+'</span> × <span class="num-b">'+t.b+'</span> &nbsp;=&nbsp; '+
+  el('p8box').innerHTML=EQ(t.a,t.b)+' &nbsp;=&nbsp; '+
     '<span class="blank'+(p8slot===0?' on':'')+(p8fill[0]!==null?' ok':'')+'" onclick="p8Slot(0)">'+s1+'</span>의 '+
     '<span class="blank'+(p8slot===1?' on':'')+(p8fill[1]!==null?' ok':'')+'" onclick="p8Slot(1)">'+s2+'</span>배';
 }
@@ -1099,11 +1115,11 @@ function p8Put(v,btn){ const t=P8[p8i]; p8fill[p8slot]=v; btn.classList.add('use
   p8slot = p8slot===0?1:0; p8Render();
   if(p8fill[0]!==null&&p8fill[1]!==null){
     if(p8fill[0]===t.b&&p8fill[1]===t.a){
-      el('p8fb').textContent='🎉 순서까지 정확해요!'; el('p8fb').className='feedback good'; sfx('ok'); p8Say();
+      el('p8fb').textContent='🎉 배 문장을 완성했어요!'; el('p8fb').className='feedback good'; sfx('ok'); p8Say();
       if(!p8done.has(p8i)){ p8done.add(p8i); bump(); recCorrect('fill',rtNow()); }
       setTimeout(()=>{ if(p8i<P8.length-1){ p8i++; p8Load(); } else el('p8fb').textContent='🌟 문장을 다 만들었어요!'; },2000);
     }else{
-      el('p8fb').innerHTML='배 문장은 <b class="num-b">뒤 숫자</b>가 먼저 와요. 다시 해볼까요?'; el('p8fb').className='feedback bad'; sfx('no');
+      el('p8fb').innerHTML='곱셈식의 <b class="num-b">앞 수</b>가 “○의”, <b class="num-a">뒤 수</b>가 “○배”예요.'; el('p8fb').className='feedback bad'; sfx('no');
       recWrong('fill',t.b+'의 '+t.a+'배');
       setTimeout(()=>{ p8fill=[null,null]; p8slot=0; document.querySelectorAll('#p8chips .chip').forEach(c=>c.classList.remove('used')); p8Render(); },900);
     }
@@ -1113,7 +1129,7 @@ function p8Say(){ const t=P8[p8i]; say(t.b+'의 '+t.a+'배'); }
 function p8Prog(){ el('p8prog').textContent='문장 '+(p8i+1)+' / '+P8.length+' · 완성 '+p8done.size; }
 
 /* ---------- P9 마무리 ---------- */
-const SELF=['곱하기를 “배”로 말할 수 있어요','배로 말할 때 순서가 바뀌는 걸 알았어요','동물의 다리·날개 수를 곱셈으로 셀 수 있어요'];
+const SELF=['곱하기를 “배”로 말할 수 있어요','앞 수와 뒤 수가 하는 일이 다른 걸 알았어요','동물의 다리·날개 수를 곱셈으로 셀 수 있어요'];
 function p9Render(){
   const total=SESSION.c;
   el('p9score').textContent=total;
@@ -1128,7 +1144,7 @@ function p9Render(){
 }
 function p9Star(i,n){ const wrap=document.querySelector('.stars[data-i="'+i+'"]');
   wrap.querySelectorAll('.star').forEach((s,k)=>s.classList.toggle('lit',k<n)); sfx('tick'); }
-function p9Say(){ say('3 곱하기 2는, 2의 3배, 쓰리 타임즈 투'); }
+function p9Say(){ say('2 곱하기 3은, 2의 3배, 2씩 3묶음'); }
 
 /* ================= 판서(화이트보드) =================
    좌표는 화면 폭으로 나눈 비율(0~1)로 저장 → 선생님·학생 화면 크기가 달라도 같은 위치에 그려진다.
@@ -1266,7 +1282,7 @@ function applyActState(st){ SYNC_APPLY=true; try{
   /* P2 배 변환기 */
   if(st.p2){ el('p2a').value=st.p2.a; el('p2b').value=st.p2.b; p2Draw(false);
     if(P2M[st.p2.m]){ p2mi=st.p2.m; el('p2mission').textContent=P2M[p2mi].txt; } }
-  /* P3 순서 뒤집기 */
+  /* P3 같은 값, 다른 그림 */
   if(st.p3 && st.p3.i!==p3i){ p3i=st.p3.i; p3Load(); }
   /* P4 퍼즐 — 선생님이 맞춘 쌍을 학생 화면에서도 자동으로 붙인다 */
   if(Array.isArray(st.p4)) st.p4.forEach(i=>{
