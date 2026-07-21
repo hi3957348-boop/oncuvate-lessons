@@ -1,0 +1,43 @@
+{
+  "name": "work-organizer",
+  "productName": "업무정리",
+  "version": "0.1.0",
+  "description": "윈도우용 원노트형 업무·법령/규정 정리 프로그램 (완전 포터블)",
+  "main": "src/main.js",
+  "scripts": {
+    "start": "electron .",
+    "build:win": "electron-builder --win portable --publish never",
+    "build:win:setup": "electron-builder --win nsis --publish never",
+    "dist": "electron-builder --win --publish never"
+  },
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "electron": "^31.0.0",
+    "electron-builder": "^24.13.3"
+  },
+  "build": {
+    "appId": "com.oncuvate.workorganizer",
+    "productName": "업무정리",
+    "files": [
+      "src/**/*",
+      "package.json"
+    ],
+    "portable": {
+      "artifactName": "업무정리-${version}-portable.exe"
+    },
+    "nsis": {
+      "artifactName": "업무정리-${version}-setup.exe",
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    },
+    "win": {
+      "target": [
+        "portable"
+      ]
+    },
+    "directories": {
+      "output": "dist"
+    }
+  }
+}

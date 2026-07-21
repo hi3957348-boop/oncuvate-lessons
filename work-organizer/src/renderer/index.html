@@ -1,0 +1,74 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data:;" />
+  <title>업무정리</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <!-- 리본 툴바 -->
+  <header class="ribbon">
+    <div class="ribbon-brand"><span class="glyph">業</span> 업무정리</div>
+    <div class="ribbon-tabs">
+      <button class="tab on">홈</button>
+    </div>
+    <div class="ribbon-actions">
+      <button id="btnAddNotebook" class="qbtn">＋ 노트북</button>
+      <button id="btnAttach" class="qbtn">📎 문서 첨부</button>
+      <button id="btnAddRef" class="qbtn">🔗 참조 연결</button>
+      <button id="btnImport" class="qbtn">↧ 가져오기</button>
+      <button id="btnExport" class="qbtn primary">↥ 공유 파일 내보내기</button>
+    </div>
+  </header>
+
+  <!-- 본문 3단 -->
+  <main class="body">
+    <!-- ① 계층 트리 -->
+    <section class="nav">
+      <div class="col-head">노트북 <button id="btnAddNotebook2" class="mini-add" title="노트북 추가">＋</button></div>
+      <div id="tree" class="tree"></div>
+    </section>
+
+    <!-- ② 페이지 목록 -->
+    <section class="pages">
+      <div class="search"><div class="box">🔍 <input id="searchInput" type="text" placeholder="조문·규정 검색…" /></div></div>
+      <div class="col-head"><span id="pageListLabel">페이지</span> <button id="btnAddPage" class="mini-add" title="페이지 추가">＋</button></div>
+      <div id="pageList" class="plist"></div>
+    </section>
+
+    <!-- ③ 편집기 -->
+    <section class="editor">
+      <div id="crumb" class="crumb"></div>
+      <div id="doc" class="doc"></div>
+    </section>
+  </main>
+
+  <!-- 상태바 -->
+  <footer class="status">
+    <span id="statSaved" class="chip">저장됨</span>
+    <span id="statVer" class="chip"></span>
+    <span id="statRef" class="chip"></span>
+    <span class="spacer"></span>
+    <span id="statMode" class="chip"></span>
+    <span class="chip">프로그램 v0.1.0</span>
+  </footer>
+
+  <!-- 참조 호버 미리보기 팝업 (전역 1개, JS로 위치 이동) -->
+  <div id="refPop" class="refcard" hidden></div>
+
+  <!-- 모달 -->
+  <div id="modalWrap" class="modal-wrap" hidden>
+    <div class="modal">
+      <div id="modalTitle" class="modal-title"></div>
+      <div id="modalBody" class="modal-body"></div>
+      <div class="modal-foot">
+        <button id="modalCancel" class="qbtn">취소</button>
+        <button id="modalOk" class="qbtn primary">확인</button>
+      </div>
+    </div>
+  </div>
+
+  <script src="renderer.js"></script>
+</body>
+</html>
