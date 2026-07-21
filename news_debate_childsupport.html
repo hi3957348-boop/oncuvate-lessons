@@ -464,6 +464,60 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 .jig-pop-emoji{font-size:46px;line-height:1;margin-bottom:8px;}
 .jig-pop-msg{font-size:19px;font-weight:800;}
 @keyframes jigPopIn{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.08)}100%{transform:scale(1);opacity:1}}
+
+/* ── 스크래치 카드 ── */
+.scratch-wrap{display:inline-block;position:relative;vertical-align:middle;margin:0 3px;cursor:crosshair;}
+.scratch-text-layer{display:inline-block;background:var(--oc-gold-light);color:var(--oc-gold);border:1.5px solid var(--oc-gold);border-radius:6px;padding:2px 8px;font-size:13.5px;font-weight:800;white-space:nowrap;user-select:none;}
+.scratch-canvas{position:absolute;top:0;left:0;border-radius:6px;cursor:crosshair;touch-action:none;}
+/* ── 단락 진행 바 ── */
+.stg-bar{display:flex;gap:6px;flex-wrap:wrap;justify-content:center;margin:2px 0 14px;}
+.stg-chip{font-size:11.5px;font-weight:800;padding:5px 12px;border-radius:20px;background:var(--oc-bg);color:var(--oc-gray-light);border:1.5px solid var(--oc-border);}
+.stg-chip.on{background:var(--oc-purple);color:#fff;border-color:var(--oc-purple);}
+.stg-chip.done{background:var(--oc-success-bg);color:var(--oc-success);border-color:var(--oc-success);}
+.stg-go{margin:0!important;flex:1;min-width:180px;}
+/* ── 빈칸 ── */
+.qz-blank{display:inline-block;min-width:92px;text-align:center;border-bottom:3px solid #FFCD1D;color:rgba(255,255,255,.40);font-weight:900;letter-spacing:4px;padding:0 10px 2px;margin:0 4px;}
+.qz-card{position:relative;margin-top:12px;border-radius:20px;padding:16px 16px 18px;color:#fff;overflow:hidden;background-color:#552C8F;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px;box-shadow:0 8px 22px rgba(74,42,142,.34);}
+.qz-top{display:flex;justify-content:space-between;align-items:center;font-size:11px;font-weight:800;letter-spacing:1.2px;color:#D8C9EF;}
+.qz-badge{text-align:center;font-size:23px;font-weight:900;letter-spacing:1px;margin:8px 0 12px;}
+.qz-badge .q{color:#FF66C4;}.qz-badge .n{color:#FFCD1D;}
+.qz-question{text-align:center;font-size:18px;font-weight:800;line-height:1.5;color:#fff;margin:2px 6px 16px;text-shadow:0 2px 6px rgba(0,0,0,.28);}
+.qz-cho{display:flex;justify-content:center;gap:9px;flex-wrap:wrap;margin-bottom:16px;}
+.qz-cho-box{width:54px;height:54px;border-radius:14px;background:#FAFAFA;color:#3A2168;font-size:29px;font-weight:900;display:flex;align-items:center;justify-content:center;box-shadow:0 4px 0 rgba(0,0,0,.20);}
+.qz-answer{display:flex;gap:8px;max-width:440px;margin:0 auto;}
+.qz-input{flex:1;min-width:0;border:none;border-radius:12px;padding:12px 14px;font-family:inherit;font-size:15px;font-weight:700;color:#3A2168;background:#fff;}
+.qz-input:focus{outline:3px solid #FFCD1D;}
+.qz-btn{border:none;border-radius:12px;padding:12px 20px;font-family:inherit;font-size:15px;font-weight:900;color:#4E2A8E;background:#FFCD1D;cursor:pointer;box-shadow:0 4px 0 #C99E00;flex:0 0 auto;}
+.qz-btn:active{transform:translateY(2px);box-shadow:0 2px 0 #C99E00;}
+.qz-fb{margin-top:12px;text-align:center;border-radius:10px;font-weight:700;}
+.qz-fb.fb-neu{background:rgba(255,255,255,.16);color:#EFE8FB;border:none;}
+/* 한 문제씩 진행 + 스크래치 힌트 */
+.qz-card{display:none;}
+.qz-card.qz-active{display:block;}
+.qz-hintwrap{margin:16px auto 0;max-width:470px;text-align:center;}
+.qz-hintlabel{font-size:12px;font-weight:800;color:#FFCD1D;margin-bottom:7px;letter-spacing:.5px;}
+.qz-hint{display:inline-block;cursor:crosshair;max-width:100%;}
+.qz-hint .scratch-text-layer{display:inline-block;white-space:normal;background:#FFF7DC;color:#7A5A00;border:1.5px solid #F0D98A;border-radius:12px;padding:10px 14px;font-size:14px;font-weight:700;line-height:1.55;text-align:center;max-width:440px;}
+.qz-hint .scratch-canvas{border-radius:12px;}
+.qz-cardfb{margin-top:12px;text-align:center;font-weight:800;min-height:20px;font-size:14px;}
+.qz-cardfb.fb-good{color:#8FF3B0;}
+.qz-cardfb.fb-bad{color:#FFB0B0;}
+.qz-done{display:none;margin-top:12px;border-radius:20px;padding:28px 18px;text-align:center;color:#fff;background-color:#552C8F;background-image:linear-gradient(rgba(255,255,255,.07) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.07) 1px,transparent 1px);background-size:26px 26px;box-shadow:0 8px 22px rgba(74,42,142,.34);}
+.qz-done h3{font-size:22px;font-weight:900;margin-bottom:6px;}
+.qz-done p{color:#E4D8F7;font-size:14px;margin-bottom:15px;}
+.qz-done button{border:none;border-radius:12px;padding:11px 24px;font-family:inherit;font-weight:900;font-size:14px;color:#4E2A8E;background:#FFCD1D;cursor:pointer;box-shadow:0 4px 0 #C99E00;}
+/* 정답 축하 팝업 */
+.qz-pop{position:fixed;inset:0;z-index:130;display:none;align-items:center;justify-content:center;background:rgba(40,20,80,.45);backdrop-filter:blur(2px);-webkit-backdrop-filter:blur(2px);}
+.qz-pop.show{display:flex;}
+.qz-pop-card{position:relative;background:#fff;border-radius:24px;padding:26px 36px;text-align:center;box-shadow:0 18px 48px rgba(0,0,0,.32);animation:qzpop .5s cubic-bezier(.2,1.55,.4,1) both;overflow:visible;}
+.qz-pop-emoji{font-size:58px;line-height:1;animation:qzbounce .6s ease infinite alternate;}
+.qz-pop-title{font-size:32px;font-weight:900;color:#4E2A8E;margin-top:4px;letter-spacing:-.5px;}
+.qz-pop-word{font-size:17px;font-weight:800;color:#7A5A00;background:#FFF3CC;border-radius:12px;padding:6px 16px;margin-top:12px;display:inline-block;}
+.qz-pop-word:empty{display:none;}
+.qz-pop .cf{position:absolute;top:-12px;font-size:20px;pointer-events:none;animation:qzfall 1.2s ease-out forwards;}
+@keyframes qzpop{0%{transform:scale(0) rotate(-14deg);}100%{transform:scale(1) rotate(0);}}
+@keyframes qzbounce{from{transform:translateY(0);}to{transform:translateY(-9px);}}
+@keyframes qzfall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(150px) rotate(240deg);opacity:0;}}
 </style>
 
 <!-- Firebase (강사→학생 워드서치 힌트 동기화) -->
@@ -606,7 +660,7 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" disabled>← 이전</button>
-      <span class="nb-cnt">1 / 10</span>
+      <span class="nb-cnt">1 / 9</span>
       <button class="nb-btn nb-next" onclick="goTo(2)">다음 →</button>
     </div>
   </div>
@@ -628,7 +682,7 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" onclick="goTo(1)">← 이전</button>
-      <span class="nb-cnt">2 / 10</span>
+      <span class="nb-cnt">2 / 9</span>
       <button class="nb-btn nb-next" onclick="goTo(3)">다음 →</button>
     </div>
   </div>
@@ -664,7 +718,7 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" onclick="goTo(2)">← 이전</button>
-      <span class="nb-cnt">3 / 10</span>
+      <span class="nb-cnt">3 / 9</span>
       <button class="nb-btn nb-next" onclick="goTo(4)">다음 →</button>
     </div>
   </div>
@@ -672,9 +726,11 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
   <!-- ════ P4 · 기사읽기1 (유창하게 읽기) ════ -->
   <div class="pg" id="pg4">
     <div class="card">
-      <div class="tag">기사읽기 1 · 유창하게 읽기</div>
-      <div class="card-h">📖 기사를 <span class="accent">끊어</span> 읽어요</div>
-      <div class="pgdesc">읽기 수준을 고르고, <b>순서대로 눌러</b> 읽은 곳을 표시해요. 순서가 아니면 살짝 깜빡여요. 🖍 형광펜을 켜면 글자 위를 <b>드래그해서 칠할 수</b> 있어요.</div>
+      <div class="tag">기사읽기 1 · 단락별 읽기</div>
+      <div class="card-h">📖 한 단락 읽고 <span class="accent">빈칸 퀴즈</span>를 풀어요</div>
+      <div class="pgdesc">한 단락을 소리 내어 읽고, 방금 읽은 문장으로 <b>빈칸 퀴즈</b>를 풀어요. 빈칸엔 초성이 흐리게 적혀 있어요. 모르면 아래 힌트를 <b>긁어서</b> 정답을 확인하고 입력하면 돼요!</div>
+      <div class="stg-bar" id="stgBar"></div>
+      <div id="stgRead">
       <div class="rd-toolbar">
         <div class="rd-seg" id="rdSeg">
           <button data-lv="word">단어 단위</button>
@@ -691,37 +747,32 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
         <canvas class="rd-hl-canvas" id="rdHlCanvas"></canvas>
       </div>
       <div class="rd-hint" id="rdHint">글자를 <b>순서대로</b> 눌러 읽어요.</div>
-      <div style="display:flex;gap:8px;margin-top:10px;">
+      <div style="display:flex;gap:8px;margin-top:10px;flex-wrap:wrap;">
         <button class="btn-ghost" onclick="rdReset()">↺ 처음부터</button>
         <button class="btn-ghost" onclick="hlClear()">🧽 형광펜 지우기</button>
+        <button class="btn-primary stg-go" onclick="stgToQuiz()">✏️ 이 단락 퀴즈 풀기 →</button>
+      </div>
+      </div>
+
+      <div id="stgQuiz" style="display:none;">
+        <div id="qzHost"></div>
+        <div class="qz-done" id="qzDone">
+          <h3 id="qzDoneT">🎉 이 단락 퀴즈 완료!</h3>
+          <p id="qzDoneP">다음 단락을 읽으러 가요.</p>
+          <button onclick="stgNext()" id="qzDoneBtn">다음 단락 읽기 →</button>
+        </div>
       </div>
     </div>
 
     <div class="nav-bottom">
       <button class="nb-btn nb-prev" onclick="goTo(3)">← 이전</button>
-      <span class="nb-cnt">4 / 10</span>
+      <span class="nb-cnt">4 / 9</span>
       <button class="nb-btn nb-next" onclick="goTo(5)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P5 · 초성 퀴즈 ════ -->
+  <!-- ════ P5 · 기사읽기2 (질문 하이라이트) ════ -->
   <div class="pg" id="pg5">
-    <div class="card">
-      <div class="tag">초성 퀴즈</div>
-      <div class="card-h">🔤 초성을 보고 <span class="accent">낱말을 완성</span>해요</div>
-      <p class="pgdesc">초성과 뜻을 보고 칸에 <b>완성된 낱말</b>을 입력해요. 정답이면 초록색으로 바뀌어요. 잘 모를 땐 아래 회색 칸을 <b>문질러서(스크래치)</b> 정답을 확인할 수 있어요.</p>
-      <div id="choList"></div>
-      <div class="cho-fb" id="choFb"></div>
-    </div>
-    <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(4)">← 이전</button>
-      <span class="nb-cnt">5 / 10</span>
-      <button class="nb-btn nb-next" onclick="goTo(6)">다음 →</button>
-    </div>
-  </div>
-
-  <!-- ════ P6 · 기사읽기2 (질문 하이라이트) ════ -->
-  <div class="pg" id="pg6">
     <div class="card">
       <div class="tag">기사읽기 2 · 문제와 해결</div>
       <div class="card-h">🔎 질문을 누르면 <span class="accent">답이 보여요</span></div>
@@ -750,14 +801,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(5)">← 이전</button>
-      <span class="nb-cnt">6 / 10</span>
-      <button class="nb-btn nb-next" onclick="goTo(7)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(4)">← 이전</button>
+      <span class="nb-cnt">5 / 9</span>
+      <button class="nb-btn nb-next" onclick="goTo(6)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P7 · 복지제도 낱말 챌린지 ════ -->
-  <div class="pg" id="pg7">
+  <!-- ════ P6 · 복지제도 낱말 챌린지 ════ -->
+  <div class="pg" id="pg6">
     <div class="card">
       <div class="tag">낱말 챌린지</div>
       <div class="card-h">🎯 음소를 모아 <span class="accent">낱말을 완성</span>해요</div>
@@ -795,14 +846,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(6)">← 이전</button>
-      <span class="nb-cnt">7 / 10</span>
-      <button class="nb-btn nb-next" onclick="goTo(8)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(5)">← 이전</button>
+      <span class="nb-cnt">6 / 9</span>
+      <button class="nb-btn nb-next" onclick="goTo(7)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P8 · 기사·어휘퀴즈 ════ -->
-  <div class="pg" id="pg8">
+  <!-- ════ P7 · 기사·어휘퀴즈 ════ -->
+  <div class="pg" id="pg7">
     <div class="card">
       <div class="tag">기사·어휘퀴즈</div>
       <div class="card-h">🧩 퀴즈 <span class="accent">활동</span></div>
@@ -819,14 +870,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(7)">← 이전</button>
-      <span class="nb-cnt">8 / 10</span>
-      <button class="nb-btn nb-next" onclick="goTo(9)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(6)">← 이전</button>
+      <span class="nb-cnt">7 / 9</span>
+      <button class="nb-btn nb-next" onclick="goTo(8)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P9 · 기사분석 ════ -->
-  <div class="pg" id="pg9">
+  <!-- ════ P8 · 기사분석 ════ -->
+  <div class="pg" id="pg8">
     <div class="card">
       <div class="tag">기사분석</div>
       <div class="card-h">🔬 기사를 <span class="accent">분석해봐요</span></div>
@@ -865,14 +916,14 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     </div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(8)">← 이전</button>
-      <span class="nb-cnt">9 / 10</span>
-      <button class="nb-btn nb-next" onclick="goTo(10)">다음 →</button>
+      <button class="nb-btn nb-prev" onclick="goTo(7)">← 이전</button>
+      <span class="nb-cnt">8 / 9</span>
+      <button class="nb-btn nb-next" onclick="goTo(9)">다음 →</button>
     </div>
   </div>
 
-  <!-- ════ P10 · 토론 ════ -->
-  <div class="pg" id="pg10">
+  <!-- ════ P9 · 토론 ════ -->
+  <div class="pg" id="pg9">
     <div class="card" style="padding-bottom:14px;">
       <div class="tag">토론</div>
       <div class="card-h">💬 <span class="accent">토론</span>해봐요</div>
@@ -930,8 +981,8 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="callout tip">🏠 집에서 해봐요! 우리 가족이 나라에서 받는 도움에는 어떤 것이 있는지 이야기해봐요. 더 필요한 도움은 무엇일지도 말해봐요!</div>
 
     <div class="nav-bottom">
-      <button class="nb-btn nb-prev" onclick="goTo(9)">← 이전</button>
-      <span class="nb-cnt">10 / 10</span>
+      <button class="nb-btn nb-prev" onclick="goTo(8)">← 이전</button>
+      <span class="nb-cnt">9 / 9</span>
       <button class="nb-btn nb-next" disabled>수업 완료 ✓</button>
     </div>
   </div>
@@ -953,6 +1004,8 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
   </div>
 
   <div class="jig-pop" id="jigPop"><div class="jig-pop-box"><div class="jig-pop-emoji">🎉</div><div class="jig-pop-msg" id="jigPopMsg">정답이에요!</div></div></div>
+
+  <div class="qz-pop" id="qz-pop"><div class="qz-pop-card"><div class="qz-pop-emoji">🎉</div><div class="qz-pop-title">정답!</div><div class="qz-pop-word" id="qz-pop-word"></div></div></div>
 
   <div class="footer">
     <img id="footer-logo" src="" alt="Oncuvate"/>
@@ -1014,7 +1067,7 @@ function enterApp(){
 }
 
 /* ── NAVIGATION ── */
-const TOTAL=10;let cur=1;window._cur=1;
+const TOTAL=9;let cur=1;window._cur=1;
 let navLocked=false, navRun=null, navApplying=false;
 const NAV_DB='sisa-childsupport/nav';
 function buildDots(){
@@ -1036,8 +1089,7 @@ function goToInternal(n){
   buildDots();
   window.scrollTo({top:0,behavior:'smooth'});
   if(n===3 && !wsBuilt) buildWordSearch();
-  if(n===4) setTimeout(resizeHl,60);
-  if(n===5) setTimeout(setupChoScratch,60);
+  if(n===4){ setTimeout(resizeHl,60); setTimeout(function(){ if(window.initAllScratch) window.initAllScratch(); },80); }
   if(!IS_HOST) pubProgress();
 }
 function goTo(n){
@@ -1371,9 +1423,12 @@ function parsePassage(str){
 }
 const READING = parsePassage(LESSON.passage);
 let rdLevel='unit', rdHl=false, rdTargets=[], rdCur=-1;
+const RD_PARAS=[[0,2],[2,5],[5,7]];
+let rdPara=0;
 function buildReading(){
-  const body=document.getElementById('rdBody'); body.innerHTML='';
-  READING.forEach((sent)=>{
+  const body=document.getElementById('rdBody'); if(!body)return; body.innerHTML='';
+  const rg=RD_PARAS[rdPara]||[0,READING.length];
+  READING.slice(rg[0],rg[1]).forEach((sent)=>{
     const sEl=document.createElement('span'); sEl.className='rd-sentence';
     sent.forEach((unit)=>{
       const uEl=document.createElement('span'); uEl.className='rd-unit';
@@ -1949,12 +2004,319 @@ function jigCheer(){
   window._jigT=setTimeout(()=>p.classList.remove('on'),1150);
 }
 
+/* ════ 단락별 읽기 + 빈칸 퀴즈 (P4) ════ */
+const PARA_QUIZ=[
+ [ {s:'지금은 세금을 깎아 주는 [ ] 방식이지만, 앞으로는 현금 보조금으로 직접 지급하는 방안을 검토하고 있습니다.', cho:'ㅅㅇㄱㅈ', a:'세액공제'},
+   {s:'지금은 세금을 깎아 주는 세액공제 방식이지만, 앞으로는 현금 [ ]으로 직접 지급하는 방안을 검토하고 있습니다.', cho:'ㅂㅈㄱ', a:'보조금'} ],
+ [ {s:'하지만 내야 할 세금이 10만 원뿐이라면 실제로는 10만 원만 [ ]을 받습니다.', cho:'ㅎㅌ', a:'혜택'},
+   {s:'정부는 세금이 적어도 55만 원을 모두 현금으로 받을 수 있도록 [ ]를 바꾸려 합니다.', cho:'ㅈㄷ', a:'제도'} ],
+ [ {s:'이렇게 하면 형편이 어려운 가정도 충분한 도움을 받고, [ ]의 생활에도 도움이 됩니다.', cho:'ㅈㅅㄷㅊ', a:'저소득층'},
+   {s:'앞으로는 아이를 키우는 모든 가정이 더 [ ]하게 지원받게 됩니다.', cho:'ㄱㅍ', a:'공평'} ],
+];
+function stgBar(){
+  const b=document.getElementById('stgBar'); if(!b)return;
+  let h='';
+  for(let i=0;i<RD_PARAS.length;i++){
+    const st = i<rdPara ? 'done' : (i===rdPara ? 'on' : '');
+    h+='<span class="stg-chip '+st+'">'+(i+1)+'단락 읽기</span><span class="stg-chip '+st+'">퀴즈 '+(i+1)+'</span>';
+  }
+  b.innerHTML=h;
+}
+function stgShowRead(){
+  document.getElementById('stgRead').style.display='block';
+  document.getElementById('stgQuiz').style.display='none';
+  buildReading(); rdReset(); clearHl(); setTimeout(resizeHl,40); stgBar();
+}
+function stgToQuiz(){
+  document.getElementById('stgRead').style.display='none';
+  document.getElementById('stgQuiz').style.display='block';
+  renderParaQuiz(); stgBar();
+}
+function stgNext(){
+  if(rdPara < RD_PARAS.length-1){ rdPara++; stgShowRead(); window.scrollTo({top:0,behavior:'smooth'}); }
+  else {
+    document.getElementById('qzDoneT').textContent='🏆 세 단락 모두 완료!';
+    document.getElementById('qzDoneP').textContent='다음 페이지로 넘어가요.';
+    const b=document.getElementById('qzDoneBtn'); b.textContent='다음 페이지 →'; b.onclick=function(){ goTo(5); };
+    stgBar();
+  }
+}
+function renderParaQuiz(){
+  const qs=PARA_QUIZ[rdPara]||[];
+  const host=document.getElementById('qzHost');
+  host.innerHTML=qs.map(function(o,i){
+    const q=o.s.replace('[ ]','<span class="qz-blank">'+o.cho+'</span>');
+    return '<div class="qz-card'+(i===0?' qz-active':'')+'">'+
+      '<div class="qz-top"><span>'+(rdPara+1)+'단락</span><span>'+(i+1)+' / '+qs.length+'</span></div>'+
+      '<div class="qz-badge"><span class="q">QUIZ</span><span class="n">:'+('0'+(i+1)).slice(-2)+'</span></div>'+
+      '<div class="qz-question">'+q+'</div>'+
+      '<div class="qz-answer"><input class="qz-input" placeholder="정답 입력" data-a="'+o.a+'" onkeydown="if(event.key===\'Enter\')qzAnswer('+i+')"/>'+
+      '<button class="qz-btn" onclick="qzAnswer('+i+')">확인</button></div>'+
+      '<div class="qz-hintwrap"><div class="qz-hintlabel">🪙 힌트 — 긁어서 정답 확인!</div>'+
+      '<span class="scratch-wrap qz-hint" data-eraser="11" data-reveal="0.55" data-word="정답 : '+o.a+'"></span></div>'+
+      '<div class="qz-cardfb"></div></div>';
+  }).join('');
+  const d=document.getElementById('qzDone'); d.style.display='none';
+  document.getElementById('qzDoneT').textContent='🎉 이 단락 퀴즈 완료!';
+  document.getElementById('qzDoneP').textContent='다음 단락을 읽으러 가요.';
+  const b=document.getElementById('qzDoneBtn'); b.textContent='다음 단락 읽기 →'; b.onclick=stgNext;
+  if(window.initAllScratch) setTimeout(window.initAllScratch,60);
+  const inp=host.querySelector('.qz-card.qz-active .qz-input'); if(inp) setTimeout(function(){try{inp.focus();}catch(e){}},130);
+}
+function qzNorm(v){ return (v||'').replace(/\s/g,''); }
+function qzAnswer(i){
+  const card=document.querySelectorAll('#qzHost .qz-card')[i]; if(!card)return;
+  const inp=card.querySelector('.qz-input'), fb=card.querySelector('.qz-cardfb');
+  const v=qzNorm(inp.value);
+  if(!v){ fb.textContent='❗ 정답을 입력해 주세요.'; fb.className='qz-cardfb fb-bad'; return; }
+  if(v===qzNorm(inp.dataset.a)){
+    fb.textContent='✅ 정답!'; fb.className='qz-cardfb fb-good'; inp.disabled=true;
+    qzPop(inp.dataset.a);
+    setTimeout(function(){ qzPopHide(); qzGoCard(i+1); },1300);
+  } else { fb.textContent='❌ 아쉬워요! 힌트를 긁어 보고 다시 도전!'; fb.className='qz-cardfb fb-bad'; }
+}
+function qzGoCard(i){
+  const cards=document.querySelectorAll('#qzHost .qz-card');
+  if(i>=cards.length){ cards.forEach(function(c){c.classList.remove('qz-active');}); document.getElementById('qzDone').style.display='block'; return; }
+  cards.forEach(function(c,k){ c.classList.toggle('qz-active', k===i); });
+  if(window.initAllScratch) setTimeout(window.initAllScratch,60);
+  const inp=cards[i].querySelector('.qz-input'); if(inp) setTimeout(function(){try{inp.focus();}catch(e){}},130);
+}
+function qzPop(word){
+  const pop=document.getElementById('qz-pop'); if(!pop)return;
+  const wd=document.getElementById('qz-pop-word'); if(wd) wd.textContent = word ? ('정답: '+word) : '';
+  const card=pop.querySelector('.qz-pop-card');
+  card.querySelectorAll('.cf').forEach(function(e){e.remove();});
+  const em=['🎉','✨','🎊','⭐','💛','🩵','🌟'];
+  for(let i=0;i<12;i++){ const sp=document.createElement('span'); sp.className='cf'; sp.textContent=em[i%em.length]; sp.style.left=(4+Math.random()*92)+'%'; sp.style.animationDelay=(Math.random()*0.35)+'s'; card.appendChild(sp); }
+  pop.classList.add('show');
+}
+function qzPopHide(){ const p=document.getElementById('qz-pop'); if(p) p.classList.remove('show'); }
+
+/* ── SCRATCH CARD ENGINE ── */
+(function(){
+  // Cover color
+  const COVER_COLOR = '#6A5DA7';
+  const COVER_TEXT_COLOR = 'rgba(255,255,255,0.85)';
+  const COVER_LABEL = '긁어보세요';
+  const ERASER_SIZE = 14;        // 지우개(스크래치 브러시) 굵기 px — 키우면 더 쉽게 지워짐
+  const REVEAL_THRESHOLD = 0.5;  // 이만큼(50%) 지우면 단어가 자동으로 드러남
+
+  function buildScratchCard(wrap) {
+    const word = wrap.dataset.word;
+    if (!word) return;
+    const eraser = parseInt(wrap.dataset.eraser) || ERASER_SIZE;
+    const reveal = parseFloat(wrap.dataset.reveal) || REVEAL_THRESHOLD;
+
+    // Create text layer (hidden behind canvas)
+    const textLayer = document.createElement('span');
+    textLayer.className = 'scratch-text-layer';
+    textLayer.textContent = word;
+    wrap.appendChild(textLayer);
+
+    // Measure size after text layer is in DOM
+    setTimeout(() => {
+      const w = textLayer.offsetWidth;
+      const h = textLayer.offsetHeight;
+      if (!w || !h) { textLayer.remove(); wrap._initialized = false; return; }
+
+      // Create canvas that overlays the word.
+      // The text layer stays in normal flow so the box always sizes to the
+      // word and lines up on the sentence baseline (no absolute mis-placement).
+      const canvas = document.createElement('canvas');
+      canvas.className = 'scratch-canvas';
+      canvas.width = w;
+      canvas.height = h;
+      canvas.style.width = w + 'px';
+      canvas.style.height = h + 'px';
+      wrap.style.position = 'relative';
+
+      wrap.appendChild(canvas);
+
+      const ctx = canvas.getContext('2d');
+
+      // Draw cover
+      function drawCover() {
+        ctx.clearRect(0, 0, w, h);
+        // Rounded rect
+        const r = 6;
+        ctx.beginPath();
+        ctx.moveTo(r, 0);
+        ctx.lineTo(w - r, 0);
+        ctx.quadraticCurveTo(w, 0, w, r);
+        ctx.lineTo(w, h - r);
+        ctx.quadraticCurveTo(w, h, w - r, h);
+        ctx.lineTo(r, h);
+        ctx.quadraticCurveTo(0, h, 0, h - r);
+        ctx.lineTo(0, r);
+        ctx.quadraticCurveTo(0, 0, r, 0);
+        ctx.closePath();
+        ctx.fillStyle = COVER_COLOR;
+        ctx.fill();
+
+        // Label text
+        ctx.fillStyle = COVER_TEXT_COLOR;
+        ctx.font = 'bold 9px Malgun Gothic, sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillText(COVER_LABEL, w / 2, h / 2);
+      }
+
+      drawCover();
+
+      // Scratch function
+      let scratching = false;
+      let totalPixels = 0;
+      let revealed = false;
+      let lastX = null, lastY = null;
+
+      function getPos(e, canvas) {
+        const rect = canvas.getBoundingClientRect();
+        const scaleX = canvas.width / rect.width;
+        const scaleY = canvas.height / rect.height;
+        if (e.touches) {
+          return {
+            x: (e.touches[0].clientX - rect.left) * scaleX,
+            y: (e.touches[0].clientY - rect.top) * scaleY
+          };
+        }
+        return {
+          x: (e.clientX - rect.left) * scaleX,
+          y: (e.clientY - rect.top) * scaleY
+        };
+      }
+
+      function scratch(x, y) {
+        if (revealed) return;
+        ctx.globalCompositeOperation = 'destination-out';
+        // continuous stroke so dragging erases a smooth path (no gaps)
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+        ctx.lineWidth = eraser;
+        ctx.beginPath();
+        ctx.moveTo(lastX === null ? x : lastX, lastY === null ? y : lastY);
+        ctx.lineTo(x, y);
+        ctx.stroke();
+        // round dab so a single tap also erases
+        ctx.beginPath();
+        ctx.arc(x, y, eraser / 2, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.globalCompositeOperation = 'source-over';
+        lastX = x; lastY = y;
+        checkReveal();
+      }
+
+      function checkReveal() {
+        if (revealed) return;
+        const imgData = ctx.getImageData(0, 0, w, h);
+        const pixels = imgData.data;
+        let transparent = 0;
+        for (let i = 3; i < pixels.length; i += 4) {
+          if (pixels[i] < 128) transparent++;
+        }
+        const ratio = transparent / (pixels.length / 4);
+        if (ratio > reveal) {
+          revealed = true;
+          canvas.style.transition = 'opacity 0.4s ease';
+          canvas.style.opacity = '0';
+          setTimeout(() => { canvas.remove(); }, 450);
+        }
+      }
+
+      // Mouse events
+      canvas.addEventListener('mousedown', (e) => {
+        scratching = true;
+        lastX = null; lastY = null;
+        const p = getPos(e, canvas);
+        scratch(p.x, p.y);
+      });
+      canvas.addEventListener('mousemove', (e) => {
+        if (!scratching) return;
+        const p = getPos(e, canvas);
+        scratch(p.x, p.y);
+      });
+      canvas.addEventListener('mouseup', () => { scratching = false; lastX = null; lastY = null; });
+      canvas.addEventListener('mouseleave', () => { scratching = false; lastX = null; lastY = null; });
+
+      // Touch events
+      canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault();
+        scratching = true;
+        lastX = null; lastY = null;
+        const p = getPos(e, canvas);
+        scratch(p.x, p.y);
+      }, { passive: false });
+      canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (!scratching) return;
+        const p = getPos(e, canvas);
+        scratch(p.x, p.y);
+      }, { passive: false });
+      canvas.addEventListener('touchend', () => { scratching = false; lastX = null; lastY = null; });
+
+      // Store reset function on wrap
+      wrap._resetScratch = function() {
+        revealed = false;
+        canvas.remove(); // remove old canvas
+        // Rebuild
+        if (wrap.querySelector('.scratch-canvas')) {
+          wrap.querySelector('.scratch-canvas').remove();
+        }
+        // Re-append canvas
+        canvas.style.opacity = '1';
+        canvas.style.transition = '';
+        wrap.appendChild(canvas);
+        ctx.clearRect(0, 0, w, h);
+        ctx.globalCompositeOperation = 'source-over';
+        drawCover();
+      };
+    }, 30);
+  }
+
+  // Init all on page load
+  window.initAllScratch = function() {
+    document.querySelectorAll('.scratch-wrap').forEach(wrap => {
+      if (!wrap._initialized) {
+        wrap._initialized = true;
+        buildScratchCard(wrap);
+      }
+    });
+  };
+
+  window.resetAllScratch = function() {
+    document.querySelectorAll('.scratch-wrap').forEach(wrap => {
+      if (wrap._resetScratch) wrap._resetScratch();
+    });
+  };
+
+  // Init when pg9 becomes visible (nav to page 9)
+  const origGoTo = window.goTo;
+  // We'll hook into goTo after it's defined
+  document.addEventListener('DOMContentLoaded', () => {
+    setTimeout(() => {
+      // Patch goTo
+      const _goTo = window.goTo;
+      window.goTo = function(n, forced) {
+        _goTo(n, forced);
+        if (n === 9) {
+          setTimeout(initAllScratch, 50);
+        }
+      };
+      // Also patch nav
+      window.nav = function(dir) { window.goTo(window._cur + dir); };
+    }, 100);
+  });
+})();
+
+
+
 /* ── INIT ── */
 buildArticle();
 buildSyllables();
 buildJamo();
 updateChances();
 buildCho();
+stgBar();
 document.addEventListener('click',e=>{if(!e.target.classList.contains('hw'))document.getElementById('tooltip').style.display='none';});
 </script>
 </body>
