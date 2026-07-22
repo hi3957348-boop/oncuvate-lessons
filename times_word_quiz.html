@@ -196,10 +196,7 @@ function picHTML(q){
   return g+(q.a>8?'<span class="more">…</span>':'');
 }
 function makeQ(){const dans=[...SEL];const b=dans[Math.floor(Math.random()*dans.length)];const a=2+Math.floor(Math.random()*8);
-  const fixed=FIXED.filter(f=>f.perN===b);       // 이 단에서만 나오는 사실 소재
-  let ctx;
-  if(fixed.length && Math.random()<0.5) ctx=fixed[Math.floor(Math.random()*fixed.length)];
-  else ctx=FREE[Math.floor(Math.random()*FREE.length)];
+  const ctx=FREE[Math.floor(Math.random()*FREE.length)];   // 자유 상황만 사용 (FIXED 사실 소재는 쓰지 않음)
   return {b,a,v:b*a,ctx};}
 function start(){if(SEL.size===0)return;Q=[];for(let i=0;i<TOTAL;i++)Q.push(makeQ());qi=0;ok=0;
   el('setup').style.display='none';el('win').style.display='none';el('game').style.display='block';el('hOk').textContent='0';load();}
