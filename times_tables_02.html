@@ -1055,7 +1055,7 @@ function p8Fin(){ p8done=true; el('p8q').innerHTML='🎉 끝!'; el('p8hint').inn
 function p8Prog(){ el('p8prog').textContent='맞힌 개수 '+p8ok; }
 
 /* ---------- P9 마무리 ---------- */
-const SELF=['2씩 뛰어 세며 표를 만들 수 있어요','2단이 두 배 하기인 걸 알았어요','2단을 내 속도로 말할 수 있어요'];
+const SELF=['2씩 뛰어 세며 표를 만들 수 있어요','2단이 어떤 수의 두 배라는 걸 알았어요','2단을 내 속도로 말할 수 있어요'];
 function p9Render(){ const total=SESSION.c;
   el('p9score').textContent=total;
   el('p9stamps').textContent='⭐'.repeat(Math.max(1,Math.min(5,Math.ceil(total/8))));
