@@ -41,10 +41,16 @@ button{font-family:inherit;cursor:pointer;border:none}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px 22px 26px}
 .story{background:#FFF6EE;border:2px dashed var(--peach);border-radius:16px;padding:16px 18px;font-size:18px;font-weight:800;color:var(--ink);line-height:1.6;text-align:center}
 .story .em{font-size:30px;display:block;margin-bottom:6px}
-.pic{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin:12px 0 4px}
-.pic .grp{border:2.5px solid var(--g-size);border-radius:50%/40%;background:#FFF8F1;padding:7px 9px;display:grid;gap:4px}
-.pic .grp i{width:12px;height:12px;border-radius:50%;background:var(--g-count)}
-.pic .more{font-size:22px;font-weight:900;color:var(--ink2)}
+.pic{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:flex-start;margin:12px 0 4px}
+.pic .grp{border:2.5px solid var(--g-size);background:#FFF8F1;padding:8px 9px;animation:pop .25s}
+.pic .grp.items{border-radius:50%/44%;display:inline-grid;gap:4px 6px;vertical-align:top}
+.pic .em2{font-size:21px;line-height:1.05}
+.pic .grp.part{border-radius:16px;display:flex;flex-direction:column;align-items:center;gap:5px}
+.pic .grp.part .sub{font-size:28px;line-height:1}
+.pic .grp.part .dots{display:grid;gap:3px}
+.pic .grp.part .dots i{width:9px;height:9px;border-radius:50%;background:var(--g-count)}
+.pic .more{font-size:22px;font-weight:900;color:var(--ink2);align-self:center}
+@keyframes pop{from{transform:scale(.7);opacity:0}to{transform:scale(1);opacity:1}}
 .step-lab{font-size:14px;font-weight:900;color:var(--blue-d);margin:16px 0 8px;text-align:center}
 .step-lab .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;align-items:center;justify-content:center;font-size:13px;margin-right:6px}
 .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -117,7 +123,6 @@ const FREE=[
   F('🍬','개',n=>'한 봉지에 사탕이 '+n+'개씩',m=>'봉지가 '+m+'개'),
   F('🍎','개',n=>'한 바구니에 사과가 '+n+'개씩',m=>'바구니가 '+m+'개'),
   F('⚽','개',n=>'한 상자에 공이 '+n+'개씩',m=>'상자가 '+m+'개'),
-  F('🌷','송이',n=>'꽃병 하나에 꽃이 '+n+'송이씩',m=>'꽃병이 '+m+'개'),
   F('✏️','자루',n=>'한 필통에 색연필이 '+n+'자루씩',m=>'필통이 '+m+'개'),
   F('🥛','개',n=>'한 상자에 우유가 '+n+'개씩',m=>'상자가 '+m+'개'),
   F('🥚','개',n=>'한 판에 달걀이 '+n+'개씩',m=>'판이 '+m+'개'),
@@ -135,7 +140,7 @@ const FREE=[
   F('🍇','개',n=>'한 송이에 포도알이 '+n+'개씩',m=>'송이가 '+m+'개'),
   F('🍅','개',n=>'한 팩에 방울토마토가 '+n+'개씩',m=>'팩이 '+m+'개'),
   F('🧁','개',n=>'한 상자에 컵케이크가 '+n+'개씩',m=>'상자가 '+m+'개'),
-  F('🪁','개',n=>'한 봉지에 사탕이 '+n+'개씩',m=>'봉지가 '+m+'봉지'),
+  F('🎈','개',n=>'한 다발에 풍선이 '+n+'개씩',m=>'다발이 '+m+'개'),
 ];
 function X(perN,em,u,one,many){return {perN:perN,em:em,u:u,one:one,many:many};}
 const FIXED=[
@@ -154,6 +159,7 @@ const FIXED=[
   X(4,'🐎','개',()=>'말 한 마리의 다리가 4개',m=>'말이 '+m+'마리'),
   X(5,'⭐','개',()=>'별 하나의 꼭짓점이 5개',m=>'별이 '+m+'개'),
   X(5,'🌟','개',()=>'불가사리 한 마리의 팔이 5개',m=>'불가사리가 '+m+'마리'),
+  X(5,'🌸','장',()=>'꽃 한 송이의 꽃잎이 5장',m=>'꽃이 '+m+'송이'),
   X(6,'🐜','개',()=>'개미 한 마리의 다리가 6개',m=>'개미가 '+m+'마리'),
   X(6,'🐞','개',()=>'무당벌레 한 마리의 다리가 6개',m=>'무당벌레가 '+m+'마리'),
   X(6,'🐝','개',()=>'벌 한 마리의 다리가 6개',m=>'벌이 '+m+'마리'),
@@ -174,6 +180,21 @@ function allDans(){SEL.size===8?SEL.clear():SEL=new Set([2,3,4,5,6,7,8,9]);build
 function validate(){el('startBtn').disabled=SEL.size===0;el('warn').textContent=SEL.size===0?'단을 하나 이상 골라 주세요.':'';}
 
 function shuffle(a){return a.sort(()=>Math.random()-0.5);}
+/* 상황별 묶음 그림: a묶음(최대 8) × 한 묶음 b개 */
+function picHTML(q){
+  const cap=Math.min(q.a,8); const fixed=q.ctx.perN!==undefined; let g='';
+  for(let i=0;i<cap;i++){
+    if(fixed){
+      const cols=Math.min(q.b,4); let dots=''; for(let k=0;k<q.b;k++) dots+='<i></i>';
+      g+='<span class="grp part"><span class="sub">'+q.ctx.em+'</span>'+
+         '<span class="dots" style="grid-template-columns:repeat('+cols+',auto)">'+dots+'</span></span>';
+    }else{
+      const cols=Math.min(q.b,3); let items=''; for(let k=0;k<q.b;k++) items+='<span class="em2">'+q.ctx.em+'</span>';
+      g+='<span class="grp items" style="grid-template-columns:repeat('+cols+',auto)">'+items+'</span>';
+    }
+  }
+  return g+(q.a>8?'<span class="more">…</span>':'');
+}
 function makeQ(){const dans=[...SEL];const b=dans[Math.floor(Math.random()*dans.length)];const a=2+Math.floor(Math.random()*8);
   const fixed=FIXED.filter(f=>f.perN===b);       // 이 단에서만 나오는 사실 소재
   let ctx;
@@ -185,9 +206,8 @@ function start(){if(SEL.size===0)return;Q=[];for(let i=0;i<TOTAL;i++)Q.push(make
 function load(){cur=Q[qi];gotEq=false;gotAns=false;el('hNo').textContent=(qi+1);
   const c=cur.ctx;
   el('story').innerHTML='<span class="em">'+c.em+'</span>'+c.one(cur.b)+', '+c.many(cur.a)+' 있어요.<br>모두 몇 '+c.u+'일까요?';
-  // 그림(묶음): a묶음 × 한 묶음 b개를 점으로 (상황과 무관하게 항상 정확)
-  let g='';for(let i=0;i<Math.min(cur.a,8);i++){const cols=Math.min(cur.b,3);g+='<span class="grp" style="grid-template-columns:repeat('+cols+',auto)">'+'<i></i>'.repeat(cur.b)+'</span>';}
-  el('pic').innerHTML=g+(cur.a>8?'<span class="more">…</span>':'');
+  // 그림(묶음): 상황에 맞는 이모지 묶음. 자유 상황=물건 이모지 b개, 사실 소재=주인공 이모지+부위 점 b개.
+  el('pic').innerHTML=picHTML(cur);
   // 식 보기: 정답 b×a + 오답(a×b 뒤바꿈은 값이 같아 제외, 대신 +, ×1 등)
   const eqRight=cur.b+' × '+cur.a;
   const eqWrong=shuffle([cur.b+' + '+cur.a, cur.b+' × '+(cur.a+1), (cur.b+cur.a)+' × 1']).slice(0,2);
