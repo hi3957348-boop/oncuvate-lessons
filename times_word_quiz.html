@@ -41,8 +41,10 @@ button{font-family:inherit;cursor:pointer;border:none}
 .card{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px 22px 26px}
 .story{background:#FFF6EE;border:2px dashed var(--peach);border-radius:16px;padding:16px 18px;font-size:18px;font-weight:800;color:var(--ink);line-height:1.6;text-align:center}
 .story .em{font-size:30px;display:block;margin-bottom:6px}
-.pic{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0 4px;font-size:26px}
-.pic .grp{border:2.5px solid var(--g-size);border-radius:40%;background:#FFF8F1;padding:6px 8px;display:inline-flex;gap:3px}
+.pic{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;align-items:center;margin:12px 0 4px}
+.pic .grp{border:2.5px solid var(--g-size);border-radius:50%/40%;background:#FFF8F1;padding:7px 9px;display:grid;gap:4px}
+.pic .grp i{width:12px;height:12px;border-radius:50%;background:var(--g-count)}
+.pic .more{font-size:22px;font-weight:900;color:var(--ink2)}
 .step-lab{font-size:14px;font-weight:900;color:var(--blue-d);margin:16px 0 8px;text-align:center}
 .step-lab .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;align-items:center;justify-content:center;font-size:13px;margin-right:6px}
 .opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
@@ -108,15 +110,58 @@ button{font-family:inherit;cursor:pointer;border:none}
 
 <script>
 const el=id=>document.getElementById(id);
-const CTX=[
-  {em:'🍬',u:'개',one:n=>'한 봉지에 사탕이 '+n+'개씩', many:m=>'봉지가 '+m+'개'},
-  {em:'🐙',u:'개',one:n=>'문어 한 마리의 다리가 '+n+'개', many:m=>'문어가 '+m+'마리', legs:true},
-  {em:'🍎',u:'개',one:n=>'한 바구니에 사과가 '+n+'개씩', many:m=>'바구니가 '+m+'개'},
-  {em:'🐞',u:'개',one:n=>'무당벌레 한 마리의 다리가 '+n+'개', many:m=>'무당벌레가 '+m+'마리', legs:true},
-  {em:'🚗',u:'개',one:n=>'자동차 한 대의 바퀴가 '+n+'개', many:m=>'자동차가 '+m+'대', legs:true},
-  {em:'🌸',u:'송이',one:n=>'꽃병 하나에 꽃이 '+n+'송이씩', many:m=>'꽃병이 '+m+'개'},
-  {em:'📦',u:'개',one:n=>'한 상자에 공이 '+n+'개씩', many:m=>'상자가 '+m+'개'},
-  {em:'🖐️',u:'개',one:n=>'한 사람의 손가락이 '+n+'개', many:m=>'사람이 '+m+'명', legs:true},
+/* ====== 문장제 소재 뱅크 (하이브리드: 상황은 다양하게 미리 작성, 숫자는 코드가 계산해 정답 100%) ======
+   FREE = 담는 개수가 자유로운 상황(어떤 단이든 가능). FIXED = 사실이 정해진 소재(그 단에서만 출제). */
+function F(em,u,one,many){return {em:em,u:u,one:one,many:many};}
+const FREE=[
+  F('🍬','개',n=>'한 봉지에 사탕이 '+n+'개씩',m=>'봉지가 '+m+'개'),
+  F('🍎','개',n=>'한 바구니에 사과가 '+n+'개씩',m=>'바구니가 '+m+'개'),
+  F('⚽','개',n=>'한 상자에 공이 '+n+'개씩',m=>'상자가 '+m+'개'),
+  F('🌷','송이',n=>'꽃병 하나에 꽃이 '+n+'송이씩',m=>'꽃병이 '+m+'개'),
+  F('✏️','자루',n=>'한 필통에 색연필이 '+n+'자루씩',m=>'필통이 '+m+'개'),
+  F('🥛','개',n=>'한 상자에 우유가 '+n+'개씩',m=>'상자가 '+m+'개'),
+  F('🥚','개',n=>'한 판에 달걀이 '+n+'개씩',m=>'판이 '+m+'개'),
+  F('🍫','개',n=>'한 상자에 초콜릿이 '+n+'개씩',m=>'상자가 '+m+'개'),
+  F('🍩','개',n=>'한 상자에 도넛이 '+n+'개씩',m=>'상자가 '+m+'개'),
+  F('🍪','개',n=>'한 접시에 쿠키가 '+n+'개씩',m=>'접시가 '+m+'개'),
+  F('🍓','개',n=>'한 접시에 딸기가 '+n+'개씩',m=>'접시가 '+m+'개'),
+  F('🔵','개',n=>'한 주머니에 구슬이 '+n+'개씩',m=>'주머니가 '+m+'개'),
+  F('✨','장',n=>'한 판에 스티커가 '+n+'장씩',m=>'판이 '+m+'개'),
+  F('🖍️','자루',n=>'한 상자에 크레파스가 '+n+'자루씩',m=>'상자가 '+m+'개'),
+  F('🐟','마리',n=>'한 어항에 물고기가 '+n+'마리씩',m=>'어항이 '+m+'개'),
+  F('📚','권',n=>'한 묶음에 책이 '+n+'권씩',m=>'묶음이 '+m+'개'),
+  F('🍞','개',n=>'한 봉지에 빵이 '+n+'개씩',m=>'봉지가 '+m+'개'),
+  F('🍊','개',n=>'한 상자에 귤이 '+n+'개씩',m=>'상자가 '+m+'개'),
+  F('🍇','개',n=>'한 송이에 포도알이 '+n+'개씩',m=>'송이가 '+m+'개'),
+  F('🍅','개',n=>'한 팩에 방울토마토가 '+n+'개씩',m=>'팩이 '+m+'개'),
+  F('🧁','개',n=>'한 상자에 컵케이크가 '+n+'개씩',m=>'상자가 '+m+'개'),
+  F('🪁','개',n=>'한 봉지에 사탕이 '+n+'개씩',m=>'봉지가 '+m+'봉지'),
+];
+function X(perN,em,u,one,many){return {perN:perN,em:em,u:u,one:one,many:many};}
+const FIXED=[
+  X(2,'🐦','개',()=>'새 한 마리의 날개가 2개',m=>'새가 '+m+'마리'),
+  X(2,'🐰','개',()=>'토끼 한 마리의 귀가 2개',m=>'토끼가 '+m+'마리'),
+  X(2,'🚲','개',()=>'자전거 한 대의 바퀴가 2개',m=>'자전거가 '+m+'대'),
+  X(3,'🛴','개',()=>'세발자전거 한 대의 바퀴가 3개',m=>'세발자전거가 '+m+'대'),
+  X(3,'🔺','개',()=>'삼각형 하나의 변이 3개',m=>'삼각형이 '+m+'개'),
+  X(3,'☘️','장',()=>'세잎클로버 하나의 잎이 3장',m=>'세잎클로버가 '+m+'개'),
+  X(4,'🐕','개',()=>'강아지 한 마리의 다리가 4개',m=>'강아지가 '+m+'마리'),
+  X(4,'🐈','개',()=>'고양이 한 마리의 다리가 4개',m=>'고양이가 '+m+'마리'),
+  X(4,'🚗','개',()=>'자동차 한 대의 바퀴가 4개',m=>'자동차가 '+m+'대'),
+  X(4,'🪑','개',()=>'의자 하나의 다리가 4개',m=>'의자가 '+m+'개'),
+  X(4,'🦋','개',()=>'나비 한 마리의 날개가 4개',m=>'나비가 '+m+'마리'),
+  X(4,'🍀','장',()=>'네잎클로버 하나의 잎이 4장',m=>'네잎클로버가 '+m+'개'),
+  X(4,'🐎','개',()=>'말 한 마리의 다리가 4개',m=>'말이 '+m+'마리'),
+  X(5,'⭐','개',()=>'별 하나의 꼭짓점이 5개',m=>'별이 '+m+'개'),
+  X(5,'🌟','개',()=>'불가사리 한 마리의 팔이 5개',m=>'불가사리가 '+m+'마리'),
+  X(6,'🐜','개',()=>'개미 한 마리의 다리가 6개',m=>'개미가 '+m+'마리'),
+  X(6,'🐞','개',()=>'무당벌레 한 마리의 다리가 6개',m=>'무당벌레가 '+m+'마리'),
+  X(6,'🐝','개',()=>'벌 한 마리의 다리가 6개',m=>'벌이 '+m+'마리'),
+  X(7,'🌈','개',()=>'무지개 하나에 색깔이 7개',m=>'무지개가 '+m+'개'),
+  X(7,'📅','일',()=>'일주일은 7일',m=>m+'주'),
+  X(8,'🐙','개',()=>'문어 한 마리의 다리가 8개',m=>'문어가 '+m+'마리'),
+  X(8,'🕷️','개',()=>'거미 한 마리의 다리가 8개',m=>'거미가 '+m+'마리'),
+  X(9,'⚾','명',()=>'야구 한 팀에 선수가 9명',m=>'팀이 '+m+'개'),
 ];
 let SEL=new Set([2,3,4,5]), Q=[], qi=0, ok=0, cur=null, gotEq=false, gotAns=false;
 const TOTAL=8;
@@ -130,15 +175,19 @@ function validate(){el('startBtn').disabled=SEL.size===0;el('warn').textContent=
 
 function shuffle(a){return a.sort(()=>Math.random()-0.5);}
 function makeQ(){const dans=[...SEL];const b=dans[Math.floor(Math.random()*dans.length)];const a=2+Math.floor(Math.random()*8);
-  const ctx=CTX[Math.floor(Math.random()*CTX.length)];return {b,a,v:b*a,ctx};}
+  const fixed=FIXED.filter(f=>f.perN===b);       // 이 단에서만 나오는 사실 소재
+  let ctx;
+  if(fixed.length && Math.random()<0.5) ctx=fixed[Math.floor(Math.random()*fixed.length)];
+  else ctx=FREE[Math.floor(Math.random()*FREE.length)];
+  return {b,a,v:b*a,ctx};}
 function start(){if(SEL.size===0)return;Q=[];for(let i=0;i<TOTAL;i++)Q.push(makeQ());qi=0;ok=0;
   el('setup').style.display='none';el('win').style.display='none';el('game').style.display='block';el('hOk').textContent='0';load();}
 function load(){cur=Q[qi];gotEq=false;gotAns=false;el('hNo').textContent=(qi+1);
   const c=cur.ctx;
   el('story').innerHTML='<span class="em">'+c.em+'</span>'+c.one(cur.b)+', '+c.many(cur.a)+' 있어요.<br>모두 몇 '+c.u+'일까요?';
-  // 그림(묶음)
-  let g='';for(let i=0;i<Math.min(cur.a,6);i++){g+='<span class="grp">'+(c.em).repeat(Math.min(cur.b,6))+'</span>';}
-  el('pic').innerHTML=g;
+  // 그림(묶음): a묶음 × 한 묶음 b개를 점으로 (상황과 무관하게 항상 정확)
+  let g='';for(let i=0;i<Math.min(cur.a,8);i++){const cols=Math.min(cur.b,3);g+='<span class="grp" style="grid-template-columns:repeat('+cols+',auto)">'+'<i></i>'.repeat(cur.b)+'</span>';}
+  el('pic').innerHTML=g+(cur.a>8?'<span class="more">…</span>':'');
   // 식 보기: 정답 b×a + 오답(a×b 뒤바꿈은 값이 같아 제외, 대신 +, ×1 등)
   const eqRight=cur.b+' × '+cur.a;
   const eqWrong=shuffle([cur.b+' + '+cur.a, cur.b+' × '+(cur.a+1), (cur.b+cur.a)+' × 1']).slice(0,2);
