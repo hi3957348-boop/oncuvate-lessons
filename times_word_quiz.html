@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>문장제 퀴즈 · 알맞은 식과 답</title>
+<style>
+:root{
+  --cream:#FBF7EF;--paper:#fff;--ink:#3B4551;--ink2:#6B7684;
+  --blue:#5B84A6;--blue-d:#3D5A6E;--peach:#F4A98A;--coral:#F08C6E;
+  --mint:#8FCBB4;--mint-d:#5FAE93;--sun:#F6CE6B;--line:#E7DFD1;--good:#5FAE93;--bad:#E7897A;--lilac:#B7A6D9;
+  --g-count:#4A78C4;--g-size:#E58A4E;
+  --shadow:0 10px 30px rgba(80,90,110,.12);--shadow-s:0 4px 14px rgba(80,90,110,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:var(--ink);
+  background:radial-gradient(1200px 500px at 15% -8%,#FDEfe0,transparent 60%),
+    radial-gradient(1000px 500px at 95% 0%,#E7F1EC,transparent 55%),var(--cream);
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 50px}
+.top{display:flex;align-items:center;gap:10px;padding:6px 4px 14px}
+.logo{font-size:21px;font-weight:900;color:var(--blue-d);letter-spacing:-.5px}
+.logo small{font-size:12.5px;color:var(--coral);font-weight:800;margin-left:6px}
+.setup{background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:26px 24px;max-width:560px;margin:10px auto}
+.setup h1{font-size:23px;font-weight:900;color:var(--blue-d);text-align:center;letter-spacing:-.6px}
+.setup .lead{text-align:center;color:var(--ink2);font-size:14px;font-weight:600;margin:4px 0 20px}
+.bt{font-size:14px;font-weight:900;color:var(--blue-d);margin-bottom:10px}
+.dans{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.dan{width:50px;height:50px;border-radius:15px;border:2.5px solid var(--line);background:#FCFAF5;font-size:19px;font-weight:900;color:var(--ink2);transition:.12s}
+.dan.on{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-2px)}
+.dan-all{margin-top:8px;height:44px;padding:0 14px;border-radius:14px;border:2.5px dashed var(--line);background:#fff;font-weight:800;color:var(--ink2);font-size:13px}
+.startbtn{width:100%;margin-top:20px;padding:16px;border-radius:16px;background:var(--peach);color:#fff;font-size:19px;font-weight:900;box-shadow:0 6px 16px rgba(240,140,110,.35);transition:.12s}
+.startbtn:hover{transform:translateY(-2px)}.startbtn:disabled{opacity:.5;transform:none}
+.warn{color:var(--coral);font-size:12.5px;font-weight:700;text-align:center;min-height:16px;margin-top:6px}
+
+#game{display:none}
+.hud{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-s);padding:10px 14px;margin-bottom:14px}
+.hud .stat{font-size:13.5px;font-weight:800;color:var(--ink2)}.hud .stat b{color:var(--mint-d);font-size:17px}
+.hud .ghost{margin-left:auto;background:#fff;border:2px solid var(--line);color:var(--ink2);font-weight:800;font-size:13px;padding:9px 14px;border-radius:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px 22px 26px}
+.story{background:#FFF6EE;border:2px dashed var(--peach);border-radius:16px;padding:16px 18px;font-size:18px;font-weight:800;color:var(--ink);line-height:1.6;text-align:center}
+.story .em{font-size:30px;display:block;margin-bottom:6px}
+.pic{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;margin:12px 0 4px;font-size:26px}
+.pic .grp{border:2.5px solid var(--g-size);border-radius:40%;background:#FFF8F1;padding:6px 8px;display:inline-flex;gap:3px}
+.step-lab{font-size:14px;font-weight:900;color:var(--blue-d);margin:16px 0 8px;text-align:center}
+.step-lab .n{display:inline-flex;width:22px;height:22px;border-radius:50%;background:var(--blue);color:#fff;align-items:center;justify-content:center;font-size:13px;margin-right:6px}
+.opts{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+@media(max-width:520px){.opts{grid-template-columns:1fr 1fr}}
+.opt{background:#fff;border:3px solid var(--line);border-radius:16px;padding:14px 8px;font-size:22px;font-weight:900;color:var(--blue-d);transition:.12s}
+.opt:hover{transform:translateY(-2px);border-color:var(--peach)}
+.opt.ok{border-color:var(--good);background:#EAF6F0}
+.opt.no{border-color:var(--bad);background:#FBEDEA;animation:shake .35s}
+.opt.dim{opacity:.45;pointer-events:none}
+@keyframes shake{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
+.fb{min-height:28px;font-size:17px;font-weight:900;text-align:center;margin-top:14px}
+.fb.good{color:var(--good)}.fb.bad{color:var(--bad)}
+.nextrow{text-align:center;margin-top:10px}
+.nextbtn{background:var(--blue);color:#fff;font-weight:900;font-size:16px;padding:12px 26px;border-radius:14px;box-shadow:0 5px 14px rgba(91,132,166,.3);display:none}
+#win{display:none;text-align:center;background:linear-gradient(135deg,#EAF3EE,#FCE7D6);border:1px solid var(--line);border-radius:24px;padding:30px 24px;box-shadow:var(--shadow);max-width:500px;margin:18px auto}
+#win .big{font-size:52px}#win h2{font-size:25px;font-weight:900;color:var(--blue-d);margin:6px 0}#win p{color:var(--ink2);font-weight:700}
+#win .row button{padding:13px 22px;border-radius:14px;font-size:16px;font-weight:800}
+#win .again{background:var(--mint);color:#fff}#win .reset{background:#fff;border:2px solid var(--line);color:var(--ink2)}
+.footer{text-align:center;font-size:12px;color:var(--ink2);opacity:.8;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="logo">📖 문장제 퀴즈<small>Oncuvate</small></div></div>
+
+  <div class="setup" id="setup">
+    <h1>이야기를 읽고 풀어요</h1>
+    <div class="lead">문제를 읽고 <b>알맞은 식</b>과 <b>알맞은 답</b>을 각각 골라요.</div>
+    <div class="bt" style="text-align:center">어떤 단으로 할까요? <span style="font-weight:700;color:var(--ink2)">(여러 개 가능)</span></div>
+    <div class="dans" id="dans"></div>
+    <div style="text-align:center"><button class="dan-all" onclick="allDans()">전체 선택 / 해제</button></div>
+    <button class="startbtn" id="startBtn" onclick="start()">시작하기 🎮</button>
+    <div class="warn" id="warn"></div>
+  </div>
+
+  <div id="game">
+    <div class="hud">
+      <span class="stat">맞힌 문제 <b id="hOk">0</b></span>
+      <span class="stat" style="color:var(--ink2)">· 문제 <b id="hNo" style="color:var(--blue)">1</b> / 8</span>
+      <button class="ghost" onclick="backToSetup()">⚙ 설정</button>
+    </div>
+    <div class="card">
+      <div class="story" id="story"></div>
+      <div class="pic" id="pic"></div>
+      <div class="step-lab"><span class="n">1</span><span id="lab1">알맞은 <b>식</b>을 고르세요</span></div>
+      <div class="opts" id="eqOpts"></div>
+      <div class="step-lab" id="lab2wrap" style="display:none"><span class="n">2</span><span>알맞은 <b>답</b>을 고르세요</span></div>
+      <div class="opts" id="ansOpts" style="display:none"></div>
+      <div class="fb" id="fb"></div>
+      <div class="nextrow"><button class="nextbtn" id="nextBtn" onclick="next()">다음 문제 →</button></div>
+    </div>
+  </div>
+
+  <div id="win">
+    <div class="big">🎉</div><h2>다 풀었어요!</h2><p id="winMsg"></p>
+    <div class="row" style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+      <button class="again" onclick="restart()">한 번 더 🔁</button>
+      <button class="reset" onclick="backToSetup()">설정 바꾸기</button>
+    </div>
+  </div>
+  <div class="footer">© ONCUVATE · 문장제 퀴즈 · 시간 재기 없이 내 속도로</div>
+</div>
+
+<script>
+const el=id=>document.getElementById(id);
+const CTX=[
+  {em:'🍬',u:'개',one:n=>'한 봉지에 사탕이 '+n+'개씩', many:m=>'봉지가 '+m+'개'},
+  {em:'🐙',u:'개',one:n=>'문어 한 마리의 다리가 '+n+'개', many:m=>'문어가 '+m+'마리', legs:true},
+  {em:'🍎',u:'개',one:n=>'한 바구니에 사과가 '+n+'개씩', many:m=>'바구니가 '+m+'개'},
+  {em:'🐞',u:'개',one:n=>'무당벌레 한 마리의 다리가 '+n+'개', many:m=>'무당벌레가 '+m+'마리', legs:true},
+  {em:'🚗',u:'개',one:n=>'자동차 한 대의 바퀴가 '+n+'개', many:m=>'자동차가 '+m+'대', legs:true},
+  {em:'🌸',u:'송이',one:n=>'꽃병 하나에 꽃이 '+n+'송이씩', many:m=>'꽃병이 '+m+'개'},
+  {em:'📦',u:'개',one:n=>'한 상자에 공이 '+n+'개씩', many:m=>'상자가 '+m+'개'},
+  {em:'🖐️',u:'개',one:n=>'한 사람의 손가락이 '+n+'개', many:m=>'사람이 '+m+'명', legs:true},
+];
+let SEL=new Set([2,3,4,5]), Q=[], qi=0, ok=0, cur=null, gotEq=false, gotAns=false;
+const TOTAL=8;
+let _ac=null;
+function sfx(k){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();const t=_ac.currentTime;const s=k==='ok'?[[660,0],[990,.12]]:k==='no'?[[300,0],[180,.16]]:[[520,0]];s.forEach(([f,d])=>{const o=_ac.createOscillator(),g=_ac.createGain();o.connect(g);g.connect(_ac.destination);o.frequency.setValueAtTime(f,t+d);g.gain.setValueAtTime(.1,t+d);g.gain.exponentialRampToValueAtTime(.001,t+d+.18);o.start(t+d);o.stop(t+d+.2);});}catch(e){}}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=.9;speechSynthesis.speak(u);}catch(e){}}
+
+function buildDans(){const d=el('dans');d.innerHTML='';for(let n=2;n<=9;n++){const b=document.createElement('button');b.className='dan'+(SEL.has(n)?' on':'');b.textContent=n;b.onclick=()=>{SEL.has(n)?SEL.delete(n):SEL.add(n);buildDans();validate();};d.appendChild(b);}}
+function allDans(){SEL.size===8?SEL.clear():SEL=new Set([2,3,4,5,6,7,8,9]);buildDans();validate();}
+function validate(){el('startBtn').disabled=SEL.size===0;el('warn').textContent=SEL.size===0?'단을 하나 이상 골라 주세요.':'';}
+
+function shuffle(a){return a.sort(()=>Math.random()-0.5);}
+function makeQ(){const dans=[...SEL];const b=dans[Math.floor(Math.random()*dans.length)];const a=2+Math.floor(Math.random()*8);
+  const ctx=CTX[Math.floor(Math.random()*CTX.length)];return {b,a,v:b*a,ctx};}
+function start(){if(SEL.size===0)return;Q=[];for(let i=0;i<TOTAL;i++)Q.push(makeQ());qi=0;ok=0;
+  el('setup').style.display='none';el('win').style.display='none';el('game').style.display='block';el('hOk').textContent='0';load();}
+function load(){cur=Q[qi];gotEq=false;gotAns=false;el('hNo').textContent=(qi+1);
+  const c=cur.ctx;
+  el('story').innerHTML='<span class="em">'+c.em+'</span>'+c.one(cur.b)+', '+c.many(cur.a)+' 있어요.<br>모두 몇 '+c.u+'일까요?';
+  // 그림(묶음)
+  let g='';for(let i=0;i<Math.min(cur.a,6);i++){g+='<span class="grp">'+(c.em).repeat(Math.min(cur.b,6))+'</span>';}
+  el('pic').innerHTML=g;
+  // 식 보기: 정답 b×a + 오답(a×b 뒤바꿈은 값이 같아 제외, 대신 +, ×1 등)
+  const eqRight=cur.b+' × '+cur.a;
+  const eqWrong=shuffle([cur.b+' + '+cur.a, cur.b+' × '+(cur.a+1), (cur.b+cur.a)+' × 1']).slice(0,2);
+  el('eqOpts').innerHTML=shuffle([[eqRight,1],...eqWrong.map(w=>[w,0])]).map(([t,c2])=>'<button class="opt" onclick="pickEq(this,'+c2+')">'+t+'</button>').join('');
+  // 답 보기(2단계는 식 맞춘 뒤 노출)
+  el('lab2wrap').style.display='none';el('ansOpts').style.display='none';
+  const cand=new Set([cur.v]);while(cand.size<3){const d=cur.v+cur.b*(Math.random()<.5?1:-1)*(1+Math.floor(Math.random()*2));if(d>0)cand.add(d);}
+  el('ansOpts').innerHTML=shuffle([...cand]).map(v=>'<button class="opt" onclick="pickAns(this,'+(v===cur.v?1:0)+')">'+v+'</button>').join('');
+  el('fb').textContent='';el('fb').className='fb';el('nextBtn').style.display='none';
+}
+function pickEq(btn,good){if(gotEq)return;
+  if(good){btn.classList.add('ok');gotEq=true;sfx('ok');
+    [...el('eqOpts').children].forEach(b=>{if(b!==btn)b.classList.add('dim');});
+    el('fb').innerHTML='식이 맞아요! 이제 답을 골라요.';el('fb').className='fb good';
+    el('lab2wrap').style.display='block';el('ansOpts').style.display='grid';
+  }else{btn.classList.add('no');setTimeout(()=>btn.classList.remove('no'),450);sfx('no');
+    el('fb').innerHTML='더하기가 아니에요. <b>같은 크기 묶음이 몇 개</b>인지 보세요.';el('fb').className='fb bad';}
+}
+function pickAns(btn,good){if(gotAns)return;
+  if(good){btn.classList.add('ok');gotAns=true;sfx('ok');
+    [...el('ansOpts').children].forEach(b=>{if(b!==btn)b.classList.add('dim');});
+    ok++;el('hOk').textContent=ok;
+    el('fb').innerHTML='🎉 맞아요! '+cur.b+' × '+cur.a+' = '+cur.v+cur.ctx.u;el('fb').className='fb good';
+    say(cur.b+' 곱하기 '+cur.a+'는 '+cur.v);
+    el('nextBtn').style.display='inline-block';
+  }else{btn.classList.add('no');setTimeout(()=>btn.classList.remove('no'),450);sfx('no');
+    el('fb').innerHTML='다시 세어 볼까요? '+cur.b+'씩 '+cur.a+'묶음이에요.';el('fb').className='fb bad';}
+}
+function next(){qi++;if(qi<TOTAL)load();else win();}
+function win(){el('game').style.display='none';el('win').style.display='block';el('winMsg').textContent=TOTAL+'문제 중 '+ok+'개를 맞혔어요! ('+[...SEL].sort((x,y)=>x-y).join('·')+'단)';say('참 잘했어요!');}
+function restart(){start();}
+function backToSetup(){el('game').style.display='none';el('win').style.display='none';el('setup').style.display='block';}
+buildDans();validate();
+</script>
+</body>
+</html>

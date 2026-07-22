@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>식을 그림으로 · 그림으로 표현하기</title>
+<style>
+:root{
+  --cream:#FBF7EF;--paper:#fff;--ink:#3B4551;--ink2:#6B7684;
+  --blue:#5B84A6;--blue-d:#3D5A6E;--peach:#F4A98A;--coral:#F08C6E;
+  --mint:#8FCBB4;--mint-d:#5FAE93;--sun:#F6CE6B;--line:#E7DFD1;--good:#5FAE93;--bad:#E7897A;
+  --g-count:#4A78C4;--g-size:#E58A4E;
+  --shadow:0 10px 30px rgba(80,90,110,.12);--shadow-s:0 4px 14px rgba(80,90,110,.10);
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:"Apple SD Gothic Neo","Malgun Gothic",system-ui,sans-serif;color:var(--ink);
+  background:radial-gradient(1200px 500px at 15% -8%,#FDEfe0,transparent 60%),
+    radial-gradient(1000px 500px at 95% 0%,#E7F1EC,transparent 55%),var(--cream);
+  -webkit-user-select:none;user-select:none;-webkit-tap-highlight-color:transparent;min-height:100vh}
+button{font-family:inherit;cursor:pointer;border:none}
+.wrap{max-width:760px;margin:0 auto;padding:18px 16px 50px}
+.top{display:flex;align-items:center;gap:10px;padding:6px 4px 14px}
+.logo{font-size:21px;font-weight:900;color:var(--blue-d);letter-spacing:-.5px}
+.logo small{font-size:12.5px;color:var(--coral);font-weight:800;margin-left:6px}
+.setup{background:var(--paper);border:1px solid var(--line);border-radius:24px;box-shadow:var(--shadow);padding:26px 24px;max-width:560px;margin:10px auto}
+.setup h1{font-size:23px;font-weight:900;color:var(--blue-d);text-align:center;letter-spacing:-.6px}
+.setup .lead{text-align:center;color:var(--ink2);font-size:14px;font-weight:600;margin:4px 0 20px}
+.bt{font-size:14px;font-weight:900;color:var(--blue-d);margin-bottom:10px}
+.dans{display:flex;gap:9px;flex-wrap:wrap;justify-content:center}
+.dan{width:50px;height:50px;border-radius:15px;border:2.5px solid var(--line);background:#FCFAF5;font-size:19px;font-weight:900;color:var(--ink2);transition:.12s}
+.dan.on{background:var(--blue);color:#fff;border-color:var(--blue);transform:translateY(-2px)}
+.dan-all{margin-top:8px;height:44px;padding:0 14px;border-radius:14px;border:2.5px dashed var(--line);background:#fff;font-weight:800;color:var(--ink2);font-size:13px}
+.startbtn{width:100%;margin-top:20px;padding:16px;border-radius:16px;background:var(--peach);color:#fff;font-size:19px;font-weight:900;box-shadow:0 6px 16px rgba(240,140,110,.35);transition:.12s}
+.startbtn:hover{transform:translateY(-2px)}.startbtn:disabled{opacity:.5;transform:none}
+.warn{color:var(--coral);font-size:12.5px;font-weight:700;text-align:center;min-height:16px;margin-top:6px}
+
+#game{display:none}
+.hud{display:flex;align-items:center;gap:10px;background:var(--paper);border:1px solid var(--line);border-radius:16px;box-shadow:var(--shadow-s);padding:10px 14px;margin-bottom:14px}
+.hud .stat{font-size:13.5px;font-weight:800;color:var(--ink2)}.hud .stat b{color:var(--mint-d);font-size:17px}
+.hud .ghost{margin-left:auto;background:#fff;border:2px solid var(--line);color:var(--ink2);font-weight:800;font-size:13px;padding:9px 14px;border-radius:12px}
+.card{background:var(--paper);border:1px solid var(--line);border-radius:22px;box-shadow:var(--shadow);padding:24px 22px 26px}
+.eqbig{text-align:center;font-size:40px;font-weight:900;color:var(--blue-d);letter-spacing:-1px;margin-bottom:4px}
+.eqbig .b{color:var(--g-size)}.eqbig .a{color:var(--g-count)}
+.subq{text-align:center;font-size:14.5px;color:var(--ink2);font-weight:700;margin-bottom:16px}
+.ctrls{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-bottom:12px}
+.ctrl{background:#FCFAF5;border:2px solid var(--line);border-radius:16px;padding:10px 14px;text-align:center}
+.ctrl .cl{font-size:12px;font-weight:900;margin-bottom:6px}
+.ctrl.b .cl{color:var(--g-size)}.ctrl.a .cl{color:var(--g-count)}
+.stepper{display:flex;align-items:center;gap:10px}
+.stepper button{width:40px;height:40px;border-radius:12px;background:#fff;border:2px solid var(--line);font-size:22px;font-weight:900;color:var(--blue-d)}
+.stepper .v{font-size:26px;font-weight:900;min-width:34px}
+.ctrl.b .v{color:var(--g-size)}.ctrl.a .v{color:var(--g-count)}
+.stage{display:flex;gap:12px;flex-wrap:wrap;justify-content:center;min-height:120px;align-items:center;background:#FCFAF5;border:2px dashed var(--line);border-radius:18px;padding:14px;margin-bottom:6px}
+.grp{border:3px solid var(--g-size);border-radius:50%/40%;background:#fff;padding:9px 11px;display:grid;gap:5px;animation:pop .25s}
+@keyframes pop{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+.grp i{width:16px;height:16px;border-radius:50%;background:var(--g-count)}
+.tot{text-align:center;font-size:15px;font-weight:800;color:var(--ink2);margin-top:6px}
+.row{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:16px}
+.bigbtn{background:var(--mint);color:#fff;font-weight:900;font-size:16px;padding:13px 22px;border-radius:14px;box-shadow:0 5px 14px rgba(95,174,147,.3)}
+.ghostbtn{background:#fff;border:2px solid var(--line);color:var(--ink2);font-weight:800;font-size:15px;padding:12px 18px;border-radius:14px}
+.fb{min-height:30px;font-size:18px;font-weight:900;text-align:center;margin-top:14px}
+.fb.good{color:var(--good)}.fb.bad{color:var(--bad)}
+#win{display:none;text-align:center;background:linear-gradient(135deg,#EAF3EE,#FCE7D6);border:1px solid var(--line);border-radius:24px;padding:30px 24px;box-shadow:var(--shadow);max-width:500px;margin:18px auto}
+#win .big{font-size:52px}#win h2{font-size:25px;font-weight:900;color:var(--blue-d);margin:6px 0}#win p{color:var(--ink2);font-weight:700}
+#win .row button{padding:13px 22px;border-radius:14px;font-size:16px;font-weight:800}
+#win .again{background:var(--mint);color:#fff}#win .reset{background:#fff;border:2px solid var(--line);color:var(--ink2)}
+.footer{text-align:center;font-size:12px;color:var(--ink2);opacity:.8;margin-top:30px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top"><div class="logo">🎨 식을 그림으로<small>Oncuvate</small></div></div>
+
+  <div class="setup" id="setup">
+    <h1>식을 그림으로!</h1>
+    <div class="lead">곱셈식을 보고 <b class="num-b" style="color:var(--g-size)">한 묶음 크기</b>와 <b class="num-a" style="color:var(--g-count)">묶음 수</b>를 맞춰 그려요.</div>
+    <div class="bt" style="text-align:center">어떤 단으로 할까요? <span style="font-weight:700;color:var(--ink2)">(여러 개 가능)</span></div>
+    <div class="dans" id="dans"></div>
+    <div style="text-align:center"><button class="dan-all" onclick="allDans()">전체 선택 / 해제</button></div>
+    <button class="startbtn" id="startBtn" onclick="start()">시작하기 🎮</button>
+    <div class="warn" id="warn"></div>
+  </div>
+
+  <div id="game">
+    <div class="hud">
+      <span class="stat">맞힌 문제 <b id="hOk">0</b></span>
+      <span class="stat" style="color:var(--ink2)">· 문제 <b id="hNo" style="color:var(--blue)">1</b> / 10</span>
+      <button class="ghost" onclick="backToSetup()">⚙ 설정</button>
+    </div>
+    <div class="card">
+      <div class="eqbig" id="eq"></div>
+      <div class="subq">이 식과 똑같이 <b>묶음 그림</b>을 만들어요</div>
+      <div class="ctrls">
+        <div class="ctrl b"><div class="cl">한 묶음 크기</div>
+          <div class="stepper"><button onclick="step('b',-1)">−</button><span class="v" id="vb">1</span><button onclick="step('b',1)">＋</button></div></div>
+        <div class="ctrl a"><div class="cl">묶음 수</div>
+          <div class="stepper"><button onclick="step('a',-1)">−</button><span class="v" id="va">1</span><button onclick="step('a',1)">＋</button></div></div>
+      </div>
+      <div class="stage" id="stage"></div>
+      <div class="tot" id="tot"></div>
+      <div class="row">
+        <button class="bigbtn" onclick="check()">확인</button>
+        <button class="ghostbtn" onclick="hint()">💡 도와줘</button>
+      </div>
+      <div class="fb" id="fb"></div>
+    </div>
+  </div>
+
+  <div id="win">
+    <div class="big">🎉</div><h2>다 그렸어요!</h2><p id="winMsg"></p>
+    <div class="row" style="display:flex;gap:10px;justify-content:center;margin-top:18px">
+      <button class="again" onclick="restart()">한 번 더 🔁</button>
+      <button class="reset" onclick="backToSetup()">설정 바꾸기</button>
+    </div>
+  </div>
+  <div class="footer">© ONCUVATE · 식을 그림으로 · 시간 재기 없이 내 속도로</div>
+</div>
+
+<script>
+const el=id=>document.getElementById(id);
+let SEL=new Set([2,3,4,5]), Q=[], qi=0, ok=0, cur=null, myB=1, myA=1;
+const TOTAL=10;
+let _ac=null;
+function sfx(k){try{_ac=_ac||new(window.AudioContext||window.webkitAudioContext)();const t=_ac.currentTime;const s=k==='ok'?[[660,0],[990,.12]]:k==='no'?[[300,0],[180,.16]]:[[520,0]];s.forEach(([f,d])=>{const o=_ac.createOscillator(),g=_ac.createGain();o.connect(g);g.connect(_ac.destination);o.frequency.setValueAtTime(f,t+d);g.gain.setValueAtTime(.1,t+d);g.gain.exponentialRampToValueAtTime(.001,t+d+.18);o.start(t+d);o.stop(t+d+.2);});}catch(e){}}
+function say(t){try{speechSynthesis.cancel();const u=new SpeechSynthesisUtterance(t);u.lang='ko-KR';u.rate=.9;speechSynthesis.speak(u);}catch(e){}}
+
+function buildDans(){const d=el('dans');d.innerHTML='';for(let n=2;n<=9;n++){const b=document.createElement('button');b.className='dan'+(SEL.has(n)?' on':'');b.textContent=n;b.onclick=()=>{SEL.has(n)?SEL.delete(n):SEL.add(n);buildDans();validate();};d.appendChild(b);}}
+function allDans(){SEL.size===8?SEL.clear():SEL=new Set([2,3,4,5,6,7,8,9]);buildDans();validate();}
+function validate(){el('startBtn').disabled=SEL.size===0;el('warn').textContent=SEL.size===0?'단을 하나 이상 골라 주세요.':'';}
+
+function makeQ(){const dans=[...SEL];const dan=dans[Math.floor(Math.random()*dans.length)];const n=1+Math.floor(Math.random()*9);return {b:dan,a:n,v:dan*n};}
+function start(){if(SEL.size===0)return;Q=[];for(let i=0;i<TOTAL;i++)Q.push(makeQ());qi=0;ok=0;
+  el('setup').style.display='none';el('win').style.display='none';el('game').style.display='block';el('hOk').textContent='0';load();}
+function load(){cur=Q[qi];myB=1;myA=1;el('hNo').textContent=(qi+1);
+  el('eq').innerHTML='<span class="b">'+cur.b+'</span> × <span class="a">'+cur.a+'</span>';
+  el('fb').textContent='';el('fb').className='fb';draw();}
+function step(k,d){if(k==='b')myB=Math.max(1,Math.min(9,myB+d));else myA=Math.max(1,Math.min(9,myA+d));draw();sfx('tick');}
+function draw(){el('vb').textContent=myB;el('va').textContent=myA;
+  let g='';for(let i=0;i<myA;i++){const cols=Math.min(myB,3);let inner='';for(let k=0;k<myB;k++)inner+='<i></i>';
+    g+='<div class="grp" style="grid-template-columns:repeat('+cols+',16px)">'+inner+'</div>';}
+  el('stage').innerHTML=g;
+  el('tot').innerHTML='지금 그림: 한 묶음 <b style="color:var(--g-size)">'+myB+'</b>개 × <b style="color:var(--g-count)">'+myA+'</b>묶음 = <b>'+(myB*myA)+'</b>개';}
+function hint(){el('fb').innerHTML='💡 한 묶음에 <b style="color:var(--g-size)">'+cur.b+'</b>개씩, 묶음은 <b style="color:var(--g-count)">'+cur.a+'</b>개!';el('fb').className='fb';}
+function check(){if(myB===cur.b&&myA===cur.a){el('fb').innerHTML='🎉 딱 맞아요! <span style="color:var(--g-size)">'+cur.b+'</span> × <span style="color:var(--g-count)">'+cur.a+'</span> = '+cur.v;el('fb').className='fb good';sfx('ok');say(cur.b+'개씩 '+cur.a+'묶음, '+cur.v);ok++;el('hOk').textContent=ok;
+    setTimeout(()=>{qi++;if(qi<TOTAL)load();else win();},1300);}
+  else{const msg=(myB*myA===cur.v)?'개수는 맞지만 <b>묶음 모양</b>이 달라요. 한 묶음 크기를 다시 봐요.':'아직 달라요. 한 묶음 크기와 묶음 수를 맞춰 봐요.';
+    el('fb').innerHTML=msg;el('fb').className='fb bad';sfx('no');}}
+function win(){el('game').style.display='none';el('win').style.display='block';el('winMsg').textContent='10문제 중 '+ok+'개를 맞혔어요! ('+[...SEL].sort((x,y)=>x-y).join('·')+'단)';say('참 잘했어요!');}
+function restart(){start();}
+function backToSetup(){el('game').style.display='none';el('win').style.display='none';el('setup').style.display='block';}
+buildDans();validate();
+</script>
+</body>
+</html>
