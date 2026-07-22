@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>온큐베이트 · 구구단 술술</title>
+<style>
+  :root{
+    --gr:#2F9E8F; --gr-d:#1F7A6E; --gr-l:#E7F5F2; --gr-bd:#CDEAE4;
+    --or:#E58A4E; --or-l:#FFF3E8;
+    --ink:#33405A; --gray:#7C879B; --card:#fff; --bg:#F6FAF9; --bd:#E6EFEC;
+  }
+  *{box-sizing:border-box;margin:0;padding:0;}
+  body{font-family:'Pretendard','Malgun Gothic',system-ui,-apple-system,sans-serif;background:var(--bg);
+    color:var(--ink);-webkit-font-smoothing:antialiased;padding:0 18px 60px;}
+  .wrap{max-width:900px;margin:0 auto;}
+  header{text-align:center;padding:52px 0 24px;}
+  .brand{display:inline-flex;align-items:center;gap:9px;font-size:15px;font-weight:800;color:var(--gr-d);
+    letter-spacing:.3px;margin-bottom:18px;background:var(--gr-l);border:1.5px solid var(--gr-bd);
+    border-radius:20px;padding:7px 16px;}
+  h1{font-size:34px;font-weight:900;letter-spacing:-1px;line-height:1.25;margin-bottom:12px;}
+  h1 .hl{color:var(--gr);}
+  .sub{font-size:15px;color:var(--gray);font-weight:600;line-height:1.6;}
+  .era-row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:18px;}
+  .era{font-size:12.5px;font-weight:700;color:var(--gr-d);background:#fff;border:1.5px solid var(--gr-bd);
+    border-radius:20px;padding:6px 14px;}
+  .xlink{margin-top:16px;font-size:13px;font-weight:700;}
+  .xlink a{color:var(--gr-d);text-decoration:underline;}
+
+  .why{margin:24px 0 6px;background:#fff;border:1.5px solid var(--bd);border-radius:20px;padding:20px 22px;}
+  .why h3{font-size:16px;font-weight:900;margin-bottom:10px;color:var(--gr-d);text-align:center;}
+  .steps{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
+  .stp{flex:1 1 150px;background:var(--bg);border:1.5px solid var(--bd);border-radius:14px;padding:12px 14px;text-align:center;}
+  .stp .n{font-size:12px;font-weight:900;color:var(--gr);}
+  .stp .t{font-size:13.5px;font-weight:800;color:var(--ink);margin-top:4px;line-height:1.4;}
+
+  .cat{margin-top:30px;}
+  .cat-head{display:flex;align-items:center;gap:10px;margin-bottom:6px;}
+  .cat-head .ico{font-size:22px;}
+  .cat-head h2{font-size:20px;font-weight:900;letter-spacing:-.5px;}
+  .cat-sub{font-size:12.5px;color:var(--gray);font-weight:700;margin-bottom:14px;}
+  .grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;}
+  @media(max-width:720px){.grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:480px){.grid{grid-template-columns:1fr;} h1{font-size:27px;}}
+  .card2{position:relative;display:flex;flex-direction:column;align-items:center;background:var(--card);
+    border:1.5px solid var(--bd);border-radius:18px;padding:20px 14px;text-decoration:none;color:inherit;
+    transition:transform .16s,box-shadow .16s,border-color .16s;overflow:hidden;text-align:center;}
+  .card2.live:hover{transform:translateY(-4px);box-shadow:0 14px 30px rgba(47,158,143,.18);border-color:var(--gr-bd);}
+  .card2 .dan{font-size:30px;font-weight:900;color:var(--gr-d);letter-spacing:-1px;}
+  .card2 .dan small{font-size:16px;}
+  .card2 .desc{font-size:12px;color:var(--gray);font-weight:700;margin:6px 0 12px;line-height:1.45;min-height:34px;}
+  .card2 .go{display:inline-flex;align-items:center;justify-content:center;gap:5px;background:var(--gr);color:#fff;
+    font-size:13px;font-weight:800;border-radius:11px;padding:9px 16px;width:100%;}
+  .card2.live:hover .go{background:var(--gr-d);}
+  .card2.soon{opacity:.72;}
+  .card2.soon .go{background:#E6ECEA;color:#9AA6A2;}
+  .card2.rev{background:var(--or-l);border-color:#F3DEC8;}
+  .card2.rev .dan{color:var(--or);}
+  .card2.bonus{background:var(--gr-l);border-color:var(--gr-bd);}
+  .badge{position:absolute;top:10px;right:10px;font-size:10px;font-weight:800;color:#fff;background:var(--gr);
+    border-radius:9px;padding:3px 8px;}
+  .badge.easy{background:var(--or);}
+  .note{margin-top:26px;background:var(--gr-l);border:1.5px solid var(--gr-bd);border-radius:16px;padding:16px 18px;
+    font-size:13px;color:var(--gr-d);font-weight:600;line-height:1.7;}
+  .note b{font-weight:900;}
+  footer{text-align:center;margin-top:38px;font-size:12px;color:var(--gray);font-weight:600;line-height:1.8;}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">🎯 Oncuvate 구구단</div>
+    <h1>구구단 <span class="hl">술술</span></h1>
+    <p class="sub">빨리 외우기가 아니라, <b>세다 보니 저절로 외워지는</b> 구구단.<br>
+      쉬운 단부터 하나씩, 시간 재기 없이 내 속도로 자신감을 붙여요.</p>
+    <div class="era-row">
+      <span class="era">🦘 뛰어 세기로 표 만들기</span>
+      <span class="era">🔍 숨은 규칙 찾기</span>
+      <span class="era">🧩 짝 맞추기 게임</span>
+      <span class="era">⏱ 시간 재기 없음</span>
+    </div>
+    <div class="xlink">✏️ 곱셈이 무슨 뜻인지부터 볼까요? →
+      <a href="math_language.html">언어로 풀어내는 수학</a></div>
+  </header>
+
+  <div class="why">
+    <h3>이렇게 배워요 — 외우는 게 아니라 자라나요</h3>
+    <div class="steps">
+      <div class="stp"><div class="n">1</div><div class="t">🦘 같은 칸씩 뛰며<br>표를 채워요</div></div>
+      <div class="stp"><div class="n">2</div><div class="t">🔍 숨은 규칙을<br>찾아요</div></div>
+      <div class="stp"><div class="n">3</div><div class="t">🎮 게임으로<br>여러 번 만나요</div></div>
+      <div class="stp"><div class="n">4</div><div class="t">⭐ 내 속도로<br>익숙해져요</div></div>
+    </div>
+  </div>
+
+  <!-- ===== 쉬운 단부터 ===== -->
+  <section class="cat">
+    <div class="cat-head"><span class="ico">🌱</span><h2>쉬운 단부터</h2></div>
+    <div class="cat-sub">가장 규칙이 뚜렷한 단이에요. 여기서 자신감을 붙여요.</div>
+    <div class="grid">
+      <div class="card2 soon bonus"><span class="badge easy">가장 쉬움</span>
+        <div class="dan">10<small>단</small></div>
+        <div class="desc">뒤에 0만 붙이면 끝! 보너스 단</div><span class="go">준비 중</span></div>
+      <a class="card2 live" href="times_tables_05.html"><span class="badge">첫 공개</span>
+        <div class="dan">5<small>단</small></div>
+        <div class="desc">끝자리가 5, 0 반복. 뛰어 세기로 술술</div><span class="go">시작하기 →</span></a>
+      <div class="card2 soon"><div class="dan">2<small>단</small></div>
+        <div class="desc">두 배 하기. 가장 친근한 단</div><span class="go">준비 중</span></div>
+    </div>
+  </section>
+
+  <!-- ===== 두 배 가족 ===== -->
+  <section class="cat">
+    <div class="cat-head"><span class="ico">✌️</span><h2>두 배 가족</h2></div>
+    <div class="cat-sub">2단을 두 배 하면 4단, 4단을 두 배 하면 8단. 이미 아는 걸로 만들어요.</div>
+    <div class="grid">
+      <div class="card2 soon"><div class="dan">4<small>단</small></div>
+        <div class="desc">2단을 두 번. 2단의 두 배</div><span class="go">준비 중</span></div>
+      <div class="card2 soon rev"><div class="dan">2·4<small>단</small></div>
+        <div class="desc">두 단을 섞어 복습해요</div><span class="go">준비 중</span></div>
+      <div class="card2 soon"><div class="dan">8<small>단</small></div>
+        <div class="desc">4단을 두 번. 4단의 두 배</div><span class="go">준비 중</span></div>
+      <div class="card2 soon rev"><div class="dan">4·8<small>단</small></div>
+        <div class="desc">두 단을 섞어 복습해요</div><span class="go">준비 중</span></div>
+    </div>
+  </section>
+
+  <!-- ===== 세 배 가족 ===== -->
+  <section class="cat">
+    <div class="cat-head"><span class="ico">🖐️</span><h2>세 배 가족</h2></div>
+    <div class="cat-sub">3단을 두 배 하면 6단. 9단은 손가락 규칙으로 쉬워요.</div>
+    <div class="grid">
+      <div class="card2 soon"><div class="dan">3<small>단</small></div>
+        <div class="desc">세 개씩 세기</div><span class="go">준비 중</span></div>
+      <div class="card2 soon"><div class="dan">6<small>단</small></div>
+        <div class="desc">3단을 두 번. 3단의 두 배</div><span class="go">준비 중</span></div>
+      <div class="card2 soon rev"><div class="dan">3·6<small>단</small></div>
+        <div class="desc">두 단을 섞어 복습해요</div><span class="go">준비 중</span></div>
+      <div class="card2 soon"><div class="dan">9<small>단</small></div>
+        <div class="desc">손가락 규칙·끝자리 규칙</div><span class="go">준비 중</span></div>
+      <div class="card2 soon rev"><div class="dan">6·9<small>단</small></div>
+        <div class="desc">두 단을 섞어 복습해요</div><span class="go">준비 중</span></div>
+    </div>
+  </section>
+
+  <!-- ===== 마지막 도전 ===== -->
+  <section class="cat">
+    <div class="cat-head"><span class="ico">🏆</span><h2>마지막 도전</h2></div>
+    <div class="cat-sub">사실 여기 오면 대부분 이미 아는 곱셈이에요. 몇 개만 남았어요!</div>
+    <div class="grid">
+      <div class="card2 soon"><div class="dan">7<small>단</small></div>
+        <div class="desc">가장 마지막. 새로 외울 건 몇 개뿐</div><span class="go">준비 중</span></div>
+    </div>
+  </section>
+
+  <div class="note">
+    <b>선생님께.</b> 이 자료는 유창성(빨리 떠올리기) 연습입니다. 뜻을 아직 어려워하는 아이라면
+    <a href="math_language.html" style="color:var(--gr-d);font-weight:900">언어로 풀어내는 수학</a>을 먼저 해 보세요.
+    모든 단은 <b>시간 재기가 없고</b>, 아이가 막히면 언제든 <b>그림으로 돌아가</b> 셀 수 있게 했습니다.
+    순서대로가 아니라 <b>필요한 단만 골라</b> 반복해도 됩니다. 화면 동기화·판서·리포트는 여기서도 그대로 됩니다.<br>
+    ⚠️ 파일을 내려받아 직접 열면 동기화가 되지 않습니다. 반드시 이 웹 주소로 열어 주세요.
+  </div>
+
+  <footer>
+    © ONCUVATE · 구구단 술술<br>
+    세다 보니 외워지는, 시간에 쫓기지 않는 구구단
+  </footer>
+</div>
+</body>
+</html>
