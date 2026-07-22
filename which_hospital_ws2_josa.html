@@ -1,0 +1,41 @@
+<!doctype html><html lang="ko"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1"><title>어떤 병원으로 가야 할까? · 조사 채우기</title>
+<style>
+:root{color-scheme:light}@page{size:A4;margin:13mm}*{box-sizing:border-box}
+body{font-family:"Pretendard","Malgun Gothic",system-ui,sans-serif;color:#2b2450;margin:0;background:#eee}
+.sheet{background:#fff;max-width:820px;margin:16px auto;padding:26px 30px;min-height:1000px}
+.top{display:flex;justify-content:space-between;align-items:flex-end;border-bottom:3px solid #6A5DA7;padding-bottom:10px;margin-bottom:4px}
+.title{font-size:22px;font-weight:900}.title small{display:block;font-size:12px;color:#9490AA;font-weight:700;margin-top:3px}
+.namebox{font-size:12.5px;color:#5c5480;font-weight:700;text-align:right}.namebox span{display:inline-block;border-bottom:1px solid #bbb;width:82px;margin-left:4px}
+.hd{display:flex;justify-content:space-between;align-items:center;margin:16px 0 4px}
+h2{font-size:17px;margin:0;padding:7px 14px;background:#EEEBF8;border-radius:8px;color:#4b4470}
+.desc{font-size:12.5px;color:#7a72a0;font-weight:700;margin:8px 0 12px}
+.qrbox{text-align:center;flex:none;margin-left:14px}.qrbox img{width:104px;height:104px;border:1px solid #eee}
+.qrbox .u{font-size:10px;color:#9490AA;margin-top:2px}
+.num{display:inline-flex;align-items:center;justify-content:center;width:23px;height:23px;background:#6A5DA7;color:#fff;border-radius:50%;font-size:12.5px;font-weight:800;flex:none}
+.s1grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px 30px;margin-top:6px}
+.s1item{display:flex;align-items:center;gap:9px;font-size:22px;font-weight:800}
+.prompt{font-size:24px;color:#8a83b0}.arrow{color:#B7ADE0;font-size:20px}.wl{flex:1;border-bottom:2px solid #6A5DA7;height:30px;min-width:110px}
+.bank{display:flex;gap:8px;flex-wrap:wrap;background:#F7F6FC;border:1px dashed #B7ADE0;border-radius:10px;padding:8px 12px;margin-bottom:14px}
+.bankchip{font-size:16px;font-weight:900;color:#6A5DA7;padding:2px 10px;background:#fff;border-radius:8px;border:1px solid #E2DEEF}
+.s2item{display:flex;align-items:flex-start;gap:9px;font-size:21px;font-weight:800;padding:9px 0;line-height:2}
+.s2sent{line-height:2.1}
+.pbox{display:inline-block;width:40px;height:30px;border:2px solid #6A5DA7;border-radius:5px;margin:0 3px;vertical-align:-6px}
+.s3item{margin:10px 0 16px}.s3head{display:flex;align-items:center;gap:8px;margin-bottom:5px}
+.grid{display:flex;margin:3px 0}.cell{width:31px;height:31px;border:1px solid #b9b3d6;margin-right:-1px;background:#fff}
+.ans{margin-top:20px;border:1px dashed #c9c3e0;border-radius:10px;padding:10px 14px;font-size:11.5px;color:#7a72a0;line-height:1.9}
+.anstitle{font-weight:900;color:#6A5DA7;margin-bottom:3px}.ans b{color:#5c5480}
+.foot{text-align:center;font-size:10.5px;color:#b3adc9;margin-top:18px}
+.printbtn{position:fixed;top:12px;right:12px;background:#6A5DA7;color:#fff;border:0;padding:10px 18px;border-radius:10px;font-weight:800;cursor:pointer;font-size:14px}
+@media print{.printbtn{display:none}body{background:#fff}.sheet{margin:0;max-width:none;padding:0;min-height:auto}.cell,.bankchip,h2,.num,.qrbox img{-webkit-print-color-adjust:exact;print-color-adjust:exact}}
+</style></head><body>
+<button class="printbtn" onclick="window.print()">🖨 인쇄</button>
+<div class="sheet">
+  <div class="top"><div class="title">어떤 병원으로 가야 할까? 워크시트<small>온큐리더기 by Oncuvate · 두루책방 그림책</small></div>
+    <div class="namebox">이름 <span></span><br>날짜 <span></span></div></div>
+  <div class="hd"><h2>② 빈칸에 알맞은 조사 채우기</h2>
+    <div class="qrbox"><img src="data:image/png;base64,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" alt="음성 QR"><div class="u">🎧 QR 음성</div></div></div>
+  <div class="desc"><b>QR 음성을 듣고</b>, 보기에서 골라 네모 칸에 알맞은 조사를 쓰세요.</div>
+  <div class="bank"><span class="bankchip">은</span> <span class="bankchip">는</span> <span class="bankchip">을</span> <span class="bankchip">를</span> <span class="bankchip">이</span> <span class="bankchip">가</span> <span class="bankchip">으로</span> <span class="bankchip">로</span> <span class="bankchip">에</span> <span class="bankchip">과</span> <span class="bankchip">와</span> <span class="bankchip">도</span></div><div class="s2item"><span class="num">1</span><span class="s2sent">콜록콜록 감기<span class="pbox"></span> 걸렸<span class="pbox"></span> 때 배가 아플 때 내과에 가요</span></div><div class="s2item"><span class="num">2</span><span class="s2sent">어린이<span class="pbox"></span> 아픈 곳을 잘 살펴 주고 예방 주사<span class="pbox"></span> 놔 주는 소아청소년과에 가요</span></div><div class="s2item"><span class="num">3</span><span class="s2sent">따끔따끔 목<span class="pbox"></span> 아플 때 귀<span class="pbox"></span> 아플 때는 이비인후과에 가요</span></div><div class="s2item"><span class="num">4</span><span class="s2sent">눈동자<span class="pbox"></span> 시리거나 눈가<span class="pbox"></span> 다래끼가 났을 때 안과에 가요</span></div><div class="s2item"><span class="num">5</span><span class="s2sent">피부<span class="pbox"></span> 가렵거나 뜨거운 불<span class="pbox"></span> 데었을 때 피부과에 가요</span></div><div class="s2item"><span class="num">6</span><span class="s2sent">넘어져서 발목<span class="pbox"></span> 삐끗하거나 높<span class="pbox"></span> 데서 떨어졌을 때 정형외과에 가요</span></div>
+  <div class="foot">© Enuma, Inc. 두루책방 · CC BY 4.0 · 온큐리더기 by Oncuvate · 무단 도용·복제 금지 · <span style="color:#c9c3e0">https://read.oncuvate.com/which_hospital_audio2.html</span></div>
+</div></body></html>

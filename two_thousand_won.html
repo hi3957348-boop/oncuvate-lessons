@@ -1604,5 +1604,19 @@ window.Oc=(function(){
   window.OcAct={get:function(){ return {a:aIdx,j:jIdx,jm:jMode}; }, set:function(v){ if(!v)return; aIdx=v.a; jIdx=v.j; if(v.jm)jMode=v.jm; if(gMode==='anagram'&&ANAG.length)startAnagram(); else if(gMode==='josa'&&JOSA.length)startJosa(); }};
 })();
 </script>
+<script>/*OC_WSBTN*/
+(function(){
+ function ready(fn){ if(document.readyState!=="loading")fn(); else document.addEventListener("DOMContentLoaded",fn); }
+ ready(function(){ var mb=document.querySelector(".modebar"); if(!mb||document.getElementById("mWS"))return;
+  var b=document.createElement("button"); b.id="mWS"; b.type="button"; b.textContent="\uD83D\uDCC4 \uC6CC\uD06C\uC2DC\uD2B8"; mb.appendChild(b);
+  function dl(u,n){ var a=document.createElement("a"); a.href=u; a.download=n; document.body.appendChild(a); a.click(); setTimeout(function(){a.remove();},100); }
+  b.onclick=function(e){ e.preventDefault();
+   dl("two_thousand_won_ws1_batchim.html","two_thousand_won_빠진받침.html");
+   setTimeout(function(){ dl("two_thousand_won_ws2_josa.html","two_thousand_won_조사채우기.html"); },500);
+   setTimeout(function(){ dl("two_thousand_won_ws3_dictation.html","two_thousand_won_받아쓰기.html"); },1000);
+  };
+ });
+})();
+</script>
 </body>
 </html>
