@@ -1011,7 +1011,7 @@ function editRule(id){
   // 업무내용 (4대 분류) — 규칙 안에서 항목을 바로 입력
   const wbox=el('div',{class:'subtle'});
   wbox.append(el('b',{},'업무내용 (THEN · 4대 분류)'),
-    el('div',{class:'hint',style:'margin:2px 0 8px'},'분류별로 항목을 바로 입력하세요. 여기 넣은 내용이 결과 화면에 카테고리별로 정리됩니다. ⓘ 로 근거텍스트를 달 수 있습니다.'));
+    el('div',{class:'hint',style:'margin:2px 0 8px',html:'분류별로 항목을 바로 입력하세요. 결과 화면에 카테고리별로 정리됩니다. 입력한 항목은 <b>업무사전에 자동으로 쌓여</b> 다음에 같은 분류에서 <b>자동완성</b>으로 재사용되며, 사전에 근거가 있으면 자동으로 채워집니다.'}));
   const catHost=el('div'); wbox.append(catHost);
   const effCatOf=e=>normCat(e.item?((model.items.find(x=>x.id===e.item)||{}).cat):e.cat);
   function drawCats(){
@@ -1019,18 +1019,35 @@ function editRule(id){
     CATS.forEach(cat=>{
       const box=el('div',{style:'margin-bottom:10px'});
       box.append(el('div',{style:'font-weight:700;font-size:12.5px;margin-bottom:4px'}, ICON[cat]+' '+cat));
+      // 자동완성: 업무사전에 쌓인 같은 분류 항목
+      const dlId='dl_'+CATS.indexOf(cat);
+      const dl=el('datalist',{id:dlId});
+      [...new Set(model.items.filter(it=>normCat(it.cat)===cat).map(it=>it.label).filter(Boolean))].forEach(lb=>dl.append(el('option',{value:lb})));
+      box.append(dl);
       const list=el('div'); box.append(list);
+      const upsertLib=(label,basis)=>{ const lb=(label||'').trim(); if(!lb)return null;
+        let lib=model.items.find(x=>normCat(x.cat)===cat && x.label===lb);
+        if(!lib){ lib={id:uid('i'),cat,label:lb,basis:basis||''}; model.items.push(lib); }   // 업무사전에 축적
+        else if(basis && !lib.basis){ lib.basis=basis; }
+        return lib; };
       (r.effects||[]).filter(e=>e.type==='ADD'&&effCatOf(e)===cat).forEach(e=>{
         const ref=e.item?(model.items.find(x=>x.id===e.item)||{}):null;
         const row=el('div',{class:'row',style:'flex-wrap:nowrap;margin-bottom:4px;align-items:flex-start'});
         if(ref){ row.append(el('span',{class:'pill',style:'flex:1'}, (ref.label||'(사전 항목)')+' · 사전')); }
         else{
-          row.append(el('input',{style:'flex:1',value:e.label||'',placeholder:cat+' 항목명',oninput:ev=>{e.label=ev.target.value;persist();renderRules();refresh();}}));
+          row.append(el('input',{list:dlId,style:'flex:1',value:e.label||'',placeholder:cat+' 항목명',
+            oninput:ev=>{e.label=ev.target.value;persist();renderRules();refresh();},
+            onchange:ev=>{ const lb=(ev.target.value||'').trim(); e.label=lb;
+              const lib=model.items.find(x=>normCat(x.cat)===cat && x.label===lb);
+              if(lib && !e.basis) e.basis=lib.basis||'';   // 사전에 있으면 근거 자동 채움
+              upsertLib(lb, e.basis); persist(); renderRules(); refresh(); }}));
           row.append(el('button',{class:'btn sm',title:'근거 입력/닫기',onclick:()=>{e._openBasis=!e._openBasis;drawCats();}}, e.basis?'ⓘ*':'ⓘ'));
         }
         row.append(el('button',{class:'btn sm danger',onclick:()=>{const i=r.effects.indexOf(e);if(i>=0)r.effects.splice(i,1);persist();drawCats();renderRules();refresh();}},'×'));
         list.append(row);
-        if(!ref && e._openBasis){ const ta=el('textarea',{rows:2,style:'margin:0 0 6px',placeholder:'근거텍스트(선택) — 결과화면 ⓘ 호버로 표시',oninput:ev=>{e.basis=ev.target.value;persist();refresh();}}); ta.value=e.basis||''; list.append(ta); }
+        if(!ref && e._openBasis){ const ta=el('textarea',{rows:2,style:'margin:0 0 6px',placeholder:'근거텍스트(선택) — 결과화면 ⓘ 호버로 표시',
+          oninput:ev=>{e.basis=ev.target.value;persist();refresh();},
+          onchange:ev=>{ const lib=upsertLib(e.label, e.basis); if(lib) lib.basis=e.basis||lib.basis; persist(); }}); ta.value=e.basis||''; list.append(ta); }
       });
       box.append(el('button',{class:'btn sm',onclick:()=>{r.effects.push({type:'ADD',cat,label:'',basis:''});persist();drawCats();renderRules();refresh();}},'＋ 항목'));
       catHost.append(box);
