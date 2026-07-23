@@ -717,7 +717,7 @@ function editRule(id){
     (r.when.conds||[]).forEach((c,i)=>{
       const row=el('div',{class:'erow'});
       // 대상
-      const fsel=el('select',{onchange:e=>{c.field=e.target.value;persist();renderRules();}});
+      const fsel=el('select',{onchange:e=>{c.field=e.target.value;c.value='';persist();drawConds();renderRules();refresh();}});
       fieldOptionsForCond().forEach(o=>fsel.append(el('option',{value:o.v,selected:c.field===o.v?'selected':null},o.l)));
       row.append(fsel);
       // 연산
@@ -766,7 +766,8 @@ function editRule(id){
         (dk.options||[]).forEach(o=>vs.append(el('option',{value:o,selected:c.value===o?'selected':null},o)));
         wrap.append(vs);
       }else{
-        wrap.append(el('input',{value:c.value??'',oninput:e=>{c.value=e.target.value;persist();renderRules();}}));
+        const itype=(fld&&fld.type==='number')?'number':(fld&&fld.type==='date')?'date':'text';
+        wrap.append(el('input',{type:itype,value:c.value??'',placeholder:fld&&fld.type==='number'?'숫자 입력':'값',oninput:e=>{c.value=e.target.value;persist();renderRules();}}));
       }
     }
     if(['≥','≤','=','≠'].includes(c.op)){
