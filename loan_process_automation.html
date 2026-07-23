@@ -294,7 +294,8 @@ const el = (t,a={},...kids)=>{const n=document.createElement(t);
     else if(k.startsWith('on'))n.addEventListener(k.slice(2),a[k]); else if(a[k]!=null)n.setAttribute(k,a[k]); }
   kids.flat().forEach(c=>n.append(c.nodeType?c:document.createTextNode(c))); return n;};
 const uid = p=>p+'_'+Math.floor(performance.now()*1000%1e9).toString(36)+Math.floor((performance.now()*7)%1e6).toString(36);
-const isEmpty = v=>v==null||v===''||v==='(선택)';
+const isEmpty = v=>{ if(Array.isArray(v)) return v.filter(x=>x!=null&&x!=='').length===0; return v==null||v===''||v==='(선택)'; };
+const fmtVal = v=>Array.isArray(v)?v.filter(Boolean).join(', '):v;
 const num = v=>{const n=parseFloat(String(v).replace(/,/g,''));return isNaN(n)?null:n;};
 const parseDate = v=>{ if(!v)return null; const d=new Date(v); return isNaN(d)?null:d; };
 const addMonths = (d,n)=>{const x=new Date(d.getFullYear(),d.getMonth()+n,d.getDate()); return x;};
@@ -348,7 +349,7 @@ function seedModel(){
        showWhen:{field:'자금종류',op:'∈',value:['토지구입자금']}},
     {id:'자금목적',label:'자금목적',type:'select',options:['사업목적','주거목적','투자목적','기타'],
        showWhen:{field:'자금종류',op:'∈',value:['토지구입자금','부동산구입자금','시설자금']}},
-    {id:'담보종류',label:'담보종류',type:'select',options:['아파트','주택','토지','상가']},
+    {id:'담보종류',label:'담보종류',type:'multi',maxItems:5,options:['아파트','주택','토지','상가','오피스텔','공장','기타']},
     {id:'신용도',label:'신용도',type:'select',options:['일반','우량']},
     {id:'상환구조',label:'상환구조',type:'select',options:['일반','특정상환구조']},
     {id:'권역구분',label:'권역구분',type:'select',options:['권역내','권역외']},
@@ -455,6 +456,15 @@ function isRealField(model,id){ return model.fields.some(f=>f.id===id); }
 
 function evalCond(c, ctx){
   const A = getVal(c.field, ctx);
+  if(Array.isArray(A)){ // 다중값 필드(예: 담보종류 여러 건): 포함 여부로 판정
+    const arr=A.map(String);
+    switch(c.op){
+      case '=': return arr.includes(String(resolveOperand(c.value,ctx)));
+      case '≠': return !arr.includes(String(resolveOperand(c.value,ctx)));
+      case '∈': return Array.isArray(c.value) && c.value.map(String).some(v=>arr.includes(v));
+      default: return false;
+    }
+  }
   switch(c.op){
     case '=': return String(A)===String(resolveOperand(c.value,ctx));
     case '≠': return String(A)!==String(resolveOperand(c.value,ctx));
@@ -629,8 +639,9 @@ function fieldVisible(f, inp){
   if(!f.showWhen) return true;
   const sw=f.showWhen, v=inp[sw.field];
   if(isEmpty(v)) return false;
-  if(sw.op==='∈') return (sw.value||[]).map(String).includes(String(v));
-  return String(v)===String(sw.value);
+  const vals=Array.isArray(v)?v.map(String):[String(v)];
+  if(sw.op==='∈') return (sw.value||[]).map(String).some(x=>vals.includes(x));
+  return vals.includes(String(sw.value));
 }
 function renderForm(){
   const box=$('#form'); box.innerHTML='';
@@ -642,6 +653,20 @@ function renderForm(){
       input=el('select',{onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
       input.append(el('option',{value:''},'(선택)'));
       for(const o of f.options||[]) input.append(el('option',{value:o, selected:inputs[f.id]===o?'selected':null},o));
+    }else if(f.type==='multi'){
+      const arr=Array.isArray(inputs[f.id])?inputs[f.id]:(isEmpty(inputs[f.id])?[]:[inputs[f.id]]);
+      inputs[f.id]=arr;
+      const max=f.maxItems||5;
+      input=el('div');
+      arr.forEach((val,idx)=>{
+        const sel=el('select',{style:'flex:1',onchange:e=>{ if(e.target.value===''){arr.splice(idx,1);} else {arr[idx]=e.target.value;} refresh(); }});
+        sel.append(el('option',{value:''},'(선택/삭제)'));
+        for(const o of f.options||[]) sel.append(el('option',{value:o,selected:val===o?'selected':null},o));
+        input.append(el('div',{class:'row',style:'margin-bottom:4px;flex-wrap:nowrap'}, sel,
+          el('button',{class:'btn sm',title:'삭제',onclick:()=>{arr.splice(idx,1);refresh();}},'×')));
+      });
+      if(arr.length<max) input.append(el('button',{class:'btn sm',onclick:()=>{arr.push('');refresh();}},'＋ 담보 추가 ('+arr.filter(Boolean).length+'/'+max+')'));
+      else input.append(el('div',{class:'hint',style:'margin:2px 0 0'},'최대 '+max+'건까지 입력했습니다'));
     }else if(f.type==='number'){
       input=el('input',{type:'number',value:inputs[f.id]??'',
         oninput:e=>{inputs[f.id]=e.target.value;refreshResult();},
@@ -878,11 +903,12 @@ function editRule(id){
       wrap.append(rsel);
     }else{
       const fld=model.fields.find(f=>f.id===c.field);
-      if(fld&&fld.type==='select'){
+      if(fld&&(fld.type==='select'||fld.type==='multi')){
         const vs=el('select',{onchange:e=>{c.value=e.target.value;persist();renderRules();}});
         vs.append(el('option',{value:''},'(값)'));
         (fld.options||[]).forEach(o=>vs.append(el('option',{value:o,selected:c.value===o?'selected':null},o)));
         wrap.append(vs);
+        if(fld.type==='multi') wrap.append(el('span',{class:'muted',style:'font-size:11px'},'※ 담보 중 하나라도 해당하면'));
       }else if((model.derivedKeys||[]).some(d=>d.id===c.field)){
         const dk=model.derivedKeys.find(d=>d.id===c.field);
         const vs=el('select',{onchange:e=>{c.value=e.target.value;persist();renderRules();}});
@@ -976,7 +1002,7 @@ function renderFields(){
   for(const f of model.fields){
     const tr=el('tr',{style:'cursor:pointer',onclick:()=>editField(f.id)});
     tr.append(el('td',{}, f.label));
-    tr.append(el('td',{}, {select:'선택',number:'숫자',date:'날짜',text:'텍스트'}[f.type]||f.type));
+    tr.append(el('td',{}, ({select:'선택',multi:'다중선택',number:'숫자',date:'날짜',text:'텍스트'}[f.type]||f.type)+(f.type==='multi'?' (최대'+(f.maxItems||5)+')':'')));
     tr.append(el('td',{}, el('span',{class:'muted'}, (f.options||[]).join(', ')||'—')));
     tr.append(el('td',{}, el('span',{class:'cond'}, f.showWhen?condText(f.showWhen):'항상')));
     tr.append(el('td',{onclick:ev=>ev.stopPropagation()}, el('button',{class:'btn sm danger',onclick:()=>{if(confirm('필드 삭제?')){model.fields=model.fields.filter(x=>x.id!==f.id);persist();renderFields();refresh();}}},'삭제')));
@@ -992,12 +1018,15 @@ function editField(id){
   card.append(el('h2',{},'필드 편집'));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'라벨(표시명) — id는 유지되어 규칙/데이터가 깨지지 않습니다'),
     el('input',{value:f.label,oninput:e=>{f.label=e.target.value;persist();renderForm();}})));
-  const ts=el('select',{onchange:e=>{f.type=e.target.value;persist();editField(id);renderForm();}});
-  [['select','선택'],['number','숫자'],['date','날짜'],['text','텍스트']].forEach(([v,l])=>ts.append(el('option',{value:v,selected:f.type===v?'selected':null},l)));
+  const ts=el('select',{onchange:e=>{f.type=e.target.value; if(f.type==='multi'&&!f.maxItems)f.maxItems=5; persist();editField(id);renderForm();}});
+  [['select','선택'],['multi','다중선택(여러 건)'],['number','숫자'],['date','날짜'],['text','텍스트']].forEach(([v,l])=>ts.append(el('option',{value:v,selected:f.type===v?'selected':null},l)));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'유형'), ts));
-  if(f.type==='select')
+  if(f.type==='select'||f.type==='multi')
     card.append(el('label',{class:'f'}, el('span',{class:'lab'},'선택지 (쉼표 구분)'),
       el('input',{value:(f.options||[]).join(', '),oninput:e=>{f.options=e.target.value.split(',').map(s=>s.trim()).filter(Boolean);persist();renderForm();}})));
+  if(f.type==='multi')
+    card.append(el('label',{class:'f'}, el('span',{class:'lab'},'최대 입력 건수'),
+      el('input',{type:'number',value:f.maxItems||5,min:'1',oninput:e=>{f.maxItems=Math.max(1,num(e.target.value)||5);persist();renderForm();}})));
   // 표시조건
   const sw=f.showWhen||{};
   const swWrap=el('div',{class:'subtle'});
@@ -1055,9 +1084,10 @@ function editItem(id){
    예시값 / 초기화 / 저장
    ============================================================ */
 const EXAMPLES={
-  '사례 A · 농지 토지구입(개인사업자)':{신청인유형:'개인사업자',자금종류:'토지구입자금',대상토지지목:'농지',자금목적:'사업목적',담보종류:'토지',신용도:'우량',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
-  '사례 B · LTV 상향 (권역외로 차단)':{담보종류:'아파트',신용도:'우량',상환구조:'특정상환구조',권역구분:'권역외',사무소제한:'없음',자금종류:'시설자금'},
-  '사례 C · 운전자금→부동산구입 재분류':{자금종류:'운전자금',부동산취득일:fmtDate(addMonths(new Date(),-3)),취급일:fmtDate(new Date()),대출금액:'50000',매매가:'48000',선분양여부:'아니오',담보종류:'상가',신용도:'일반',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
+  '사례 A · 농지 토지구입(개인사업자)':{신청인유형:'개인사업자',자금종류:'토지구입자금',대상토지지목:'농지',자금목적:'사업목적',담보종류:['토지'],신용도:'우량',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
+  '사례 B · LTV 상향 (권역외로 차단)':{담보종류:['아파트'],신용도:'우량',상환구조:'특정상환구조',권역구분:'권역외',사무소제한:'없음',자금종류:'시설자금'},
+  '사례 C · 운전자금→부동산구입 재분류':{자금종류:'운전자금',부동산취득일:fmtDate(addMonths(new Date(),-3)),취급일:fmtDate(new Date()),대출금액:'50000',매매가:'48000',선분양여부:'아니오',담보종류:['상가'],신용도:'일반',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
+  '사례 D · 담보 여러 건(토지+아파트)':{자금종류:'시설자금',담보종류:['토지','아파트'],신용도:'우량',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
 };
 $('#btnExample').onclick=(ev)=>{
   const menu=el('div',{class:'card',style:'position:absolute;z-index:30;padding:8px'});
@@ -1111,7 +1141,7 @@ function doPrint(sel, title, withBasis){
   R.calcOutputs.filter(c=>c.defined).forEach(c=>h+='<div><b>'+esc(c.label)+':</b> '+c.total+esc(c.unit)+'</div>');
   h+='</div>';
   const filled=model.fields.filter(f=>!isEmpty(inputs[f.id]));
-  if(filled.length) h+='<div class="meta"><b>신청정보</b> · '+filled.map(f=>esc(f.label)+'='+esc(inputs[f.id])).join(' · ')+'</div>';
+  if(filled.length) h+='<div class="meta"><b>신청정보</b> · '+filled.map(f=>esc(f.label)+'='+esc(fmtVal(inputs[f.id]))).join(' · ')+'</div>';
   for(const cat of sel){
     const items=R.addItems.filter(i=>(catMap[i.cat]||i.cat)===cat);
     if(!items.length) continue;
