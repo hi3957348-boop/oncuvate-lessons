@@ -1,0 +1,973 @@
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>대출업무방법서 자동화 · 프로토타입</title>
+<style>
+  :root{
+    --bg:#f4f5f7; --panel:#ffffff; --line:#e2e5ea; --ink:#1f2430; --muted:#6b7280;
+    --brand:#2563eb; --brand-weak:#eaf1ff; --ok:#0f9d58; --warn:#b45309; --danger:#c0392b;
+    --chip:#eef1f6; --shadow:0 1px 3px rgba(0,0,0,.08),0 1px 2px rgba(0,0,0,.04);
+  }
+  *{box-sizing:border-box}
+  body{margin:0;font-family:"Segoe UI","Malgun Gothic",AppleSDGothicNeo,system-ui,sans-serif;
+       background:var(--bg);color:var(--ink);font-size:14px;line-height:1.5}
+  header{background:var(--panel);border-bottom:1px solid var(--line);padding:10px 16px;display:flex;
+         align-items:center;gap:14px;position:sticky;top:0;z-index:20}
+  header h1{font-size:16px;margin:0;font-weight:700}
+  header .sub{color:var(--muted);font-size:12px}
+  .tabs{display:flex;gap:4px;margin-left:auto;flex-wrap:wrap}
+  .tabs button{border:1px solid var(--line);background:var(--panel);padding:6px 12px;border-radius:8px;
+       cursor:pointer;font-size:13px;color:var(--ink)}
+  .tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+  main{max-width:1180px;margin:0 auto;padding:16px}
+  .grid2{display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:16px;align-items:start}
+  @media(max-width:860px){.grid2{grid-template-columns:1fr}}
+  .card{background:var(--panel);border:1px solid var(--line);border-radius:12px;box-shadow:var(--shadow);
+        padding:14px 16px;margin-bottom:16px}
+  .card h2{font-size:14px;margin:0 0 10px;font-weight:700;display:flex;align-items:center;gap:8px}
+  .card h2 .tag{font-size:11px;font-weight:600;color:var(--brand);background:var(--brand-weak);
+       border-radius:20px;padding:2px 9px}
+  label.f{display:block;margin-bottom:11px}
+  label.f .lab{font-size:12px;color:var(--muted);margin-bottom:4px;display:block}
+  label.f .lab b{color:var(--brand);font-weight:600}
+  input,select,textarea{width:100%;padding:7px 9px;border:1px solid var(--line);border-radius:8px;
+       font:inherit;color:var(--ink);background:#fff}
+  input[type=number]{width:100%}
+  .row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+  .row>*{flex:0 0 auto}
+  .btn{border:1px solid var(--line);background:#fff;padding:7px 12px;border-radius:8px;cursor:pointer;font:inherit}
+  .btn:hover{background:#f7f8fa}
+  .btn.pri{background:var(--brand);border-color:var(--brand);color:#fff}
+  .btn.pri:hover{filter:brightness(1.05)}
+  .btn.sm{padding:4px 9px;font-size:12px}
+  .btn.danger{color:var(--danger);border-color:#e8c7c2}
+  .muted{color:var(--muted)}
+  .hint{font-size:12px;color:var(--muted);margin:2px 0 10px}
+  .pill{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border-radius:20px;
+        padding:3px 10px;font-size:12px;margin:0 6px 6px 0}
+  /* result blocks */
+  .res-group{margin-bottom:14px}
+  .res-group .gh{font-size:12px;font-weight:700;color:var(--muted);text-transform:none;margin-bottom:6px;
+       letter-spacing:.2px;display:flex;align-items:center;gap:8px}
+  .item{display:flex;align-items:flex-start;gap:8px;padding:8px 10px;border:1px solid var(--line);
+        border-radius:9px;background:#fff;margin-bottom:6px}
+  .item .ic{flex:0 0 auto;margin-top:1px}
+  .item .body{flex:1 1 auto}
+  .item .name{font-weight:600}
+  .item .trace{font-size:11px;color:var(--muted);margin-top:2px}
+  .item.block{border-color:#e8c7c2;background:#fdf3f2}
+  .item.excepted{opacity:.6}
+  .item.excepted .name{text-decoration:line-through}
+  .verdict{font-size:22px;font-weight:800;letter-spacing:-.3px}
+  .verdict small{font-size:12px;font-weight:600;color:var(--muted);margin-left:8px}
+  .infoi{display:inline-flex;width:16px;height:16px;border-radius:50%;background:var(--brand-weak);
+     color:var(--brand);font-size:11px;align-items:center;justify-content:center;cursor:help;font-weight:700;
+     border:1px solid #cfe0ff}
+  .askbox{background:#fffbeb;border:1px solid #f5e2b3;border-radius:9px;padding:10px 12px}
+  .askbox .q{display:inline-block;background:#fff;border:1px solid #eBD9a8;border-radius:20px;
+     padding:4px 11px;margin:3px 6px 3px 0;font-size:13px}
+  /* tables */
+  table{width:100%;border-collapse:collapse;font-size:13px}
+  th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top}
+  th{background:#f7f8fa;font-weight:600;font-size:12px;color:var(--muted)}
+  td .mono{font-family:ui-monospace,Consolas,monospace;font-size:12px}
+  tr.off{opacity:.5}
+  .cond{font-family:ui-monospace,Consolas,monospace;font-size:12px;color:#374151}
+  .eff{font-size:12px}
+  .eff .k{font-weight:700}
+  .k-add{color:#1d4ed8}.k-set{color:#7c3aed}.k-calc{color:#0f766e}.k-block{color:#c0392b}.k-null{color:#b45309}.k-except{color:#0f9d58}
+  /* editor rows */
+  .erow{display:grid;grid-template-columns:1.2fr .9fr 1.4fr auto;gap:6px;margin-bottom:6px;align-items:center}
+  .erow.eff{grid-template-columns:1fr 2.2fr auto}
+  .subtle{border:1px dashed var(--line);border-radius:9px;padding:10px;margin-bottom:10px;background:#fafbfc}
+  .tt{position:fixed;max-width:360px;background:#111827;color:#f9fafb;padding:9px 11px;border-radius:8px;
+      font-size:12.5px;line-height:1.5;box-shadow:0 6px 24px rgba(0,0,0,.28);z-index:60;display:none;pointer-events:none}
+  .tt b{color:#93c5fd}
+  .flexspace{display:flex;justify-content:space-between;align-items:center;gap:10px;flex-wrap:wrap}
+  .savebar{font-size:12px;color:var(--muted)}
+  .kbd{font-family:ui-monospace,monospace;background:#eef1f6;border-radius:5px;padding:1px 6px;font-size:12px}
+  .empty{color:var(--muted);font-size:13px;padding:6px 0}
+</style>
+
+<header>
+  <div>
+    <h1>대출업무방법서 자동화 <span class="muted" style="font-weight:400">· 프로토타입</span></h1>
+    <div class="sub">신청정보를 입력하면 규칙엔진이 업무내용을 합산해 출력합니다 · 폼은 필드·규칙에서 자동 파생됩니다</div>
+  </div>
+  <nav class="tabs" id="tabs">
+    <button data-tab="work" class="active">입력·판정</button>
+    <button data-tab="rules">규칙</button>
+    <button data-tab="fields">필드</button>
+    <button data-tab="items">업무사전</button>
+    <button data-tab="data">저장·불러오기</button>
+  </nav>
+</header>
+
+<main>
+  <!-- 입력·판정 -->
+  <section id="tab-work">
+    <div class="grid2">
+      <div>
+        <div class="card">
+          <h2>대출신청 정보 <span class="tag">자동 파생 폼</span></h2>
+          <div class="hint">필드는 <b>필드 사전</b>에서 자동 생성됩니다. 상위 선택에 따라 관련 필드만 단계적으로 나타납니다.</div>
+          <div id="form"></div>
+          <div class="row" style="margin-top:8px">
+            <button class="btn sm" id="btnClear">입력 초기화</button>
+            <button class="btn sm" id="btnExample">예시값 채우기 ▾</button>
+          </div>
+        </div>
+      </div>
+      <div>
+        <div class="card">
+          <h2>업무내용 (자동 정리) <span class="tag" id="fireCount">규칙 0건 발화</span></h2>
+          <div id="result"></div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 규칙 -->
+  <section id="tab-rules" hidden>
+    <div class="card">
+      <div class="flexspace">
+        <h2 style="margin:0">규칙 <span class="muted" style="font-weight:400" id="ruleCount"></span></h2>
+        <button class="btn pri sm" id="btnAddRule">＋ 규칙 추가</button>
+      </div>
+      <div class="hint">아래는 <b>결정표(격자) 보기</b>입니다. 행을 클릭하면 <b>가이드형 빌더</b>로 편집합니다. 규칙은 서로 독립이며, 조건에 맞는 규칙들이 동시에 발화해 결과가 합산됩니다.</div>
+      <table id="ruleTable">
+        <thead><tr><th style="width:150px">규칙명</th><th>조건 (IF)</th><th>효과 (THEN)</th><th style="width:60px">우선</th><th style="width:60px">사용</th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="card" id="ruleEditorCard" hidden></div>
+  </section>
+
+  <!-- 필드 -->
+  <section id="tab-fields" hidden>
+    <div class="card">
+      <div class="flexspace"><h2 style="margin:0">필드 사전 (입력 폼의 원천)</h2>
+        <button class="btn pri sm" id="btnAddField">＋ 필드 추가</button></div>
+      <div class="hint">여기서 필드를 추가/수정하면 <b>입력 폼이 즉시 바뀝니다</b>. 표시조건을 주면 관련 상황에서만 폼에 나타납니다.</div>
+      <table id="fieldTable">
+        <thead><tr><th style="width:170px">라벨</th><th style="width:90px">유형</th><th>값(선택지)</th><th>표시조건</th><th style="width:70px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+      <div class="hint" style="margin-top:10px">판정값(파생): <span id="derivedList" class="muted"></span> — 규칙의 <b>판정(SET)</b> 효과로 계산되는 결과이며 폼에는 나타나지 않고 다른 규칙의 조건으로 쓰입니다.</div>
+    </div>
+    <div class="card" id="fieldEditorCard" hidden></div>
+  </section>
+
+  <!-- 업무사전 -->
+  <section id="tab-items" hidden>
+    <div class="card">
+      <div class="flexspace"><h2 style="margin:0">업무 사전 (재사용 업무항목 · 근거)</h2>
+        <button class="btn pri sm" id="btnAddItem">＋ 항목 추가</button></div>
+      <div class="hint">서류·검토·사후 등 업무항목을 한 번 정의하면 여러 규칙에서 재사용됩니다. 근거텍스트는 결과 화면에서 <b>ⓘ 호버팝업</b>으로 표시됩니다.</div>
+      <table id="itemTable">
+        <thead><tr><th style="width:190px">항목명</th><th style="width:90px">분류</th><th>근거텍스트</th><th style="width:70px"></th></tr></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+    <div class="card" id="itemEditorCard" hidden></div>
+  </section>
+
+  <!-- 저장 -->
+  <section id="tab-data" hidden>
+    <div class="card">
+      <h2>저장 · 불러오기</h2>
+      <div class="hint">모든 데이터(필드·규칙·업무사전)는 브라우저에 <b>자동 저장</b>됩니다. 백업·다른 PC 이동은 JSON 파일로 내보내세요. 외부망 없이 완전 오프라인 동작합니다.</div>
+      <div class="row">
+        <button class="btn pri" id="btnExport">JSON 내보내기(백업)</button>
+        <button class="btn" id="btnImport">JSON 불러오기</button>
+        <input type="file" id="fileInput" accept="application/json,.json" hidden>
+        <button class="btn danger" id="btnReset">기본 예시로 초기화</button>
+      </div>
+      <div class="savebar" id="saveStat" style="margin-top:10px"></div>
+    </div>
+    <div class="card">
+      <h2>설계 메모</h2>
+      <ul class="muted" style="font-size:13px;line-height:1.7;margin:0;padding-left:18px">
+        <li><b>효과 5종</b>: 추가(ADD) · 판정(SET) · 산출(CALC) · 제약(BLOCK) · 무효화/예외(NULLIFY·EXCEPT)</li>
+        <li><b>전방연쇄</b>: 판정 결과(예: 분류=일반시설자금)가 다시 다른 규칙의 조건이 됩니다.</li>
+        <li><b>추가확인 역제시</b>: 결론에 필요하지만 아직 안 채운 필드를 스스로 짚어줍니다.</li>
+        <li><b>차단·예외</b>: LTV 상향 무효(권역외), 6개월 제약의 선분양 예외 등 상위규칙이 하위효과를 덮어씁니다.</li>
+        <li>이 파일은 단일 HTML 프로토타입입니다. 관계도·4단계 트리·첨부파일은 다음 단계에서 통합 예정.</li>
+      </ul>
+    </div>
+  </section>
+</main>
+
+<div class="tt" id="tooltip"></div>
+
+<script>
+/* ============================================================
+   대출업무방법서 자동화 — 규칙엔진 프로토타입
+   ============================================================ */
+
+/* ---------- 유틸 ---------- */
+const $ = (s,r=document)=>r.querySelector(s);
+const $$ = (s,r=document)=>[...r.querySelectorAll(s)];
+const el = (t,a={},...kids)=>{const n=document.createElement(t);
+  for(const k in a){ if(k==='class')n.className=a[k]; else if(k==='html')n.innerHTML=a[k];
+    else if(k.startsWith('on'))n.addEventListener(k.slice(2),a[k]); else if(a[k]!=null)n.setAttribute(k,a[k]); }
+  kids.flat().forEach(c=>n.append(c.nodeType?c:document.createTextNode(c))); return n;};
+const uid = p=>p+'_'+Math.floor(performance.now()*1000%1e9).toString(36)+Math.floor((performance.now()*7)%1e6).toString(36);
+const isEmpty = v=>v==null||v===''||v==='(선택)';
+const num = v=>{const n=parseFloat(String(v).replace(/,/g,''));return isNaN(n)?null:n;};
+const parseDate = v=>{ if(!v)return null; const d=new Date(v); return isNaN(d)?null:d; };
+const addMonths = (d,n)=>{const x=new Date(d.getFullYear(),d.getMonth()+n,d.getDate()); return x;};
+const fmtDate = d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+
+/* ---------- 연산자 ---------- */
+const OPS = {
+  '=':'같음', '≠':'다름', '∈':'다음중 하나(∈)', '≥':'이상(≥)', '≤':'이하(≤)',
+  'between':'범위', 'date_within':'두 날짜 차이 ≤ N개월', 'date_after_plus':'A가 B+N개월 초과'
+};
+
+/* ============================================================
+   기본 예시 모델 (세 사례 내장)
+   ============================================================ */
+function seedModel(){
+  return {
+  version: 2,
+  meta:{ title:'대출업무방법서', updatedAt:null },
+  derivedKeys:[ {id:'분류', label:'분류결과', options:['일반시설자금','부동산구입자금','일반운전자금']} ],
+  calcOutputs:[ {id:'LTV', label:'적용 LTV', unit:'%', sum:['기본LTV','상향LTV'], nullifiable:['상향LTV']} ],
+  fields:[
+    {id:'신청인유형',label:'신청인유형',type:'select',options:['개인','개인사업자','법인']},
+    {id:'자금종류',label:'자금종류',type:'select',options:['운전자금','시설자금','토지구입자금','부동산구입자금']},
+    {id:'대상토지지목',label:'대상토지 지목',type:'select',options:['농지','대지','임야','기타'],
+       showWhen:{field:'자금종류',op:'∈',value:['토지구입자금']}},
+    {id:'자금목적',label:'자금목적',type:'select',options:['사업목적','주거목적','투자목적','기타'],
+       showWhen:{field:'자금종류',op:'∈',value:['토지구입자금','부동산구입자금','시설자금']}},
+    {id:'담보종류',label:'담보종류',type:'select',options:['아파트','주택','토지','상가']},
+    {id:'신용도',label:'신용도',type:'select',options:['일반','우량']},
+    {id:'상환구조',label:'상환구조',type:'select',options:['일반','특정상환구조']},
+    {id:'권역구분',label:'권역구분',type:'select',options:['권역내','권역외']},
+    {id:'사무소제한',label:'사무소 별도 상향제한',type:'select',options:['없음','있음']},
+    {id:'부동산취득일',label:'부동산 취득일',type:'date',
+       showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
+    {id:'취급일',label:'취급(실행)일',type:'date',
+       showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
+    {id:'대출금액',label:'대출금액(만원)',type:'number',
+       showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
+    {id:'매매가',label:'부동산 매매가(만원)',type:'number',
+       showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
+    {id:'선분양여부',label:'선분양 물건',type:'select',options:['아니오','예'],
+       showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
+  ],
+  items:[
+    {id:'i_saup',label:'사업계획서',cat:'서류',basis:'자금목적이 사업목적인 경우, 실제 사업영위 및 자금용도 확인을 위해 사업계획서를 징구한다. (여신업무방법서 §시설자금)'},
+    {id:'i_nongchi',label:'농지취득자격증명(농취증)',cat:'서류',basis:'농지법 제8조: 농지를 취득하려는 자는 농지소재지 관할 관청에서 농지취득자격증명을 발급받아야 한다. 취득목적이 기재되므로 자금목적 확인의 근거자료가 된다.'},
+    {id:'i_saupcheck',label:'사업목적 부합 여부 확인',cat:'검토',basis:'제출된 사업계획서상의 용도와 실제 자금 사용처가 일치하는지 검토한다.'},
+    {id:'i_nongchicheck',label:'농취증상 토지매입목적 확인',cat:'검토',basis:'농취증에 기재된 취득목적이 신청한 자금목적(사업목적)과 부합하는지 대조한다.'},
+    {id:'i_sahu',label:'자금사용 사후점검',cat:'사후',basis:'시설자금 실행 후 실제 자금이 신고된 목적대로 집행되었는지 사후점검을 실시한다.'},
+  ],
+  rules:[
+    // --- 사례 A: 농지 토지구입 → 일반시설자금 ---
+    {id:'R1',name:'농지 사업목적 → 일반시설자금',priority:10,enabled:true,
+     when:{op:'AND',conds:[
+       {field:'신청인유형',op:'=',value:'개인사업자'},
+       {field:'자금종류',op:'=',value:'토지구입자금'},
+       {field:'대상토지지목',op:'=',value:'농지'},
+       {field:'자금목적',op:'=',value:'사업목적'} ]},
+     effects:[{type:'SET',target:'분류',value:'일반시설자금'}]},
+    {id:'R2',name:'사업목적 → 사업계획서·검토',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'자금목적',op:'=',value:'사업목적'}]},
+     effects:[{type:'ADD',item:'i_saup'},{type:'ADD',item:'i_saupcheck'}]},
+    {id:'R3',name:'농지 → 농취증·목적확인',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'대상토지지목',op:'=',value:'농지'}]},
+     effects:[{type:'ADD',item:'i_nongchi'},{type:'ADD',item:'i_nongchicheck'}]},
+    {id:'R4',name:'일반시설자금 → 사후점검',priority:1,enabled:true,
+     when:{op:'AND',conds:[{field:'분류',op:'=',value:'일반시설자금'}]},
+     effects:[{type:'ADD',item:'i_sahu'}]},
+
+    // --- 사례 B: LTV 상향 (산출 + 차단) ---
+    {id:'L0a',name:'기본LTV: 토지 60%',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'담보종류',op:'=',value:'토지'}]},
+     effects:[{type:'CALC',target:'기본LTV',op:'set',value:60}]},
+    {id:'L0b',name:'기본LTV: 아파트 70%',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'담보종류',op:'=',value:'아파트'}]},
+     effects:[{type:'CALC',target:'기본LTV',op:'set',value:70}]},
+    {id:'L0c',name:'기본LTV: 주택 65%',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'담보종류',op:'=',value:'주택'}]},
+     effects:[{type:'CALC',target:'기본LTV',op:'set',value:65}]},
+    {id:'L0d',name:'기본LTV: 상가 55%',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'담보종류',op:'=',value:'상가'}]},
+     effects:[{type:'CALC',target:'기본LTV',op:'set',value:55}]},
+    {id:'L1',name:'신용우량 → LTV +5',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'신용도',op:'=',value:'우량'}]},
+     effects:[{type:'CALC',target:'상향LTV',op:'add',value:5}]},
+    {id:'L2',name:'특정상환구조 → LTV +5',priority:5,enabled:true,
+     when:{op:'AND',conds:[{field:'상환구조',op:'=',value:'특정상환구조'}]},
+     effects:[{type:'CALC',target:'상향LTV',op:'add',value:5}]},
+    {id:'L3',name:'권역외 → 상향 무효',priority:90,enabled:true,
+     when:{op:'AND',conds:[{field:'권역구분',op:'=',value:'권역외'}]},
+     effects:[{type:'NULLIFY',target:'상향LTV',reason:'권역외 대출은 LTV 상향 불가'}]},
+    {id:'L4',name:'사무소 별도제한 → 상향 무효',priority:90,enabled:true,
+     when:{op:'AND',conds:[{field:'사무소제한',op:'=',value:'있음'}]},
+     effects:[{type:'NULLIFY',target:'상향LTV',reason:'사무소 별도규칙에 의해 상향 불가'}]},
+
+    // --- 사례 C: 부동산구입자금 (재분류 + 기한제약 + 예외) ---
+    {id:'P0',name:'부동산구입자금 종류 → 분류',priority:8,enabled:true,
+     when:{op:'AND',conds:[{field:'자금종류',op:'=',value:'부동산구입자금'}]},
+     effects:[{type:'SET',target:'분류',value:'부동산구입자금'}]},
+    {id:'P1',name:'운전자금이라도 취득 전후 6개월 → 부동산구입자금',priority:12,enabled:true,
+     when:{op:'AND',conds:[
+       {field:'자금종류',op:'=',value:'운전자금'},
+       {field:'취급일',op:'date_within',field2:'부동산취득일',months:6} ]},
+     effects:[{type:'SET',target:'분류',value:'부동산구입자금'}]},
+    {id:'P2',name:'매매가 이상 대출 → 취득+6개월 내 실행 제약',priority:8,enabled:true,
+     when:{op:'AND',conds:[
+       {field:'분류',op:'=',value:'부동산구입자금'},
+       {field:'대출금액',op:'≥',value:{ref:'매매가'}} ]},
+     effects:[{type:'BLOCK',tag:'부동산6개월',
+        message:'매매가 이상 대출은 부동산 구입일(취득일)로부터 6개월 내에만 실행 가능. 기한: {취득+6}. 현재 취급일 기준 {상태}.'}]},
+    {id:'P3',name:'선분양 물건 → 6개월 제약 예외',priority:95,enabled:true,
+     when:{op:'AND',conds:[{field:'선분양여부',op:'=',value:'예'}]},
+     effects:[{type:'EXCEPT',cancelTag:'부동산6개월'}]},
+  ]
+  };
+}
+
+/* ============================================================
+   규칙엔진
+   ============================================================ */
+function getVal(fieldId, ctx){
+  if(fieldId in ctx.derived) return ctx.derived[fieldId];
+  return ctx.inputs[fieldId];
+}
+function resolveOperand(v, ctx){
+  if(v && typeof v==='object' && 'ref' in v) return getVal(v.ref, ctx);
+  return v;
+}
+function condFields(c){ return [c.field, c.field2, (c.value&&c.value.ref)].filter(Boolean); }
+function isRealField(model,id){ return model.fields.some(f=>f.id===id); }
+
+function evalCond(c, ctx){
+  const A = getVal(c.field, ctx);
+  switch(c.op){
+    case '=': return String(A)===String(resolveOperand(c.value,ctx));
+    case '≠': return String(A)!==String(resolveOperand(c.value,ctx));
+    case '∈': return Array.isArray(c.value) && c.value.map(String).includes(String(A));
+    case '≥': {const b=num(resolveOperand(c.value,ctx)); return num(A)!=null&&b!=null&&num(A)>=b;}
+    case '≤': {const b=num(resolveOperand(c.value,ctx)); return num(A)!=null&&b!=null&&num(A)<=b;}
+    case 'between': {const x=num(A); return x!=null&&x>=num(c.value)&&x<=num(c.value2);}
+    case 'date_within':{
+      const d1=parseDate(getVal(c.field,ctx)), d2=parseDate(getVal(c.field2,ctx));
+      if(!d1||!d2) return false;
+      return d1>=addMonths(d2,-c.months) && d1<=addMonths(d2,c.months);
+    }
+    case 'date_after_plus':{
+      const d1=parseDate(getVal(c.field,ctx)), d2=parseDate(getVal(c.field2,ctx));
+      if(!d1||!d2) return false; return d1>addMonths(d2,c.months);
+    }
+    default: return false;
+  }
+}
+function condEvaluable(c, ctx, model){
+  // 참조된 실제 필드가 비어있으면 평가 불가
+  return condFields(c).every(f=> !isRealField(model,f) || !isEmpty(getVal(f,ctx)) );
+}
+function ruleMatches(r, ctx){
+  if(!r.enabled) return false;
+  const cs=r.when.conds||[];
+  if(!cs.length) return false;
+  const results=cs.map(c=>evalCond(c,ctx));
+  return r.when.op==='OR' ? results.some(Boolean) : results.every(Boolean);
+}
+
+function evaluate(model, inputs){
+  const ctx={ inputs, derived:{} };
+  const byPriority=[...model.rules].sort((a,b)=>(a.priority||0)-(b.priority||0));
+
+  // 전방연쇄: SET 효과 전파
+  for(let iter=0; iter<12; iter++){
+    let changed=false;
+    for(const r of byPriority){
+      if(!ruleMatches(r,ctx)) continue;
+      for(const e of r.effects) if(e.type==='SET'){
+        if(ctx.derived[e.target]!==e.value){ ctx.derived[e.target]=e.value; changed=true; }
+      }
+    }
+    if(!changed) break;
+  }
+
+  // 효과 수집
+  const fired=[];
+  const adds=[]; const calcSet={}; const calcAdd={}; const blocks=[]; const nullifies=[]; const excepts=new Set();
+  const setTrace={};
+  for(const r of byPriority){
+    if(!ruleMatches(r,ctx)) continue;
+    fired.push(r);
+    for(const e of r.effects){
+      if(e.type==='ADD') adds.push({item:e.item, rule:r});
+      else if(e.type==='SET'){ setTrace[e.target]=setTrace[e.target]||[]; setTrace[e.target].push(r); }
+      else if(e.type==='CALC'){
+        if(e.op==='set'){ calcSet[e.target]={v:e.value,rule:r}; }
+        else { (calcAdd[e.target]=calcAdd[e.target]||[]).push({v:e.value,rule:r}); }
+      }
+      else if(e.type==='BLOCK') blocks.push({tag:e.tag,message:e.message,rule:r});
+      else if(e.type==='NULLIFY') nullifies.push({target:e.target,reason:e.reason,rule:r});
+      else if(e.type==='EXCEPT') excepts.add(e.cancelTag);
+    }
+  }
+
+  // 누산기 계산
+  const acc={}, accTrace={};
+  for(const t in calcSet){ acc[t]=calcSet[t].v; accTrace[t]=[{v:calcSet[t].v,rule:calcSet[t].rule,op:'set'}]; }
+  for(const t in calcAdd){ acc[t]=acc[t]||0; accTrace[t]=accTrace[t]||[]; for(const c of calcAdd[t]){ acc[t]+=c.v; accTrace[t].push({v:c.v,rule:c.rule,op:'add'}); } }
+  // 무효화
+  const nullApplied=[];
+  for(const n of nullifies){ if(n.target in acc && acc[n.target]!==0){ acc[n.target]=0; nullApplied.push(n); } else if(!(n.target in acc)){ acc[n.target]=0; } }
+
+  // calc outputs
+  const calcOutputs=(model.calcOutputs||[]).map(co=>{
+    const parts=co.sum.map(t=>({t, v:acc[t]||0, trace:accTrace[t]||[]}));
+    const anyDefined=co.sum.some(t=>t in acc);
+    const total=parts.reduce((s,p)=>s+p.v,0);
+    const nulls=nullApplied.filter(n=>co.sum.includes(n.target));
+    return {...co, parts, total, nulls, defined:anyDefined};
+  });
+
+  // 중복제거 ADD
+  const seen=new Set(); const addItems=[];
+  for(const a of adds){ if(seen.has(a.item))continue; seen.add(a.item);
+    const it=model.items.find(x=>x.id===a.item); if(it) addItems.push({...it, rule:a.rule}); }
+
+  // blocks: 예외 적용
+  const blockOut=blocks.map(b=>({...b, excepted:excepts.has(b.tag), text:resolveBlockMsg(b.message, ctx, model)}));
+
+  // 추가확인 필요 필드
+  const pending=pendingFields(model, ctx, byPriority);
+
+  return { ctx, fired, addItems, calcOutputs, blocks:blockOut, derived:ctx.derived, setTrace, pending };
+}
+
+function resolveBlockMsg(msg, ctx, model){
+  if(!msg) return '';
+  return msg
+    .replace('{취득+6}', ()=>{ const d=parseDate(getVal('부동산취득일',ctx)); return d?fmtDate(addMonths(d,6)):'(취득일 미입력)'; })
+    .replace('{상태}', ()=>{
+      const acq=parseDate(getVal('부동산취득일',ctx)), exe=parseDate(getVal('취급일',ctx));
+      if(!acq||!exe) return '취득일/취급일 확인 필요';
+      return exe>addMonths(acq,6) ? '⚠ 기한 초과 — 실행 불가' : '✔ 기한 내 실행 가능';
+    });
+}
+
+function pendingFields(model, ctx, byPriority){
+  const need=new Set();
+  for(const r of byPriority){
+    if(!r.enabled) continue;
+    if(ruleMatches(r,ctx)) continue; // 이미 발화면 제외
+    const cs=r.when.conds||[];
+    let filledPass=true, emptyRefs=[];
+    for(const c of cs){
+      if(condEvaluable(c,ctx,model)){ if(!evalCond(c,ctx)) filledPass=false; }
+      else { for(const f of condFields(c)) if(isRealField(model,f)&&isEmpty(getVal(f,ctx))) emptyRefs.push(f); }
+    }
+    // AND 규칙: 채워진 조건이 다 참이고, 빈 조건만 남았다면 그 필드를 물어야 함
+    if(r.when.op!=='OR'){ if(filledPass && emptyRefs.length) emptyRefs.forEach(f=>need.add(f)); }
+    else { if(emptyRefs.length) emptyRefs.forEach(f=>need.add(f)); }
+  }
+  // 현재 표시조건을 만족하는(=관련있는) 필드만
+  return [...need].filter(fid=>fieldVisible(model.fields.find(f=>f.id===fid), ctx.inputs));
+}
+
+/* ============================================================
+   상태 & 저장
+   ============================================================ */
+let model = seedModel();
+let inputs = {};
+const DB='loanAutoDB', STORE='kv';
+function openDB(){return new Promise((res,rej)=>{const rq=indexedDB.open(DB,1);
+  rq.onupgradeneeded=()=>rq.result.createObjectStore(STORE);
+  rq.onsuccess=()=>res(rq.result); rq.onerror=()=>rej(rq.error);});}
+async function idbGet(k){try{const db=await openDB();return await new Promise(r=>{const t=db.transaction(STORE).objectStore(STORE).get(k);t.onsuccess=()=>r(t.result);t.onerror=()=>r(null);});}catch(e){return null;}}
+async function idbSet(k,v){try{const db=await openDB();return await new Promise(r=>{const tx=db.transaction(STORE,'readwrite');tx.objectStore(STORE).put(v,k);tx.oncomplete=()=>r(true);tx.onerror=()=>r(false);});}catch(e){return false;}}
+
+let saveTimer=null;
+function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{
+  model.meta.updatedAt=fmtDate(new Date())+' '+new Date().toTimeString().slice(0,8);
+  await idbSet('model',model);
+  const s=$('#saveStat'); if(s) s.textContent='자동 저장됨 · '+model.meta.updatedAt;
+},400); }
+
+/* ============================================================
+   탭
+   ============================================================ */
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
+  $$('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
+  const t=b.dataset.tab;
+  ['work','rules','fields','items','data'].forEach(k=>$('#tab-'+k).hidden=(k!==t));
+  if(t==='rules')renderRules(); if(t==='fields')renderFields(); if(t==='items')renderItems();
+  if(t==='data'){const s=$('#saveStat');s.textContent=model.meta.updatedAt?('자동 저장됨 · '+model.meta.updatedAt):'저장 이력 없음';}
+});
+
+/* ============================================================
+   입력 폼 (자동 파생 + 진행형 표시)
+   ============================================================ */
+function fieldVisible(f, inp){
+  if(!f) return false;
+  if(!f.showWhen) return true;
+  const sw=f.showWhen, v=inp[sw.field];
+  if(isEmpty(v)) return false;
+  if(sw.op==='∈') return (sw.value||[]).map(String).includes(String(v));
+  return String(v)===String(sw.value);
+}
+function renderForm(){
+  const box=$('#form'); box.innerHTML='';
+  for(const f of model.fields){
+    if(!fieldVisible(f,inputs)) continue;
+    const lab=el('span',{class:'lab',html:f.label + (f.showWhen?' <b>▸</b>':'')});
+    let input;
+    if(f.type==='select'){
+      input=el('select',{onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
+      input.append(el('option',{value:''},'(선택)'));
+      for(const o of f.options||[]) input.append(el('option',{value:o, selected:inputs[f.id]===o?'selected':null},o));
+    }else if(f.type==='number'){
+      input=el('input',{type:'number',value:inputs[f.id]??'',oninput:e=>{inputs[f.id]=e.target.value;refresh();}});
+    }else if(f.type==='date'){
+      input=el('input',{type:'date',value:inputs[f.id]??'',onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
+    }else{
+      input=el('input',{type:'text',value:inputs[f.id]??'',oninput:e=>{inputs[f.id]=e.target.value;refresh();}});
+    }
+    box.append(el('label',{class:'f'},lab,input));
+  }
+  // 표시조건으로 숨겨진 필드 안내
+  const hidden=model.fields.filter(f=>!fieldVisible(f,inputs) && f.showWhen);
+  if(hidden.length) box.append(el('div',{class:'hint'},'· 상위 항목을 선택하면 관련 필드('+hidden.map(f=>f.label).join(', ')+')가 추가로 나타납니다.'));
+}
+
+/* ============================================================
+   결과 렌더
+   ============================================================ */
+const ICON={서류:'📄',검토:'🔍',사후:'📌',기타:'▫️'};
+function itemWithBasis(name, cat, basis, trace){
+  const row=el('div',{class:'item'});
+  row.append(el('span',{class:'ic'}, ICON[cat]||'▫️'));
+  const body=el('div',{class:'body'});
+  const nameEl=el('div',{class:'name'}, name+' ');
+  if(basis){ const i=el('span',{class:'infoi'},'ⓘ'); attachTip(i, basis); nameEl.append(' ',i); }
+  body.append(nameEl);
+  if(trace) body.append(el('div',{class:'trace'},'↳ '+trace));
+  row.append(body); return row;
+}
+function group(title, extra){ const g=el('div',{class:'res-group'});
+  g.append(el('div',{class:'gh'}, title, extra?el('span',{class:'muted',style:'font-weight:400'},extra):'')); return g; }
+
+function renderResult(){
+  const out=$('#result'); out.innerHTML='';
+  const R=evaluate(model, inputs);
+  $('#fireCount').textContent='규칙 '+R.fired.length+'건 발화';
+
+  const anyInput=Object.values(inputs).some(v=>!isEmpty(v));
+  if(!anyInput){ out.append(el('div',{class:'empty'},'왼쪽에 신청정보를 입력하면 업무내용이 자동으로 정리됩니다. “예시값 채우기”로 빠르게 확인해 보세요.')); return; }
+
+  // 분류결과
+  if(Object.keys(R.derived).length){
+    const g=group('분류결과');
+    for(const k in R.derived){
+      const tr=(R.setTrace[k]||[]).map(r=>r.name).join(' / ');
+      const line=el('div',{class:'item'});
+      line.append(el('span',{class:'ic'},'🏷️'));
+      const body=el('div',{class:'body'});
+      body.append(el('div',{class:'verdict'}, R.derived[k], el('small',{}, k)));
+      if(tr) body.append(el('div',{class:'trace'},'↳ '+tr));
+      line.append(body); g.append(line);
+    }
+    out.append(g);
+  }
+
+  // 산출 (LTV)
+  for(const co of R.calcOutputs){
+    if(!co.defined) continue;
+    const g=group(co.label);
+    const line=el('div',{class:'item'});
+    line.append(el('span',{class:'ic'},'📊'));
+    const body=el('div',{class:'body'});
+    body.append(el('div',{class:'verdict'}, co.total+co.unit));
+    const bits=co.parts.filter(p=>p.trace.length).map(p=>{
+      const detail=p.trace.map(t=>(t.op==='add'?'+':'')+t.v+'('+t.rule.name+')').join(' ');
+      return p.t+': '+detail;
+    });
+    if(bits.length) body.append(el('div',{class:'trace'},'↳ '+bits.join('  ·  ')));
+    for(const n of co.nulls) body.append(el('div',{class:'trace',style:'color:var(--warn)'},'⚑ '+n.reason+' ('+n.rule.name+') → 상향 0 처리'));
+    line.append(body); g.append(line); out.append(g);
+  }
+
+  // 서류/검토/사후
+  for(const cat of ['서류','검토','사후']){
+    const items=R.addItems.filter(i=>i.cat===cat);
+    if(!items.length) continue;
+    const g=group(cat==='서류'?'필요서류':cat==='검토'?'검토사항':'사후관리');
+    for(const it of items) g.append(itemWithBasis(it.label, it.cat, it.basis, it.rule.name));
+    out.append(g);
+  }
+
+  // 제약
+  const blocks=R.blocks;
+  if(blocks.length){
+    const g=group('실행 제약 / 금지');
+    for(const b of blocks){
+      const row=el('div',{class:'item block'+(b.excepted?' excepted':'')});
+      row.append(el('span',{class:'ic'}, b.excepted?'✅':'🚫'));
+      const body=el('div',{class:'body'});
+      body.append(el('div',{class:'name'}, b.text));
+      body.append(el('div',{class:'trace'}, (b.excepted?'예외 적용됨 · ':'')+'↳ '+b.rule.name));
+      row.append(body); g.append(row);
+    }
+    out.append(g);
+  }
+
+  // 추가확인 필요
+  if(R.pending.length){
+    const g=group('추가 확인 필요','— 결론에 필요한 항목입니다');
+    const box=el('div',{class:'askbox'});
+    for(const fid of R.pending){ const f=model.fields.find(x=>x.id===fid);
+      box.append(el('span',{class:'q'}, '❓ '+(f?f.label:fid)+' ?')); }
+    g.append(box); out.append(g);
+  }
+
+  if(!Object.keys(R.derived).length && !R.addItems.length && !blocks.length && !R.calcOutputs.some(c=>c.defined) && !R.pending.length){
+    out.append(el('div',{class:'empty'},'입력에 해당하는 규칙이 아직 없습니다. 값을 더 채우거나 규칙 탭에서 규칙을 추가해 보세요.'));
+  }
+}
+
+function refresh(){ renderForm(); renderResult(); persist(); }
+
+/* ============================================================
+   툴팁
+   ============================================================ */
+const tip=$('#tooltip');
+function attachTip(node, text){
+  node.addEventListener('mouseenter',e=>{ tip.innerHTML='<b>근거</b><br>'+text; tip.style.display='block'; moveTip(e); });
+  node.addEventListener('mousemove',moveTip);
+  node.addEventListener('mouseleave',()=>tip.style.display='none');
+}
+function moveTip(e){ const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
+  const w=tip.offsetWidth, h=tip.offsetHeight;
+  if(x+w>innerWidth-8) x=e.clientX-w-pad; if(y+h>innerHeight-8) y=e.clientY-h-pad;
+  tip.style.left=x+'px'; tip.style.top=y+'px'; }
+
+/* ============================================================
+   규칙 탭 — 결정표 + 빌더
+   ============================================================ */
+function condText(c){
+  if(c.op==='date_within') return `${c.field} ↔ ${c.field2} 차이 ≤ ${c.months}개월`;
+  if(c.op==='date_after_plus') return `${c.field} > ${c.field2}+${c.months}개월`;
+  const v = (c.value&&c.value.ref)?('['+c.value.ref+']') : Array.isArray(c.value)?('{'+c.value.join(',')+'}'):c.value;
+  return `${c.field} ${c.op} ${v}`;
+}
+function effText(e){
+  if(e.type==='ADD'){const it=model.items.find(x=>x.id===e.item);return `<span class="k k-add">추가</span> ${it?it.label:e.item}`;}
+  if(e.type==='SET')return `<span class="k k-set">판정</span> ${e.target}=${e.value}`;
+  if(e.type==='CALC')return `<span class="k k-calc">산출</span> ${e.target} ${e.op==='set'?'=':'+='} ${e.value}`;
+  if(e.type==='BLOCK')return `<span class="k k-block">제약</span> ${e.tag||''}`;
+  if(e.type==='NULLIFY')return `<span class="k k-null">무효화</span> ${e.target}`;
+  if(e.type==='EXCEPT')return `<span class="k k-except">예외</span> ${e.cancelTag}`;
+  return e.type;
+}
+function renderRules(){
+  const tb=$('#ruleTable tbody'); tb.innerHTML='';
+  $('#ruleCount').textContent='('+model.rules.length+'건)';
+  for(const r of model.rules){
+    const tr=el('tr',{class:r.enabled?'':'off',style:'cursor:pointer',onclick:()=>editRule(r.id)});
+    tr.append(el('td',{}, r.name));
+    tr.append(el('td',{}, el('span',{class:'cond',html:(r.when.conds||[]).map(condText).join(' <b>'+(r.when.op==='OR'?'또는':'그리고')+'</b> ')})));
+    tr.append(el('td',{}, el('span',{class:'eff',html:r.effects.map(effText).join(' · ')})));
+    tr.append(el('td',{}, String(r.priority||0)));
+    const tog=el('input',{type:'checkbox',onclick:ev=>{ev.stopPropagation();r.enabled=ev.target.checked;persist();renderRules();refresh();}});
+    tog.checked=r.enabled;
+    tr.append(el('td',{onclick:ev=>ev.stopPropagation()}, tog));
+    tb.append(tr);
+  }
+}
+$('#btnAddRule').onclick=()=>{ const r={id:uid('R'),name:'새 규칙',priority:5,enabled:true,when:{op:'AND',conds:[]},effects:[]};
+  model.rules.push(r); persist(); renderRules(); editRule(r.id); };
+
+function fieldOptionsForCond(){
+  const opts=[];
+  model.fields.forEach(f=>opts.push({v:f.id,l:f.label}));
+  (model.derivedKeys||[]).forEach(d=>opts.push({v:d.id,l:'▷ '+d.label+' (판정값)'}));
+  return opts;
+}
+function editRule(id){
+  const r=model.rules.find(x=>x.id===id); if(!r)return;
+  const card=$('#ruleEditorCard'); card.hidden=false; card.innerHTML='';
+  card.append(el('h2',{}, '규칙 편집 · ', el('span',{class:'muted',style:'font-weight:400'}, r.id)));
+
+  const meta=el('div',{class:'row',style:'margin-bottom:10px'});
+  meta.append(el('label',{class:'f',style:'flex:1 1 220px;margin:0'}, el('span',{class:'lab'},'규칙명'),
+     el('input',{value:r.name,oninput:e=>{r.name=e.target.value;persist();}})));
+  meta.append(el('label',{class:'f',style:'width:120px;margin:0'}, el('span',{class:'lab'},'우선순위(클수록 우선)'),
+     el('input',{type:'number',value:r.priority||0,oninput:e=>{r.priority=num(e.target.value)||0;persist();}})));
+  card.append(meta);
+
+  // 조건
+  const cbox=el('div',{class:'subtle'});
+  cbox.append(el('div',{class:'flexspace',style:'margin-bottom:8px'},
+    el('b',{},'조건 (IF)'),
+    (()=>{const s=el('select',{style:'width:auto',onchange:e=>{r.when.op=e.target.value;persist();renderRules();}});
+      s.append(el('option',{value:'AND',selected:r.when.op!=='OR'?'selected':null},'모두 만족(AND)'));
+      s.append(el('option',{value:'OR',selected:r.when.op==='OR'?'selected':null},'하나라도(OR)')); return s;})()));
+  const condHost=el('div'); cbox.append(condHost);
+  function drawConds(){
+    condHost.innerHTML='';
+    (r.when.conds||[]).forEach((c,i)=>{
+      const row=el('div',{class:'erow'});
+      // 대상
+      const fsel=el('select',{onchange:e=>{c.field=e.target.value;persist();renderRules();}});
+      fieldOptionsForCond().forEach(o=>fsel.append(el('option',{value:o.v,selected:c.field===o.v?'selected':null},o.l)));
+      row.append(fsel);
+      // 연산
+      const osel=el('select',{onchange:e=>{c.op=e.target.value; if(['date_within','date_after_plus'].includes(c.op)){c.field2=c.field2||model.fields.find(f=>f.type==='date')?.id;c.months=c.months||6;} persist();drawConds();renderRules();}});
+      Object.entries(OPS).forEach(([v,l])=>osel.append(el('option',{value:v,selected:c.op===v?'selected':null},l)));
+      row.append(osel);
+      // 값
+      row.append(valueEditor(c));
+      // 삭제
+      row.append(el('button',{class:'btn sm danger',onclick:()=>{r.when.conds.splice(i,1);persist();drawConds();renderRules();refresh();}},'×'));
+      condHost.append(row);
+    });
+  }
+  function valueEditor(c){
+    const wrap=el('div',{class:'row',style:'flex-wrap:nowrap'});
+    if(c.op==='date_within'||c.op==='date_after_plus'){
+      const f2=el('select',{onchange:e=>{c.field2=e.target.value;persist();renderRules();}});
+      model.fields.filter(f=>f.type==='date').forEach(f=>f2.append(el('option',{value:f.id,selected:c.field2===f.id?'selected':null},f.label)));
+      wrap.append(f2, el('span',{class:'muted'},'차이'),
+        el('input',{type:'number',style:'width:70px',value:c.months??6,oninput:e=>{c.months=num(e.target.value)||0;persist();renderRules();}}),
+        el('span',{class:'muted'},'개월'));
+      return wrap;
+    }
+    if(c.op==='∈'){
+      wrap.append(el('input',{value:Array.isArray(c.value)?c.value.join(', '):'',placeholder:'값1, 값2, …',
+        oninput:e=>{c.value=e.target.value.split(',').map(s=>s.trim()).filter(Boolean);persist();renderRules();}}));
+      return wrap;
+    }
+    // 리터럴 or 필드참조
+    const isRef=c.value&&typeof c.value==='object'&&'ref'in c.value;
+    if(isRef){
+      const rsel=el('select',{onchange:e=>{c.value={ref:e.target.value};persist();renderRules();}});
+      model.fields.forEach(f=>rsel.append(el('option',{value:f.id,selected:c.value.ref===f.id?'selected':null},'['+f.label+']')));
+      wrap.append(rsel);
+    }else{
+      const fld=model.fields.find(f=>f.id===c.field);
+      if(fld&&fld.type==='select'){
+        const vs=el('select',{onchange:e=>{c.value=e.target.value;persist();renderRules();}});
+        vs.append(el('option',{value:''},'(값)'));
+        (fld.options||[]).forEach(o=>vs.append(el('option',{value:o,selected:c.value===o?'selected':null},o)));
+        wrap.append(vs);
+      }else if((model.derivedKeys||[]).some(d=>d.id===c.field)){
+        const dk=model.derivedKeys.find(d=>d.id===c.field);
+        const vs=el('select',{onchange:e=>{c.value=e.target.value;persist();renderRules();}});
+        vs.append(el('option',{value:''},'(값)'));
+        (dk.options||[]).forEach(o=>vs.append(el('option',{value:o,selected:c.value===o?'selected':null},o)));
+        wrap.append(vs);
+      }else{
+        wrap.append(el('input',{value:c.value??'',oninput:e=>{c.value=e.target.value;persist();renderRules();}}));
+      }
+    }
+    if(['≥','≤','=','≠'].includes(c.op)){
+      const t=el('label',{class:'muted',style:'font-size:12px;white-space:nowrap;display:flex;gap:4px;align-items:center'},
+        el('input',{type:'checkbox',style:'width:auto',checked:isRef?'checked':null,
+          onchange:e=>{ c.value=e.target.checked?{ref:model.fields[0].id}:''; persist(); drawConds(); renderRules(); }}),'필드참조');
+      wrap.append(t);
+    }
+    return wrap;
+  }
+  drawConds();
+  cbox.append(el('button',{class:'btn sm',style:'margin-top:6px',onclick:()=>{r.when.conds.push({field:model.fields[0].id,op:'=',value:''});persist();drawConds();}},'＋ 조건'));
+  card.append(cbox);
+
+  // 효과
+  const ebox=el('div',{class:'subtle'});
+  ebox.append(el('b',{},'효과 (THEN)'));
+  const effHost=el('div',{style:'margin-top:8px'}); ebox.append(effHost);
+  function drawEffs(){
+    effHost.innerHTML='';
+    (r.effects||[]).forEach((e,i)=>{
+      const row=el('div',{class:'erow eff'});
+      const tsel=el('select',{onchange:ev=>{e.type=ev.target.value; migrateEffect(e); persist();drawEffs();renderRules();refresh();}});
+      [['ADD','추가(서류·검토·사후)'],['SET','판정(분류 등)'],['CALC','산출(수치)'],['BLOCK','제약(금지·기한)'],['NULLIFY','무효화(차단)'],['EXCEPT','예외(제약해제)']]
+        .forEach(([v,l])=>tsel.append(el('option',{value:v,selected:e.type===v?'selected':null},l)));
+      row.append(tsel);
+      row.append(effParams(e));
+      row.append(el('button',{class:'btn sm danger',onclick:()=>{r.effects.splice(i,1);persist();drawEffs();renderRules();refresh();}},'×'));
+      effHost.append(row);
+    });
+  }
+  function effParams(e){
+    const wrap=el('div',{class:'row',style:'flex-wrap:wrap'});
+    if(e.type==='ADD'){
+      const s=el('select',{onchange:ev=>{e.item=ev.target.value;persist();renderRules();refresh();}});
+      model.items.forEach(it=>s.append(el('option',{value:it.id,selected:e.item===it.id?'selected':null},'['+it.cat+'] '+it.label)));
+      wrap.append(s);
+    }else if(e.type==='SET'){
+      const ds=el('select',{onchange:ev=>{e.target=ev.target.value;persist();renderRules();refresh();}});
+      (model.derivedKeys||[]).forEach(d=>ds.append(el('option',{value:d.id,selected:e.target===d.id?'selected':null},d.label)));
+      const dk=(model.derivedKeys||[]).find(d=>d.id===(e.target||model.derivedKeys[0]?.id));
+      const vs=el('select',{onchange:ev=>{e.value=ev.target.value;persist();renderRules();refresh();}});
+      (dk?.options||[]).forEach(o=>vs.append(el('option',{value:o,selected:e.value===o?'selected':null},o)));
+      wrap.append(ds, el('span',{class:'muted'},'='), vs);
+    }else if(e.type==='CALC'){
+      wrap.append(el('input',{style:'width:120px',value:e.target||'',placeholder:'누산기명',oninput:ev=>{e.target=ev.target.value;persist();renderRules();refresh();}}));
+      const os=el('select',{style:'width:auto',onchange:ev=>{e.op=ev.target.value;persist();renderRules();refresh();}});
+      os.append(el('option',{value:'set',selected:e.op==='set'?'selected':null},'설정(=)'));
+      os.append(el('option',{value:'add',selected:e.op!=='set'?'selected':null},'가산(+=)'));
+      wrap.append(os, el('input',{type:'number',style:'width:90px',value:e.value??0,oninput:ev=>{e.value=num(ev.target.value)||0;persist();renderRules();refresh();}}));
+    }else if(e.type==='BLOCK'){
+      wrap.append(el('input',{style:'width:110px',value:e.tag||'',placeholder:'태그',oninput:ev=>{e.tag=ev.target.value;persist();renderRules();}}),
+        el('input',{style:'flex:1 1 260px',value:e.message||'',placeholder:'제약 메시지 ( {취득+6}, {상태} 치환가능 )',oninput:ev=>{e.message=ev.target.value;persist();refresh();}}));
+    }else if(e.type==='NULLIFY'){
+      wrap.append(el('input',{style:'width:120px',value:e.target||'',placeholder:'대상 누산기',oninput:ev=>{e.target=ev.target.value;persist();refresh();}}),
+        el('input',{style:'flex:1 1 220px',value:e.reason||'',placeholder:'사유',oninput:ev=>{e.reason=ev.target.value;persist();refresh();}}));
+    }else if(e.type==='EXCEPT'){
+      wrap.append(el('input',{style:'width:160px',value:e.cancelTag||'',placeholder:'취소할 태그',oninput:ev=>{e.cancelTag=ev.target.value;persist();refresh();}}));
+    }
+    return wrap;
+  }
+  drawEffs();
+  ebox.append(el('button',{class:'btn sm',style:'margin-top:6px',onclick:()=>{r.effects.push({type:'ADD',item:model.items[0]?.id});persist();drawEffs();renderRules();refresh();}},'＋ 효과'));
+  card.append(ebox);
+
+  card.append(el('div',{class:'row'},
+    el('button',{class:'btn pri',onclick:()=>{card.hidden=true;refresh();}},'완료'),
+    el('button',{class:'btn danger',onclick:()=>{ if(confirm('이 규칙을 삭제할까요?')){model.rules=model.rules.filter(x=>x.id!==id);persist();card.hidden=true;renderRules();refresh();}}},'규칙 삭제')));
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+function migrateEffect(e){
+  if(e.type==='ADD'&&!e.item)e.item=model.items[0]?.id;
+  if(e.type==='SET'&&!e.target){e.target=model.derivedKeys[0]?.id;e.value=model.derivedKeys[0]?.options[0];}
+  if(e.type==='CALC'&&!e.op)e.op='add';
+}
+
+/* ============================================================
+   필드 탭
+   ============================================================ */
+function renderFields(){
+  const tb=$('#fieldTable tbody'); tb.innerHTML='';
+  for(const f of model.fields){
+    const tr=el('tr',{style:'cursor:pointer',onclick:()=>editField(f.id)});
+    tr.append(el('td',{}, f.label));
+    tr.append(el('td',{}, {select:'선택',number:'숫자',date:'날짜',text:'텍스트'}[f.type]||f.type));
+    tr.append(el('td',{}, el('span',{class:'muted'}, (f.options||[]).join(', ')||'—')));
+    tr.append(el('td',{}, el('span',{class:'cond'}, f.showWhen?condText(f.showWhen):'항상')));
+    tr.append(el('td',{onclick:ev=>ev.stopPropagation()}, el('button',{class:'btn sm danger',onclick:()=>{if(confirm('필드 삭제?')){model.fields=model.fields.filter(x=>x.id!==f.id);persist();renderFields();refresh();}}},'삭제')));
+    tb.append(tr);
+  }
+  $('#derivedList').textContent=(model.derivedKeys||[]).map(d=>d.label+'{'+d.options.join('/')+'}').join(', ');
+}
+$('#btnAddField').onclick=()=>{ const f={id:uid('f'),label:'새 필드',type:'select',options:['값1','값2']};
+  model.fields.push(f); persist(); renderFields(); editField(f.id); };
+function editField(id){
+  const f=model.fields.find(x=>x.id===id); if(!f)return;
+  const card=$('#fieldEditorCard'); card.hidden=false; card.innerHTML='';
+  card.append(el('h2',{},'필드 편집'));
+  card.append(el('label',{class:'f'}, el('span',{class:'lab'},'라벨(표시명) — id는 유지되어 규칙/데이터가 깨지지 않습니다'),
+    el('input',{value:f.label,oninput:e=>{f.label=e.target.value;persist();renderForm();}})));
+  const ts=el('select',{onchange:e=>{f.type=e.target.value;persist();editField(id);renderForm();}});
+  [['select','선택'],['number','숫자'],['date','날짜'],['text','텍스트']].forEach(([v,l])=>ts.append(el('option',{value:v,selected:f.type===v?'selected':null},l)));
+  card.append(el('label',{class:'f'}, el('span',{class:'lab'},'유형'), ts));
+  if(f.type==='select')
+    card.append(el('label',{class:'f'}, el('span',{class:'lab'},'선택지 (쉼표 구분)'),
+      el('input',{value:(f.options||[]).join(', '),oninput:e=>{f.options=e.target.value.split(',').map(s=>s.trim()).filter(Boolean);persist();renderForm();}})));
+  // 표시조건
+  const sw=f.showWhen||{};
+  const swWrap=el('div',{class:'subtle'});
+  swWrap.append(el('label',{class:'muted',style:'display:flex;gap:6px;align-items:center;font-size:13px'},
+    el('input',{type:'checkbox',style:'width:auto',checked:f.showWhen?'checked':null,
+      onchange:e=>{ f.showWhen=e.target.checked?{field:model.fields[0].id,op:'∈',value:[]}:undefined; persist();editField(id);renderForm();}}),
+    '표시조건 사용 (특정 상황에서만 폼에 표시)'));
+  if(f.showWhen){
+    const row=el('div',{class:'row',style:'margin-top:8px'});
+    const fs=el('select',{onchange:e=>{f.showWhen.field=e.target.value;persist();renderForm();}});
+    model.fields.filter(x=>x.id!==f.id).forEach(x=>fs.append(el('option',{value:x.id,selected:f.showWhen.field===x.id?'selected':null},x.label)));
+    row.append(fs, el('span',{class:'muted'},'∈'),
+      el('input',{style:'flex:1',value:Array.isArray(f.showWhen.value)?f.showWhen.value.join(', '):'',placeholder:'값1, 값2',
+        oninput:e=>{f.showWhen.op='∈';f.showWhen.value=e.target.value.split(',').map(s=>s.trim()).filter(Boolean);persist();renderForm();}}));
+    swWrap.append(row);
+  }
+  card.append(swWrap);
+  card.append(el('button',{class:'btn pri',onclick:()=>{card.hidden=true;}},'완료'));
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ============================================================
+   업무사전 탭
+   ============================================================ */
+function renderItems(){
+  const tb=$('#itemTable tbody'); tb.innerHTML='';
+  for(const it of model.items){
+    const tr=el('tr',{style:'cursor:pointer',onclick:()=>editItem(it.id)});
+    tr.append(el('td',{}, (ICON[it.cat]||'')+' '+it.label));
+    tr.append(el('td',{}, it.cat));
+    tr.append(el('td',{}, el('span',{class:'muted'}, (it.basis||'').slice(0,60)+((it.basis||'').length>60?'…':''))));
+    tr.append(el('td',{onclick:ev=>ev.stopPropagation()}, el('button',{class:'btn sm danger',onclick:()=>{if(confirm('삭제?')){model.items=model.items.filter(x=>x.id!==it.id);persist();renderItems();refresh();}}},'삭제')));
+    tb.append(tr);
+  }
+}
+$('#btnAddItem').onclick=()=>{ const it={id:uid('i'),label:'새 업무항목',cat:'서류',basis:''};
+  model.items.push(it); persist(); renderItems(); editItem(it.id); };
+function editItem(id){
+  const it=model.items.find(x=>x.id===id); if(!it)return;
+  const card=$('#itemEditorCard'); card.hidden=false; card.innerHTML='';
+  card.append(el('h2',{},'업무항목 편집'));
+  card.append(el('label',{class:'f'}, el('span',{class:'lab'},'항목명'),
+    el('input',{value:it.label,oninput:e=>{it.label=e.target.value;persist();}})));
+  const cs=el('select',{onchange:e=>{it.cat=e.target.value;persist();}});
+  ['서류','검토','사후','기타'].forEach(c=>cs.append(el('option',{value:c,selected:it.cat===c?'selected':null},c)));
+  card.append(el('label',{class:'f'}, el('span',{class:'lab'},'분류'), cs));
+  card.append(el('label',{class:'f'}, el('span',{class:'lab'},'근거텍스트 (결과 화면 ⓘ 호버팝업으로 표시)'),
+    el('textarea',{rows:4,oninput:e=>{it.basis=e.target.value;persist();},html:''}, )));
+  $('textarea',card).value=it.basis||'';
+  card.append(el('button',{class:'btn pri',onclick:()=>{card.hidden=true;renderItems();}},'완료'));
+  card.scrollIntoView({behavior:'smooth',block:'nearest'});
+}
+
+/* ============================================================
+   예시값 / 초기화 / 저장
+   ============================================================ */
+const EXAMPLES={
+  '사례 A · 농지 토지구입(개인사업자)':{신청인유형:'개인사업자',자금종류:'토지구입자금',대상토지지목:'농지',자금목적:'사업목적',담보종류:'토지',신용도:'우량',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
+  '사례 B · LTV 상향 (권역외로 차단)':{담보종류:'아파트',신용도:'우량',상환구조:'특정상환구조',권역구분:'권역외',사무소제한:'없음',자금종류:'시설자금'},
+  '사례 C · 운전자금→부동산구입 재분류':{자금종류:'운전자금',부동산취득일:fmtDate(addMonths(new Date(),-3)),취급일:fmtDate(new Date()),대출금액:'50000',매매가:'48000',선분양여부:'아니오',담보종류:'상가',신용도:'일반',상환구조:'일반',권역구분:'권역내',사무소제한:'없음'},
+};
+$('#btnExample').onclick=(ev)=>{
+  const menu=el('div',{class:'card',style:'position:absolute;z-index:30;padding:8px'});
+  Object.keys(EXAMPLES).forEach(k=>menu.append(el('div',{class:'btn sm',style:'display:block;margin:4px 0;cursor:pointer',
+    onclick:()=>{ inputs={...EXAMPLES[k]}; document.body.removeChild(menu); refresh(); }},k)));
+  const r=ev.target.getBoundingClientRect(); menu.style.left=r.left+'px'; menu.style.top=(r.bottom+6)+'px';
+  document.body.append(menu);
+  setTimeout(()=>document.addEventListener('click',function h(e){if(!menu.contains(e.target)&&e.target!==ev.target){menu.remove();document.removeEventListener('click',h);}}),0);
+};
+$('#btnClear').onclick=()=>{ inputs={}; refresh(); };
+
+$('#btnExport').onclick=async()=>{
+  const blob=new Blob([JSON.stringify(model,null,2)],{type:'application/json'});
+  const name='대출업무방법서_'+fmtDate(new Date())+'.json';
+  if(window.showSaveFilePicker){
+    try{const h=await showSaveFilePicker({suggestedName:name,types:[{description:'JSON',accept:{'application/json':['.json']}}]});
+      const w=await h.createWritable(); await w.write(blob); await w.close(); return;}catch(e){ if(e.name==='AbortError')return; }
+  }
+  const a=el('a',{href:URL.createObjectURL(blob),download:name}); a.click(); URL.revokeObjectURL(a.href);
+};
+$('#btnImport').onclick=()=>$('#fileInput').click();
+$('#fileInput').onchange=e=>{ const file=e.target.files[0]; if(!file)return;
+  const rd=new FileReader(); rd.onload=()=>{ try{ const m=JSON.parse(rd.result);
+    if(!m.fields||!m.rules) throw new Error('형식 오류'); model=m; inputs={}; persist();
+    renderRules();renderFields();renderItems();refresh(); alert('불러오기 완료');
+  }catch(err){ alert('불러오기 실패: '+err.message); } }; rd.readAsText(file); e.target.value=''; };
+$('#btnReset').onclick=()=>{ if(confirm('모든 데이터를 기본 예시로 초기화할까요? (백업은 먼저 내보내기)')){ model=seedModel(); inputs={}; persist(); renderRules();renderFields();renderItems();refresh(); } };
+
+/* ============================================================
+   초기화
+   ============================================================ */
+(async function init(){
+  const saved=await idbGet('model');
+  if(saved&&saved.fields&&saved.rules) model=saved;
+  // 취급일 기본값(오늘)
+  refresh();
+})();
+</script>
