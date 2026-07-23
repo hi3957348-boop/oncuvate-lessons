@@ -86,6 +86,46 @@
   .savebar{font-size:12px;color:var(--muted)}
   .kbd{font-family:ui-monospace,monospace;background:#eef1f6;border-radius:5px;padding:1px 6px;font-size:12px}
   .empty{color:var(--muted);font-size:13px;padding:6px 0}
+  /* tree */
+  .tree{font-size:13px;max-height:64vh;overflow:auto}
+  .trow{display:flex;align-items:center;gap:4px;padding:3px 4px;border-radius:6px}
+  .trow:hover{background:#f2f5fa}
+  .trow.sel{background:var(--brand-weak)}
+  .trow .tw{width:16px;text-align:center;color:var(--muted);cursor:pointer;user-select:none;flex:0 0 auto}
+  .trow .tlabel{flex:1 1 auto;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;cursor:pointer;padding:1px 2px}
+  .trow .tacts{display:none;gap:1px;flex:0 0 auto}
+  .trow:hover .tacts{display:flex}
+  .tbtn{border:none;background:none;cursor:pointer;color:var(--muted);font-size:11px;padding:1px 4px;border-radius:4px}
+  .tbtn:hover{background:#e5e9f0;color:var(--ink)}
+  .tchildren{margin-left:12px;border-left:1px dashed var(--line);padding-left:4px}
+  .rt-toolbar{display:flex;flex-wrap:wrap;gap:3px;margin:6px 0 8px;border:1px solid var(--line);border-radius:8px;padding:5px}
+  .rt-toolbar button{border:1px solid transparent;background:#fff;border-radius:5px;padding:3px 8px;cursor:pointer;font-size:13px;min-width:28px}
+  .rt-toolbar button:hover{background:#f0f2f6;border-color:var(--line)}
+  .rt-toolbar input[type=color]{width:30px;height:27px;padding:0;border:1px solid var(--line);border-radius:5px;background:#fff;cursor:pointer}
+  .rt-toolbar .sep{width:1px;background:var(--line);margin:2px 3px}
+  .editor{min-height:220px;border:1px solid var(--line);border-radius:8px;padding:12px;outline:none;line-height:1.7}
+  .editor:focus{border-color:var(--brand)}
+  .editor h3{font-size:15px;margin:.4em 0}
+  .chips{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+  .chip.att{background:#eef7ee;border:1px solid #cfe6cf;cursor:pointer}
+  .chip.ref{background:#eef1ff;border:1px solid #cfd8ff;cursor:pointer}
+  .chip .x{cursor:pointer;color:var(--danger);font-weight:700;margin-left:2px}
+  /* graph */
+  .graphwrap{position:relative;border:1px solid var(--line);border-radius:10px;height:560px;overflow:auto;
+    background:linear-gradient(#f3f5f8 1px,transparent 1px) 0 0/24px 24px,
+               linear-gradient(90deg,#f3f5f8 1px,transparent 1px) 0 0/24px 24px,#fff}
+  .gsvg{position:absolute;left:0;top:0}
+  .gnode{position:absolute;min-width:92px;max-width:190px;background:#fff;border:1.5px solid var(--brand);
+    border-radius:10px;padding:7px 10px;font-size:12.5px;box-shadow:var(--shadow);cursor:grab;user-select:none;touch-action:none}
+  .gnode.sel{outline:2px solid var(--brand);outline-offset:1px}
+  .gnode.linking{border-color:var(--warn);box-shadow:0 0 0 3px #fde9c8}
+  .gnode .gx{position:absolute;top:-9px;right:-9px;width:19px;height:19px;border-radius:50%;background:#fff;
+    border:1px solid var(--line);color:var(--danger);font-size:12px;line-height:17px;text-align:center;cursor:pointer;display:none}
+  .gnode:hover .gx{display:block}
+  .elabel{fill:#475569;font-size:11px}
+  /* modal */
+  .modalback{position:fixed;inset:0;background:rgba(15,23,42,.35);z-index:50;display:flex;align-items:center;justify-content:center}
+  .modalbox{background:#fff;border-radius:12px;padding:16px 18px;width:min(460px,92vw);box-shadow:0 12px 44px rgba(0,0,0,.3)}
 </style>
 
 <header>
@@ -95,6 +135,8 @@
   </div>
   <nav class="tabs" id="tabs">
     <button data-tab="work" class="active">입력·판정</button>
+    <button data-tab="doc">문서(트리)</button>
+    <button data-tab="graph">관계도</button>
     <button data-tab="rules">규칙</button>
     <button data-tab="fields">필드</button>
     <button data-tab="items">업무사전</button>
@@ -171,6 +213,33 @@
     <div class="card" id="itemEditorCard" hidden></div>
   </section>
 
+  <!-- 문서(트리) -->
+  <section id="tab-doc" hidden>
+    <div class="grid2">
+      <div class="card">
+        <div class="flexspace"><h2 style="margin:0">문서 트리 <span class="tag">최대 4단계</span></h2>
+          <button class="btn pri sm" id="btnAddRoot">＋ 최상위 항목</button></div>
+        <div class="hint">법령·규정을 계층으로 정리합니다. 각 단계는 고정 명칭 없이 <b>내용 자체가 제목</b>이 됩니다. 항목에 마우스를 올리면 ＋하위·＋형제·삭제가 나타나고, ▸/▾ 로 접기/펼치기 합니다.</div>
+        <div id="treeHost" class="tree"></div>
+      </div>
+      <div class="card" id="nodeEditor"></div>
+    </div>
+  </section>
+
+  <!-- 관계도 -->
+  <section id="tab-graph" hidden>
+    <div class="card">
+      <div class="flexspace"><h2 style="margin:0">관계도</h2>
+        <div class="row">
+          <button class="btn sm" id="btnAddGNode">＋ 노드</button>
+          <button class="btn sm" id="btnAddGFromTree">＋ 문서에서</button>
+          <button class="btn sm" id="btnLink">🔗 연결 모드</button>
+        </div></div>
+      <div class="hint">법령·규정·업무의 유기적 관계를 노드-연결선으로 나타냅니다. 노드를 <b>드래그</b>해 배치하고, <b>연결 모드</b>에서 노드 두 개를 차례로 클릭하면 연결됩니다. 노드 <b>더블클릭</b>=이름변경, 연결선 <b>클릭</b>=삭제/라벨편집, 노드의 <b>×</b>=삭제. “문서에서” 넣은 노드는 해당 문서 항목으로 이동할 수 있습니다.</div>
+      <div id="graphWrap" class="graphwrap"></div>
+    </div>
+  </section>
+
   <!-- 저장 -->
   <section id="tab-data" hidden>
     <div class="card">
@@ -185,13 +254,21 @@
       <div class="savebar" id="saveStat" style="margin-top:10px"></div>
     </div>
     <div class="card">
+      <div class="flexspace"><h2 style="margin:0">버전 스냅샷 (시점 보관)</h2>
+        <button class="btn pri sm" id="btnSnap">＋ 현재 상태 스냅샷</button></div>
+      <div class="hint">규정 개정 등 중요한 시점의 규칙·문서·관계도 상태를 통째로 보관합니다. 과거 대출건의 <b>“당시 기준”</b>을 재현할 때 사용합니다. (브라우저 내 별도 보관 · 백업은 “내보내기”로)</div>
+      <div id="snapList"></div>
+    </div>
+    <div class="card">
       <h2>설계 메모</h2>
       <ul class="muted" style="font-size:13px;line-height:1.7;margin:0;padding-left:18px">
         <li><b>효과 5종</b>: 추가(ADD) · 판정(SET) · 산출(CALC) · 제약(BLOCK) · 무효화/예외(NULLIFY·EXCEPT)</li>
         <li><b>전방연쇄</b>: 판정 결과(예: 분류=일반시설자금)가 다시 다른 규칙의 조건이 됩니다.</li>
         <li><b>추가확인 역제시</b>: 결론에 필요하지만 아직 안 채운 필드를 스스로 짚어줍니다.</li>
         <li><b>차단·예외</b>: LTV 상향 무효(권역외), 6개월 제약의 선분양 예외 등 상위규칙이 하위효과를 덮어씁니다.</li>
-        <li>이 파일은 단일 HTML 프로토타입입니다. 관계도·4단계 트리·첨부파일은 다음 단계에서 통합 예정.</li>
+        <li><b>문서 트리</b>: OneNote식 최대 4단계 무명 계층 · 서식(굵게/색/형광펜/목록/제목) · 첨부파일 · 상호참조.</li>
+        <li><b>관계도</b>: 법령·규정·업무의 유기적 관계를 드래그 가능한 노드-연결선으로 시각화.</li>
+        <li>단일 HTML · 완전 오프라인 · 모든 데이터(규칙·문서·관계도·첨부)는 JSON 하나로 백업·이동.</li>
       </ul>
     </div>
   </section>
@@ -233,6 +310,32 @@ function seedModel(){
   meta:{ title:'대출업무방법서', updatedAt:null },
   derivedKeys:[ {id:'분류', label:'분류결과', options:['일반시설자금','부동산구입자금','일반운전자금']} ],
   calcOutputs:[ {id:'LTV', label:'적용 LTV', unit:'%', sum:['기본LTV','상향LTV'], nullifiable:['상향LTV']} ],
+  tree:[
+    {id:'t_nongji',html:'<h3>농지법</h3>',collapsed:false,attachments:[],refs:[],children:[
+      {id:'t_nongji8',html:'<b>제8조 (농지취득자격증명)</b><br>농지를 취득하려는 자는 농지 소재지를 관할하는 시·구·읍·면장에게서 농지취득자격증명을 발급받아야 한다. 신청 시 <span style="background-color:#fff59d">취득목적</span>을 기재하므로 자금목적 확인의 근거가 된다.',collapsed:false,attachments:[],refs:['t_yeosin_budongsan'],children:[]}
+    ]},
+    {id:'t_yeosin',html:'<h3>여신업무방법서</h3>',collapsed:false,attachments:[],refs:[],children:[
+      {id:'t_yeosin_sisul',html:'<b>시설자금 편</b>',collapsed:false,attachments:[],refs:[],children:[
+        {id:'t_yeosin_budongsan',html:'<b>부동산구입자금</b><br>부동산 취득 전후 <span style="background-color:#fff59d">6개월</span> 이내 취급하는 자금은 운전자금이라도 부동산구입자금으로 분류한다. 매매가 이상 대출은 구입일로부터 6개월 내 실행하여야 하며, <u>선분양 물건</u> 등은 예외로 한다.',collapsed:false,attachments:[],refs:[],children:[]}
+      ]}
+    ]},
+    {id:'t_ltv',html:'<h3>LTV 운용기준</h3>',collapsed:false,attachments:[],refs:[],children:[
+      {id:'t_ltv_base',html:'<b>담보종류별 기본 LTV</b><br>아파트 70% · 주택 65% · 토지 60% · 상가 55%',collapsed:false,attachments:[],refs:[],children:[]},
+      {id:'t_ltv_up',html:'<b>상향 및 제한</b><br>신용우량·특정상환구조 시 상향 가능. 단 <b>권역외 대출</b> 또는 <b>사무소 별도규칙</b>이 있으면 상향 불가.',collapsed:false,attachments:[],refs:[],children:[]}
+    ]}
+  ],
+  graph:{nodes:[
+    {id:'g1',label:'농지법 §8 농취증',ref:'t_nongji8',x:40,y:70},
+    {id:'g2',label:'토지구입(농지·사업목적)',x:320,y:50},
+    {id:'g3',label:'일반시설자금',x:320,y:210},
+    {id:'g4',label:'사업계획서·농취증',x:610,y:50},
+    {id:'g5',label:'자금 사후점검',x:610,y:210}
+  ],edges:[
+    {id:'e1',from:'g2',to:'g3',label:'농지+사업목적'},
+    {id:'e2',from:'g1',to:'g2',label:'근거'},
+    {id:'e3',from:'g2',to:'g4',label:'필요서류'},
+    {id:'e4',from:'g3',to:'g5',label:'사후'}
+  ]},
   fields:[
     {id:'신청인유형',label:'신청인유형',type:'select',options:['개인','개인사업자','법인']},
     {id:'자금종류',label:'자금종류',type:'select',options:['운전자금','시설자금','토지구입자금','부동산구입자금']},
@@ -496,13 +599,21 @@ function persist(){ clearTimeout(saveTimer); saveTimer=setTimeout(async()=>{
 /* ============================================================
    탭
    ============================================================ */
-$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return;
-  $$('#tabs button').forEach(x=>x.classList.toggle('active',x===b));
-  const t=b.dataset.tab;
-  ['work','rules','fields','items','data'].forEach(k=>$('#tab-'+k).hidden=(k!==t));
-  if(t==='rules')renderRules(); if(t==='fields')renderFields(); if(t==='items')renderItems();
-  if(t==='data'){const s=$('#saveStat');s.textContent=model.meta.updatedAt?('자동 저장됨 · '+model.meta.updatedAt):'저장 이력 없음';}
-});
+const TABS=['work','doc','graph','rules','fields','items','data'];
+$('#tabs').addEventListener('click',e=>{const b=e.target.closest('button');if(!b)return; activateTab(b.dataset.tab);});
+function activateTab(t){
+  $$('#tabs button').forEach(x=>x.classList.toggle('active',x.dataset.tab===t));
+  TABS.forEach(k=>$('#tab-'+k).hidden=(k!==t));
+  onTab(t);
+}
+function onTab(t){
+  if(t==='rules')renderRules();
+  else if(t==='fields')renderFields();
+  else if(t==='items')renderItems();
+  else if(t==='doc'){renderTree();renderNodeEditor();}
+  else if(t==='graph'){setLinkBtn();renderGraph();}
+  else if(t==='data'){renderSnapshots(); const s=$('#saveStat');s.textContent=model.meta.updatedAt?('자동 저장됨 · '+model.meta.updatedAt):'저장 이력 없음';}
+}
 
 /* ============================================================
    입력 폼 (자동 파생 + 진행형 표시)
@@ -960,12 +1071,198 @@ $('#btnExport').onclick=async()=>{
   const a=el('a',{href:URL.createObjectURL(blob),download:name}); a.click(); URL.revokeObjectURL(a.href);
 };
 $('#btnImport').onclick=()=>$('#fileInput').click();
+$('#btnImport').onclick=()=>$('#fileInput').click();
 $('#fileInput').onchange=e=>{ const file=e.target.files[0]; if(!file)return;
   const rd=new FileReader(); rd.onload=()=>{ try{ const m=JSON.parse(rd.result);
-    if(!m.fields||!m.rules) throw new Error('형식 오류'); model=m; inputs={}; persist();
-    renderRules();renderFields();renderItems();refresh(); alert('불러오기 완료');
+    if(!m.fields||!m.rules) throw new Error('형식 오류'); model=migrate(m); inputs={}; selNode=null; persist();
+    rerenderAll(); alert('불러오기 완료');
   }catch(err){ alert('불러오기 실패: '+err.message); } }; rd.readAsText(file); e.target.value=''; };
-$('#btnReset').onclick=()=>{ if(confirm('모든 데이터를 기본 예시로 초기화할까요? (백업은 먼저 내보내기)')){ model=seedModel(); inputs={}; persist(); renderRules();renderFields();renderItems();refresh(); } };
+$('#btnReset').onclick=()=>{ if(confirm('모든 데이터를 기본 예시로 초기화할까요? (백업은 먼저 내보내기)')){ model=seedModel(); inputs={}; selNode=null; persist(); rerenderAll(); } };
+
+/* ============================================================
+   문서 트리 · 리치텍스트 · 첨부 · 상호참조
+   ============================================================ */
+let selNode=null;
+function migrate(m){ m.tree=m.tree||[]; m.graph=m.graph||{nodes:[],edges:[]}; m.graph.nodes=m.graph.nodes||[]; m.graph.edges=m.graph.edges||[]; m.items=m.items||[]; m.meta=m.meta||{}; return m; }
+function rerenderAll(){ renderRules();renderFields();renderItems();renderTree();renderNodeEditor();renderGraph();renderSnapshots();refresh(); }
+
+function findNode(id,nodes=model.tree,parent=null){ for(const n of nodes){ if(n.id===id)return {node:n,parent,siblings:nodes}; const r=findNode(id,n.children||[],n); if(r)return r; } return null; }
+function nodeDepth(id,nodes=model.tree,d=1){ for(const n of nodes){ if(n.id===id)return d; const r=nodeDepth(id,n.children||[],d+1); if(r)return r; } return 0; }
+function nodeTitle(n){ const t=el('div',{html:n.html||''}); const s=(t.textContent||'').trim().split('\n')[0]; return s?s.slice(0,44):'(빈 항목)'; }
+function nodeText(n){ const t=el('div',{html:n.html||''}); return (t.textContent||'').trim().slice(0,320)||'(빈 항목)'; }
+function newNode(){ return {id:uid('n'),html:'',children:[],attachments:[],refs:[],collapsed:false}; }
+
+function renderTree(){
+  const host=$('#treeHost'); if(!host)return; host.innerHTML='';
+  if(!model.tree.length){ host.append(el('div',{class:'empty'},'항목이 없습니다. “＋ 최상위 항목”으로 시작하세요.')); return; }
+  const build=(nodes,depth)=>{
+    const wrap=el('div',{class:depth>1?'tchildren':''});
+    for(const n of nodes){
+      n.children=n.children||[];
+      const hasKids=n.children.length>0;
+      const row=el('div',{class:'trow'+(selNode===n.id?' sel':'')});
+      const tw=el('span',{class:'tw',onclick:ev=>{ev.stopPropagation();n.collapsed=!n.collapsed;persist();renderTree();}}, hasKids?(n.collapsed?'▸':'▾'):'·');
+      const lab=el('span',{class:'tlabel',onclick:()=>{selNode=n.id;renderTree();renderNodeEditor();}}, nodeTitle(n));
+      const acts=el('span',{class:'tacts'});
+      if(depth<4) acts.append(el('button',{class:'tbtn',title:'하위 추가',onclick:ev=>{ev.stopPropagation();addChild(n.id);}},'＋하위'));
+      acts.append(el('button',{class:'tbtn',title:'형제 추가',onclick:ev=>{ev.stopPropagation();addSibling(n.id);}},'＋형제'));
+      acts.append(el('button',{class:'tbtn',title:'삭제',onclick:ev=>{ev.stopPropagation();delNode(n.id);}},'🗑'));
+      row.append(tw,lab,acts);
+      const box=el('div',{}); box.append(row);
+      if(hasKids&&!n.collapsed) box.append(build(n.children,depth+1));
+      wrap.append(box);
+    }
+    return wrap;
+  };
+  host.append(build(model.tree,1));
+}
+function addChild(id){ if(nodeDepth(id)>=4){alert('최대 4단계까지만 만들 수 있습니다.');return;} const r=findNode(id); if(!r)return; const nn=newNode(); r.node.children=r.node.children||[]; r.node.children.push(nn); r.node.collapsed=false; selNode=nn.id; persist(); renderTree(); renderNodeEditor(); }
+function addSibling(id){ const r=findNode(id); if(!r)return; const nn=newNode(); const i=r.siblings.indexOf(r.node); r.siblings.splice(i+1,0,nn); selNode=nn.id; persist(); renderTree(); renderNodeEditor(); }
+function addRoot(){ const nn=newNode(); model.tree.push(nn); selNode=nn.id; persist(); renderTree(); renderNodeEditor(); }
+function removeRefsTo(id){ const walk=nodes=>nodes.forEach(n=>{ n.refs=(n.refs||[]).filter(r=>r!==id); walk(n.children||[]); }); walk(model.tree); }
+function delNode(id){ if(!confirm('이 항목과 모든 하위 항목을 삭제할까요?'))return; const r=findNode(id); if(!r)return; const i=r.siblings.indexOf(r.node); r.siblings.splice(i,1); if(selNode===id)selNode=null; removeRefsTo(id); persist(); renderTree(); renderNodeEditor(); }
+
+function renderNodeEditor(){
+  const host=$('#nodeEditor'); if(!host)return; host.innerHTML='';
+  if(!selNode){ host.append(el('div',{class:'empty'},'왼쪽에서 항목을 선택하거나 “＋ 최상위 항목”으로 새로 추가하세요.')); return; }
+  const r=findNode(selNode); if(!r){ selNode=null; host.append(el('div',{class:'empty'},'항목을 선택하세요.')); return; }
+  const n=r.node; const depth=nodeDepth(selNode);
+  host.append(el('div',{class:'hint'}, depth+'단계 항목 · 서식/첨부/상호참조를 담을 수 있습니다'));
+
+  const ed=el('div',{class:'editor',contenteditable:'true'}); ed.innerHTML=n.html||'';
+  const saveNow=()=>{ n.html=ed.innerHTML; persist(); };
+  const cmd=(c,v)=>{ try{document.execCommand('styleWithCSS',false,true);}catch(_){} document.execCommand(c,false,v); ed.focus(); saveNow(); };
+  const mkb=(label,c,v,title)=>el('button',{type:'button',title:title||label,onmousedown:e=>{e.preventDefault();cmd(c,v);}},label);
+
+  const tb=el('div',{class:'rt-toolbar'});
+  tb.append(mkb('𝐁','bold',null,'굵게'),mkb('𝘐','italic',null,'기울임'),mkb('U̲','underline',null,'밑줄'));
+  tb.append(el('span',{class:'sep'}));
+  tb.append((()=>{const w=el('label',{title:'글자색',style:'display:flex;align-items:center'});w.append(el('input',{type:'color',value:'#c0392b',oninput:e=>cmd('foreColor',e.target.value)}));return w;})());
+  tb.append((()=>{const w=el('label',{title:'형광펜',style:'display:flex;align-items:center'});w.append(el('input',{type:'color',value:'#fff59d',oninput:e=>cmd('hiliteColor',e.target.value)}));return w;})());
+  tb.append(el('span',{class:'sep'}));
+  tb.append(mkb('• 목록','insertUnorderedList'),mkb('1. 목록','insertOrderedList'),mkb('제목','formatBlock','h3'),mkb('지움','removeFormat','','서식 지우기'));
+  host.append(tb);
+
+  let st; ed.addEventListener('input',()=>{ n.html=ed.innerHTML; clearTimeout(st); st=setTimeout(()=>{persist();renderTree();},450); });
+  ed.addEventListener('blur',()=>{ saveNow(); renderTree(); });
+  host.append(ed);
+
+  // 첨부
+  const fi=el('input',{type:'file',hidden:'true',multiple:'true',onchange:e=>{addAttach(n,e.target.files);e.target.value='';}});
+  host.append(el('div',{class:'flexspace',style:'margin-top:14px'}, el('b',{},'첨부파일'),
+    (()=>{const b=el('button',{class:'btn sm',onclick:()=>fi.click()},'＋ 파일 추가'); return el('span',{},b,fi);})()));
+  const ac=el('div',{class:'chips'});
+  (n.attachments||[]).forEach((a,i)=>{ const c=el('span',{class:'chip att',onclick:()=>openAttach(a)}, '📎 '+a.name);
+    c.append(el('span',{class:'x',title:'삭제',onclick:ev=>{ev.stopPropagation();n.attachments.splice(i,1);persist();renderNodeEditor();}},'×')); ac.append(c); });
+  if(!(n.attachments||[]).length) ac.append(el('span',{class:'muted',style:'font-size:12px'},'없음'));
+  host.append(ac);
+
+  // 상호참조
+  host.append(el('div',{class:'flexspace',style:'margin-top:12px'}, el('b',{},'상호참조 (관련 조문·규정)'),
+    el('button',{class:'btn sm',onclick:()=>pickRef(n)},'＋ 참조 추가')));
+  const rc=el('div',{class:'chips'});
+  (n.refs||[]).forEach((rid,i)=>{ const t=findNode(rid);
+    const c=el('span',{class:'chip ref',onclick:()=>{ if(t){selNode=rid;renderTree();renderNodeEditor();} }}, '↪ '+(t?nodeTitle(t.node):'(삭제됨)'));
+    if(t) attachTip(c, nodeText(t.node));
+    c.append(el('span',{class:'x',title:'제거',onclick:ev=>{ev.stopPropagation();n.refs.splice(i,1);persist();renderNodeEditor();}},'×')); rc.append(c); });
+  if(!(n.refs||[]).length) rc.append(el('span',{class:'muted',style:'font-size:12px'},'없음'));
+  host.append(rc);
+}
+async function addAttach(n, files){ n.attachments=n.attachments||[];
+  for(const f of files){ if(f.size>10*1024*1024 && !confirm(f.name+' 은 10MB를 넘습니다. 첨부하면 저장이 느려질 수 있습니다. 계속할까요?')) continue;
+    const dataUrl=await new Promise(res=>{const rd=new FileReader();rd.onload=()=>res(rd.result);rd.readAsDataURL(f);});
+    n.attachments.push({name:f.name,type:f.type,size:f.size,dataUrl}); }
+  persist(); renderNodeEditor(); }
+function openAttach(a){ if((a.type||'').startsWith('image/')){ const w=window.open('','_blank'); if(w){ w.document.title=a.name; w.document.body.style.margin='0'; const img=w.document.createElement('img'); img.src=a.dataUrl; img.style.maxWidth='100%'; w.document.body.appendChild(img); return; } }
+  const link=el('a',{href:a.dataUrl,download:a.name}); document.body.append(link); link.click(); link.remove(); }
+function treeOptions(exclude){ const opts=[]; const walk=(nodes,pre)=>nodes.forEach(x=>{ if(x.id!==exclude)opts.push({id:x.id,label:pre+nodeTitle(x)}); walk(x.children||[],pre+'· '); }); walk(model.tree,''); return opts; }
+function pickRef(n){ const opts=treeOptions(n.id); if(!opts.length){alert('참조할 다른 항목이 없습니다.');return;}
+  showPicker('참조할 항목 선택', opts, id=>{ n.refs=n.refs||[]; if(!n.refs.includes(id))n.refs.push(id); persist(); renderNodeEditor(); }); }
+
+function showPicker(title, opts, cb){
+  const back=el('div',{class:'modalback'}); const box=el('div',{class:'modalbox'});
+  box.append(el('h2',{style:'margin:0 0 10px'},title));
+  const list=el('div',{style:'max-height:340px;overflow:auto'});
+  opts.forEach(o=>list.append(el('div',{class:'btn',style:'display:block;margin:4px 0;text-align:left;white-space:normal',onclick:()=>{document.body.removeChild(back);cb(o.id);}},o.label)));
+  box.append(list, el('div',{class:'row',style:'margin-top:10px;justify-content:flex-end'}, el('button',{class:'btn',onclick:()=>document.body.removeChild(back)},'취소')));
+  back.append(box); back.addEventListener('click',e=>{if(e.target===back)document.body.removeChild(back);}); document.body.append(back);
+}
+$('#btnAddRoot').onclick=addRoot;
+
+/* ============================================================
+   관계도
+   ============================================================ */
+let linkMode=false, linkFrom=null, selGNode=null;
+const SVGNS='http://www.w3.org/2000/svg';
+function gotoNode(id){ activateTab('doc'); selNode=id; renderTree(); renderNodeEditor(); }
+function setLinkBtn(){ const b=$('#btnLink'); if(!b)return; b.textContent=linkMode?'🔗 연결 모드 (켜짐)':'🔗 연결 모드'; b.classList.toggle('pri',linkMode); }
+function renderGraph(){
+  const wrap=$('#graphWrap'); if(!wrap)return; wrap.innerHTML=''; model.graph=model.graph||{nodes:[],edges:[]};
+  const svg=document.createElementNS(SVGNS,'svg'); svg.setAttribute('class','gsvg'); svg.setAttribute('width','2400'); svg.setAttribute('height','1600');
+  svg.innerHTML='<defs><marker id="arr" markerWidth="9" markerHeight="9" refX="7" refY="3" orient="auto"><path d="M0,0 L7,3 L0,6 Z" fill="#94a3b8"/></marker></defs>';
+  wrap.append(svg);
+  const nodeEls={};
+  model.graph.nodes.forEach(gn=>{
+    const d=el('div',{class:'gnode'+(selGNode===gn.id?' sel':'')+(linkFrom===gn.id?' linking':'')});
+    d.style.left=(gn.x||20)+'px'; d.style.top=(gn.y||20)+'px';
+    d.append(document.createTextNode(gn.label||'(무제)'));
+    if(gn.ref){ const link=el('a',{href:'#',style:'font-size:11px;display:block;margin-top:3px',onclick:e=>{e.preventDefault();e.stopPropagation();gotoNode(gn.ref);}},'↪ 문서 보기'); d.append(link); }
+    d.append(el('div',{class:'gx',title:'노드 삭제',onclick:e=>{e.stopPropagation();delGNode(gn.id);}},'×'));
+    d.addEventListener('pointerdown',e=>startDrag(e,gn,d));
+    d.addEventListener('click',()=>{ if(linkMode) handleLinkClick(gn); else { selGNode=gn.id; renderGraph(); } });
+    d.addEventListener('dblclick',()=>{ const nl=prompt('노드 이름',gn.label); if(nl!=null){gn.label=nl;persist();renderGraph();} });
+    wrap.append(d); nodeEls[gn.id]=d;
+  });
+  function drawEdges(){
+    [...svg.querySelectorAll('.edge,.ehit,.elabel')].forEach(x=>x.remove());
+    model.graph.edges.forEach(edge=>{
+      const a=model.graph.nodes.find(n=>n.id===edge.from), b=model.graph.nodes.find(n=>n.id===edge.to); if(!a||!b)return;
+      const ea=nodeEls[a.id], eb=nodeEls[b.id];
+      const ax=(a.x||0)+(ea?ea.offsetWidth/2:46), ay=(a.y||0)+(ea?ea.offsetHeight/2:18);
+      const bx=(b.x||0)+(eb?eb.offsetWidth/2:46), by=(b.y||0)+(eb?eb.offsetHeight/2:18);
+      const mk=(cls,w,color,pe)=>{ const l=document.createElementNS(SVGNS,'line'); l.setAttribute('x1',ax);l.setAttribute('y1',ay);l.setAttribute('x2',bx);l.setAttribute('y2',by); l.setAttribute('stroke',color);l.setAttribute('stroke-width',w);l.setAttribute('class',cls); l.style.pointerEvents=pe; return l; };
+      const vis=mk('edge','1.6','#94a3b8','none'); vis.setAttribute('marker-end','url(#arr)'); svg.append(vis);
+      const hit=mk('ehit','12','transparent','stroke'); hit.style.cursor='pointer';
+      hit.addEventListener('click',()=>{ if(confirm('이 연결선을 삭제할까요?\n[확인]=삭제  [취소]=라벨 편집')){ model.graph.edges=model.graph.edges.filter(x=>x!==edge); persist(); renderGraph(); } else { const nl=prompt('연결선 라벨',edge.label||''); if(nl!=null){edge.label=nl;persist();renderGraph();} } });
+      svg.append(hit);
+      if(edge.label){ const tx=document.createElementNS(SVGNS,'text'); tx.setAttribute('x',(ax+bx)/2);tx.setAttribute('y',(ay+by)/2-4);tx.setAttribute('text-anchor','middle');tx.setAttribute('class','elabel'); tx.textContent=edge.label; svg.append(tx); }
+    });
+  }
+  drawEdges();
+  function startDrag(e,gn,d){ if(linkMode)return; e.preventDefault(); d.setPointerCapture(e.pointerId); const sx=e.clientX,sy=e.clientY,ox=gn.x||0,oy=gn.y||0; d.style.cursor='grabbing';
+    const move=ev=>{ gn.x=Math.max(0,ox+(ev.clientX-sx)); gn.y=Math.max(0,oy+(ev.clientY-sy)); d.style.left=gn.x+'px'; d.style.top=gn.y+'px'; drawEdges(); };
+    const up=()=>{ try{d.releasePointerCapture(e.pointerId);}catch(_){}; d.removeEventListener('pointermove',move); d.removeEventListener('pointerup',up); d.style.cursor='grab'; persist(); };
+    d.addEventListener('pointermove',move); d.addEventListener('pointerup',up); }
+  function handleLinkClick(gn){ if(!linkFrom){ linkFrom=gn.id; renderGraph(); }
+    else if(linkFrom===gn.id){ linkFrom=null; renderGraph(); }
+    else { model.graph.edges.push({id:uid('e'),from:linkFrom,to:gn.id,label:''}); linkFrom=null; linkMode=false; setLinkBtn(); persist(); renderGraph(); } }
+}
+function delGNode(id){ model.graph.nodes=model.graph.nodes.filter(n=>n.id!==id); model.graph.edges=model.graph.edges.filter(e=>e.from!==id&&e.to!==id); if(selGNode===id)selGNode=null; persist(); renderGraph(); }
+$('#btnAddGNode').onclick=()=>{ const label=prompt('노드 이름'); if(label==null)return; const k=model.graph.nodes.length; model.graph.nodes.push({id:uid('g'),label:label||'무제',x:40+(k%6)*28,y:40+(k%6)*28}); persist(); renderGraph(); };
+$('#btnAddGFromTree').onclick=()=>{ const opts=treeOptions(null); if(!opts.length){alert('문서 항목이 없습니다. 먼저 문서 트리에서 항목을 만드세요.');return;}
+  showPicker('관계도에 넣을 문서 항목', opts, id=>{ const t=findNode(id); const k=model.graph.nodes.length; model.graph.nodes.push({id:uid('g'),label:nodeTitle(t.node),ref:id,x:40+(k%6)*28,y:40+(k%6)*28}); persist(); renderGraph(); }); };
+$('#btnLink').onclick=()=>{ linkMode=!linkMode; linkFrom=null; setLinkBtn(); renderGraph(); };
+
+/* ============================================================
+   버전 스냅샷
+   ============================================================ */
+async function getSnaps(){ return (await idbGet('snapshots'))||[]; }
+$('#btnSnap').onclick=async()=>{ const label=prompt('스냅샷 설명 (예: 2026-07 규정개정 반영)'); if(label==null)return;
+  const snaps=await getSnaps(); snaps.unshift({ts:fmtDate(new Date())+' '+new Date().toTimeString().slice(0,8), label:label||'(무제)', json:JSON.stringify(model)});
+  await idbSet('snapshots',snaps.slice(0,50)); renderSnapshots(); };
+async function renderSnapshots(){ const host=$('#snapList'); if(!host)return; const snaps=await getSnaps(); host.innerHTML='';
+  if(!snaps.length){ host.append(el('div',{class:'empty'},'저장된 스냅샷이 없습니다. 규정 개정 등 중요한 시점마다 스냅샷을 남기면 과거 기준을 그대로 재현할 수 있습니다.')); return; }
+  snaps.forEach((s,i)=>{ const row=el('div',{class:'item'});
+    row.append(el('div',{class:'body'}, el('div',{class:'name'}, s.label), el('div',{class:'trace'}, s.ts)));
+    row.append(el('button',{class:'btn sm',onclick:()=>restoreSnap(i)},'복원'));
+    row.append(el('button',{class:'btn sm',onclick:()=>exportSnap(i)},'내보내기'));
+    row.append(el('button',{class:'btn sm danger',onclick:()=>delSnap(i)},'삭제'));
+    host.append(row); }); }
+async function restoreSnap(i){ if(!confirm('현재 상태를 이 스냅샷으로 되돌릴까요? (되돌리기 전 현재 상태도 스냅샷으로 남겨두는 것을 권합니다)'))return;
+  const snaps=await getSnaps(); try{ model=migrate(JSON.parse(snaps[i].json)); inputs={}; selNode=null; persist(); rerenderAll(); alert('복원되었습니다.'); }catch(e){ alert('복원 실패: '+e.message); } }
+async function exportSnap(i){ const snaps=await getSnaps(); const blob=new Blob([snaps[i].json],{type:'application/json'});
+  const a=el('a',{href:URL.createObjectURL(blob),download:'스냅샷_'+snaps[i].ts.replace(/[: ]/g,'-')+'.json'}); a.click(); URL.revokeObjectURL(a.href); }
+async function delSnap(i){ if(!confirm('이 스냅샷을 삭제할까요?'))return; const snaps=await getSnaps(); snaps.splice(i,1); await idbSet('snapshots',snaps); renderSnapshots(); }
 
 /* ============================================================
    초기화
@@ -973,7 +1270,7 @@ $('#btnReset').onclick=()=>{ if(confirm('모든 데이터를 기본 예시로 �
 (async function init(){
   const saved=await idbGet('model');
   if(saved&&saved.fields&&saved.rules) model=saved;
-  // 취급일 기본값(오늘)
+  migrate(model);
   refresh();
 })();
 </script>
