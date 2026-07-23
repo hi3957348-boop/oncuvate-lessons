@@ -1,7 +1,6 @@
 <!--
   담보대출 말모씨 (Malmossi) v1.0
-  ⓒ 2026. All rights reserved. 이 프로그램의 저작권은 보호됩니다.
-  본 프로그램은 농협에 재직 중인 사람(농협동인)의 개인업무를 위해서만 사용할 수 있으며,
+  ⓒ 2026. 농협 재직동인의 개인업무를 위해서만 사용할 수 있습니다.
   그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.
 -->
 <meta charset="utf-8">
@@ -329,8 +328,7 @@
 </main>
 
 <footer class="copyr">
-  ⓒ 2026 · 담보대출 말모씨 v1.0 &nbsp;|&nbsp; 이 프로그램의 <b>저작권은 보호</b>됩니다.
-  <b>농협에 재직 중인 사람(농협동인)의 개인업무</b>를 위해서만 사용할 수 있으며, 그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.
+  ⓒ 2026 · 담보대출 말모씨 v1.0 &nbsp;|&nbsp; <b>농협 재직동인의 개인업무</b>를 위해서만 사용할 수 있습니다. 그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.
 </footer>
 
 <div class="tt" id="tooltip"></div>
@@ -1200,7 +1198,7 @@ function doPrint(sel, title, withBasis){
   }
   const blocks=R.blocks.filter(b=>!b.excepted);
   if(blocks.length){ h+='<div class="sec"><h2>🚫 실행 제약</h2>'; blocks.forEach(b=>h+='<div class="it blk">'+esc(b.text)+'</div>'); h+='</div>'; }
-  h+='<div class="foot">담보대출 말모씨 v1.0 · 규칙엔진 출력<br>ⓒ 2026 저작권 보호 · 농협동인(농협 재직자)의 개인업무 목적으로만 사용 가능 · 무단 복제·배포 금지</div></body></html>';
+  h+='<div class="foot">담보대출 말모씨 v1.0 · 규칙엔진 출력<br>ⓒ 2026 · 농협 재직동인의 개인업무를 위해서만 사용할 수 있습니다. 그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.</div></body></html>';
   const w=window.open('','_blank'); if(!w){ alert('팝업이 차단되었습니다. 팝업을 허용한 뒤 다시 시도하세요.'); return; }
   w.document.open(); w.document.write(h); w.document.close(); w.focus();
   setTimeout(()=>{ try{w.print();}catch(_){} }, 350);
@@ -1349,7 +1347,7 @@ function printLoan(){
     +'<table><thead><tr><th>#</th><th>주소</th><th>지번</th><th>지목</th><th>감정평가액</th><th>LTV</th><th>차감전<br>가능금액</th><th>주택<br>임차</th><th>상가<br>임차</th><th>임금<br>채권</th><th>조세<br>채권</th><th>기타<br>채권</th><th>최종<br>가능금액</th></tr></thead>'
     +'<tbody>'+rows+'</tbody>'
     +'<tfoot><tr><td colspan="6" class="l">합계</td><td class="b">'+fmtWon(pre)+'</td><td colspan="5"></td><td class="g">'+fmtWon(fin)+'</td></tr></tfoot></table>'
-    +'<div style="margin-top:14px;color:#888;font-size:10.5px;border-top:1px solid #ddd;padding-top:6px">ⓒ 2026 담보대출 말모씨 v1.0 · 저작권 보호 · 농협동인(농협 재직자)의 개인업무 목적으로만 사용 가능 · 무단 복제·배포 금지</div>'
+    +'<div style="margin-top:14px;color:#888;font-size:10.5px;border-top:1px solid #ddd;padding-top:6px">ⓒ 2026 담보대출 말모씨 v1.0 · 농협 재직동인의 개인업무를 위해서만 사용할 수 있습니다. 그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.</div>'
     +'</body></html>';
   const w=window.open('','_blank'); if(!w){alert('팝업이 차단되었습니다. 팝업 허용 후 다시 시도하세요.');return;}
   w.document.open();w.document.write(h);w.document.close();w.focus();setTimeout(()=>{try{w.print();}catch(_){} },350);
