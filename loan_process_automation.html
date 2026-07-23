@@ -162,7 +162,7 @@
 <header>
   <div>
     <h1>담보대출 말모씨 <span class="muted" style="font-weight:400">v1.0</span></h1>
-    <div class="sub">신청정보를 입력하면 규칙엔진이 업무내용을 합산해 출력합니다 · 담보는 대출가능금액 산출표에서 관리</div>
+    <div class="sub">기본사항을 입력하면 설정한 규칙에 따라 업무내용이 정리되어 출력됩니다 · 담보는 대출가능금액산출에서 관리</div>
   </div>
   <nav class="tabs" id="tabs">
     <button data-tab="work" class="active">기본사항입력</button>
@@ -200,7 +200,7 @@
       </div>
       <div>
         <div class="card">
-          <div class="flexspace"><h2 style="margin:0">업무내용 (자동 정리) <span class="tag" id="fireCount">규칙 0건 발화</span></h2>
+          <div class="flexspace"><h2 style="margin:0">업무내용 (자동 정리) <span class="tag" id="fireCount">규칙 0건 적용</span></h2>
             <button class="btn sm pri" id="btnPrint">🖨 인쇄</button></div>
           <div id="result"></div>
         </div>
@@ -230,10 +230,10 @@
   <section id="tab-rules" hidden>
     <div class="card">
       <div class="flexspace">
-        <h2 style="margin:0">규칙 <span class="muted" style="font-weight:400" id="ruleCount"></span></h2>
+        <h2 style="margin:0">업무내용 규칙 <span class="muted" style="font-weight:400" id="ruleCount"></span></h2>
         <button class="btn pri sm" id="btnAddRule">＋ 규칙 추가</button>
       </div>
-      <div class="hint">아래는 <b>결정표(격자) 보기</b>입니다. 행을 클릭하면 <b>가이드형 빌더</b>로 편집합니다. 규칙은 서로 독립이며, 조건에 맞는 규칙들이 동시에 발화해 결과가 합산됩니다.</div>
+      <div class="hint">아래는 <b>결정표(격자) 보기</b>입니다. 행을 클릭하면 <b>가이드형 빌더</b>로 편집합니다. 규칙은 서로 독립이며, 조건에 맞는 규칙들이 동시에 적용되어 결과가 합산됩니다.</div>
       <table id="ruleTable">
         <thead><tr><th style="width:150px">규칙명</th><th>조건 (IF)</th><th>효과 (THEN)</th><th style="width:60px">우선</th><th style="width:60px">사용</th></tr></thead>
         <tbody></tbody>
@@ -245,9 +245,9 @@
   <!-- 필드 -->
   <section id="tab-fields" hidden>
     <div class="card">
-      <div class="flexspace"><h2 style="margin:0">필드 사전 (입력 폼의 원천)</h2>
+      <div class="flexspace"><h2 style="margin:0">입력폼 항목 (필드)</h2>
         <button class="btn pri sm" id="btnAddField">＋ 필드 추가</button></div>
-      <div class="hint">여기서 필드를 추가/수정하면 <b>입력 폼이 즉시 바뀝니다</b>. 표시조건을 주면 관련 상황에서만 폼에 나타납니다.</div>
+      <div class="hint">여기서 항목(필드)을 추가/수정하면 <b>기본사항입력 화면이 즉시 바뀝니다</b>. 표시조건을 주면 관련 상황에서만 나타납니다.</div>
       <table id="fieldTable">
         <thead><tr><th style="width:170px">라벨</th><th style="width:90px">유형</th><th>값(선택지)</th><th>표시조건</th><th style="width:70px"></th></tr></thead>
         <tbody></tbody>
@@ -260,9 +260,9 @@
   <!-- 업무사전 -->
   <section id="tab-items" hidden>
     <div class="card">
-      <div class="flexspace"><h2 style="margin:0">업무 사전 (재사용 업무항목 · 근거)</h2>
+      <div class="flexspace"><h2 style="margin:0">업무사전 (자동 축적 · 재사용 항목)</h2>
         <button class="btn pri sm" id="btnAddItem">＋ 항목 추가</button></div>
-      <div class="hint">업무항목을 <b>해야할일 · 받을서류 · 작성해야할 서류 · 기타이행사항</b> 4가지로 분류해 정의하면 여러 규칙에서 재사용됩니다. 근거텍스트는 결과 화면에서 <b>ⓘ 호버팝업</b>으로 표시됩니다.</div>
+      <div class="hint">업무항목은 <b>해야할일 · 받을서류 · 작성서류 · 기타이행사항</b> 4가지로 분류됩니다. <b>업무내용수정</b>에서 입력한 항목이 여기에 자동으로 쌓이며, 다음 입력 시 자동완성으로 재사용됩니다. 근거텍스트는 결과 화면에서 <b>ⓘ 호버팝업</b>으로 표시됩니다.</div>
       <table id="itemTable">
         <thead><tr><th style="width:190px">항목명</th><th style="width:90px">분류</th><th>근거텍스트</th><th style="width:70px"></th></tr></thead>
         <tbody></tbody>
@@ -323,7 +323,7 @@
         <li><b>효과 5종</b>: 추가(ADD) · 판정(SET) · 산출(CALC) · 제약(BLOCK) · 무효화/예외(NULLIFY·EXCEPT)</li>
         <li><b>전방연쇄</b>: 판정 결과(예: 분류=일반시설자금)가 다시 다른 규칙의 조건이 됩니다.</li>
         <li><b>추가확인 역제시</b>: 결론에 필요하지만 아직 안 채운 필드를 스스로 짚어줍니다.</li>
-        <li><b>차단·예외</b>: LTV 상향 무효(권역외), 6개월 제약의 선분양 예외 등 상위규칙이 하위효과를 덮어씁니다.</li>
+        <li><b>차단·예외</b>: 6개월 기한 제약의 선분양 예외처럼 상위규칙이 하위효과를 덮어씁니다.</li>
         <li><b>문서 트리</b>: OneNote식 최대 4단계 무명 계층 · 서식(굵게/색/형광펜/목록/제목) · 첨부파일 · 상호참조.</li>
         <li><b>관계도</b>: 법령·규정·업무의 유기적 관계를 드래그 가능한 노드-연결선으로 시각화.</li>
         <li>단일 HTML · 완전 오프라인 · 모든 데이터(규칙·문서·관계도·첨부)는 JSON 하나로 백업·이동.</li>
@@ -340,7 +340,7 @@
 
 <script>
 /* ============================================================
-   대출업무방법서 자동화 — 규칙엔진 프로토타입
+   담보대출 말모씨 — 업무 규칙엔진
    ============================================================ */
 
 /* ---------- 유틸 ---------- */
@@ -775,7 +775,7 @@ function group(title, extra){ const g=el('div',{class:'res-group'});
 function renderResult(){
   const out=$('#result'); out.innerHTML='';
   const R=evaluate(model, inputs);
-  $('#fireCount').textContent='규칙 '+R.fired.length+'건 발화';
+  $('#fireCount').textContent='규칙 '+R.fired.length+'건 적용';
 
   const anyInput=Object.values(inputs).some(v=>!isEmpty(v));
   if(!anyInput){ out.append(el('div',{class:'empty'},'왼쪽에 신청정보를 입력하면 업무내용이 자동으로 정리됩니다. “예시값 채우기”로 빠르게 확인해 보세요.')); return; }
@@ -1269,7 +1269,7 @@ function openPrint(){
 function doPrint(sel, title, withBasis){
   const R=evaluate(model, inputs);
   const esc=s=>String(s==null?'':s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
-  let h='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title||'대출업무 정리')+'</title><style>'
+  let h='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title||'업무내용 정리')+'</title><style>'
     +'body{font-family:"Malgun Gothic","맑은 고딕",sans-serif;color:#111;margin:22px;font-size:13px;line-height:1.6}'
     +'h1{font-size:19px;margin:0 0 3px}.meta{color:#555;font-size:12px;margin:2px 0}'
     +'.head{display:flex;gap:22px;flex-wrap:wrap;border:1px solid #bbb;border-radius:6px;padding:8px 12px;margin:10px 0 14px}'
@@ -1279,7 +1279,7 @@ function doPrint(sel, title, withBasis){
     +'.blk{color:#b00020;font-weight:600}.foot{margin-top:20px;color:#888;font-size:11px;border-top:1px solid #ddd;padding-top:6px}'
     +'@media print{@page{margin:14mm}}'
     +'</style></head><body>';
-  h+='<h1>'+esc(title||'대출업무 정리')+'</h1>';
+  h+='<h1>'+esc(title||'업무내용 정리')+'</h1>';
   h+='<div class="meta">출력일 '+fmtDate(new Date())+'</div>';
   h+='<div class="head">';
   for(const k in R.derived) h+='<div><b>'+esc(k)+':</b> '+esc(R.derived[k])+'</div>';
@@ -1297,7 +1297,7 @@ function doPrint(sel, title, withBasis){
   }
   const blocks=R.blocks.filter(b=>!b.excepted);
   if(blocks.length){ h+='<div class="sec"><h2>🚫 실행 제약</h2>'; blocks.forEach(b=>h+='<div class="it blk">'+esc(b.text)+'</div>'); h+='</div>'; }
-  h+='<div class="foot">담보대출 말모씨 v1.0 · 규칙엔진 출력<br>ⓒ 2026 · 농협 재직동인의 개인업무를 위해서만 사용할 수 있습니다. 그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.</div></body></html>';
+  h+='<div class="foot">담보대출 말모씨 v1.0 · 업무내용 출력<br>ⓒ 2026 · 농협 재직동인의 개인업무를 위해서만 사용할 수 있습니다. 그 외의 무단 복제·배포·양도·상업적 이용을 금합니다.</div></body></html>';
   const w=window.open('','_blank'); if(!w){ alert('팝업이 차단되었습니다. 팝업을 허용한 뒤 다시 시도하세요.'); return; }
   w.document.open(); w.document.write(h); w.document.close(); w.focus();
   setTimeout(()=>{ try{w.print();}catch(_){} }, 350);
