@@ -526,11 +526,15 @@ function renderForm(){
       input.append(el('option',{value:''},'(선택)'));
       for(const o of f.options||[]) input.append(el('option',{value:o, selected:inputs[f.id]===o?'selected':null},o));
     }else if(f.type==='number'){
-      input=el('input',{type:'number',value:inputs[f.id]??'',oninput:e=>{inputs[f.id]=e.target.value;refresh();}});
+      input=el('input',{type:'number',value:inputs[f.id]??'',
+        oninput:e=>{inputs[f.id]=e.target.value;refreshResult();},
+        onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
     }else if(f.type==='date'){
       input=el('input',{type:'date',value:inputs[f.id]??'',onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
     }else{
-      input=el('input',{type:'text',value:inputs[f.id]??'',oninput:e=>{inputs[f.id]=e.target.value;refresh();}});
+      input=el('input',{type:'text',value:inputs[f.id]??'',
+        oninput:e=>{inputs[f.id]=e.target.value;refreshResult();},
+        onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
     }
     box.append(el('label',{class:'f'},lab,input));
   }
@@ -635,6 +639,7 @@ function renderResult(){
 }
 
 function refresh(){ renderForm(); renderResult(); persist(); }
+function refreshResult(){ renderResult(); persist(); }  // 입력 중 포커스 유지: 폼은 재렌더하지 않음
 
 /* ============================================================
    툴팁
