@@ -1488,7 +1488,7 @@ async function ofGradeAI(){
   const btn=document.getElementById('ofBtnAI');if(btn)btn.disabled=true;
   try{
     const d=await aiPost({session_id:(state.name||'학생'),category:(s.aiCategory||'움직임'),
-      question:'"'+obj+'"을(를) 넣어 대상이 있는 움직임 문장을 만들어요.',student_answer:sent,code:AI_CODE});
+      question:'「누가 + '+obj+' + 어찌하다」 형식의 문장 만들기',student_answer:sent,code:AI_CODE});
     renderAiFeedback(d);
     if(d.correct){saveMade(sent);wallSubmit(s.id,sent);markDone(s.id,{msg:s.title+' 통과!',emoji:'🎉'});}
   }catch(e){aiError('ofAI',e);}
