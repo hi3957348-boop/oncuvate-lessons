@@ -125,7 +125,7 @@
   .elabel{fill:#475569;font-size:11px}
   /* 대출가능금액 산출표 (엑셀형 그리드) */
   .lwrap{overflow-x:auto}
-  table.calc{border-collapse:collapse;font-size:12.5px;table-layout:fixed}
+  table.calc{border-collapse:collapse;font-size:12.5px;table-layout:fixed;width:100%;min-width:720px}
   table.calc th,table.calc td{border:1px solid var(--line);padding:0;vertical-align:top;overflow:hidden}
   table.calc th{background:#f7f8fa;color:var(--muted);font-size:11.5px;text-align:center;position:relative;white-space:nowrap;text-overflow:ellipsis;padding:5px 6px}
   table.calc td{text-align:right;white-space:nowrap}
@@ -1234,10 +1234,12 @@ function renderLoan(){
   const wb=$('#btnWrapLoan'); if(wb) wb.classList.toggle('pri',!!cfg.wrap);
   t.classList.toggle('wrap',!!cfg.wrap);
 
-  const colg=el('colgroup'); const colEls=[];
-  LOAN_COLS.forEach(c=>{ const co=el('col',{style:'width:'+colW(c)+'px'}); colEls.push(co); colg.append(co); });
+  // 열 너비를 비율(%)로 분배 → 표 전체가 항상 브라우저 폭을 채움(가로 스크롤 없음)
   const totalW=()=>LOAN_COLS.reduce((s,c)=>s+colW(c),0);
-  const applyWidths=()=>{ LOAN_COLS.forEach((c,i)=>colEls[i].style.width=colW(c)+'px'); t.style.width=totalW()+'px'; };
+  const pctOf=c=>(colW(c)/totalW()*100).toFixed(4)+'%';
+  const colg=el('colgroup'); const colEls=[];
+  LOAN_COLS.forEach(c=>{ const co=el('col',{style:'width:'+pctOf(c)}); colEls.push(co); colg.append(co); });
+  const applyWidths=()=>{ LOAN_COLS.forEach((c,i)=>colEls[i].style.width=pctOf(c)); };
 
   const thead=el('thead'); const htr=el('tr');
   LOAN_COLS.forEach(c=>{ const th=el('th',{class:c.type==='text'?'txt':''}, c.label);
@@ -1287,12 +1289,12 @@ function renderLoan(){
   updateTotals();
 
   t.innerHTML=''; t.append(colg,thead,tbody,tfoot);
-  t.style.width=totalW()+'px';
   grows.forEach(g=>g());
 }
 function startResize(e,c,applyWidths){ e.preventDefault(); e.stopPropagation();
-  const startX=e.clientX, w0=colW(c);
-  const move=ev=>{ loanCfg().widths[c.key]=Math.max(40, Math.round(w0+(ev.clientX-startX))); applyWidths(); };
+  const tbl=$('#loanTable'); const cont=(tbl&&tbl.clientWidth)||1000;
+  const startX=e.clientX, w0=colW(c), tw0=LOAN_COLS.reduce((s,x)=>s+colW(x),0), scale=tw0/cont; // 화면폭 기준 가중치 변환
+  const move=ev=>{ loanCfg().widths[c.key]=Math.max(24, Math.round(w0+(ev.clientX-startX)*scale)); applyWidths(); };
   const up=()=>{ document.removeEventListener('pointermove',move); document.removeEventListener('pointerup',up); idbSet('model',model); };
   document.addEventListener('pointermove',move); document.addEventListener('pointerup',up);
 }
