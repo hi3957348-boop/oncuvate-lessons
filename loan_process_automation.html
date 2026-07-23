@@ -721,7 +721,7 @@ function renderForm(){
         input.append(el('div',{class:'row',style:'margin-bottom:4px;flex-wrap:nowrap'}, sel,
           el('button',{class:'btn sm',title:'삭제',onclick:()=>{arr.splice(idx,1);refresh();}},'×')));
       });
-      if(arr.length<max) input.append(el('button',{class:'btn sm',onclick:()=>{arr.push('');refresh();}},'＋ 담보 추가 ('+arr.filter(Boolean).length+'/'+max+')'));
+      if(arr.length<max) input.append(el('button',{class:'btn sm',onclick:()=>{arr.push('');refresh();}},'＋ 추가 ('+arr.filter(Boolean).length+'/'+max+')'));
       else input.append(el('div',{class:'hint',style:'margin:2px 0 0'},'최대 '+max+'건까지 입력했습니다'));
     }else if(f.type==='money'){
       const inp=el('input',{type:'text',inputmode:'numeric',value:fmtComma(inputs[f.id])});
