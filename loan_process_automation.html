@@ -1153,12 +1153,14 @@ function renderFields(){
 }
 $('#btnAddField').onclick=()=>{ const f={id:uid('f'),label:'새 필드',type:'select',options:['값1','값2']};
   model.fields.push(f); persist(); renderFields(); editField(f.id); };
+function findDupFieldLabel(f){ const nm=(f.label||'').trim(); if(!nm)return null; return model.fields.find(x=>x.id!==f.id && (x.label||'').trim()===nm)||null; }
 function editField(id){
   const f=model.fields.find(x=>x.id===id); if(!f)return;
   const card=$('#fieldEditorCard'); card.hidden=false; card.innerHTML='';
   card.append(el('h2',{},'필드 편집'));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'라벨(표시명) — id는 유지되어 규칙/데이터가 깨지지 않습니다'),
-    el('input',{value:f.label,oninput:e=>{f.label=e.target.value;persist();renderForm();}})));
+    el('input',{value:f.label,oninput:e=>{f.label=e.target.value;persist();renderForm();},
+      onchange:e=>{ const d=findDupFieldLabel(f); if(d){ alert('동일한 라벨의 필드가 이미 있습니다: "'+d.label+'"\n다른 라벨을 사용하세요.'); e.target.select(); } renderFields(); }})));
   const ts=el('select',{onchange:e=>{f.type=e.target.value; if(f.type==='multi'&&!f.maxItems)f.maxItems=5; persist();editField(id);renderForm();}});
   [['select','선택'],['multi','다중선택(여러 건)'],['money','금액(원·콤마)'],['number','숫자'],['date','날짜'],['text','텍스트']].forEach(([v,l])=>ts.append(el('option',{value:v,selected:f.type===v?'selected':null},l)));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'유형'), ts));
@@ -1185,7 +1187,12 @@ function editField(id){
     swWrap.append(row);
   }
   card.append(swWrap);
-  card.append(el('button',{class:'btn pri',onclick:()=>{card.hidden=true;}},'완료'));
+  card.append(el('button',{class:'btn pri',onclick:()=>{
+    const d=findDupFieldLabel(f);
+    if(d){ alert('동일한 라벨의 필드가 이미 있습니다: "'+d.label+'"\n라벨을 변경한 뒤 완료하세요.'); return; }
+    if(!(f.label||'').trim()){ alert('라벨을 입력하세요.'); return; }
+    card.hidden=true; renderFields(); refresh();
+  }},'완료'));
   card.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
 
