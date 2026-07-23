@@ -1,6 +1,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>담보대출 말모새 v1.0</title>
+<title>담보대출 말모씨 v1.0</title>
 <style>
   :root{
     --bg:#f4f5f7; --panel:#ffffff; --line:#e2e5ea; --ink:#1f2430; --muted:#6b7280;
@@ -147,7 +147,7 @@
 
 <header>
   <div>
-    <h1>담보대출 말모새 <span class="muted" style="font-weight:400">v1.0</span></h1>
+    <h1>담보대출 말모씨 <span class="muted" style="font-weight:400">v1.0</span></h1>
     <div class="sub">신청정보를 입력하면 규칙엔진이 업무내용을 합산해 출력합니다 · 담보는 대출가능금액 산출표에서 관리</div>
   </div>
   <nav class="tabs" id="tabs">
@@ -347,7 +347,7 @@ const OPS = {
 function seedModel(){
   return {
   version: 3,
-  meta:{ title:'담보대출 말모새', updatedAt:null },
+  meta:{ title:'담보대출 말모씨', updatedAt:null },
   derivedKeys:[ {id:'분류', label:'분류결과', options:['일반시설자금','부동산구입자금','일반운전자금']} ],
   calcOutputs:[],
   tree:[
@@ -1180,7 +1180,7 @@ function doPrint(sel, title, withBasis){
   }
   const blocks=R.blocks.filter(b=>!b.excepted);
   if(blocks.length){ h+='<div class="sec"><h2>🚫 실행 제약</h2>'; blocks.forEach(b=>h+='<div class="it blk">'+esc(b.text)+'</div>'); h+='</div>'; }
-  h+='<div class="foot">담보대출 말모새 v1.0 · 규칙엔진 출력</div></body></html>';
+  h+='<div class="foot">담보대출 말모씨 v1.0 · 규칙엔진 출력</div></body></html>';
   const w=window.open('','_blank'); if(!w){ alert('팝업이 차단되었습니다. 팝업을 허용한 뒤 다시 시도하세요.'); return; }
   w.document.open(); w.document.write(h); w.document.close(); w.focus();
   setTimeout(()=>{ try{w.print();}catch(_){} }, 350);
@@ -1283,7 +1283,7 @@ function openCaseModal(cases){
 
 $('#btnExport').onclick=async()=>{
   const blob=new Blob([JSON.stringify(model,null,2)],{type:'application/json'});
-  const name='담보대출말모새_'+fmtDate(new Date())+'.json';
+  const name='담보대출말모씨_'+fmtDate(new Date())+'.json';
   if(window.showSaveFilePicker){
     try{const h=await showSaveFilePicker({suggestedName:name,types:[{description:'JSON',accept:{'application/json':['.json']}}]});
       const w=await h.createWritable(); await w.write(blob); await w.close(); return;}catch(e){ if(e.name==='AbortError')return; }
