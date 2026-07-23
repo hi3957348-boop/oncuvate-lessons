@@ -157,11 +157,16 @@
             <button class="btn sm" id="btnClear">입력 초기화</button>
             <button class="btn sm" id="btnExample">예시값 채우기 ▾</button>
           </div>
+          <div class="row" style="margin-top:6px">
+            <button class="btn sm" id="btnSaveCase">💾 이 건 저장</button>
+            <button class="btn sm" id="btnLoadCase">📂 저장된 건</button>
+          </div>
         </div>
       </div>
       <div>
         <div class="card">
-          <h2>업무내용 (자동 정리) <span class="tag" id="fireCount">규칙 0건 발화</span></h2>
+          <div class="flexspace"><h2 style="margin:0">업무내용 (자동 정리) <span class="tag" id="fireCount">규칙 0건 발화</span></h2>
+            <button class="btn sm pri" id="btnPrint">🖨 인쇄</button></div>
           <div id="result"></div>
         </div>
       </div>
@@ -204,7 +209,7 @@
     <div class="card">
       <div class="flexspace"><h2 style="margin:0">업무 사전 (재사용 업무항목 · 근거)</h2>
         <button class="btn pri sm" id="btnAddItem">＋ 항목 추가</button></div>
-      <div class="hint">서류·검토·사후 등 업무항목을 한 번 정의하면 여러 규칙에서 재사용됩니다. 근거텍스트는 결과 화면에서 <b>ⓘ 호버팝업</b>으로 표시됩니다.</div>
+      <div class="hint">업무항목을 <b>해야할일 · 받을서류 · 작성해야할 서류 · 기타이행사항</b> 4가지로 분류해 정의하면 여러 규칙에서 재사용됩니다. 근거텍스트는 결과 화면에서 <b>ⓘ 호버팝업</b>으로 표시됩니다.</div>
       <table id="itemTable">
         <thead><tr><th style="width:190px">항목명</th><th style="width:90px">분류</th><th>근거텍스트</th><th style="width:70px"></th></tr></thead>
         <tbody></tbody>
@@ -360,11 +365,12 @@ function seedModel(){
        showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
   ],
   items:[
-    {id:'i_saup',label:'사업계획서',cat:'서류',basis:'자금목적이 사업목적인 경우, 실제 사업영위 및 자금용도 확인을 위해 사업계획서를 징구한다. (여신업무방법서 §시설자금)'},
-    {id:'i_nongchi',label:'농지취득자격증명(농취증)',cat:'서류',basis:'농지법 제8조: 농지를 취득하려는 자는 농지소재지 관할 관청에서 농지취득자격증명을 발급받아야 한다. 취득목적이 기재되므로 자금목적 확인의 근거자료가 된다.'},
-    {id:'i_saupcheck',label:'사업목적 부합 여부 확인',cat:'검토',basis:'제출된 사업계획서상의 용도와 실제 자금 사용처가 일치하는지 검토한다.'},
-    {id:'i_nongchicheck',label:'농취증상 토지매입목적 확인',cat:'검토',basis:'농취증에 기재된 취득목적이 신청한 자금목적(사업목적)과 부합하는지 대조한다.'},
-    {id:'i_sahu',label:'자금사용 사후점검',cat:'사후',basis:'시설자금 실행 후 실제 자금이 신고된 목적대로 집행되었는지 사후점검을 실시한다.'},
+    {id:'i_saup',label:'사업계획서',cat:'받을서류',basis:'자금목적이 사업목적인 경우, 실제 사업영위 및 자금용도 확인을 위해 사업계획서를 징구한다. (여신업무방법서 §시설자금)'},
+    {id:'i_nongchi',label:'농지취득자격증명(농취증)',cat:'받을서류',basis:'농지법 제8조: 농지를 취득하려는 자는 농지소재지 관할 관청에서 농지취득자격증명을 발급받아야 한다. 취득목적이 기재되므로 자금목적 확인의 근거자료가 된다.'},
+    {id:'i_saupcheck',label:'사업목적 부합 여부 확인',cat:'해야할일',basis:'제출된 사업계획서상의 용도와 실제 자금 사용처가 일치하는지 검토한다.'},
+    {id:'i_nongchicheck',label:'농취증상 토지매입목적 확인',cat:'해야할일',basis:'농취증에 기재된 취득목적이 신청한 자금목적(사업목적)과 부합하는지 대조한다.'},
+    {id:'i_pumui',label:'여신품의서 작성',cat:'작성해야할 서류',basis:'심사 결과와 검토 내용을 여신품의서에 작성하여 결재를 상신한다.'},
+    {id:'i_sahu',label:'자금사용 사후점검',cat:'기타이행사항',basis:'시설자금 실행 후 실제 자금이 신고된 목적대로 집행되었는지 사후점검을 실시한다.'},
   ],
   rules:[
     // --- 사례 A: 농지 토지구입 → 일반시설자금 ---
@@ -381,9 +387,9 @@ function seedModel(){
     {id:'R3',name:'농지 → 농취증·목적확인',priority:5,enabled:true,
      when:{op:'AND',conds:[{field:'대상토지지목',op:'=',value:'농지'}]},
      effects:[{type:'ADD',item:'i_nongchi'},{type:'ADD',item:'i_nongchicheck'}]},
-    {id:'R4',name:'일반시설자금 → 사후점검',priority:1,enabled:true,
+    {id:'R4',name:'일반시설자금 → 품의서·사후점검',priority:1,enabled:true,
      when:{op:'AND',conds:[{field:'분류',op:'=',value:'일반시설자금'}]},
-     effects:[{type:'ADD',item:'i_sahu'}]},
+     effects:[{type:'ADD',item:'i_pumui'},{type:'ADD',item:'i_sahu'}]},
 
     // --- 사례 B: LTV 상향 (산출 + 차단) ---
     {id:'L0a',name:'기본LTV: 토지 60%',priority:5,enabled:true,
@@ -657,7 +663,8 @@ function renderForm(){
 /* ============================================================
    결과 렌더
    ============================================================ */
-const ICON={서류:'📄',검토:'🔍',사후:'📌',기타:'▫️'};
+const CATS=['해야할일','받을서류','작성해야할 서류','기타이행사항'];
+const ICON={'해야할일':'✅','받을서류':'📥','작성해야할 서류':'✍️','기타이행사항':'📌','기타':'▫️','서류':'📥','검토':'✅','사후':'📌'};
 function itemWithBasis(name, cat, basis, trace){
   const row=el('div',{class:'item'});
   row.append(el('span',{class:'ic'}, ICON[cat]||'▫️'));
@@ -711,12 +718,13 @@ function renderResult(){
     line.append(body); g.append(line); out.append(g);
   }
 
-  // 서류/검토/사후
-  for(const cat of ['서류','검토','사후']){
-    const items=R.addItems.filter(i=>i.cat===cat);
+  // 4대 업무분류: 해야할일 / 받을서류 / 작성해야할 서류 / 기타이행사항
+  const catMap={'서류':'받을서류','검토':'해야할일','사후':'기타이행사항'}; // 구 데이터 호환
+  for(const cat of CATS){
+    const items=R.addItems.filter(i=>(catMap[i.cat]||i.cat)===cat);
     if(!items.length) continue;
-    const g=group(cat==='서류'?'필요서류':cat==='검토'?'검토사항':'사후관리');
-    for(const it of items) g.append(itemWithBasis(it.label, it.cat, it.basis, it.rule.name));
+    const g=group(ICON[cat]+' '+cat);
+    for(const it of items) g.append(itemWithBasis(it.label, cat, it.basis, it.rule.name));
     out.append(g);
   }
 
@@ -1025,7 +1033,7 @@ function renderItems(){
     tb.append(tr);
   }
 }
-$('#btnAddItem').onclick=()=>{ const it={id:uid('i'),label:'새 업무항목',cat:'서류',basis:''};
+$('#btnAddItem').onclick=()=>{ const it={id:uid('i'),label:'새 업무항목',cat:'해야할일',basis:''};
   model.items.push(it); persist(); renderItems(); editItem(it.id); };
 function editItem(id){
   const it=model.items.find(x=>x.id===id); if(!it)return;
@@ -1034,7 +1042,7 @@ function editItem(id){
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'항목명'),
     el('input',{value:it.label,oninput:e=>{it.label=e.target.value;persist();}})));
   const cs=el('select',{onchange:e=>{it.cat=e.target.value;persist();}});
-  ['서류','검토','사후','기타'].forEach(c=>cs.append(el('option',{value:c,selected:it.cat===c?'selected':null},c)));
+  CATS.forEach(c=>cs.append(el('option',{value:c,selected:it.cat===c?'selected':null},ICON[c]+' '+c)));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'분류'), cs));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'근거텍스트 (결과 화면 ⓘ 호버팝업으로 표시)'),
     el('textarea',{rows:4,oninput:e=>{it.basis=e.target.value;persist();},html:''}, )));
@@ -1061,6 +1069,90 @@ $('#btnExample').onclick=(ev)=>{
 };
 $('#btnClear').onclick=()=>{ inputs={}; refresh(); };
 
+/* ============================================================
+   인쇄 (4대 분류 필터) + 건 저장/불러오기
+   ============================================================ */
+function openPrint(){
+  const anyInput=Object.values(inputs).some(v=>!isEmpty(v));
+  if(!anyInput){ alert('먼저 신청정보를 입력하세요.'); return; }
+  const back=el('div',{class:'modalback'}), box=el('div',{class:'modalbox'});
+  box.append(el('h2',{style:'margin:0 0 10px'},'🖨 인쇄 옵션'));
+  const titleInput=el('input',{placeholder:'예: 홍길동 · 토지구입자금'});
+  box.append(el('label',{class:'f'}, el('span',{class:'lab'},'제목(건명/고객명 등)'), titleInput));
+  box.append(el('div',{class:'lab',style:'margin:4px 0'},'인쇄할 업무분류 선택 (필터)'));
+  const cbs={};
+  CATS.forEach(c=>{ const w=el('label',{style:'display:flex;gap:8px;align-items:center;margin:5px 0;cursor:pointer'});
+    const cb=el('input',{type:'checkbox',checked:'true',style:'width:auto'}); cbs[c]=cb; w.append(cb, ICON[c]+' '+c); box.append(w); });
+  const incBasis=el('input',{type:'checkbox',style:'width:auto'});
+  box.append(el('label',{style:'display:flex;gap:8px;align-items:center;margin:10px 0 0;cursor:pointer'}, incBasis, '근거텍스트도 함께 인쇄'));
+  box.append(el('div',{class:'row',style:'margin-top:14px;justify-content:flex-end'},
+    el('button',{class:'btn',onclick:()=>document.body.removeChild(back)},'취소'),
+    el('button',{class:'btn pri',onclick:()=>{ const sel=CATS.filter(c=>cbs[c].checked); if(!sel.length){alert('분류를 하나 이상 선택하세요.');return;} document.body.removeChild(back); doPrint(sel, titleInput.value, incBasis.checked); }},'인쇄하기')));
+  back.append(box); back.addEventListener('click',e=>{if(e.target===back)document.body.removeChild(back);}); document.body.append(back);
+}
+function doPrint(sel, title, withBasis){
+  const R=evaluate(model, inputs);
+  const catMap={'서류':'받을서류','검토':'해야할일','사후':'기타이행사항'};
+  const esc=s=>String(s==null?'':s).replace(/[&<>]/g,m=>({'&':'&amp;','<':'&lt;','>':'&gt;'}[m]));
+  let h='<!doctype html><html><head><meta charset="utf-8"><title>'+esc(title||'대출업무 정리')+'</title><style>'
+    +'body{font-family:"Malgun Gothic","맑은 고딕",sans-serif;color:#111;margin:22px;font-size:13px;line-height:1.6}'
+    +'h1{font-size:19px;margin:0 0 3px}.meta{color:#555;font-size:12px;margin:2px 0}'
+    +'.head{display:flex;gap:22px;flex-wrap:wrap;border:1px solid #bbb;border-radius:6px;padding:8px 12px;margin:10px 0 14px}'
+    +'.sec{margin:14px 0;break-inside:avoid}.sec h2{font-size:14px;border-bottom:2px solid #333;padding-bottom:3px;margin:0 0 8px}'
+    +'.it{margin:0 0 8px}.it .nm{font-weight:600}.it .bs{color:#555;font-size:12px;margin:2px 0 0 20px}'
+    +'.chk{display:inline-block;width:12px;height:12px;border:1.4px solid #333;border-radius:2px;margin-right:8px;vertical-align:-1px}'
+    +'.blk{color:#b00020;font-weight:600}.foot{margin-top:20px;color:#888;font-size:11px;border-top:1px solid #ddd;padding-top:6px}'
+    +'@media print{@page{margin:14mm}}'
+    +'</style></head><body>';
+  h+='<h1>'+esc(title||'대출업무 정리')+'</h1>';
+  h+='<div class="meta">출력일 '+fmtDate(new Date())+'</div>';
+  h+='<div class="head">';
+  for(const k in R.derived) h+='<div><b>'+esc(k)+':</b> '+esc(R.derived[k])+'</div>';
+  R.calcOutputs.filter(c=>c.defined).forEach(c=>h+='<div><b>'+esc(c.label)+':</b> '+c.total+esc(c.unit)+'</div>');
+  h+='</div>';
+  const filled=model.fields.filter(f=>!isEmpty(inputs[f.id]));
+  if(filled.length) h+='<div class="meta"><b>신청정보</b> · '+filled.map(f=>esc(f.label)+'='+esc(inputs[f.id])).join(' · ')+'</div>';
+  for(const cat of sel){
+    const items=R.addItems.filter(i=>(catMap[i.cat]||i.cat)===cat);
+    if(!items.length) continue;
+    h+='<div class="sec"><h2>'+esc(ICON[cat]+' '+cat)+'</h2>';
+    items.forEach(it=>{ h+='<div class="it"><div class="nm"><span class="chk"></span>'+esc(it.label)+'</div>';
+      if(withBasis&&it.basis) h+='<div class="bs">근거: '+esc(it.basis)+'</div>'; h+='</div>'; });
+    h+='</div>';
+  }
+  const blocks=R.blocks.filter(b=>!b.excepted);
+  if(blocks.length){ h+='<div class="sec"><h2>🚫 실행 제약</h2>'; blocks.forEach(b=>h+='<div class="it blk">'+esc(b.text)+'</div>'); h+='</div>'; }
+  h+='<div class="foot">대출업무방법서 자동화 · 규칙엔진 출력</div></body></html>';
+  const w=window.open('','_blank'); if(!w){ alert('팝업이 차단되었습니다. 팝업을 허용한 뒤 다시 시도하세요.'); return; }
+  w.document.open(); w.document.write(h); w.document.close(); w.focus();
+  setTimeout(()=>{ try{w.print();}catch(_){} }, 350);
+}
+$('#btnPrint').onclick=openPrint;
+
+async function getCases(){ return (await idbGet('cases'))||[]; }
+$('#btnSaveCase').onclick=async()=>{
+  const anyInput=Object.values(inputs).some(v=>!isEmpty(v));
+  if(!anyInput){ alert('먼저 신청정보를 입력하세요.'); return; }
+  const name=prompt('저장할 건 이름 (예: 홍길동 토지구입 2026-07)'); if(name==null)return;
+  const cases=await getCases();
+  cases.unshift({id:uid('case'),name:name||'(무제)',ts:fmtDate(new Date())+' '+new Date().toTimeString().slice(0,8),inputs:{...inputs}});
+  await idbSet('cases',cases.slice(0,300)); alert('저장되었습니다.');
+};
+$('#btnLoadCase').onclick=async()=>{ const cases=await getCases(); if(!cases.length){ alert('저장된 건이 없습니다.'); return; } openCaseModal(cases); };
+function openCaseModal(cases){
+  const back=el('div',{class:'modalback'}), box=el('div',{class:'modalbox'});
+  box.append(el('h2',{style:'margin:0 0 10px'},'📂 저장된 건 ('+cases.length+')'));
+  const list=el('div',{style:'max-height:360px;overflow:auto'});
+  cases.forEach(c=>{ const row=el('div',{class:'item'});
+    row.append(el('div',{class:'body'}, el('div',{class:'name'}, c.name), el('div',{class:'trace'}, c.ts)));
+    row.append(el('button',{class:'btn sm',onclick:()=>{ inputs={...c.inputs}; document.body.removeChild(back); activateTab('work'); refresh(); }},'불러오기'));
+    row.append(el('button',{class:'btn sm',onclick:()=>{ const blob=new Blob([JSON.stringify(c,null,2)],{type:'application/json'}); const a=el('a',{href:URL.createObjectURL(blob),download:'건_'+c.name.replace(/[\\/:*?"<>|]/g,'_')+'.json'}); a.click(); URL.revokeObjectURL(a.href); }},'내보내기'));
+    row.append(el('button',{class:'btn sm danger',onclick:async()=>{ if(!confirm('이 건을 삭제할까요?'))return; const cs=(await getCases()).filter(x=>x.id!==c.id); await idbSet('cases',cs); document.body.removeChild(back); if(cs.length)openCaseModal(cs); }},'삭제'));
+    list.append(row); });
+  box.append(list, el('div',{class:'row',style:'margin-top:10px;justify-content:flex-end'}, el('button',{class:'btn',onclick:()=>document.body.removeChild(back)},'닫기')));
+  back.append(box); back.addEventListener('click',e=>{if(e.target===back)document.body.removeChild(back);}); document.body.append(back);
+}
+
 $('#btnExport').onclick=async()=>{
   const blob=new Blob([JSON.stringify(model,null,2)],{type:'application/json'});
   const name='대출업무방법서_'+fmtDate(new Date())+'.json';
@@ -1070,7 +1162,6 @@ $('#btnExport').onclick=async()=>{
   }
   const a=el('a',{href:URL.createObjectURL(blob),download:name}); a.click(); URL.revokeObjectURL(a.href);
 };
-$('#btnImport').onclick=()=>$('#fileInput').click();
 $('#btnImport').onclick=()=>$('#fileInput').click();
 $('#fileInput').onchange=e=>{ const file=e.target.files[0]; if(!file)return;
   const rd=new FileReader(); rd.onload=()=>{ try{ const m=JSON.parse(rd.result);
