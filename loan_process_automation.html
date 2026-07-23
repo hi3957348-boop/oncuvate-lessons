@@ -23,6 +23,8 @@
   .tabs button{border:1px solid var(--line);background:var(--panel);padding:6px 12px;border-radius:8px;
        cursor:pointer;font-size:13px;color:var(--ink)}
   .tabs button.active{background:var(--brand);border-color:var(--brand);color:#fff}
+  .tabs .tabsep{width:1px;align-self:center;height:22px;background:var(--line);margin:0 5px}
+  @media(max-width:640px){.tabs .tabsep{width:100%;height:0;margin:2px 0;background:transparent}}
   main{max-width:1180px;margin:0 auto;padding:16px}
   .grid2{display:grid;grid-template-columns:minmax(320px,420px) 1fr;gap:16px;align-items:start}
   @media(max-width:860px){.grid2{grid-template-columns:1fr}}
@@ -165,11 +167,14 @@
   <nav class="tabs" id="tabs">
     <button data-tab="work" class="active">기본사항입력</button>
     <button data-tab="loan">대출가능금액산출</button>
-    <button data-tab="doc">문서(트리)</button>
-    <button data-tab="graph">관계도</button>
+    <span class="tabsep"></span>
     <button data-tab="rules">규칙</button>
     <button data-tab="fields">필드</button>
+    <span class="tabsep"></span>
     <button data-tab="items">업무사전</button>
+    <button data-tab="doc">문서(트리)</button>
+    <button data-tab="graph">관계도</button>
+    <span class="tabsep"></span>
     <button data-tab="data">저장·불러오기</button>
   </nav>
 </header>
