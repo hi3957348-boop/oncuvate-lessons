@@ -878,6 +878,12 @@ function moveTip(e){ const pad=14; let x=e.clientX+pad, y=e.clientY+pad;
 /* ============================================================
    규칙 탭 — 결정표 + 빌더
    ============================================================ */
+function condSig(r){ // 조건 동일성 판별용 서명
+  const cs=(r.when.conds||[]).map(c=>JSON.stringify([c.field,c.op,c.value??null,c.value2??null,c.field2??null,c.months??null])).sort();
+  return (r.when.op||'AND')+'|'+cs.join('||');
+}
+function findDupName(r){ const nm=(r.name||'').trim(); if(!nm)return null; return model.rules.find(x=>x.id!==r.id && (x.name||'').trim()===nm)||null; }
+function findDupCond(r){ if(!(r.when.conds||[]).length)return null; const s=condSig(r); return model.rules.find(x=>x.id!==r.id && (x.when.conds||[]).length && condSig(x)===s)||null; }
 function condText(c){
   if(c.op==='date_within') return `${c.field} ↔ ${c.field2} 차이 ≤ ${c.months}개월`;
   if(c.op==='date_after_plus') return `${c.field} > ${c.field2}+${c.months}개월`;
@@ -924,7 +930,8 @@ function editRule(id){
 
   const meta=el('div',{class:'row',style:'margin-bottom:10px'});
   meta.append(el('label',{class:'f',style:'flex:1 1 220px;margin:0'}, el('span',{class:'lab'},'규칙명'),
-     el('input',{value:r.name,oninput:e=>{r.name=e.target.value;persist();}})));
+     el('input',{value:r.name,oninput:e=>{r.name=e.target.value;persist();},
+       onchange:e=>{ const d=findDupName(r); if(d){ alert('동일한 규칙명이 이미 있습니다: "'+d.name+'"\n다른 이름을 사용하세요.'); e.target.select(); } renderRules(); }})));
   meta.append(el('label',{class:'f',style:'width:120px;margin:0'}, el('span',{class:'lab'},'우선순위(클수록 우선)'),
      el('input',{type:'number',value:r.priority||0,oninput:e=>{r.priority=num(e.target.value)||0;persist();}})));
   card.append(meta);
@@ -1105,7 +1112,15 @@ function editRule(id){
   card.append(ebox);
 
   card.append(el('div',{class:'row'},
-    el('button',{class:'btn pri',onclick:()=>{card.hidden=true;refresh();}},'완료'),
+    el('button',{class:'btn pri',onclick:()=>{
+      const dn=findDupName(r);
+      if(dn){ alert('동일한 규칙명이 이미 있습니다: "'+dn.name+'"\n이름을 변경한 뒤 완료하세요.'); return; }
+      const dc=findDupCond(r);
+      if(dc){ if(confirm('동일한 조건의 규칙이 이미 있습니다: "'+dc.name+'"\n해당 규칙으로 이동해 확인할까요?')){
+                card.hidden=true; editRule(dc.id); setTimeout(()=>alert('"'+dc.name+'" 규칙으로 이동했습니다.'),50);
+              } return; }
+      card.hidden=true; refresh();
+    }},'완료'),
     el('button',{class:'btn danger',onclick:()=>{ if(confirm('이 규칙을 삭제할까요?')){model.rules=model.rules.filter(x=>x.id!==id);persist();card.hidden=true;renderRules();refresh();}}},'규칙 삭제')));
   card.scrollIntoView({behavior:'smooth',block:'nearest'});
 }
