@@ -405,9 +405,9 @@ function seedModel(){
        showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
     {id:'취급일',label:'취급(실행)일',type:'date',
        showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
-    {id:'대출금액',label:'대출금액(만원)',type:'number',
+    {id:'대출금액',label:'대출금액(원)',type:'money',
        showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
-    {id:'매매가',label:'부동산 매매가(만원)',type:'number',
+    {id:'매매가',label:'부동산 매매가(원)',type:'money',
        showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
     {id:'선분양여부',label:'선분양 물건',type:'select',options:['아니오','예'],
        showWhen:{field:'자금종류',op:'∈',value:['운전자금','부동산구입자금','시설자금']}},
@@ -692,14 +692,16 @@ function fieldVisible(f, inp){
   if(sw.op==='∈') return (sw.value||[]).map(String).some(x=>vals.includes(x));
   return vals.includes(String(sw.value));
 }
+function fieldDrives(id){ return model.fields.some(x=>x.showWhen&&x.showWhen.field===id); }
 function renderForm(){
   const box=$('#form'); box.innerHTML='';
   for(const f of model.fields){
     if(!fieldVisible(f,inputs)) continue;
     const lab=el('span',{class:'lab',html:f.label + (f.showWhen?' <b>▸</b>':'')});
     let input;
+    const commit=()=> fieldDrives(f.id)?refresh():refreshResult(); // 다른 필드의 표시조건을 좌우하는 필드만 폼 재구성 → 그 외엔 포커스 유지
     if(f.type==='select'){
-      input=el('select',{onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
+      input=el('select',{onchange:e=>{inputs[f.id]=e.target.value;commit();}});
       input.append(el('option',{value:''},'(선택)'));
       for(const o of f.options||[]) input.append(el('option',{value:o, selected:inputs[f.id]===o?'selected':null},o));
     }else if(f.type==='multi'){
@@ -716,16 +718,27 @@ function renderForm(){
       });
       if(arr.length<max) input.append(el('button',{class:'btn sm',onclick:()=>{arr.push('');refresh();}},'＋ 담보 추가 ('+arr.filter(Boolean).length+'/'+max+')'));
       else input.append(el('div',{class:'hint',style:'margin:2px 0 0'},'최대 '+max+'건까지 입력했습니다'));
+    }else if(f.type==='money'){
+      const inp=el('input',{type:'text',inputmode:'numeric',value:fmtComma(inputs[f.id])});
+      inp.addEventListener('input',()=>{ const old=inp.value, sel=inp.selectionStart||0;
+        const before=(old.slice(0,sel).match(/\d/g)||[]).length;
+        const digits=old.replace(/[^\d]/g,''); const fm=digits===''?'':Number(digits).toLocaleString('en-US'); inp.value=fm;
+        let pos=0,seen=0; while(pos<fm.length&&seen<before){ if(/\d/.test(fm[pos]))seen++; pos++; } try{inp.setSelectionRange(pos,pos);}catch(_){}
+        inputs[f.id]=digits; refreshResult(); });
+      inp.addEventListener('change',commit);
+      input=inp;
     }else if(f.type==='number'){
       input=el('input',{type:'number',value:inputs[f.id]??'',
         oninput:e=>{inputs[f.id]=e.target.value;refreshResult();},
-        onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
+        onchange:e=>{inputs[f.id]=e.target.value;commit();}});
     }else if(f.type==='date'){
-      input=el('input',{type:'date',value:inputs[f.id]??'',onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
+      input=el('input',{type:'date',value:inputs[f.id]??'',
+        oninput:e=>{inputs[f.id]=e.target.value;refreshResult();},
+        onchange:e=>{inputs[f.id]=e.target.value;commit();}});
     }else{
       input=el('input',{type:'text',value:inputs[f.id]??'',
         oninput:e=>{inputs[f.id]=e.target.value;refreshResult();},
-        onchange:e=>{inputs[f.id]=e.target.value;refresh();}});
+        onchange:e=>{inputs[f.id]=e.target.value;commit();}});
     }
     box.append(el('label',{class:'f'},lab,input));
   }
@@ -1093,7 +1106,7 @@ function renderFields(){
   for(const f of model.fields){
     const tr=el('tr',{style:'cursor:pointer',onclick:()=>editField(f.id)});
     tr.append(el('td',{}, f.label));
-    tr.append(el('td',{}, ({select:'선택',multi:'다중선택',number:'숫자',date:'날짜',text:'텍스트'}[f.type]||f.type)+(f.type==='multi'?' (최대'+(f.maxItems||5)+')':'')));
+    tr.append(el('td',{}, ({select:'선택',multi:'다중선택',money:'금액(원)',number:'숫자',date:'날짜',text:'텍스트'}[f.type]||f.type)+(f.type==='multi'?' (최대'+(f.maxItems||5)+')':'')));
     tr.append(el('td',{}, el('span',{class:'muted'}, (f.options||[]).join(', ')||'—')));
     tr.append(el('td',{}, el('span',{class:'cond'}, f.showWhen?condText(f.showWhen):'항상')));
     tr.append(el('td',{onclick:ev=>ev.stopPropagation()}, el('button',{class:'btn sm danger',onclick:()=>{if(confirm('필드 삭제?')){model.fields=model.fields.filter(x=>x.id!==f.id);persist();renderFields();refresh();}}},'삭제')));
@@ -1110,7 +1123,7 @@ function editField(id){
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'라벨(표시명) — id는 유지되어 규칙/데이터가 깨지지 않습니다'),
     el('input',{value:f.label,oninput:e=>{f.label=e.target.value;persist();renderForm();}})));
   const ts=el('select',{onchange:e=>{f.type=e.target.value; if(f.type==='multi'&&!f.maxItems)f.maxItems=5; persist();editField(id);renderForm();}});
-  [['select','선택'],['multi','다중선택(여러 건)'],['number','숫자'],['date','날짜'],['text','텍스트']].forEach(([v,l])=>ts.append(el('option',{value:v,selected:f.type===v?'selected':null},l)));
+  [['select','선택'],['multi','다중선택(여러 건)'],['money','금액(원·콤마)'],['number','숫자'],['date','날짜'],['text','텍스트']].forEach(([v,l])=>ts.append(el('option',{value:v,selected:f.type===v?'selected':null},l)));
   card.append(el('label',{class:'f'}, el('span',{class:'lab'},'유형'), ts));
   if(f.type==='select'||f.type==='multi')
     card.append(el('label',{class:'f'}, el('span',{class:'lab'},'선택지 (쉼표 구분)'),
@@ -1176,7 +1189,7 @@ function editItem(id){
    ============================================================ */
 const EXAMPLES={
   '사례 A · 농지 토지구입(개인사업자)':{신청인유형:'개인사업자',자금종류:'토지구입자금',대상토지지목:'농지',자금목적:'사업목적'},
-  '사례 B · 운전자금→부동산구입 재분류':{자금종류:'운전자금',부동산취득일:fmtDate(addMonths(new Date(),-3)),취급일:fmtDate(new Date()),대출금액:'50000',매매가:'48000',선분양여부:'아니오'},
+  '사례 B · 운전자금→부동산구입 재분류':{자금종류:'운전자금',부동산취득일:fmtDate(addMonths(new Date(),-3)),취급일:fmtDate(new Date()),대출금액:'500000000',매매가:'480000000',선분양여부:'아니오'},
 };
 $('#btnExample').onclick=(ev)=>{
   const menu=el('div',{class:'card',style:'position:absolute;z-index:30;padding:8px'});
@@ -1229,7 +1242,7 @@ function doPrint(sel, title, withBasis){
   R.calcOutputs.forEach(c=>{ if(c.breakdown&&c.breakdown.length){ h+='<div><b>'+esc(c.label)+' (담보별):</b> '+c.breakdown.map(b=>esc(b.value)+' '+b.total+esc(c.unit)).join(' / ')+'</div>'; } else if(c.defined){ h+='<div><b>'+esc(c.label)+':</b> '+c.total+esc(c.unit)+'</div>'; } });
   h+='</div>';
   const filled=model.fields.filter(f=>!isEmpty(inputs[f.id]));
-  if(filled.length) h+='<div class="meta"><b>신청정보</b> · '+filled.map(f=>esc(f.label)+'='+esc(fmtVal(inputs[f.id]))).join(' · ')+'</div>';
+  if(filled.length) h+='<div class="meta"><b>신청정보</b> · '+filled.map(f=>esc(f.label)+'='+esc(f.type==='money'?(fmtComma(inputs[f.id])+'원'):fmtVal(inputs[f.id]))).join(' · ')+'</div>';
   for(const cat of sel){
     const items=R.addItems.filter(i=>normCat(i.cat)===cat);
     if(!items.length) continue;
@@ -1444,6 +1457,8 @@ function migrate(m){ m.tree=m.tree||[]; m.graph=m.graph||{nodes:[],edges:[]}; m.
   // 카테고리 명칭 통일: '작성해야할 서류' → '작성서류'
   (m.items||[]).forEach(it=>{ if(it.cat==='작성해야할 서류') it.cat='작성서류'; });
   (m.rules||[]).forEach(r=>(r.effects||[]).forEach(e=>{ if(e.type==='ADD'&&e.cat==='작성해야할 서류') e.cat='작성서류'; }));
+  // 금액 필드: 대출금액·매매가 원단위(콤마) 전환
+  (m.fields||[]).forEach(f=>{ if((f.id==='대출금액'||f.id==='매매가') && f.type!=='money'){ f.type='money'; f.label=(f.label||'').replace('만원','원'); if(!/\(원\)/.test(f.label)) f.label=f.label.replace(/\(.*?\)/,'')+'(원)'; } });
   // v3 1회 마이그레이션: LTV를 규칙 사전설정에서 제거 → 대출가능금액 산출표에서 그때그때 입력
   if(!(m.version>=3)){
     const rmFields=new Set(['담보종류','신용도','상환구조','권역구분','사무소제한']);
