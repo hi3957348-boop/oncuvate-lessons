@@ -125,14 +125,16 @@
   .elabel{fill:#475569;font-size:11px}
   /* 대출가능금액 산출표 */
   .lwrap{overflow-x:auto}
-  table.calc{min-width:1080px;border-collapse:collapse;font-size:12.5px}
+  table.calc{min-width:1520px;border-collapse:collapse;font-size:12.5px}
   table.calc th,table.calc td{border:1px solid var(--line);padding:5px 7px;text-align:right;white-space:nowrap}
   table.calc th{background:#f7f8fa;color:var(--muted);font-size:11.5px;text-align:center;position:sticky;top:0}
   table.calc td.txt,table.calc th.txt{text-align:left}
   table.calc input{border:1px solid transparent;background:transparent;padding:4px 5px;border-radius:5px;text-align:right;width:100%}
   table.calc td.txt input{text-align:left}
-  table.calc input:focus{border-color:var(--brand);background:#fff}
-  table.calc input[type=number]{min-width:88px}
+  table.calc input:focus{border-color:var(--brand);background:#fff;box-shadow:0 0 0 2px var(--brand-weak)}
+  table.calc input[type=number]{min-width:104px}
+  table.calc td.txt input{min-width:130px}
+  table.calc td.addr input{min-width:300px}
   table.calc td.calc-cell{background:#f3f7ff;font-weight:600;color:#1d4ed8}
   table.calc td.final{background:#eef7ee;font-weight:700;color:#0f7a34}
   table.calc td.final.neg{background:#fdf3f2;color:var(--danger)}
@@ -203,7 +205,7 @@
       <div class="lwrap">
         <table class="calc" id="loanTable"></table>
       </div>
-      <div class="lhint" style="margin-top:8px">※ 금액 단위는 <b>원</b>입니다. 차감전 = 감정평가액 × LTV(%) · 최종 = 차감전 − (주택임차 + 상가임차 + 임금채권 + 조세채권 + 기타채권). 최종이 음수면 붉게 표시됩니다.</div>
+      <div class="lhint" style="margin-top:8px">※ 금액 단위는 <b>원</b>입니다. 차감전 = 감정평가액 × LTV(%) · 최종 = 차감전 − (주택임차 + 상가임차 + 임금채권 + 조세채권 + 기타채권). 최종이 음수면 붉게 표시됩니다.<br>※ 표가 화면보다 넓으면 <b>좌우로 스크롤</b>되며, 칸이 좁아 글자가 잘려 보여도 <b>칸에 마우스를 올리면 전체 내용</b>이 표시됩니다.</div>
     </div>
   </section>
 
@@ -1218,9 +1220,11 @@ function renderLoan(){
     tr.append(el('td',{class:'rownum'}, String(idx+1)));
     const preCell=el('td',{class:'calc-cell'}), finalCell=el('td',{class:'final'});
     const recalc=()=>{ const c=loanCalc(r); preCell.textContent=fmtWon(c.pre)+'원'; finalCell.textContent=fmtWon(c.final)+'원'; finalCell.classList.toggle('neg',c.final<0); updateTotals(); };
-    const mkText=key=>{ const td=el('td',{class:'txt'}); td.append(el('input',{value:r[key]||'',oninput:e=>{r[key]=e.target.value;persistWork();}})); return td; };
+    const mkText=(key,wide)=>{ const td=el('td',{class:'txt'+(wide?' addr':'')});
+      const inp=el('input',{value:r[key]||'',title:r[key]||'',oninput:e=>{r[key]=e.target.value;e.target.title=e.target.value;persistWork();}});
+      td.append(inp); return td; };
     const mkNum=key=>{ const td=el('td'); td.append(el('input',{type:'number',value:r[key]??'',oninput:e=>{r[key]=e.target.value;recalc();persistWork();}})); return td; };
-    tr.append(mkText('addr'),mkText('jibun'),mkText('jimok'),mkNum('appraisal'),mkNum('ltv'),preCell,
+    tr.append(mkText('addr',true),mkText('jibun'),mkText('jimok'),mkNum('appraisal'),mkNum('ltv'),preCell,
       mkNum('dHousing'),mkNum('dCommercial'),mkNum('dWage'),mkNum('dTax'),mkNum('dEtc'),finalCell);
     tr.append(el('td',{class:'delc'}, el('button',{class:'btn sm danger',title:'삭제',onclick:()=>{collateral.rows.splice(idx,1);persistWork();renderLoan();}},'×')));
     const c=loanCalc(r); preCell.textContent=fmtWon(c.pre)+'원'; finalCell.textContent=fmtWon(c.final)+'원'; finalCell.classList.toggle('neg',c.final<0);
