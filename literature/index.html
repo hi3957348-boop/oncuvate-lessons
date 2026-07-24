@@ -1,0 +1,121 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>온큐베이트 문학 수업 시리즈</title>
+  <meta name="description" content="짧은 이야기 조각을 읽고 인물·사건·배경을 추론하는 온큐베이트 문학 수업 시리즈">
+  <meta property="og:title" content="온큐베이트 문학 수업 시리즈">
+  <meta property="og:description" content="읽고, 추리하고, 연결하며 고전을 이해하는 수업 자료">
+  <meta property="og:image" content="/literature/og-literature-series.png">
+  <style>
+    :root{
+      --v950:#24144f;--v900:#35206f;--v800:#4b24a5;--v700:#5932b6;--v500:#8d70d7;
+      --v200:#d9cff5;--v100:#eee9fb;--v050:#f8f6fd;--cyan:#4bc9dc;--blue:#2785c7;
+      --gold:#e1b72c;--ink:#29243a;--muted:#777187;--paper:#fffefb;--line:#e8e3f3;
+      --shadow:0 22px 58px rgba(37,20,78,.17);
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--ink);background:#1d1d20}
+    body{padding:10px}
+    a{color:inherit}
+    .frame{width:min(1180px,100%);min-height:calc(100vh - 20px);margin:auto;border:2px solid var(--gold);background:
+      radial-gradient(circle at 92% 5%,rgba(75,201,220,.18),transparent 24%),
+      linear-gradient(145deg,#f9f7fd,#eee9fb 60%,#e5e1f2)}
+    .top{display:flex;align-items:center;justify-content:space-between;gap:20px;padding:20px 26px;border-bottom:1px solid rgba(89,50,182,.13);background:rgba(255,255,255,.72)}
+    .top img{display:block;width:190px;height:56px;object-fit:contain;object-position:left center;filter:drop-shadow(0 4px 12px rgba(36,20,79,.12))}
+    .top-label{text-align:right}.top-label span{display:block;color:var(--v700);font-size:10px;font-weight:900;letter-spacing:.15em}.top-label strong{display:block;margin-top:4px;font-size:15px}
+    main{padding:24px}
+    .hero{position:relative;min-height:345px;overflow:hidden;border-radius:28px;background:var(--v950);box-shadow:var(--shadow)}
+    .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.43;filter:saturate(.82)}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(36,20,79,.98) 0,rgba(36,20,79,.82) 52%,rgba(36,20,79,.12) 100%)}
+    .hero-copy{position:relative;z-index:2;max-width:680px;padding:54px;color:#fff}
+    .eyebrow{display:flex;align-items:center;gap:9px;margin-bottom:13px;color:var(--cyan);font-size:11px;font-weight:900;letter-spacing:.16em}.eyebrow::before{content:"";width:28px;height:3px;border-radius:4px;background:linear-gradient(90deg,var(--cyan),var(--v500))}
+    h1,h2,h3,p{margin-top:0}.hero h1{margin-bottom:14px;font-size:clamp(35px,6vw,64px);line-height:1.05;letter-spacing:-.055em}.hero p{max-width:590px;margin-bottom:22px;color:rgba(255,255,255,.8);font-size:16px;line-height:1.8;word-break:keep-all}
+    .hero-chips{display:flex;flex-wrap:wrap;gap:8px}.hero-chips span{padding:7px 12px;border:1px solid rgba(255,255,255,.22);border-radius:999px;background:rgba(255,255,255,.1);font-size:11px;font-weight:800}
+    .stats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:14px 0 28px}.stat{padding:18px;border:1px solid var(--line);border-radius:17px;background:rgba(255,255,255,.82);text-align:center}.stat b{display:block;color:var(--v800);font-size:24px}.stat span{display:block;margin-top:3px;color:var(--muted);font-size:11px;font-weight:750}
+    .section-head{display:flex;align-items:flex-end;justify-content:space-between;gap:16px;margin-bottom:14px}.section-head small{display:block;margin-bottom:5px;color:var(--v700);font-size:10px;font-weight:900;letter-spacing:.14em}.section-head h2{margin:0;font-size:30px;letter-spacing:-.04em}.section-head p{max-width:470px;margin:0;color:var(--muted);font-size:12px;line-height:1.65;text-align:right}
+    .series-card{display:grid;grid-template-columns:minmax(280px,.85fr) 1.15fr;overflow:hidden;border:1px solid var(--line);border-radius:24px;background:var(--paper);box-shadow:0 13px 35px rgba(42,25,79,.1)}
+    .series-cover{position:relative;min-height:310px;overflow:hidden;background:var(--v950)}.series-cover img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}.series-cover::after{content:"";position:absolute;inset:0;background:linear-gradient(180deg,transparent 20%,rgba(36,20,79,.86))}
+    .cover-copy{position:absolute;z-index:2;left:24px;right:24px;bottom:22px;color:#fff}.cover-copy span{font-size:10px;font-weight:900;letter-spacing:.14em;color:var(--cyan)}.cover-copy h3{margin:7px 0 3px;font-size:31px;letter-spacing:-.04em}.cover-copy p{margin:0;color:rgba(255,255,255,.72);font-size:12px}
+    .series-body{padding:27px}.series-meta{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:16px}.series-meta span{padding:6px 10px;border-radius:999px;color:var(--v800);background:var(--v100);font-size:10px;font-weight:850}.series-meta .live{color:#176b78;background:#e8fafb}
+    .series-body h3{margin-bottom:7px;font-size:24px;letter-spacing:-.035em}.series-body>p{margin-bottom:18px;color:var(--muted);font-size:13px;line-height:1.75}
+    .lesson-list{display:grid;gap:9px}.lesson{display:grid;grid-template-columns:48px 1fr auto;gap:12px;align-items:center;padding:13px;border:1px solid var(--line);border-radius:15px;background:#fff}.lesson-no{display:grid;width:44px;height:44px;border-radius:14px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--v800),var(--cyan));font-size:12px;font-weight:950}.lesson h4{margin:0 0 3px;font-size:14px}.lesson p{margin:0;color:var(--muted);font-size:10px;line-height:1.5}.lesson a{min-height:42px;padding:0 16px;border-radius:12px;display:inline-flex;align-items:center;text-decoration:none;color:#fff;background:var(--v800);font-size:11px;font-weight:900;box-shadow:0 8px 18px rgba(75,36,165,.2)}.lesson a:hover{background:var(--v700);transform:translateY(-1px)}
+    .lesson.soon{opacity:.58}.lesson.soon .lesson-no{color:var(--v800);background:var(--v100)}.soon-tag{padding:6px 9px;border:1px solid var(--v200);border-radius:9px;color:var(--v700);font-size:9px;font-weight:850}
+    .method{margin-top:28px;padding:24px;border:1px solid var(--line);border-radius:22px;background:rgba(255,255,255,.72)}.method h2{margin-bottom:14px;font-size:23px}.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}.step{padding:17px;border-radius:16px;background:#fff}.step i{display:grid;width:35px;height:35px;margin-bottom:11px;border-radius:12px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--v700),var(--cyan));font-style:normal;font-size:11px;font-weight:950}.step h3{margin-bottom:5px;font-size:15px}.step p{margin:0;color:var(--muted);font-size:11px;line-height:1.65}
+    footer{display:flex;justify-content:space-between;gap:20px;padding:24px 2px 5px;color:var(--muted);font-size:10px}
+    @media(max-width:760px){body{padding:0}.frame{min-height:100vh;border:0}.top{padding:15px}.top img{width:145px;height:44px}.top-label strong{display:none}main{padding:14px}.hero{min-height:390px}.hero-copy{padding:36px 24px}.stats,.steps{grid-template-columns:1fr}.series-card{grid-template-columns:1fr}.series-cover{min-height:270px}.section-head{align-items:flex-start;flex-direction:column}.section-head p{text-align:left}.lesson{grid-template-columns:44px 1fr}.lesson>a,.soon-tag{grid-column:2;justify-self:start}footer{flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+  </style>
+</head>
+<body>
+  <div class="frame">
+    <header class="top">
+      <img src="./assets/oncuvate-brand-logo.png" alt="Oncuvate">
+      <div class="top-label"><span>LITERATURE LEARNING STUDIO</span><strong>온큐베이트 문학 수업 시리즈</strong></div>
+    </header>
+    <main>
+      <section class="hero">
+        <img src="./pride-prejudice/lesson-1/assets/images/regency-bennet-family-longbourn-drawing-room.png" alt="">
+        <div class="hero-copy">
+          <div class="eyebrow">ONCUVATE LITERATURE SERIES</div>
+          <h1>읽고, 추리하고,<br>생각을 연결해요.</h1>
+          <p>짧은 이야기 조각으로 작품에 들어가 인물의 바람, 사건의 원인과 결과, 시대와 장소의 영향을 스스로 찾아가는 문학 수업입니다.</p>
+          <div class="hero-chips"><span>60초 이야기</span><span>근거 중심 추론</span><span>인물 관계 마인드맵</span></div>
+        </div>
+      </section>
+
+      <section class="stats" aria-label="시리즈 현황">
+        <div class="stat"><b>1</b><span>등록 작품</span></div>
+        <div class="stat"><b>1</b><span>공개 수업</span></div>
+        <div class="stat"><b>계속</b><span>차시 업데이트</span></div>
+      </section>
+
+      <div class="section-head">
+        <div><small>CLASSIC LITERATURE</small><h2>작품별 수업</h2></div>
+        <p>각 작품은 여러 회차로 확장됩니다. 공개된 수업부터 차례로 선택해 진행하세요.</p>
+      </div>
+
+      <article class="series-card">
+        <div class="series-cover">
+          <img src="./pride-prejudice/lesson-1/assets/images/regency-meryton-ball-jane-bingley-elizabeth-darcy.png" alt="메리턴 무도회의 인물들">
+          <div class="cover-copy"><span>JANE AUSTEN</span><h3>오만과 편견</h3><p>인물·사건·배경 탐정단</p></div>
+        </div>
+        <div class="series-body">
+          <div class="series-meta"><span class="live">수업 공개 중</span><span>고전 문학</span><span>추론 읽기</span></div>
+          <h3>첫인상에서 관계의 변화까지</h3>
+          <p>인물의 말과 행동, 사건의 순서, 장소의 역할을 단서로 작품의 구조를 발견합니다. 책을 읽기 전에도 짧은 줄거리 조각으로 시작할 수 있습니다.</p>
+          <div class="lesson-list">
+            <div class="lesson">
+              <span class="lesson-no">01</span>
+              <div><h4>1회차 · 베넷 가족과 첫인상</h4><p>1~4장 · 인물의 바람, 무도회, 청혼, 떠남의 편지</p></div>
+              <a href="./pride-prejudice/lesson-1/index.html">수업 시작</a>
+            </div>
+            <div class="lesson soon">
+              <span class="lesson-no">02</span>
+              <div><h4>2회차 · 오해가 깊어지는 순간</h4><p>다음 수업 자료를 준비하고 있습니다.</p></div>
+              <span class="soon-tag">준비 중</span>
+            </div>
+            <div class="lesson soon">
+              <span class="lesson-no">03</span>
+              <div><h4>3회차 · 판단이 바뀌는 단서</h4><p>다음 수업 자료를 준비하고 있습니다.</p></div>
+              <span class="soon-tag">준비 중</span>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <section class="method">
+        <h2>수업은 이렇게 이어집니다</h2>
+        <div class="steps">
+          <div class="step"><i>01</i><h3>이야기 조각 열기</h3><p>한 줄씩 읽으며 다음 행동과 숨은 원인을 예상합니다.</p></div>
+          <div class="step"><i>02</i><h3>근거로 추리하기</h3><p>인물·사건·배경 단서를 분류하고 자신의 판단을 확인합니다.</p></div>
+          <div class="step"><i>03</i><h3>관계 연결하기</h3><p>마인드맵과 탐정 보고서로 작품의 구조를 자기 언어로 정리합니다.</p></div>
+        </div>
+      </section>
+
+      <footer><span>© 2026 Oncuvate Literature Learning Studio</span><span>새로운 작품과 차시가 이 페이지에 계속 추가됩니다.</span></footer>
+    </main>
+  </div>
+</body>
+</html>

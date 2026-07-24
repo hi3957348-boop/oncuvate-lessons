@@ -1,0 +1,889 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>오만과 편견 · 인물·사건·배경 탐정단 1회차</title>
+  <link rel="stylesheet" href="assets/oncuvate-theme.css">
+  <style>
+    :root{
+      --violet-950:#24144f;--violet-900:#35206f;--violet-800:#4b24a5;--violet-700:#5932b6;
+      --violet-500:#8d70d7;--violet-200:#d9cff5;--violet-100:#eee9fb;--violet-050:#f8f6fd;
+      --cyan:#4bc9dc;--blue:#2785c7;--gold:#e1b72c;--ink:#29243a;--muted:#777187;
+      --paper:#fffefb;--line:#e8e3f3;--success:#35a978;--success-bg:#f0fbf6;
+      --danger:#e56f71;--danger-bg:#fff5f5;--shadow:0 18px 48px rgba(37,20,78,.16);
+      --elizabeth:#35694f;--jane:#6a91b7;--darcy:#3e3c4e;--bingley:#a86d46;--collins:#777244;
+    }
+    *{box-sizing:border-box}
+    html,body{margin:0;min-height:100%;background:#1d1d20;color:var(--ink);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif}
+    button,input,textarea{font:inherit}
+    button{touch-action:manipulation}
+    body{padding:10px}
+    .shell{width:min(1120px,100%);min-height:calc(100vh - 20px);margin:auto;padding:10px;border:2px solid var(--gold);background:
+      radial-gradient(circle at 88% 0,rgba(75,201,220,.16),transparent 28%),
+      linear-gradient(140deg,#f8f6fd,#eee9fb 56%,#e7e2f5);display:grid;grid-template-columns:190px minmax(0,1fr);gap:10px;overflow:hidden}
+    .side{min-height:0;border-radius:18px;color:#fff;background:
+      radial-gradient(circle at 0 0,rgba(75,201,220,.26),transparent 35%),
+      linear-gradient(160deg,var(--violet-900),var(--violet-950));box-shadow:var(--shadow);display:flex;flex-direction:column}
+    .brand{padding:19px 15px 15px;border-bottom:1px solid rgba(255,255,255,.11)}
+    .brand img{display:block;width:150px;max-width:100%;height:42px;object-fit:contain;object-position:left center;mix-blend-mode:screen;filter:saturate(1.08) brightness(1.08)}
+    .brand small{display:block;margin-top:8px;color:rgba(255,255,255,.55);font-size:9px;font-weight:850;letter-spacing:.15em}
+    .brand strong{display:block;margin-top:5px;font-size:14px;line-height:1.4}
+    .mission-label{padding:14px 13px 6px;color:rgba(255,255,255,.48);font-size:9px;font-weight:900;letter-spacing:.15em}
+    .nav{padding:0 9px 12px;display:grid;gap:5px;overflow:auto}
+    .nav button{display:grid;grid-template-columns:28px 1fr;gap:8px;align-items:center;width:100%;min-height:42px;padding:7px 9px;border:1px solid transparent;border-radius:12px;color:rgba(255,255,255,.72);background:transparent;text-align:left;cursor:pointer}
+    .nav button:hover{color:#fff;background:rgba(255,255,255,.08)}
+    .nav button.on{color:var(--violet-950);border-color:rgba(255,255,255,.75);background:linear-gradient(135deg,#fff,#e9e0fb);box-shadow:0 7px 18px rgba(12,6,36,.24)}
+    .nav-num{display:grid;width:26px;height:26px;border-radius:9px;place-items:center;background:rgba(255,255,255,.1);font-size:10px;font-weight:900}
+    .nav button.on .nav-num{color:#fff;background:linear-gradient(135deg,var(--violet-800),var(--cyan))}
+    .nav-text strong{display:block;font-size:11px}
+    .nav-text small{display:block;margin-top:2px;font-size:8px;opacity:.65}
+    .rolebox{margin-top:auto;padding:12px;border-top:1px solid rgba(255,255,255,.11)}
+    .rolebox p{margin:0 0 8px;color:rgba(255,255,255,.6);font-size:9px}
+    .roles{display:grid;grid-template-columns:1fr 1fr;gap:5px}
+    .roles button{min-height:34px;border:1px solid rgba(255,255,255,.2);border-radius:10px;color:rgba(255,255,255,.72);background:rgba(255,255,255,.08);font-size:10px;font-weight:800;cursor:pointer}
+    .roles button.on{color:var(--violet-900);background:#fff}
+    .main{min-width:0;min-height:0;height:calc(100vh - 44px);overflow:auto;border-radius:18px;background:rgba(255,255,255,.74);box-shadow:var(--shadow)}
+    .top{position:sticky;top:0;z-index:20;display:flex;align-items:center;justify-content:space-between;gap:12px;padding:12px 16px;border-bottom:1px solid var(--line);background:rgba(255,255,255,.92);backdrop-filter:blur(14px)}
+    .top-title span{display:block;color:var(--violet-700);font-size:9px;font-weight:900;letter-spacing:.12em}
+    .top-title strong{display:block;margin-top:2px;font-size:15px}
+    .top-actions{display:flex;align-items:center;gap:7px}
+    .detective-hud{display:flex;align-items:center;gap:5px}
+    .hud-chip{min-height:30px;padding:7px 10px;border:1px solid var(--violet-200);border-radius:10px;color:var(--violet-800);background:#fff;font-size:9px;font-weight:900;white-space:nowrap}
+    .hud-chip b{color:#176b78}
+    .progress{width:120px;height:7px;overflow:hidden;border-radius:999px;background:var(--violet-100)}
+    .progress i{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,var(--violet-700),var(--cyan));transition:width .25s}
+    .icon-btn{display:grid;width:35px;height:35px;border:1px solid var(--violet-200);border-radius:11px;place-items:center;color:var(--violet-800);background:#fff;cursor:pointer;font-weight:900}
+    .content{padding:18px}
+    .pg{display:none;animation:enter .28s ease}.pg.on{display:block}
+    @keyframes enter{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+    .hero{position:relative;min-height:300px;overflow:hidden;border-radius:24px;background:var(--violet-950);box-shadow:0 16px 35px rgba(36,20,79,.2)}
+    .hero img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:.48;filter:saturate(.85)}
+    .hero::after{content:"";position:absolute;inset:0;background:linear-gradient(90deg,rgba(36,20,79,.96) 0,rgba(36,20,79,.78) 46%,rgba(36,20,79,.15) 100%)}
+    .hero-copy{position:relative;z-index:2;max-width:560px;padding:42px;color:#fff}
+    .eyebrow{display:inline-flex;align-items:center;gap:7px;margin-bottom:9px;color:var(--cyan);font-size:10px;font-weight:900;letter-spacing:.12em}
+    .eyebrow::before{content:"";width:22px;height:3px;border-radius:3px;background:linear-gradient(90deg,var(--cyan),var(--violet-500))}
+    h1,h2,h3,p{margin-top:0}
+    .hero h1{margin-bottom:10px;font-size:clamp(28px,5vw,48px);line-height:1.05;letter-spacing:-.05em}
+    .hero p{max-width:490px;margin-bottom:20px;color:rgba(255,255,255,.78);font-size:14px;line-height:1.7}
+    .pillrow{display:flex;flex-wrap:wrap;gap:7px}
+    .pill{padding:6px 11px;border:1px solid rgba(255,255,255,.22);border-radius:999px;color:#fff;background:rgba(255,255,255,.1);font-size:10px;font-weight:800}
+    .start-btn,.primary{min-height:44px;padding:0 20px;border:0;border-radius:13px;color:#fff;background:linear-gradient(135deg,var(--violet-800),var(--violet-500));box-shadow:0 10px 21px rgba(85,50,164,.22);font-weight:900;cursor:pointer}
+    .start-btn{margin-top:22px;background:linear-gradient(135deg,var(--cyan),#2785c7)}
+    .card{margin-bottom:13px;padding:20px;border:1px solid var(--line);border-radius:20px;background:var(--paper);box-shadow:0 9px 25px rgba(45,28,82,.07)}
+    .card-head{display:flex;align-items:flex-start;justify-content:space-between;gap:15px;margin-bottom:15px}
+    .tag{display:inline-flex;align-items:center;gap:6px;margin-bottom:6px;color:var(--violet-700);font-size:9px;font-weight:900;letter-spacing:.11em}
+    .tag::before{content:"";width:3px;height:12px;border-radius:3px;background:linear-gradient(var(--violet-700),var(--cyan))}
+    .card h2{margin-bottom:5px;font-size:clamp(22px,3vw,30px);letter-spacing:-.04em}
+    .desc{margin:0;color:var(--muted);font-size:13px;line-height:1.65}
+    .chapter-badge{flex:0 0 auto;padding:7px 11px;border-radius:999px;color:#fff;background:var(--violet-800);font-size:10px;font-weight:900}
+    .scene{overflow:hidden;border:1px solid var(--line);border-radius:17px;background:var(--violet-050)}
+    .scene img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+    .scene figcaption{padding:8px 12px;color:var(--muted);background:#fff;font-size:10px;font-weight:700}
+    .two{display:grid;grid-template-columns:1.08fr .92fr;gap:13px}
+    .three{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+    .lens{position:relative;padding:17px;border:1px solid var(--line);border-radius:17px;background:linear-gradient(145deg,#fff,var(--violet-050))}
+    .lens-icon{display:grid;width:42px;height:42px;margin-bottom:12px;border-radius:14px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--violet-700),var(--cyan));font-size:18px;font-weight:950}
+    .lens h3{margin-bottom:6px;font-size:17px}.lens p{margin:0;color:var(--muted);font-size:12px;line-height:1.6}
+    .lens button{margin-top:11px;padding:7px 10px;border:1px solid var(--violet-200);border-radius:9px;color:var(--violet-800);background:#fff;font-size:10px;font-weight:850;cursor:pointer}
+    .lens.open{border-color:var(--violet-500);box-shadow:0 0 0 3px rgba(141,112,215,.1)}
+    .reveal{display:none;margin-top:9px;padding-top:9px;border-top:1px dashed var(--violet-200);color:var(--violet-700);font-size:11px;line-height:1.55}.open .reveal{display:block}
+    .people{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .person{padding:14px;border:2px solid var(--line);border-radius:15px;background:#fff;cursor:pointer;transition:.16s}
+    .person:hover{transform:translateY(-2px);border-color:var(--violet-200)}
+    .person.open{border-color:var(--accent,var(--violet-500));box-shadow:0 8px 19px rgba(46,29,80,.08)}
+    .person-top{display:flex;align-items:center;gap:9px}
+    .avatar{display:grid;flex:0 0 34px;width:34px;height:34px;border-radius:12px;place-items:center;color:#fff;background:var(--accent,var(--violet-700));font-size:12px;font-weight:900}
+    .person h3{margin:0;font-size:14px}.person small{display:block;margin-top:2px;color:var(--muted);font-size:9px}
+    .person-detail{display:none;margin-top:10px;padding-top:9px;border-top:1px dashed var(--line);color:var(--muted);font-size:11px;line-height:1.6}.person.open .person-detail{display:block}
+    .reading{padding:15px;border-left:4px solid var(--violet-700);border-radius:0 14px 14px 0;background:var(--violet-050);font-size:15px;font-weight:590;line-height:1.9;word-break:keep-all}
+    .reading b{color:var(--violet-800)}
+    .story-case{margin-bottom:14px;padding:16px;border:1px solid var(--violet-200);border-radius:18px;background:
+      radial-gradient(circle at 100% 0,rgba(75,201,220,.13),transparent 30%),linear-gradient(145deg,#fff,var(--violet-050))}
+    .story-case-head{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:10px}
+    .story-case-title{display:flex;align-items:center;gap:9px}.story-number{display:grid;width:36px;height:36px;border-radius:12px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--violet-800),var(--cyan));font-size:11px;font-weight:950}
+    .story-case-title strong{display:block;font-size:14px}.story-case-title small{display:block;margin-top:2px;color:var(--muted);font-size:9px}
+    .story-dots{display:flex;gap:4px}.story-dots i{width:18px;height:5px;border-radius:9px;background:var(--violet-200)}.story-dots i.on{background:linear-gradient(90deg,var(--violet-700),var(--cyan))}
+    .story-fragments{display:grid;gap:7px}.story-fragment{display:none;padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:#fff;font-size:13px;font-weight:580;line-height:1.75;word-break:keep-all}
+    .story-fragment.show{display:block;animation:enter .25s ease}.story-fragment b{color:var(--violet-800)}
+    .story-case-actions{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-top:10px}
+    .story-open{min-height:40px;padding:0 15px;border:0;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--violet-800),var(--violet-500));font-size:11px;font-weight:900;cursor:pointer}
+    .story-open:disabled{color:var(--violet-700);background:var(--violet-100);box-shadow:none}
+    .story-reward{color:var(--muted);font-size:9px;font-weight:800}
+    .story-quiz{display:none;margin-top:11px;padding-top:11px;border-top:1px dashed var(--violet-200)}.story-quiz.show{display:block}
+    .story-quiz h3{margin-bottom:8px;font-size:13px}.story-options{display:flex;flex-wrap:wrap;gap:6px}
+    .story-option{min-height:40px;padding:8px 12px;border:1px solid var(--violet-200);border-radius:11px;color:var(--ink);background:#fff;font-size:10px;font-weight:800;cursor:pointer}
+    .story-option:hover,.story-option:focus-visible{border-color:var(--violet-700);box-shadow:0 0 0 3px rgba(75,36,165,.08);outline:0}
+    .story-option.good{color:#247354;border-color:var(--success);background:var(--success-bg)}.story-option.bad{color:#a0474b;border-color:var(--danger);background:var(--danger-bg)}
+    .story-result{min-height:18px;margin:8px 0 0;color:var(--muted);font-size:10px;font-weight:750;line-height:1.55}
+    .speak{display:inline-flex;align-items:center;gap:7px;margin-bottom:10px;padding:7px 12px;border:1px solid rgba(75,201,220,.65);border-radius:999px;color:#176b78;background:#eafafb;font-size:10px;font-weight:900;cursor:pointer}
+    .speak::before{content:"";width:12px;height:12px;border:2px solid currentColor;border-right:0;border-radius:50%}
+    .cluebox{display:grid;gap:8px;margin-top:12px}
+    .clue{padding:12px;border:1px solid var(--line);border-radius:13px;background:#fff}
+    .clue p{margin:0 0 9px;font-size:12px;font-weight:750;line-height:1.55}
+    .clue-actions{display:flex;flex-wrap:wrap;gap:5px}
+    .clue-actions button{padding:6px 9px;border:1px solid var(--violet-200);border-radius:9px;color:var(--muted);background:var(--violet-050);font-size:9px;font-weight:850;cursor:pointer}
+    .clue-actions button.sel{color:#fff;border-color:var(--violet-700);background:var(--violet-700)}
+    .clue.good{border-color:#bfe5d5;background:var(--success-bg)}.clue.bad{border-color:#f0c5c6;background:var(--danger-bg)}
+    .feedback{display:none;margin-top:11px;padding:11px 13px;border-radius:12px;font-size:11px;font-weight:750;line-height:1.6}.feedback.show{display:block}
+    .feedback.ok{color:#247354;background:var(--success-bg);border-left:4px solid var(--success)}.feedback.try{color:#a0474b;background:var(--danger-bg);border-left:4px solid var(--danger)}
+    .sequence-pool,.sequence-line{display:flex;flex-wrap:wrap;gap:8px;min-height:64px;padding:11px;border:1px dashed var(--violet-200);border-radius:14px;background:var(--violet-050)}
+    .sequence-line{margin-top:10px;counter-reset:beat;background:#fff}
+    .event-card{position:relative;padding:10px 12px;border:1px solid var(--violet-200);border-radius:11px;color:var(--ink);background:#fff;cursor:pointer;font-size:11px;font-weight:750;line-height:1.5;box-shadow:0 4px 10px rgba(46,29,80,.05)}
+    .sequence-line .event-card{padding-left:32px;border-color:var(--violet-500)}.sequence-line .event-card::before{counter-increment:beat;content:counter(beat);position:absolute;left:8px;top:50%;display:grid;width:18px;height:18px;border-radius:50%;place-items:center;color:#fff;background:var(--violet-700);font-size:8px;transform:translateY(-50%)}
+    #ballPool{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:9px}
+    .pool-slot{display:grid;min-height:78px;border:1px dashed var(--violet-200);border-radius:12px;background:rgba(255,255,255,.62)}
+    .pool-slot .event-card{width:100%;min-height:78px;text-align:left}
+    .pool-slot.used{place-items:center;color:var(--muted);background:var(--violet-050);font-size:9px;font-weight:800}
+    #ballLine{display:grid;gap:7px;padding:10px;counter-reset:none}
+    .sequence-slot{display:grid;grid-template-columns:34px 1fr;gap:8px;align-items:center;min-height:64px;padding:7px;border:1px dashed var(--violet-200);border-radius:12px;background:var(--violet-050)}
+    .sequence-slot .slot-num{display:grid;width:29px;height:29px;border-radius:10px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--violet-800),var(--cyan));font-size:10px;font-weight:950}
+    .sequence-slot .event-card{width:100%;min-height:48px;padding:9px 11px;border-color:var(--violet-500)}
+    .sequence-slot .event-card::before{display:none}.sequence-placeholder{color:#9a94a6;font-size:10px;font-weight:750}
+    .sequence-actions{display:flex;gap:7px;margin-top:10px}.secondary{min-height:40px;padding:0 15px;border:1px solid var(--violet-200);border-radius:12px;color:var(--violet-800);background:#fff;font-size:11px;font-weight:850;cursor:pointer}
+    .perspectives{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:9px}
+    .perspective{padding:15px;border:1px solid var(--line);border-radius:15px;background:#fff}
+    .perspective h3{margin-bottom:7px;color:var(--accent,var(--violet-800));font-size:15px}.perspective p{margin:0;color:var(--muted);font-size:11px;line-height:1.6}
+    .quote{margin-top:10px;padding:9px;border-radius:10px;background:var(--violet-050);font-size:11px;font-weight:750;line-height:1.55}
+    .character-lock{margin-top:11px;padding:14px;border:1px dashed var(--violet-200);border-radius:16px;background:linear-gradient(145deg,#fff,var(--violet-050))}
+    .lock-message{display:flex;align-items:center;justify-content:space-between;gap:12px}.lock-message strong{display:block;color:var(--violet-800);font-size:13px}.lock-message p{margin:4px 0 0;color:var(--muted);font-size:10px;line-height:1.55}
+    .teacher-reveal{display:none;min-height:40px;padding:0 14px;border:0;border-radius:11px;color:#fff;background:var(--violet-800);font-size:10px;font-weight:900;cursor:pointer}body.teacher .teacher-reveal{display:inline-flex;align-items:center}
+    .secret-perspectives{display:none}.character-lock.revealed .secret-perspectives{display:grid}.character-lock.revealed .lock-copy{display:none}.character-lock.revealed .lock-message{justify-content:flex-end}
+    .choice-row{display:flex;flex-wrap:wrap;gap:8px}
+    .choice{min-height:42px;padding:0 14px;border:2px solid var(--line);border-radius:12px;color:var(--ink);background:#fff;font-size:12px;font-weight:850;cursor:pointer}
+    .choice.sel{color:var(--violet-800);border-color:var(--violet-700);background:var(--violet-100)}.choice.good{color:#247354;border-color:var(--success);background:var(--success-bg)}
+    .fact-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .fact-col{min-height:140px;padding:12px;border:2px solid var(--line);border-radius:15px;background:var(--violet-050)}
+    .fact-col h3{margin-bottom:9px;text-align:center;font-size:13px}.fact-col[data-zone=fact] h3{color:#176b78}.fact-col[data-zone=guess] h3{color:var(--violet-700)}
+    .fact-pool{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:10px;padding:11px;border:1px dashed var(--violet-200);border-radius:14px;background:#fff}
+    .fact-card{padding:9px 11px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:10px;font-weight:750;line-height:1.5;cursor:pointer}.fact-card.used{display:none}
+    .fact-pick{flex:1 1 240px;padding:10px;border:1px solid var(--line);border-radius:12px;background:#fff;box-shadow:0 5px 16px rgba(70,42,145,.06)}
+    .fact-pick p{margin:0 0 8px;font-size:10px;font-weight:750;line-height:1.5}
+    .fact-actions{display:flex;gap:6px}.fact-action{flex:1;padding:7px;border:1px solid var(--violet-200);border-radius:9px;background:var(--violet-050);color:var(--violet-800);font-size:9px;font-weight:850;cursor:pointer}
+    .fact-action:first-child{background:#eafafa;color:#176b78;border-color:#bfe8e8}.fact-action:hover{transform:translateY(-1px);box-shadow:0 4px 10px rgba(70,42,145,.10)}
+    .placed{display:grid;gap:6px}.placed .fact-card{display:block}
+    .place-map{position:relative;overflow:hidden;border-radius:18px;border:1px solid var(--line)}
+    .place-map img{display:block;width:100%;aspect-ratio:16/9;object-fit:cover}
+    .hotspot{position:absolute;display:grid;width:34px;height:34px;border:3px solid #fff;border-radius:50%;place-items:center;color:#fff;background:var(--violet-800);box-shadow:0 5px 14px rgba(36,20,79,.35);font-size:10px;font-weight:900;cursor:pointer;transform:translate(-50%,-50%)}
+    .hotspot.on{background:var(--cyan);transform:translate(-50%,-50%) scale(1.15)}
+    .place-info{min-height:76px;margin-top:9px;padding:12px 14px;border:1px solid var(--line);border-radius:13px;background:#fff}.place-info strong{display:block;color:var(--violet-800);font-size:13px}.place-info p{margin:5px 0 0;color:var(--muted);font-size:11px;line-height:1.6}
+    .place-note{display:grid;gap:7px;margin-top:10px}.place-note label{color:var(--violet-700);font-size:10px;font-weight:900}.place-note textarea{width:100%;min-height:82px;padding:10px 11px;border:1px solid var(--violet-200);border-radius:11px;color:var(--ink);background:var(--violet-050);font-size:12px;line-height:1.6;resize:vertical;outline:0}.place-note textarea:focus{border-color:var(--violet-700);box-shadow:0 0 0 3px rgba(75,36,165,.08)}
+    .timeline{display:grid;gap:8px}
+    .timeline-row{display:grid;grid-template-columns:74px 1fr 1fr 1fr;gap:7px;align-items:stretch}
+    .timeline-row > *{padding:10px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:10px;line-height:1.5}
+    .timeline-row > strong{display:grid;place-items:center;color:#fff;background:var(--violet-800);font-size:11px}.timeline-row span b{display:block;margin-bottom:3px;color:var(--violet-700)}
+    .mind-tools{display:grid;gap:10px}.mind-palette{display:flex;flex-wrap:wrap;gap:8px;padding:10px;border:1px solid var(--line);border-radius:14px;background:var(--violet-050)}
+    .portrait-pick{display:grid;gap:5px;justify-items:center;width:72px;padding:6px;border:1px solid transparent;border-radius:13px;color:var(--ink);background:transparent;cursor:pointer;font-size:9px;font-weight:850}.portrait-pick:hover{border-color:var(--violet-200);background:#fff}
+    .portrait-face{display:block;width:52px;height:52px;border:3px solid #fff;border-radius:50%;background-image:url('assets/images/regency-main-characters-portrait-sheet-4x2.png');background-size:400% 200%;background-position:var(--px) var(--py);box-shadow:0 5px 13px rgba(36,20,79,.18)}
+    .mind-toolbar{display:flex;flex-wrap:wrap;gap:7px;align-items:center}.mind-toolbar input{flex:1 1 230px;min-height:40px;padding:0 11px;border:1px solid var(--violet-200);border-radius:11px;outline:0}.mind-toolbar input:focus{border-color:var(--violet-700);box-shadow:0 0 0 3px rgba(75,36,165,.08)}
+    .mind-board{position:relative;height:430px;overflow:hidden;border:2px solid var(--violet-200);border-radius:18px;background-color:#fff;background-image:linear-gradient(rgba(89,50,182,.055) 1px,transparent 1px),linear-gradient(90deg,rgba(89,50,182,.055) 1px,transparent 1px);background-size:24px 24px;touch-action:none}
+    .mind-board svg{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}.mind-board line{stroke:var(--violet-500);stroke-width:3;stroke-linecap:round}
+    .mind-hint{position:absolute;left:50%;top:50%;color:#aaa4b4;font-size:11px;font-weight:800;transform:translate(-50%,-50%);pointer-events:none}.mind-board.has-node .mind-hint{display:none}
+    .mind-node{position:absolute;z-index:2;display:grid;justify-items:center;gap:3px;width:88px;padding:6px;border:2px solid transparent;border-radius:15px;color:var(--ink);background:rgba(255,255,255,.94);box-shadow:0 8px 18px rgba(36,20,79,.12);cursor:grab;user-select:none}.mind-node:active{cursor:grabbing}.mind-node.selected{border-color:var(--cyan);box-shadow:0 0 0 4px rgba(75,201,220,.18)}
+    .mind-node .portrait-face{width:58px;height:58px}.mind-node b{font-size:9px}.mind-node.note{display:block;width:auto;max-width:180px;padding:10px 12px;border-color:var(--violet-200);border-radius:12px;color:var(--violet-800);background:#fff;font-size:10px;font-weight:800;line-height:1.45;text-align:center}
+    .mind-help{margin:0;color:var(--muted);font-size:10px;line-height:1.6}
+    .report{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+    .report label{display:grid;gap:6px;color:var(--violet-700);font-size:10px;font-weight:900}
+    .report input,.report textarea{width:100%;border:1px solid var(--violet-200);border-radius:11px;padding:10px 11px;color:var(--ink);background:#fff;outline:none}.report textarea{min-height:88px;resize:vertical}.report input:focus,.report textarea:focus{border-color:var(--violet-700);box-shadow:0 0 0 3px rgba(75,36,165,.09)}
+    .report .wide{grid-column:1/-1}
+    .stamp{display:none;margin-top:12px;padding:13px;border:2px solid #bfe5d5;border-radius:14px;color:#247354;background:var(--success-bg);text-align:center;font-weight:900}.stamp.show{display:block}
+    .teacher-note{display:none;margin-top:11px;padding:10px 12px;border:1px dashed var(--gold);border-radius:12px;color:#76580d;background:#fffaf0;font-size:10px;line-height:1.6}body.teacher .teacher-note{display:block}
+    .footer-nav{display:flex;align-items:center;justify-content:space-between;gap:10px;margin-top:14px;padding-top:13px;border-top:1px solid var(--line)}
+    .footer-nav span{color:var(--muted);font-size:10px;font-weight:850}
+    .footer-nav button{min-height:40px;padding:0 16px;border:0;border-radius:12px;font-weight:900;cursor:pointer}.prev{color:var(--muted);background:var(--violet-100)}.next{color:#fff;background:var(--violet-800)}
+    .footer-nav button:disabled{opacity:.35;cursor:not-allowed}
+    .series-note{margin-top:15px;color:var(--muted);font-size:9px;text-align:center}
+    .reward-toast{position:fixed;right:26px;bottom:24px;z-index:80;display:none;max-width:290px;padding:13px 16px;border:1px solid rgba(75,201,220,.65);border-radius:14px;color:#fff;background:linear-gradient(135deg,var(--violet-900),var(--violet-700));box-shadow:0 15px 35px rgba(36,20,79,.3);font-size:11px;font-weight:900}
+    .reward-toast.show{display:block;animation:enter .25s ease}
+    @media(max-width:820px){.shell{grid-template-columns:1fr}.side{min-height:auto}.brand{display:flex;align-items:center;gap:10px}.brand img{width:112px}.brand small,.brand strong{display:none}.mission-label{display:none}.nav{display:flex;overflow-x:auto;padding:8px}.nav button{flex:0 0 116px}.rolebox{margin-top:0}.main{height:auto;min-height:75vh}.two{grid-template-columns:1fr}.people,.perspectives{grid-template-columns:repeat(2,minmax(0,1fr))}.detective-hud{display:none}}
+    @media(max-width:560px){body{padding:0}.shell{min-height:100vh;padding:0;border:0}.side,.main{border-radius:0}.content{padding:11px}.top{padding:10px}.progress{width:75px}.hero-copy{padding:28px 20px}.hero{min-height:340px}.three,.people,.perspectives,.report,.fact-grid{grid-template-columns:1fr}.timeline-row{grid-template-columns:52px 1fr}.timeline-row span{grid-column:2}.report .wide{grid-column:auto}.card{padding:15px}.card-head{flex-direction:column}.chapter-badge{align-self:flex-start}.story-case-head,.story-case-actions{align-items:flex-start;flex-direction:column}}
+    @media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;animation-duration:.01ms!important;transition-duration:.01ms!important}}
+    @media print{
+      @page{size:A4 portrait;margin:12mm}
+      body{padding:0;background:#fff}.shell{display:block;border:0;padding:0;min-height:auto}.side,.top,.footer-nav,.series-note,.pg:not(#pg13),.icon-btn,.reward-toast{display:none!important}.main{height:auto;overflow:visible;box-shadow:none}.content{padding:0}#pg13{display:block!important}.card{box-shadow:none}.report input,.report textarea{border-color:#aaa}.stamp{display:block}
+    }
+  </style>
+</head>
+<body>
+<div class="shell">
+  <aside class="side">
+    <div class="brand">
+      <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate">
+      <div><small>LITERATURE DETECTIVE</small><strong>인물·사건·배경 탐정단</strong></div>
+    </div>
+    <div class="mission-label">1회차 · 1~4장</div>
+    <nav class="nav" id="nav"></nav>
+    <div class="rolebox">
+      <p>화면 보기</p>
+      <div class="roles"><button id="studentRole" class="on" type="button">학생</button><button id="teacherRole" type="button">강사</button></div>
+    </div>
+  </aside>
+
+  <main class="main" id="main">
+    <header class="top">
+      <div class="top-title"><span>PRIDE AND PREJUDICE · LESSON 1</span><strong id="pageTitle">탐정단 출발</strong></div>
+      <div class="top-actions">
+        <div class="detective-hud" aria-label="탐정 게임 진행 상황"><span class="hud-chip">단서 배지 <b id="badgeHud">0/4</b></span><span class="hud-chip">탐정력 <b id="scoreHud">0</b></span></div>
+        <div class="progress" aria-label="진행률"><i id="progressBar"></i></div>
+        <button class="icon-btn" type="button" title="탐정 노트 인쇄" onclick="go(13);setTimeout(()=>window.print(),120)">P</button>
+      </div>
+    </header>
+    <div class="content">
+      <section class="pg on" id="pg1">
+        <div class="hero">
+          <img src="assets/images/regency-bennet-family-longbourn-drawing-room.png" alt="롱본 응접실에 모인 베넷 가족">
+          <div class="hero-copy">
+            <div class="eyebrow">오만과 편견 · 1~4장</div>
+            <h1>이야기 탐정단,<br>사건을 열어라!</h1>
+            <p>책을 아직 읽지 않아도 괜찮아요. 짧은 이야기 조각을 차례로 열고, 숨겨진 원인과 인물의 다음 선택을 추리해 봅니다.</p>
+            <div class="pillrow"><span class="pill">인물의 바람</span><span class="pill">사건의 원인과 결과</span><span class="pill">시대와 장소</span></div>
+            <button class="start-btn" type="button" onclick="go(2)">첫 단서 받기</button>
+          </div>
+        </div>
+        <div class="card" style="margin-top:13px">
+          <div class="three">
+            <div class="lens"><div class="lens-icon">人</div><h3>인물 렌즈</h3><p>누가 무엇을 원하고 어떤 선택을 하는지 찾습니다.</p></div>
+            <div class="lens"><div class="lens-icon">!</div><h3>사건 렌즈</h3><p>원인–행동–결과가 어떻게 이어지는지 정리합니다.</p></div>
+            <div class="lens"><div class="lens-icon">@</div><h3>배경 렌즈</h3><p>장소와 시대의 규칙이 사건에 미친 영향을 살핍니다.</p></div>
+          </div>
+        </div>
+        <div class="footer-nav"><button class="prev" disabled>이전</button><span>1 / 13</span><button class="next" onclick="go(2)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg2">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">탐정 도구 연습</div><h2>세 가지 렌즈를 구별해요</h2><p class="desc">단서를 읽고 ‘인물·사건·배경’ 중 무엇을 알려 주는지 골라 보세요.</p></div><span class="chapter-badge">준비 파일</span></div>
+          <div class="cluebox" id="lensClues"></div>
+          <button class="primary" type="button" onclick="checkClues()">탐정 판정 확인</button>
+          <div class="feedback" id="lensFeedback"></div>
+          <div class="teacher-note"><b>강사 포인트</b> · 인물은 ‘누가/무엇을 원하나’, 사건은 ‘무슨 일이/왜’, 배경은 ‘언제/어디/어떤 사회 규칙’으로 질문하게 합니다.</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(1)">이전</button><span>2 / 13</span><button class="next" onclick="go(3)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg3">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 1 · 베넷 집안의 다섯 자매</div><h2>롱본에 사는 일곱 사람</h2><p class="desc">인물을 눌러 겉으로 드러난 모습과 마음속 바람을 확인하세요.</p></div><span class="chapter-badge">인물 파일</span></div>
+          <div class="story-case" data-story="ch1"></div>
+          <div class="two">
+            <figure class="scene"><img src="assets/images/regency-bennet-family-longbourn-drawing-room.png" alt="롱본 응접실에 모인 베넷 가족"><figcaption>롱본의 응접실 · 베넷 가족의 대화가 시작되는 곳</figcaption></figure>
+            <div>
+              <button class="speak" type="button" onclick="speakStory('ch1',this)">읽은 이야기 듣기</button>
+              <div class="reading"><b>관찰 메모</b><br>누가 소식에 가장 크게 반응했나요? 말과 행동을 보고 각 인물이 무엇을 원하는지 추리해 보세요.</div>
+              <div class="teacher-note"><b>읽기 질문</b> · “같은 사건을 보고도 베넷 씨와 베넷 부인이 다르게 행동하는 까닭은 무엇일까요?”</div>
+            </div>
+          </div>
+          <div class="people" id="familyPeople" style="margin-top:12px"></div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(2)">이전</button><span>3 / 13</span><button class="next" onclick="go(4)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg4">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 1 · 인물의 바람</div><h2>말보다 먼저 ‘원하는 것’을 찾아요</h2><p class="desc">각 단서는 인물의 목표를 보여 줍니다. 누구의 마음인지 골라 보세요.</p></div><span class="chapter-badge">인물 추리</span></div>
+          <div class="cluebox" id="characterClues"></div>
+          <button class="primary" type="button" onclick="checkCharacterClues()">인물 추리 확인</button>
+          <div class="feedback" id="characterFeedback"></div>
+          <div class="teacher-note"><b>핵심 개념</b> · 인물의 ‘성격’만 붙이지 말고, 그 장면에서 원하는 것과 선택한 행동을 함께 말하게 합니다.</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(3)">이전</button><span>4 / 13</span><button class="next" onclick="go(5)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg5">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 2 · 첫 번째 춤과 반갑지 않은 손님</div><h2>무도회장은 관계가 시작되는 무대</h2><p class="desc">그림에서 장소·사람·분위기의 증거를 찾아 보세요.</p></div><span class="chapter-badge">배경 파일</span></div>
+          <div class="story-case" data-story="ch2"></div>
+          <button class="speak" type="button" onclick="speakStory('ch2',this)">읽은 이야기 듣기</button>
+          <figure class="scene"><img src="assets/images/regency-meryton-ball-jane-bingley-elizabeth-darcy.png" alt="메리턴 무도회의 제인과 빙리, 엘리자베스와 다아시"><figcaption>메리턴 무도회 · 첫 만남과 첫인상이 만들어지는 공개적인 사교 장소</figcaption></figure>
+          <div class="three" style="margin-top:11px">
+            <div class="lens" onclick="this.classList.toggle('open')"><div class="lens-icon">1</div><h3>장소</h3><p>사람들이 춤추고 서로를 소개받아요.</p><button type="button">증거 열기</button><div class="reveal">악기, 춤추는 사람들, 화려한 조명은 이곳이 공개적인 무도회장임을 보여 줍니다.</div></div>
+            <div class="lens" onclick="this.classList.toggle('open')"><div class="lens-icon">2</div><h3>분위기</h3><p>즐거움과 어색함이 동시에 있어요.</p><button type="button">증거 열기</button><div class="reveal">제인과 빙리는 밝지만, 다아시는 떨어져 서 있습니다. 한 장소 안에 다른 분위기가 생깁니다.</div></div>
+            <div class="lens" onclick="this.classList.toggle('open')"><div class="lens-icon">3</div><h3>시대 규칙</h3><p>춤과 소개가 관계를 만드는 중요한 방법이에요.</p><button type="button">증거 열기</button><div class="reveal">당시 젊은 남녀는 무도회와 방문을 통해 만나고 서로를 알아 갔습니다.</div></div>
+          </div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(4)">이전</button><span>5 / 13</span><button class="next" onclick="go(6)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg6">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 2 · 사건 조립</div><h2>무도회의 네 장면을 차례로</h2><p class="desc">카드를 눌러 아래 사건 선에 순서대로 놓으세요. 다시 누르면 빼낼 수 있습니다.</p></div><span class="chapter-badge">사건 파일</span></div>
+          <div class="sequence-pool" id="ballPool"></div>
+          <div class="sequence-line" id="ballLine"></div>
+          <div class="sequence-actions"><button class="secondary" type="button" onclick="resetSequence('ball')">다시 놓기</button><button class="primary" type="button" onclick="checkSequence('ball')">순서 확인</button></div>
+          <div class="feedback" id="ballFeedback"></div>
+          <div class="teacher-note"><b>확장 질문</b> · 다아시의 한마디가 없었다면 엘리자베스의 첫인상은 어떻게 달라졌을까요?</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(5)">이전</button><span>6 / 13</span><button class="next" onclick="go(7)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg7">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 2 · 사실과 판단</div><h2>첫인상에는 ‘본 것’과 ‘해석한 것’이 섞여요</h2><p class="desc">문장을 사실 또는 인물의 판단으로 나누어 보세요.</p></div><span class="chapter-badge">증거 감별</span></div>
+          <div class="fact-pool" id="impressionPool"></div>
+          <div class="fact-grid">
+            <div class="fact-col" data-zone="fact" id="impressionFact"><h3>눈으로 확인한 사실</h3><div class="placed"></div></div>
+            <div class="fact-col" data-zone="guess" id="impressionGuess"><h3>인물이 내린 판단</h3><div class="placed"></div></div>
+          </div>
+          <div class="sequence-actions"><button class="secondary" type="button" onclick="resetSort('impression')">처음부터</button><button class="primary" type="button" onclick="checkSort('impression')">분류 확인</button></div>
+          <div class="feedback" id="impressionFeedback"></div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(6)">이전</button><span>7 / 13</span><button class="next" onclick="go(8)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg8">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 3 · 형편없는 청혼</div><h2>같은 청혼, 서로 다른 생각</h2><p class="desc">세 인물은 같은 장면에서 서로 다른 것을 원합니다.</p></div><span class="chapter-badge">관점 파일</span></div>
+          <div class="story-case" data-story="ch3"></div>
+          <div class="two">
+            <figure class="scene"><img src="assets/images/regency-collins-proposal-elizabeth-refusal.png" alt="콜린스의 청혼에 자신의 뜻을 밝히는 엘리자베스"><figcaption>롱본 응접실 · 콜린스의 청혼과 엘리자베스의 선택</figcaption></figure>
+            <div>
+              <button class="speak" type="button" onclick="speakStory('ch3',this)">읽은 이야기 듣기</button>
+              <div class="reading"><b>관찰 메모</b><br>청혼의 조건만 보지 말고, 콜린스가 묻지 않은 것과 엘리자베스가 중요하게 여긴 것을 찾아보세요.</div>
+            </div>
+          </div>
+          <div class="character-lock" id="characterLock">
+            <div class="lock-message">
+              <div class="lock-copy"><strong>인물의 속마음은 아직 비공개</strong><p>세 사람의 말과 행동을 먼저 추론해 보세요. 충분히 이야기한 뒤 강사가 특성과 대사를 공개합니다.</p></div>
+              <button class="teacher-reveal" id="teacherRevealBtn" type="button" onclick="toggleCharacterReveal()">인물 특성 공개</button>
+            </div>
+            <div class="perspectives secret-perspectives" style="margin-top:11px">
+              <div class="perspective" style="--accent:var(--elizabeth)"><h3>엘리자베스</h3><p>스스로 판단하고, 존중받는 결혼을 원합니다.</p><div class="quote">“조건만으로 내 삶을 결정할 수는 없어.”</div></div>
+              <div class="perspective" style="--accent:var(--collins)"><h3>콜린스</h3><p>결혼을 의무와 체면, 실용적인 선택으로 봅니다.</p><div class="quote">“이 청혼은 모두에게 알맞은 선택이야.”</div></div>
+              <div class="perspective" style="--accent:#7b3f71"><h3>베넷 부인</h3><p>딸의 안정된 미래와 집안의 걱정을 먼저 봅니다.</p><div class="quote">“좋은 조건을 왜 거절하는 거니?”</div></div>
+            </div>
+          </div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(7)">이전</button><span>8 / 13</span><button class="next" onclick="go(9)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg9">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 3 · 선택의 근거</div><h2>엘리자베스의 거절을 설명해요</h2><p class="desc">거절의 근거가 되는 문장을 모두 고르세요.</p></div><span class="chapter-badge">근거 찾기</span></div>
+          <div class="choice-row" id="proposalChoices"></div>
+          <button class="primary" type="button" style="margin-top:11px" onclick="checkProposal()">근거 확인</button>
+          <div class="feedback" id="proposalFeedback"></div>
+          <div class="teacher-note"><b>토론 포인트</b> · 당시 재산과 결혼의 관계를 이해하되, 엘리자베스의 선택을 오늘의 기준으로만 단순 평가하지 않도록 배경과 함께 봅니다.</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(8)">이전</button><span>9 / 13</span><button class="next" onclick="go(10)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg10">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">CHAPTER 4 · 처음 느낀 실망</div><h2>편지가 남긴 사실과 아직 모르는 것</h2><p class="desc">빙리가 떠났다는 소식 뒤에는 확인된 사실과 엘리자베스의 추측이 함께 있습니다.</p></div><span class="chapter-badge">사건 분석</span></div>
+          <div class="story-case" data-story="ch4"></div>
+          <div class="two">
+            <figure class="scene"><img src="assets/images/regency-jane-bingley-departure-letter-elizabeth-support.png" alt="빙리의 떠남을 알리는 편지를 읽는 제인과 곁의 엘리자베스"><figcaption>롱본의 아침 방 · 떠남을 알리는 편지와 자매의 대화</figcaption></figure>
+            <div>
+              <button class="speak" type="button" onclick="speakStory('ch4',this)">읽은 이야기 듣기</button>
+              <div class="reading"><b>관찰 메모</b><br>편지에 직접 적힌 내용과 자매가 마음속으로 짐작한 내용을 구분하면 사건의 빈칸이 보입니다.</div>
+            </div>
+          </div>
+          <div class="fact-pool" id="letterPool" style="margin-top:12px"></div>
+          <div class="fact-grid">
+            <div class="fact-col" data-zone="fact" id="letterFact"><h3>편지로 확인한 사실</h3><div class="placed"></div></div>
+            <div class="fact-col" data-zone="guess" id="letterGuess"><h3>아직 확인하지 못한 추측</h3><div class="placed"></div></div>
+          </div>
+          <div class="sequence-actions"><button class="secondary" type="button" onclick="resetSort('letter')">처음부터</button><button class="primary" type="button" onclick="checkSort('letter')">분류 확인</button></div>
+          <div class="feedback" id="letterFeedback"></div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(9)">이전</button><span>10 / 13</span><button class="next" onclick="go(11)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg11">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">1~4장 · 배경 지도</div><h2>장소가 바뀌면 가능한 행동도 달라져요</h2><p class="desc">번호를 눌러 장소의 역할을 확인하세요.</p></div><span class="chapter-badge">배경 종합</span></div>
+          <div class="place-map">
+            <img src="assets/images/regency-english-village-estates-setting-panorama.png" alt="롱본과 메리턴 마을, 네더필드 저택이 보이는 영국 시골 전경">
+            <button class="hotspot" style="left:15%;top:55%" data-place="longbourn" type="button">1</button>
+            <button class="hotspot" style="left:49%;top:58%" data-place="meryton" type="button">2</button>
+            <button class="hotspot" style="left:84%;top:31%" data-place="netherfield" type="button">3</button>
+          </div>
+          <div class="place-info" id="placeInfo"><strong>장소 번호를 눌러 보세요.</strong><p>장소의 짧은 이름만 확인한 뒤, 그곳에서 가능했던 사건을 직접 설명합니다.</p></div>
+          <div class="teacher-note"><b>강사 포인트</b> · 정답 설명은 화면에서 제공하지 않습니다. 학생이 쓴 문장을 보고 ‘그 장소라서 가능했던 일’이 드러나는지 질문으로 보완합니다.</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(10)">이전</button><span>11 / 13</span><button class="next" onclick="go(12)">다음</button></div>
+      </section>
+
+      <section class="pg" id="pg12">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">1~4장 · 관계 마인드맵</div><h2>인물과 사건을 내 방식으로 연결해요</h2><p class="desc">인물 얼굴을 캔버스에 놓고 자유롭게 움직이세요. 두 항목을 선택해 선을 잇고, 관계·사건·장소 메모를 추가할 수 있습니다.</p></div><span class="chapter-badge">종합 파일</span></div>
+          <div class="mind-tools">
+            <div class="mind-palette" id="mindPalette"></div>
+            <div class="mind-toolbar">
+              <input id="mindText" type="text" maxlength="60" placeholder="예: 무도회에서 첫인상이 생김 / 롱본 / 서로 다른 가치관">
+              <button class="secondary" type="button" onclick="addMindNote()">텍스트 추가</button>
+              <button class="primary" type="button" onclick="connectMindNodes()">선으로 연결</button>
+              <button class="secondary" type="button" onclick="deleteMindSelection()">선택 삭제</button>
+              <button class="secondary" type="button" onclick="resetMindMap()">전체 초기화</button>
+            </div>
+            <p class="mind-help">얼굴을 눌러 추가 → 자유롭게 끌어 배치 → 연결할 두 항목을 차례로 선택 → ‘선으로 연결’을 누르세요.</p>
+            <div class="mind-board" id="mindBoard">
+              <svg id="mindLines" aria-hidden="true"></svg>
+              <div class="mind-hint">위의 인물 얼굴을 눌러 관계도를 시작하세요.</div>
+            </div>
+          </div>
+          <div class="teacher-note"><b>마무리 질문</b> · 선 하나를 골라 “두 항목은 왜 연결했나요?”라고 묻습니다. 인물–바람, 인물–사건, 사건–장소 중 두 종류 이상이 나타나는지 확인합니다.</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(11)">이전</button><span>12 / 13</span><button class="next" onclick="go(13)">탐정 보고서</button></div>
+      </section>
+
+      <section class="pg" id="pg13">
+        <div class="card">
+          <div class="card-head"><div><div class="tag">출구 미션 · 탐정 보고서</div><h2>내가 찾은 이야기의 뼈대</h2><p class="desc">짧게 말하거나 적어 보세요. 완성한 보고서는 A4로 인쇄할 수 있습니다.</p></div><span class="chapter-badge">완료 파일</span></div>
+          <div class="report">
+            <label>가장 기억에 남는 인물<input id="rCharacter" type="text" placeholder="인물 이름"></label>
+            <label>그 인물이 원한 것<input id="rWant" type="text" placeholder="바람이나 목표"></label>
+            <label class="wide">가장 중요한 사건<textarea id="rEvent" placeholder="무슨 일이 일어났고, 그 결과 무엇이 달라졌나요?"></textarea></label>
+            <label>중요한 장소<input id="rPlace" type="text" placeholder="장소 이름"></label>
+            <label>장소가 사건에 미친 영향<input id="rSetting" type="text" placeholder="그곳이라서 가능했던 일"></label>
+            <label class="wide">다음 장면 예측<textarea id="rPrediction" placeholder="다음에는 누가 어떤 선택을 할까요? 근거와 함께 적어 보세요."></textarea></label>
+          </div>
+          <div class="sequence-actions"><button class="secondary" type="button" onclick="window.print()">A4 인쇄</button><button class="primary" type="button" onclick="completeReport()">탐정 보고서 완료</button></div>
+          <div class="stamp" id="reportStamp">인물·사건·배경 탐정단 1회차 완료 · 1~4장 사건 파일을 해결했습니다.</div>
+          <div class="teacher-note"><b>평가 관찰</b> · 인물의 바람, 사건의 원인–결과, 배경의 영향을 각각 한 문장으로 설명하는지 확인합니다.</div>
+        </div>
+        <div class="footer-nav"><button class="prev" onclick="go(12)">이전</button><span>13 / 13</span><button class="next" disabled>완료</button></div>
+        <p class="series-note">© 2026 Oncuvate · 오만과 편견 인물·사건·배경 탐정단 · 1회차</p>
+      </section>
+    </div>
+  </main>
+</div>
+<div class="reward-toast" id="rewardToast" role="status" aria-live="polite"></div>
+
+<script>
+  const pageNames=[
+    ['탐정단 출발','1~4장 미션'],['세 가지 렌즈','탐정 도구'],['베넷 가족','1장 인물'],['인물의 바람','1장 추리'],
+    ['메리턴 무도회','2장 배경'],['무도회 사건','2장 순서'],['첫인상 감별','2장 증거'],['콜린스의 청혼','3장 관점'],
+    ['거절의 근거','3장 선택'],['떠남의 편지','4장 사건'],['이야기 지도','배경 종합'],['관계 마인드맵','1~4장 종합'],['탐정 보고서','출구 미션']
+  ];
+  let current=1;
+  let awards={};
+  try{awards=JSON.parse(localStorage.getItem('oncuvate-pp-lesson1-awards')||'{}')}catch(e){awards={}}
+  function updateHud(){
+    const score=Object.values(awards).reduce((sum,n)=>sum+(Number(n)||0),0);
+    const badges=Object.keys(awards).filter(k=>k.startsWith('story-')).length;
+    document.getElementById('scoreHud').textContent=score;
+    document.getElementById('badgeHud').textContent=badges+'/4';
+  }
+  function award(key,points,message){
+    if(awards[key])return;
+    awards[key]=points;localStorage.setItem('oncuvate-pp-lesson1-awards',JSON.stringify(awards));updateHud();
+    const toast=document.getElementById('rewardToast');toast.textContent='단서 획득 · '+message+'  +'+points;
+    toast.classList.add('show');clearTimeout(award.timer);award.timer=setTimeout(()=>toast.classList.remove('show'),2400);
+  }
+
+  const storyCases={
+    ch1:{
+      n:'01',title:'새 이웃의 소문',subtitle:'1장 · 이야기 조각 5개',
+      fragments:[
+        '영국 시골의 <b>롱본 저택</b>에는 베넷 부부와 성격이 서로 다른 다섯 딸이 살아요.',
+        '집안의 재산은 훗날 가까운 남자 친척에게 넘어갈 예정이라 베넷 부인은 딸들의 앞날을 걱정합니다.',
+        '근처 네더필드에 젊고 부유한 <b>빙리</b>가 이사 왔다는 소식에 베넷 부인은 누구보다 들뜹니다.',
+        '첫째 제인은 사람의 좋은 면을 먼저 보고, 둘째 엘리자베스는 남의 말보다 자신의 판단을 중요하게 여깁니다.',
+        '베넷 씨는 관심 없는 척 농담하지만, 가족에게 알리지 않고 조용히 빙리를 만나러 갑니다.'
+      ],
+      question:'베넷 부인이 빙리 소식에 들뜬 가장 큰 까닭은 무엇일까요?',
+      options:['새 저택을 구경하고 싶어서','딸들 중 한 명의 결혼 가능성을 생각해서','빙리에게 돈을 빌리려고'],
+      answer:1,success:'말보다 행동과 집안 사정을 함께 보았어요.'
+    },
+    ch2:{
+      n:'02',title:'무도회의 엇갈린 표정',subtitle:'2장 · 이야기 조각 4개',
+      fragments:[
+        '베넷 가족은 새 이웃을 만날 수 있는 <b>메리턴 무도회</b>에 갑니다.',
+        '빙리는 사람들과 잘 어울리고, 제인에게 여러 번 춤을 청하며 즐겁게 대화합니다.',
+        '친구 다아시는 사람들 곁에서 떨어져 서 있다가 엘리자베스와 춤추라는 권유를 거절합니다.',
+        '그 말을 우연히 들은 엘리자베스는 아직 다아시를 거의 모르지만 좋지 않은 첫인상을 갖습니다.'
+      ],
+      question:'이때 엘리자베스에게 생길 가능성이 큰 첫인상은 무엇일까요?',
+      options:['다아시는 친절하고 다정하다','다아시는 거만하고 차갑다','다아시는 춤을 무척 좋아한다'],
+      answer:1,success:'한 장면이 첫인상을 만드는 과정을 추리했어요.'
+    },
+    ch3:{
+      n:'03',title:'조건으로 가득한 청혼',subtitle:'3장 · 이야기 조각 4개',
+      fragments:[
+        '베넷 집안의 재산을 이어받게 될 친척 콜린스가 롱본을 방문합니다. 그는 결혼이 자신의 의무에도, 베넷 가족에게도 도움이 된다고 생각합니다.',
+        '콜린스는 자신의 지위와 결혼의 장점을 길게 설명하며 엘리자베스에게 청혼합니다.',
+        '엘리자베스가 거절의 뜻을 보여도 콜린스는 부끄러워서 하는 말이라고 여기며 진지하게 듣지 않습니다.',
+        '엘리자베스는 재산과 조건보다 사랑, 존중, 스스로 선택할 권리를 중요하게 여깁니다.'
+      ],
+      question:'엘리자베스의 다음 행동으로 가장 자연스러운 것은 무엇일까요?',
+      options:['자신의 뜻을 분명히 밝힌다','바로 받아들인다','아무 말 없이 자리를 떠난다'],
+      answer:0,success:'인물의 가치관으로 다음 선택을 예측했어요.'
+    },
+    ch4:{
+      n:'04',title:'떠남을 알리는 편지',subtitle:'4장 · 이야기 조각 4개',
+      fragments:[
+        '무도회 뒤 제인과 빙리는 가까워지는 듯했습니다. 그런데 어느 날 빙리의 누이에게서 편지가 옵니다.',
+        '편지에는 빙리 가족이 <b>런던으로 떠났고</b>, 당분간 네더필드로 돌아오지 않을 것 같다고 적혀 있습니다.',
+        '제인은 빙리의 마음이 달라졌다고 단정하지 않고, 편지를 보낸 사람의 말을 좋게 받아들이려 합니다.',
+        '엘리자베스는 다른 누군가가 두 사람 사이를 막았을지도 모른다고 생각하지만, 편지에는 그 이유가 적혀 있지 않습니다.'
+      ],
+      question:'이 편지만으로 아직 확실히 알 수 없는 것은 무엇일까요?',
+      options:['빙리가 런던으로 떠난 사실','편지를 보낸 사람이 빙리의 누이라는 사실','빙리가 떠난 진짜 이유'],
+      answer:2,success:'확인된 사실과 아직 빈칸인 이유를 구분했어요.'
+    }
+  };
+  const storyState={};
+  function buildStoryCases(){
+    localStorage.removeItem('oncuvate-pp-lesson1-story');
+    document.querySelectorAll('.story-case').forEach(el=>{
+      const key=el.dataset.story;storyState[key]=1;
+      renderStoryCase(key);
+    });
+  }
+  function renderStoryCase(key){
+    const data=storyCases[key],open=storyState[key],el=document.querySelector('[data-story="'+key+'"]');
+    const complete=open===data.fragments.length;
+    el.innerHTML=
+      '<div class="story-case-head"><div class="story-case-title"><span class="story-number">'+data.n+'</span><div><strong>60초 이야기 · '+data.title+'</strong><small>'+data.subtitle+'</small></div></div><div class="story-dots" aria-label="이야기 진행 '+open+'/'+data.fragments.length+'">'+data.fragments.map((_,i)=>'<i class="'+(i<open?'on':'')+'"></i>').join('')+'</div></div>'+
+      '<div class="story-fragments">'+data.fragments.map((t,i)=>'<div class="story-fragment '+(i<open?'show':'')+'">'+t+'</div>').join('')+'</div>'+
+      '<div class="story-case-actions"><button class="story-open" type="button" '+(complete?'disabled':'')+' onclick="openStory(\''+key+'\')">'+(complete?'이야기 조각 모두 확인':'다음 이야기 조각 열기')+'</button><span class="story-reward">읽고 추리를 맞히면 단서 배지 +15</span></div>'+
+      '<div class="story-quiz '+(complete?'show':'')+'"><h3>탐정의 예측 · '+data.question+'</h3><div class="story-options">'+data.options.map((o,i)=>'<button class="story-option" type="button" onclick="answerStory(\''+key+'\','+i+',this)">'+o+'</button>').join('')+'</div><p class="story-result" id="'+key+'Result">'+(awards['story-'+key]?'단서 배지를 이미 획득했어요.':'정답은 이야기 조각 안에 숨어 있어요.')+'</p></div>';
+  }
+  function openStory(key){
+    const total=storyCases[key].fragments.length;
+    storyState[key]=Math.min(total,storyState[key]+1);renderStoryCase(key);
+  }
+  function answerStory(key,index,button){
+    const data=storyCases[key],box=button.closest('.story-quiz'),result=document.getElementById(key+'Result');
+    box.querySelectorAll('.story-option').forEach(b=>b.classList.remove('good','bad'));
+    if(index===data.answer){
+      button.classList.add('good');result.textContent='정확한 추리예요. '+data.success;
+      award('story-'+key,15,data.n+'번 이야기 배지');
+    }else{
+      button.classList.add('bad');result.textContent='아직 단서가 맞물리지 않았어요. 굵게 표시된 말과 인물의 행동을 다시 살펴보세요.';
+    }
+  }
+  function speakStory(key,button){
+    const count=storyState[key]||1,text=storyCases[key].fragments.slice(0,count).map(t=>t.replace(/<[^>]+>/g,'')).join(' ');
+    speakText(text,button);
+  }
+  const nav=document.getElementById('nav');
+  pageNames.forEach((p,i)=>{
+    const b=document.createElement('button');b.type='button';b.dataset.page=i+1;
+    b.innerHTML='<span class="nav-num">'+String(i+1).padStart(2,'0')+'</span><span class="nav-text"><strong>'+p[0]+'</strong><small>'+p[1]+'</small></span>';
+    b.onclick=()=>go(i+1);nav.appendChild(b);
+  });
+  function go(n){
+    current=Math.max(1,Math.min(13,n));
+    document.querySelectorAll('.pg').forEach((p,i)=>p.classList.toggle('on',i===current-1));
+    nav.querySelectorAll('button').forEach(b=>b.classList.toggle('on',+b.dataset.page===current));
+    document.getElementById('pageTitle').textContent=pageNames[current-1][0];
+    document.getElementById('progressBar').style.width=(current/13*100)+'%';
+    document.getElementById('main').scrollTop=0;
+    localStorage.setItem('oncuvate-pp-lesson1-page',current);
+    if(current===12)setTimeout(drawMindLines,60);
+  }
+  document.getElementById('studentRole').onclick=()=>setRole(false);
+  document.getElementById('teacherRole').onclick=()=>setRole(true);
+  function setRole(teacher){
+    document.body.classList.toggle('teacher',teacher);
+    document.getElementById('studentRole').classList.toggle('on',!teacher);
+    document.getElementById('teacherRole').classList.toggle('on',teacher);
+  }
+  function toggleCharacterReveal(){
+    const box=document.getElementById('characterLock'),button=document.getElementById('teacherRevealBtn');
+    const revealed=box.classList.toggle('revealed');
+    button.textContent=revealed?'인물 특성 다시 가리기':'인물 특성 공개';
+  }
+
+  const lensData=[
+    {t:'엘리자베스는 다른 사람의 말보다 자신의 판단을 중요하게 여긴다.',a:'인물'},
+    {t:'무도회에서 다아시의 말이 엘리자베스에게 좋지 않은 첫인상을 남긴다.',a:'사건'},
+    {t:'당시 젊은 남녀는 무도회와 방문을 통해 서로를 알아 갔다.',a:'배경'}
+  ];
+  const charData=[
+    {t:'다섯 딸 가운데 한 명이 좋은 조건의 사람과 결혼하기를 바란다.',a:'베넷 부인'},
+    {t:'겉모습이나 재산보다 스스로 존중할 수 있는 선택을 하고 싶다.',a:'엘리자베스'},
+    {t:'사람들의 좋은 면을 먼저 보고 관계가 평화롭기를 바란다.',a:'제인'}
+  ];
+  function buildClues(id,data,labels){
+    const box=document.getElementById(id);box.innerHTML='';
+    data.forEach((c,i)=>{
+      const row=document.createElement('div');row.className='clue';row.dataset.answer=c.a;
+      row.innerHTML='<p>'+(i+1)+'. '+c.t+'</p><div class="clue-actions">'+labels.map(l=>'<button type="button">'+l+'</button>').join('')+'</div>';
+      row.querySelectorAll('button').forEach(b=>b.onclick=()=>{row.querySelectorAll('button').forEach(x=>x.classList.remove('sel'));b.classList.add('sel');row.dataset.selected=b.textContent;});
+      box.appendChild(row);
+    });
+  }
+  function checkClueSet(boxId,feedbackId,awardKey,awardMessage){
+    const rows=[...document.querySelectorAll('#'+boxId+' .clue')];let answered=0,correct=0;
+    rows.forEach(r=>{r.classList.remove('good','bad');if(r.dataset.selected){answered++;const ok=r.dataset.selected===r.dataset.answer;r.classList.add(ok?'good':'bad');if(ok)correct++;}});
+    const fb=document.getElementById(feedbackId);fb.className='feedback show '+(correct===rows.length?'ok':'try');
+    fb.innerHTML=correct===rows.length?'세 가지 렌즈를 정확히 구별했어요. 이제 본격적으로 사건 파일을 열어 봅시다.':'현재 '+correct+'개가 맞아요. 질문을 다시 떠올려 보세요: 누가? 무슨 일? 언제·어디·어떤 규칙?';
+    if(correct===rows.length)award(awardKey,10,awardMessage);
+  }
+  function checkClues(){checkClueSet('lensClues','lensFeedback','lens-tool','세 가지 렌즈 판정')}
+  function checkCharacterClues(){checkClueSet('characterClues','characterFeedback','character-clue','인물의 바람 추리')}
+
+  const people=[
+    ['베넷 씨','아버지','재치 있게 가족을 관찰함','#4d463f','가족을 아끼지만 걱정을 농담처럼 말하기도 합니다.'],
+    ['베넷 부인','어머니','딸들의 결혼을 가장 걱정함','#7b3f71','결혼을 딸들의 안정된 미래와 연결해 생각합니다.'],
+    ['제인','첫째','온화하고 사람의 좋은 면을 봄','var(--jane)','빙리에게 호감을 느끼지만 감정을 조심스럽게 드러냅니다.'],
+    ['엘리자베스','둘째','재치 있고 스스로 판단함','var(--elizabeth)','자존감과 존중을 중요하게 여기며 분명하게 선택합니다.'],
+    ['메리','셋째','책과 지식을 좋아함','#627083','조용히 책을 읽으며 진지한 말을 하려 합니다.'],
+    ['키티·리디아','넷째·다섯째','사교와 즐거운 일을 좋아함','#b16f63','무도회와 새로운 사람들에게 관심이 많습니다.']
+  ];
+  function buildPeople(){
+    const box=document.getElementById('familyPeople');box.innerHTML='';
+    people.forEach(p=>{const d=document.createElement('button');d.type='button';d.className='person';d.style.setProperty('--accent',p[3]);d.innerHTML='<div class="person-top"><span class="avatar">'+p[0][0]+'</span><div><h3>'+p[0]+'</h3><small>'+p[1]+' · '+p[2]+'</small></div></div><div class="person-detail">'+p[4]+'</div>';d.onclick=()=>d.classList.toggle('open');box.appendChild(d);});
+  }
+
+  const sequences={
+    ball:[
+      '베넷 가족이 메리턴 무도회에 간다.',
+      '빙리는 제인과 춤추며 서로 호감을 느낀다.',
+      '다아시는 엘리자베스와 춤추기를 거절한다.',
+      '엘리자베스는 다아시가 오만하다는 첫인상을 갖는다.'
+    ]
+  };
+  const selectedSeq={ball:[]};
+  function stableMix(arr){return arr.map((v,i)=>({v,k:(i*7+3)%arr.length})).sort((a,b)=>a.k-b.k).map(x=>x.v)}
+  function buildSequence(key){
+    selectedSeq[key]=[];renderSequence(key);
+  }
+  function eventButton(key,text,inLine){
+    const b=document.createElement('button');b.type='button';b.className='event-card';b.textContent=text;
+    b.onclick=()=>{
+      if(inLine){selectedSeq[key]=selectedSeq[key].filter(x=>x!==text)}else if(!selectedSeq[key].includes(text)){selectedSeq[key].push(text)}
+      renderSequence(key);
+    };return b;
+  }
+  function renderSequence(key){
+    const pool=document.getElementById(key+'Pool'),line=document.getElementById(key+'Line');pool.innerHTML='';line.innerHTML='';
+    stableMix(sequences[key]).forEach(t=>{
+      const slot=document.createElement('div');slot.className='pool-slot'+(selectedSeq[key].includes(t)?' used':'');
+      if(selectedSeq[key].includes(t))slot.textContent='순서 칸에 놓음';else slot.appendChild(eventButton(key,t,false));
+      pool.appendChild(slot);
+    });
+    sequences[key].forEach((_,i)=>{
+      const slot=document.createElement('div');slot.className='sequence-slot';
+      const num=document.createElement('span');num.className='slot-num';num.textContent=i+1;slot.appendChild(num);
+      if(selectedSeq[key][i])slot.appendChild(eventButton(key,selectedSeq[key][i],true));
+      else{const ph=document.createElement('span');ph.className='sequence-placeholder';ph.textContent=(i+1)+'번째 사건을 놓으세요.';slot.appendChild(ph)}
+      line.appendChild(slot);
+    });
+  }
+  function resetSequence(key){selectedSeq[key]=[];renderSequence(key);document.getElementById(key+'Feedback').className='feedback'}
+  function checkSequence(key){
+    const ok=JSON.stringify(selectedSeq[key])===JSON.stringify(sequences[key]),fb=document.getElementById(key+'Feedback');
+    fb.className='feedback show '+(ok?'ok':'try');fb.textContent=ok?'원인과 결과가 자연스럽게 이어졌어요. 마지막 첫인상은 앞의 말과 행동에서 만들어졌습니다.':'사건의 원인과 결과를 다시 살펴보세요. 무도회에 감 → 만남 → 말과 행동 → 첫인상 순서입니다.';
+    if(ok)award('sequence-'+key,10,'사건 순서 복원');
+  }
+
+  const sorts={
+    impression:[
+      ['다아시는 엘리자베스와 춤추지 않았다.','fact'],
+      ['엘리자베스는 다아시가 오만한 사람이라고 생각했다.','guess'],
+      ['빙리와 제인은 함께 춤을 추었다.','fact'],
+      ['다아시는 모든 사람을 싫어한다.','guess']
+    ],
+    letter:[
+      ['빙리는 런던으로 떠났다.','fact'],
+      ['당분간 네더필드로 돌아오지 않을 예정이다.','fact'],
+      ['빙리는 제인을 더 이상 좋아하지 않는다.','guess'],
+      ['다아시와 빙리의 누이가 두 사람을 떼어 놓았다.','guess']
+    ]
+  };
+  const sortState={impression:{fact:[],guess:[]},letter:{fact:[],guess:[]}};
+  function poolSortCard(key,text){
+    const card=document.createElement('div');card.className='fact-pick';
+    const label=document.createElement('p');label.textContent=text;card.appendChild(label);
+    const actions=document.createElement('div');actions.className='fact-actions';
+    [['fact','확인한 사실'],['guess','판단·추측']].forEach(([zone,name])=>{
+      const b=document.createElement('button');b.type='button';b.className='fact-action';b.textContent=name;
+      b.onclick=()=>chooseZone(key,text,zone);actions.appendChild(b);
+    });
+    card.appendChild(actions);return card;
+  }
+  function buildSort(key){
+    const pool=document.getElementById(key+'Pool');pool.innerHTML='';
+    stableMix(sorts[key].map(x=>x[0])).forEach(text=>pool.appendChild(poolSortCard(key,text)));
+    ['fact','guess'].forEach(z=>{const zone=document.querySelector('#'+key+(z==='fact'?'Fact':'Guess')+' .placed');zone.innerHTML='';zone.onclick=()=>{}});
+  }
+  function chooseZone(key,text,zone){
+    ['fact','guess'].forEach(z=>sortState[key][z]=sortState[key][z].filter(x=>x!==text));
+    sortState[key][zone].push(text);renderSort(key);
+  }
+  function renderSort(key){
+    const pool=document.getElementById(key+'Pool');pool.innerHTML='';
+    stableMix(sorts[key].map(x=>x[0])).filter(t=>!sortState[key].fact.includes(t)&&!sortState[key].guess.includes(t)).forEach(text=>pool.appendChild(poolSortCard(key,text)));
+    ['fact','guess'].forEach(z=>{
+      const zone=document.querySelector('#'+key+(z==='fact'?'Fact':'Guess')+' .placed');zone.innerHTML='';
+      sortState[key][z].forEach(text=>{const b=document.createElement('button');b.type='button';b.className='fact-card';b.textContent=text;b.onclick=()=>{sortState[key][z]=sortState[key][z].filter(x=>x!==text);renderSort(key)};zone.appendChild(b);});
+    });
+  }
+  function resetSort(key){sortState[key]={fact:[],guess:[]};renderSort(key);document.getElementById(key+'Feedback').className='feedback'}
+  function checkSort(key){
+    let correct=0,total=sorts[key].length;
+    sorts[key].forEach(([text,zone])=>{if(sortState[key][zone].includes(text))correct++});
+    const fb=document.getElementById(key+'Feedback');fb.className='feedback show '+(correct===total?'ok':'try');
+    fb.textContent=correct===total?'모든 증거를 정확히 나누었어요. 사실과 해석을 구별하면 인물의 오해도 더 잘 보입니다.':correct+' / '+total+'개가 맞아요. 편지나 행동으로 직접 확인했는지, 인물이 마음속으로 판단한 것인지 다시 살펴보세요.';
+    if(correct===total)award('sort-'+key,10,key==='letter'?'편지의 사실과 추측 분류':'첫인상의 사실과 판단 분류');
+  }
+
+  const proposalOptions=[
+    ['콜린스가 자신의 말을 진지하게 듣지 않았다.',true],
+    ['엘리자베스는 애정과 존중 없는 결혼을 원하지 않았다.',true],
+    ['콜린스가 무도회에서 춤을 잘 추지 못했다.',false],
+    ['엘리자베스는 자신의 삶을 스스로 선택하려 했다.',true],
+    ['베넷 부인이 기뻐했기 때문에 거절했다.',false]
+  ];
+  function buildProposal(){
+    const box=document.getElementById('proposalChoices');box.innerHTML='';
+    proposalOptions.forEach(([t])=>{const b=document.createElement('button');b.type='button';b.className='choice';b.textContent=t;b.onclick=()=>b.classList.toggle('sel');box.appendChild(b)});
+  }
+  function checkProposal(){
+    const buttons=[...document.querySelectorAll('#proposalChoices .choice')];let ok=true,chosen=0;
+    buttons.forEach((b,i)=>{b.classList.remove('good');if(b.classList.contains('sel'))chosen++;const should=proposalOptions[i][1];if(should)b.classList.add('good');if(b.classList.contains('sel')!==should)ok=false});
+    const fb=document.getElementById('proposalFeedback');fb.className='feedback show '+(ok?'ok':'try');fb.textContent=!chosen?'먼저 근거를 골라 보세요.':ok?'거절의 근거를 정확히 찾았어요. 엘리자베스의 선택은 성격뿐 아니라 가치관을 보여 줍니다.':'초록으로 표시된 문장이 이야기에서 찾을 수 있는 핵심 근거예요. 인물의 선택과 직접 연결되는지 확인해 보세요.';
+    if(ok&&chosen)award('proposal-evidence',10,'청혼 장면의 근거 찾기');
+  }
+
+  const places={
+    longbourn:['1 · 롱본','베넷 가족의 집','이 장소에서 가족의 어떤 생각이나 바람이 부딪혔나요?'],
+    meryton:['2 · 메리턴','무도회가 열리는 마을','여러 사람이 함께 보는 장소라서 어떤 일이 생겼나요?'],
+    netherfield:['3 · 네더필드','빙리가 머무는 저택','새 이웃이 이곳에 머물면서 어떤 관계가 시작되었나요?']
+  };
+  let placeNotes={};
+  try{placeNotes=JSON.parse(localStorage.getItem('oncuvate-pp-lesson1-place-notes')||'{}')}catch(e){placeNotes={}}
+  function savePlaceNote(key,value){
+    placeNotes[key]=value;localStorage.setItem('oncuvate-pp-lesson1-place-notes',JSON.stringify(placeNotes));
+    if(Object.keys(places).every(k=>(placeNotes[k]||'').trim()))award('setting-map',10,'세 장소의 역할 설명');
+  }
+  function openPlace(key){
+    const p=places[key],info=document.getElementById('placeInfo');info.innerHTML='';
+    const title=document.createElement('strong');title.textContent=p[0]+' · '+p[1];info.appendChild(title);
+    const prompt=document.createElement('p');prompt.textContent=p[2];info.appendChild(prompt);
+    const note=document.createElement('div');note.className='place-note';
+    const label=document.createElement('label');label.textContent='내 설명';note.appendChild(label);
+    const area=document.createElement('textarea');area.placeholder='이야기에서 찾은 근거를 한두 문장으로 적어 보세요.';area.value=placeNotes[key]||'';
+    area.oninput=()=>savePlaceNote(key,area.value);note.appendChild(area);info.appendChild(note);area.focus();
+  }
+  document.querySelectorAll('.hotspot').forEach(b=>b.onclick=()=>{
+    document.querySelectorAll('.hotspot').forEach(x=>x.classList.remove('on'));b.classList.add('on');
+    openPlace(b.dataset.place);
+  });
+
+  const mindCharacters=[
+    {id:'elizabeth',name:'엘리자베스',px:'0%',py:'0%'},
+    {id:'jane',name:'제인',px:'33.333%',py:'0%'},
+    {id:'bingley',name:'빙리',px:'66.667%',py:'0%'},
+    {id:'darcy',name:'다아시',px:'100%',py:'0%'},
+    {id:'mr-bennet',name:'베넷 씨',px:'0%',py:'100%'},
+    {id:'mrs-bennet',name:'베넷 부인',px:'33.333%',py:'100%'},
+    {id:'collins',name:'콜린스',px:'66.667%',py:'100%'},
+    {id:'caroline',name:'빙리의 누이',px:'100%',py:'100%'}
+  ];
+  let mindState={nodes:[],lines:[]};
+  try{mindState=JSON.parse(localStorage.getItem('oncuvate-pp-lesson1-mindmap')||'{"nodes":[],"lines":[]}')}catch(e){mindState={nodes:[],lines:[]}}
+  if(!Array.isArray(mindState.nodes))mindState.nodes=[];if(!Array.isArray(mindState.lines))mindState.lines=[];
+  let mindSelected=[];
+  function portraitSpan(character){
+    const face=document.createElement('span');face.className='portrait-face';
+    face.style.setProperty('--px',character.px);face.style.setProperty('--py',character.py);return face;
+  }
+  function buildMindPalette(){
+    const palette=document.getElementById('mindPalette');palette.innerHTML='';
+    mindCharacters.forEach(character=>{
+      const b=document.createElement('button');b.type='button';b.className='portrait-pick';
+      b.appendChild(portraitSpan(character));const name=document.createElement('span');name.textContent=character.name;b.appendChild(name);
+      b.onclick=()=>addMindCharacter(character.id);palette.appendChild(b);
+    });
+    renderMindMap();
+  }
+  function saveMindMap(){localStorage.setItem('oncuvate-pp-lesson1-mindmap',JSON.stringify(mindState))}
+  function addMindCharacter(characterId){
+    const existing=mindState.nodes.find(n=>n.type==='character'&&n.characterId===characterId);
+    if(existing){toggleMindSelection(existing.id,true);return}
+    const i=mindState.nodes.length,board=document.getElementById('mindBoard');
+    mindState.nodes.push({id:'mind-'+Date.now(),type:'character',characterId,x:28+(i%5)*118,y:34+Math.floor(i/5)*118});
+    saveMindMap();renderMindMap();award('mind-start',5,'관계 마인드맵 시작');
+  }
+  function addMindNote(){
+    const input=document.getElementById('mindText'),text=input.value.trim();if(!text)return;
+    const i=mindState.nodes.length;mindState.nodes.push({id:'mind-'+Date.now(),type:'note',text,x:52+(i%4)*145,y:58+Math.floor(i/4)*102});
+    input.value='';saveMindMap();renderMindMap();
+  }
+  function createMindNode(node){
+    const el=document.createElement('button');el.type='button';el.className='mind-node'+(node.type==='note'?' note':'');el.dataset.id=node.id;
+    el.style.left=node.x+'px';el.style.top=node.y+'px';
+    if(node.type==='character'){
+      const c=mindCharacters.find(x=>x.id===node.characterId);el.appendChild(portraitSpan(c));
+      const name=document.createElement('b');name.textContent=c.name;el.appendChild(name);
+    }else el.textContent=node.text;
+    attachMindDrag(el,node);return el;
+  }
+  function attachMindDrag(el,node){
+    el.onpointerdown=e=>{
+      if(e.button!==0)return;e.preventDefault();el.setPointerCapture(e.pointerId);
+      const board=document.getElementById('mindBoard'),startX=e.clientX,startY=e.clientY,baseX=node.x,baseY=node.y;let moved=false;
+      el.onpointermove=ev=>{
+        if(!el.hasPointerCapture(ev.pointerId))return;
+        const dx=ev.clientX-startX,dy=ev.clientY-startY;if(Math.abs(dx)+Math.abs(dy)>4)moved=true;
+        node.x=Math.max(0,Math.min(board.clientWidth-el.offsetWidth,baseX+dx));
+        node.y=Math.max(0,Math.min(board.clientHeight-el.offsetHeight,baseY+dy));
+        el.style.left=node.x+'px';el.style.top=node.y+'px';drawMindLines();
+      };
+      el.onpointerup=ev=>{
+        if(el.hasPointerCapture(ev.pointerId))el.releasePointerCapture(ev.pointerId);
+        el.onpointermove=null;el.onpointerup=null;
+        if(!moved)toggleMindSelection(node.id);saveMindMap();
+      };
+    };
+  }
+  function toggleMindSelection(id,only){
+    if(only)mindSelected=[id];
+    else if(mindSelected.includes(id))mindSelected=mindSelected.filter(x=>x!==id);
+    else{mindSelected.push(id);if(mindSelected.length>2)mindSelected.shift()}
+    document.querySelectorAll('.mind-node').forEach(n=>n.classList.toggle('selected',mindSelected.includes(n.dataset.id)));
+  }
+  function renderMindMap(){
+    const board=document.getElementById('mindBoard');board.querySelectorAll('.mind-node').forEach(n=>n.remove());
+    mindState.nodes.forEach(node=>board.appendChild(createMindNode(node)));
+    board.classList.toggle('has-node',mindState.nodes.length>0);mindSelected=mindSelected.filter(id=>mindState.nodes.some(n=>n.id===id));drawMindLines();
+  }
+  function drawMindLines(){
+    const board=document.getElementById('mindBoard'),svg=document.getElementById('mindLines');if(!board||!svg)return;svg.innerHTML='';
+    mindState.lines.forEach(([a,b])=>{
+      const ae=board.querySelector('[data-id="'+a+'"]'),be=board.querySelector('[data-id="'+b+'"]');if(!ae||!be)return;
+      const line=document.createElementNS('http://www.w3.org/2000/svg','line');
+      line.setAttribute('x1',ae.offsetLeft+ae.offsetWidth/2);line.setAttribute('y1',ae.offsetTop+ae.offsetHeight/2);
+      line.setAttribute('x2',be.offsetLeft+be.offsetWidth/2);line.setAttribute('y2',be.offsetTop+be.offsetHeight/2);svg.appendChild(line);
+    });
+  }
+  function connectMindNodes(){
+    if(mindSelected.length!==2)return;
+    const pair=[...mindSelected],exists=mindState.lines.some(l=>l.includes(pair[0])&&l.includes(pair[1]));
+    if(!exists)mindState.lines.push(pair);mindSelected=[];saveMindMap();renderMindMap();award('mind-connect',10,'인물과 사건 연결');
+  }
+  function deleteMindSelection(){
+    if(!mindSelected.length)return;
+    mindState.nodes=mindState.nodes.filter(n=>!mindSelected.includes(n.id));
+    mindState.lines=mindState.lines.filter(l=>!l.some(id=>mindSelected.includes(id)));mindSelected=[];saveMindMap();renderMindMap();
+  }
+  function resetMindMap(){mindState={nodes:[],lines:[]};mindSelected=[];saveMindMap();renderMindMap()}
+
+  function speakText(text,btn){
+    if(!('speechSynthesis' in window))return;speechSynthesis.cancel();
+    const u=new SpeechSynthesisUtterance(text);u.lang='ko-KR';u.rate=.9;btn.disabled=true;u.onend=u.onerror=()=>btn.disabled=false;speechSynthesis.speak(u);
+  }
+  function completeReport(){
+    const ids=['rCharacter','rWant','rEvent','rPlace','rSetting','rPrediction'];
+    const values=ids.map(id=>document.getElementById(id).value.trim());
+    const stamp=document.getElementById('reportStamp');
+    stamp.classList.add('show');stamp.textContent=values.filter(Boolean).length>=4?'인물·사건·배경 탐정단 1회차 완료 · 훌륭한 근거를 모았습니다.':'보고서가 저장되었습니다. 빈칸은 말로 설명해도 괜찮아요.';
+    const data={};ids.forEach(id=>data[id]=document.getElementById(id).value);localStorage.setItem('oncuvate-pp-lesson1-report',JSON.stringify(data));
+    award('final-report',20,'최종 탐정 보고서');
+  }
+  function restore(){
+    try{const data=JSON.parse(localStorage.getItem('oncuvate-pp-lesson1-report')||'{}');Object.keys(data).forEach(id=>{const el=document.getElementById(id);if(el)el.value=data[id]})}catch(e){}
+  }
+  buildStoryCases();updateHud();
+  buildClues('lensClues',lensData,['인물','사건','배경']);
+  buildClues('characterClues',charData,['베넷 부인','엘리자베스','제인']);
+  buildPeople();buildSequence('ball');buildSort('impression');buildSort('letter');buildProposal();buildMindPalette();restore();
+  go(Number(localStorage.getItem('oncuvate-pp-lesson1-page'))||1);
+</script>
+</body>
+</html>
