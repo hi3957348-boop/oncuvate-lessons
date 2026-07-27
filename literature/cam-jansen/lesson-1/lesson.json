@@ -1,0 +1,41 @@
+{
+  "schema": "oncuvate.lesson-manifest.v1",
+  "lessonId": "cam-jansen-stolen-diamonds-l01",
+  "seriesId": "cam-jansen-stolen-diamonds",
+  "lessonNumber": 1,
+  "lessonVersion": 11,
+  "title": "The Wrong-Way Runner",
+  "titleKo": "거꾸로 달린 사람",
+  "route": "/literature/cam-jansen/lesson-1/",
+  "sourceReading": {
+    "title": "Cam Jansen and the Mystery of the Stolen Diamonds",
+    "chapters": [1, 2, 3],
+    "required": true
+  },
+  "durationMinutes": 70,
+  "progressSchema": "oncuvate.lesson-progress.v1",
+  "activityRecordSchema": "oncuvate.activity-record.v1",
+  "temporarySubmissionProvider": "web3forms",
+  "submissionMode": "automatic-checkpoint-with-local-retry",
+  "activityConfig": "activity-config.js",
+  "writingTutorMode": "protected-endpoint-with-local-scaffold-fallback",
+  "storageKey": "oncuvate.lesson.cam-jansen.l01.v7",
+  "totalPages": 12,
+  "vocabularyCount": 16,
+  "audioDirectory": "assets/audio",
+  "audioClipCount": 27,
+  "audioMode": "bundled-generated-mp3",
+  "teacherGuide": "teacher-guide.html",
+  "teacherGuidePdf": "output/pdf/cam-jansen-lesson-1-teacher-guide.pdf",
+  "assets": [
+    "assets/oncuvate-theme.css",
+    "assets/oncuvate-brand-logo.png",
+    "assets/riverlight-mall-observation.png",
+    "assets/jelly-detective-hint.png",
+    "assets/jelly-detective-listen.png",
+    "assets/jelly-detective-cheer.png",
+    "assets/jelly-detective-magnifier.png",
+    "assets/jelly-teacher-writing-v2.png"
+  ],
+  "copyrightMode": "original-companion-only"
+}
