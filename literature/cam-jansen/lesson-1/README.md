@@ -15,7 +15,7 @@
   type: "oncuvate-lesson-progress",
   schema: "oncuvate.lesson-progress.v1",
   lessonId: "cam-jansen-stolen-diamonds-l01",
-  lessonVersion: 12,
+  lessonVersion: 13,
   entryMode: "self",
   roomCode: "",
   currentPage: 1,
@@ -41,7 +41,7 @@
   type: "oncuvate-help-request",
   schema: "oncuvate.help-request.v1",
   lessonId: "cam-jansen-stolen-diamonds-l01",
-  lessonVersion: 12,
+  lessonVersion: 13,
   currentPage: 6,
   promptId: "ch1-q1",
   status: "requested",
@@ -80,6 +80,8 @@ Web3Forms는 기록 전송만 담당하며 AI를 실행하지 않는다. `aiTuto
 - 자율학습 힌트는 정답 대신 다시 볼 장면과 답의 구조를 안내한다. 강사 연동 요청에는 답안 내용을 포함하지 않는다.
 - 학생 화면의 Chapter 1–3 읽기 문항은 답과 판본별 쪽수를 각각 저장하며, 모든 필수 칸이 채워지면 기록 완료 상태가 자동 표시된다.
 - 강사 모드는 지도 포인트와 `teacher-guide.html` 진입 링크를 보여 준다. 교수안의 예상 답은 핵심 의미만 요약하며 원문을 대체하지 않는다.
+- 오른쪽 패널은 모든 모드에서 자유 필기용 미니칠판을 제공한다. 강사 모드에서는 현재 화면, 방 코드, 현재 브라우저 세션의 도움 요청 수, 화면 바로가기와 교수용 진행안 링크가 함께 표시된다.
+- `화면 판서`는 수업 화면 위에 임시로 선을 그리는 도구다. 종료하거나 새로고침하면 지워지며 학생 활동 기록과 Web3Forms에는 포함하지 않는다.
 - Web3Forms 임시 수집은 보호자·기관의 적법한 동의와 개인정보 처리 고지를 준비한 수업에서만 활성화한다. 정식 백엔드 전환 후에는 인증, 교사별 접근 권한, 보존·삭제 정책을 적용한다.
 - 배포 전 모바일, 키보드, A4 인쇄, 콘솔 오류를 확인한다.
 - 원서 문장·삽화·표지 이미지를 이 폴더에 추가하지 않는다.
