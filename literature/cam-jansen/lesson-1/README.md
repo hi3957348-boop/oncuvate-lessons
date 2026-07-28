@@ -15,7 +15,7 @@
   type: "oncuvate-lesson-progress",
   schema: "oncuvate.lesson-progress.v1",
   lessonId: "cam-jansen-stolen-diamonds-l01",
-  lessonVersion: 13,
+  lessonVersion: 14,
   entryMode: "self",
   roomCode: "",
   currentPage: 1,
@@ -41,7 +41,7 @@
   type: "oncuvate-help-request",
   schema: "oncuvate.help-request.v1",
   lessonId: "cam-jansen-stolen-diamonds-l01",
-  lessonVersion: 13,
+  lessonVersion: 14,
   currentPage: 6,
   promptId: "ch1-q1",
   status: "requested",
@@ -68,6 +68,12 @@
 
 Web3Forms는 기록 전송만 담당하며 AI를 실행하지 않는다. `aiTutorEndpoint`가 비어 있으면 로컬 문장 틀·기본 문법 코치가 작동하고 `local_scaffold`로 기록된다. 실제 AI Tutor를 연결할 때는 인증이 포함된 보호된 서버 엔드포인트를 사용하고 브라우저 파일에 AI API 키를 넣지 않는다.
 
+## 보너스 사건 게임
+
+`bonus-case.html`은 수업 완료 뒤 열리는 창작 사건 `The Missing Star Badge`다. 학생은 각자 기기에서 독립된 보드를 조작한다. 3인 모드는 Observer, Tracker, Interviewer가 서로 다른 단서를 받아 말로 공유하고, 1대1 모드는 강사가 Case Master로서 세 단서 묶음을 차례로 공개한다.
+
+게임 파일은 수업 입력 폼과 분리되어 있으며 Web3Forms, 진행 메시지, 정오답, 반응속도, 힌트, 배지, AI 도움 기록을 생성하지 않는다. `localStorage`와 `sessionStorage`도 사용하지 않으므로 새로고침하거나 게임 초기화를 누르면 모든 조작 상태가 사라진다. 부모 수업 화면에는 게임 닫기 신호만 전달한다.
+
 ## 운영 원칙
 
 - 학생 화면은 브라우저 로컬 저장만으로도 작동한다.
@@ -89,6 +95,7 @@ Web3Forms는 기록 전송만 담당하며 AI를 실행하지 않는다. `aiTuto
 ## 교수용 진행안
 
 - 파일: `teacher-guide.html`
-- 인쇄본: `output/pdf/cam-jansen-lesson-1-teacher-guide.pdf` (A4, 6쪽)
-- 용도: 수업 중 교사용 진행, 예상 답의 핵심 의미 확인, 5분 즉흥 증인 인터뷰 운영
+- 인쇄본: `output/pdf/cam-jansen-lesson-1-teacher-guide.pdf` (A4, 6쪽 · 핵심 70분 수업안)
+- 용도: 수업 중 교사용 진행, 예상 답의 핵심 의미 확인, 5분 즉흥 증인 인터뷰와 보너스 추리 게임 운영
+- 최신 보너스 게임 운영법과 정답은 웹 교수안 `teacher-guide.html`의 `BONUS CASE`에서 확인한다.
 - 원칙: 학생별 합법 원서 사용, 원작 대사 대본화 금지, 역할극 녹화·공개 배포 금지

@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#24144f">
+  <title>Bonus Case · The Missing Star Badge</title>
+  <link rel="stylesheet" href="assets/oncuvate-theme.css">
+  <style>
+    :root{--v950:var(--oc-violet-950,#24144f);--v900:var(--oc-violet-900,#35206f);--v800:var(--oc-violet-800,#4b24a5);--v700:var(--oc-violet-700,#5932b6);--v500:var(--oc-violet-500,#8d70d7);--v200:var(--oc-violet-200,#d9cff5);--v100:var(--oc-violet-100,#eee9fb);--v050:var(--oc-violet-050,#f8f6fd);--cyan:var(--oc-cyan,#4bc9dc);--blue:var(--oc-blue,#2785c7);--gold:var(--oc-gold,#e1b72c);--ink:var(--oc-ink,#29243a);--muted:var(--oc-muted,#777187);--paper:var(--oc-paper,#fffefb);--line:var(--oc-line,#e8e3f3);--ok:#35a978;--retry:#e56f71;--shadow:0 18px 48px rgba(37,20,78,.16)}
+    *{box-sizing:border-box}html,body{margin:0;min-height:100%;color:var(--ink);background:var(--v950);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif}button,select{font:inherit}button{touch-action:manipulation}.game-shell{min-height:100vh;padding:10px;border:2px solid var(--gold);background:radial-gradient(circle at 84% 2%,rgba(75,201,220,.18),transparent 25%),linear-gradient(145deg,#eee9fb,#f8f6fd 55%,#e8f9fc)}
+    .topbar{position:sticky;top:0;z-index:50;display:flex;min-height:70px;padding:10px 14px;align-items:center;gap:14px;border-radius:20px;color:#fff;background:linear-gradient(135deg,var(--v900),var(--v950));box-shadow:var(--shadow)}.topbar img{width:150px;height:42px;object-fit:contain;object-position:left center}.top-copy{min-width:0}.top-copy small{display:block;color:var(--cyan);font-size:9px;font-weight:950;letter-spacing:.15em}.top-copy strong{display:block;margin-top:4px;font-size:16px}.top-actions{display:flex;gap:7px;margin-left:auto}.top-btn{min-height:42px;padding:0 13px;border:1px solid rgba(255,255,255,.2);border-radius:11px;color:#fff;background:rgba(255,255,255,.08);font-size:11px;font-weight:900;cursor:pointer}.top-btn:hover{background:rgba(255,255,255,.15)}
+    main{width:min(1500px,100%);margin:10px auto 0}.view[hidden]{display:none!important}.start-card{display:grid;grid-template-columns:minmax(240px,.72fr) minmax(0,1.28fr);min-height:calc(100vh - 112px);overflow:hidden;border:1px solid var(--v200);border-radius:26px;background:var(--paper);box-shadow:var(--shadow)}.start-visual{position:relative;display:grid;padding:30px;place-items:center;background:radial-gradient(circle at 50% 32%,rgba(75,201,220,.34),transparent 28%),linear-gradient(150deg,var(--v900),var(--v950));text-align:center}.start-visual::after{content:"";position:absolute;inset:auto -65px -85px auto;width:270px;height:270px;border:34px solid rgba(255,255,255,.05);border-radius:50%}.start-visual img{position:relative;z-index:1;width:min(320px,90%);max-height:370px;object-fit:contain}.start-visual b{position:relative;z-index:1;display:block;margin-top:-12px;color:#fff;font-size:23px}.start-content{display:flex;padding:clamp(28px,5vw,64px);flex-direction:column;justify-content:center}.case-kicker{color:var(--v700);font-size:10px;font-weight:950;letter-spacing:.17em}.start-content h1{margin:10px 0 12px;color:var(--v950);font-size:clamp(35px,5vw,62px);line-height:1;letter-spacing:-.055em}.start-content>p{max-width:680px;margin:0;color:var(--muted);font-size:16px;line-height:1.75}.tool-row{display:grid;grid-template-columns:repeat(3,1fr);gap:9px;margin:22px 0}.tool-card{padding:14px;border:1px solid var(--v200);border-radius:15px;background:linear-gradient(145deg,#fff,var(--v050))}.tool-card span{display:grid;width:34px;height:34px;border-radius:11px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--v800),var(--cyan));font-size:12px;font-weight:950}.tool-card strong{display:block;margin-top:9px;color:var(--v800);font-size:12px}.mode-grid,.role-grid{display:grid;grid-template-columns:1fr 1fr;gap:11px}.mode-card,.role-card{min-height:110px;padding:17px;border:2px solid var(--v200);border-radius:18px;color:var(--ink);background:#fff;text-align:left;cursor:pointer}.mode-card:hover,.role-card:hover{border-color:var(--cyan);box-shadow:0 10px 24px rgba(53,32,111,.1)}.mode-card strong,.role-card strong{display:block;color:var(--v800);font-size:18px}.mode-card span,.role-card span{display:block;margin-top:6px;color:var(--muted);font-size:12px;line-height:1.55}.privacy-note{margin:14px 0 0;padding:11px 13px;border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;color:#35606a;background:#eefafb;font-size:11px;line-height:1.6}
+    .role-stage{min-height:calc(100vh - 112px);padding:clamp(24px,5vw,54px);border:1px solid var(--v200);border-radius:26px;background:var(--paper);box-shadow:var(--shadow)}.role-stage h1{margin:8px 0;color:var(--v950);font-size:clamp(32px,4vw,48px);letter-spacing:-.045em}.role-stage>p{margin:0 0 23px;color:var(--muted);font-size:15px;line-height:1.7}.role-grid{grid-template-columns:repeat(3,1fr)}.role-card{min-height:230px}.role-icon{display:grid;width:55px;height:55px;border-radius:18px;place-items:center;color:#fff;background:linear-gradient(135deg,var(--v800),var(--cyan));font-size:18px;font-weight:950}.role-card strong{margin-top:20px;font-size:23px}.role-card ul{margin:12px 0 0;padding-left:18px;color:var(--muted);font-size:13px;line-height:1.75}.back-btn{min-height:42px;margin-top:20px;padding:0 15px;border:1px solid var(--v200);border-radius:11px;color:var(--v800);background:var(--v050);font-size:11px;font-weight:900;cursor:pointer}
+    .case-ribbon{display:flex;min-height:72px;padding:13px 17px;align-items:center;gap:12px;border:1px solid var(--v200);border-radius:19px;background:var(--paper);box-shadow:0 8px 24px rgba(45,28,82,.08)}.case-ribbon small{display:block;color:var(--v700);font-size:9px;font-weight:950;letter-spacing:.14em}.case-ribbon strong{display:block;margin-top:4px;color:var(--v950);font-size:18px}.mode-badges{display:flex;flex-wrap:wrap;gap:6px;margin-left:auto}.mode-badge{padding:7px 10px;border-radius:99px;color:var(--v800);background:var(--v100);font-size:9px;font-weight:900}.reveal-btn{min-height:42px;padding:0 14px;border:0;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--v800),var(--v700));font-size:11px;font-weight:900;cursor:pointer}.reveal-btn[hidden]{display:none}
+    .board-grid{display:grid;grid-template-columns:280px minmax(500px,1fr) 320px;gap:10px;margin-top:10px}.panel{min-width:0;padding:16px;border:1px solid var(--v200);border-radius:20px;background:var(--paper);box-shadow:0 9px 25px rgba(45,28,82,.08)}.panel-head{display:flex;align-items:flex-end;justify-content:space-between;gap:10px;margin-bottom:12px}.panel-head small{display:block;color:var(--v700);font-size:9px;font-weight:950;letter-spacing:.12em}.panel-head strong{display:block;margin-top:4px;color:var(--v950);font-size:17px}.panel-head span{color:var(--muted);font-size:9px}.event-log{display:grid;gap:7px;margin:0;padding:0;list-style:none}.event-log li{display:grid;grid-template-columns:27px 1fr;gap:8px;align-items:start;padding:9px;border-radius:11px;background:var(--v050);font-size:11px;line-height:1.55}.event-log b{display:grid;width:27px;height:27px;border-radius:9px;place-items:center;color:#fff;background:var(--v700);font-size:9px}.clue-title{display:flex;margin:16px 0 8px;align-items:center;justify-content:space-between;color:var(--v800);font-size:11px;font-weight:950}.clue-deck{display:grid;gap:8px}.clue-card{position:relative;width:100%;min-height:82px;padding:12px 12px 12px 38px;border:1px solid var(--v200);border-radius:13px;color:var(--ink);background:#fff;text-align:left;cursor:grab;touch-action:none;box-shadow:0 5px 12px rgba(53,32,111,.07)}.clue-card::before{content:"";position:absolute;left:12px;top:15px;width:14px;height:18px;border:2px solid var(--v500);border-radius:4px}.clue-card::after{content:"";position:absolute;left:16px;top:12px;width:8px;height:4px;border-radius:3px;background:var(--cyan)}.clue-card b{display:block;color:var(--v700);font-size:8px;letter-spacing:.08em}.clue-card span{display:block;margin-top:5px;font-size:12px;font-weight:720;line-height:1.5}.clue-card.selected,.person-token.selected{outline:3px solid var(--cyan);outline-offset:2px}.clue-card.drag-source,.person-token.drag-source{opacity:.35}.drag-ghost{position:fixed;z-index:500;width:220px;pointer-events:none;opacity:.94;transform:rotate(-2deg);box-shadow:0 18px 35px rgba(36,20,79,.25)}
+    .map-panel{display:flex;min-height:650px;flex-direction:column}.fair-map{position:relative;min-height:390px;overflow:hidden;border:2px solid var(--v200);border-radius:20px;background:linear-gradient(90deg,rgba(217,207,245,.27) 1px,transparent 1px),linear-gradient(rgba(217,207,245,.27) 1px,transparent 1px),linear-gradient(145deg,#fff,#effbfd);background-size:28px 28px}.fair-map::before{content:"RIVERLIGHT DISCOVERY FAIR";position:absolute;left:50%;top:50%;display:grid;width:190px;height:88px;border:2px solid var(--v500);border-radius:18px;place-items:center;color:var(--v800);background:linear-gradient(135deg,#fff,var(--v100));font-size:15px;font-weight:950;text-align:center;transform:translate(-50%,-50%);box-shadow:0 10px 24px rgba(53,32,111,.12)}.map-path{position:absolute;height:12px;border-radius:99px;background:rgba(141,112,215,.2);transform-origin:left center}.path-a{left:23%;top:34%;width:55%;transform:rotate(14deg)}.path-b{left:24%;top:67%;width:54%;transform:rotate(-13deg)}.map-place{position:absolute;display:flex;width:145px;min-height:88px;padding:10px;border:2px dashed var(--v500);border-radius:16px;flex-direction:column;align-items:center;justify-content:center;color:var(--v800);background:rgba(255,255,255,.9);text-align:center;cursor:pointer}.map-place:focus-visible,.evidence-bin:focus-visible{outline:3px solid var(--cyan);outline-offset:3px}.map-place b{font-size:12px}.map-place small{margin-top:3px;color:var(--muted);font-size:8px}.map-place[data-location="display"]{left:18px;top:18px}.map-place[data-location="snack"]{right:18px;top:18px}.map-place[data-location="photo"]{left:18px;bottom:18px}.map-place[data-location="exit"]{right:18px;bottom:18px}.token-slot{display:flex;min-height:30px;margin-top:7px;flex-wrap:wrap;gap:5px;justify-content:center}.token-dock{display:flex;min-height:76px;margin-top:10px;padding:11px;border:1px solid var(--v200);border-radius:15px;align-items:center;gap:9px;background:var(--v050)}.token-dock>strong{margin-right:auto;color:var(--v800);font-size:11px}.person-token{display:grid;width:48px;height:48px;border:2px solid #fff;border-radius:16px;place-items:center;color:#fff;background:var(--token-color);box-shadow:0 7px 14px rgba(36,20,79,.2);font-size:15px;font-weight:950;cursor:grab;touch-action:none}.map-place .person-token{width:34px;height:34px;border-radius:11px;font-size:11px}
+    .evidence-board{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px}.evidence-bin{min-height:150px;padding:10px;border:2px dashed var(--v200);border-radius:15px;background:var(--v050);cursor:pointer}.evidence-bin h3{margin:0;color:var(--v800);font-size:12px}.evidence-bin p{margin:4px 0 8px;color:var(--muted);font-size:8px;line-height:1.45}.bin-items{display:grid;gap:6px}.evidence-bin .clue-card{min-height:58px;padding:9px 9px 9px 29px}.evidence-bin .clue-card::before{left:8px;top:12px;width:11px;height:14px}.evidence-bin .clue-card::after{left:11px;top:9px;width:6px}.evidence-bin .clue-card span{font-size:9px}.evidence-bin .clue-card b{display:none}.touch-help{margin:9px 0 0;color:var(--muted);font-size:9px;line-height:1.55;text-align:center}
+    .deduction-table{width:100%;border-collapse:separate;border-spacing:4px}.deduction-table th{padding:5px;color:var(--muted);font-size:8px}.deduction-table th:first-child{text-align:left}.deduction-table td:first-child{color:var(--v800);font-size:10px;font-weight:900}.mark-btn{display:grid;width:100%;min-height:39px;border:1px solid var(--v200);border-radius:9px;place-items:center;color:var(--muted);background:var(--v050);font-size:13px;font-weight:950;cursor:pointer}.mark-btn.no{color:#a0474b;border-color:#f0c5c6;background:#fff5f5}.mark-btn.yes{color:#247354;border-color:#bfe5d5;background:#f0fbf6}.claim-box{margin-top:14px;padding:13px;border:1px solid var(--v200);border-radius:15px;background:linear-gradient(145deg,#fff,var(--v050))}.claim-box>strong{display:block;color:var(--v800);font-size:14px}.claim-box>p{margin:5px 0 10px;color:var(--muted);font-size:10px;line-height:1.55}.claim-fields{display:grid;gap:8px}.claim-fields label{display:grid;gap:4px;color:var(--v700);font-size:9px;font-weight:900}.claim-fields select{width:100%;min-height:42px;padding:0 9px;border:1px solid var(--v200);border-radius:10px;color:var(--ink);background:#fff;font-size:11px}.claim-btn{width:100%;min-height:47px;margin-top:10px;border:0;border-radius:12px;color:#fff;background:linear-gradient(135deg,var(--v800),var(--v700));font-size:12px;font-weight:950;cursor:pointer}.case-feedback{min-height:56px;margin-top:10px;padding:11px 13px;border-left:4px solid var(--cyan);border-radius:0 12px 12px 0;color:#35606a;background:#eefafb;font-size:11px;line-height:1.55}.case-feedback.retry{color:#8d4548;border-color:var(--retry);background:#fff5f5}
+    .solved-card{position:relative;display:grid;min-height:calc(100vh - 112px);overflow:hidden;padding:35px;place-items:center;border:1px solid rgba(255,255,255,.2);border-radius:26px;color:#fff;background:radial-gradient(circle at 50% 35%,rgba(75,201,220,.36),transparent 23%),linear-gradient(145deg,var(--v800),var(--v950));box-shadow:var(--shadow);text-align:center}.solved-content{position:relative;z-index:2;max-width:760px}.solved-content img{width:190px;height:190px;object-fit:contain}.solved-content small{display:block;color:var(--cyan);font-size:10px;font-weight:950;letter-spacing:.2em}.solved-content h1{margin:8px 0;font-size:clamp(44px,7vw,78px);letter-spacing:-.06em}.solved-content p{margin:0 auto;color:rgba(255,255,255,.82);font-size:16px;line-height:1.75}.solution{margin:20px auto;padding:16px;border:1px solid rgba(255,255,255,.2);border-radius:17px;background:rgba(255,255,255,.1);font-size:18px;font-weight:900}.solved-actions{display:flex;gap:8px;justify-content:center;margin-top:18px}.solved-actions button{min-height:47px;padding:0 18px;border:1px solid rgba(255,255,255,.25);border-radius:13px;color:#fff;background:rgba(255,255,255,.1);font-size:11px;font-weight:900;cursor:pointer}.solved-actions .again{color:var(--v950);border:0;background:var(--cyan)}.star{position:absolute;width:15px;height:15px;border-radius:5px;background:var(--cyan);animation:float 3.2s ease-in-out infinite}.star:nth-child(1){left:12%;top:18%}.star:nth-child(2){right:13%;top:24%;animation-delay:.7s}.star:nth-child(3){left:21%;bottom:18%;animation-delay:1.3s}.star:nth-child(4){right:22%;bottom:14%;animation-delay:2s}@keyframes float{50%{transform:translateY(-15px) rotate(45deg);opacity:.55}}
+    @media(max-width:1180px){.board-grid{grid-template-columns:240px minmax(430px,1fr)}.deduction-panel{grid-column:1/-1}.deduction-panel{display:grid;grid-template-columns:1fr 1fr;gap:15px}.claim-box{margin-top:0}.start-card{grid-template-columns:1fr}.start-visual{min-height:280px}.start-visual img{height:240px}}
+    @media(max-width:760px){.game-shell{padding:0;border:0}.topbar{border-radius:0}.topbar img{width:104px}.top-copy strong{font-size:13px}.top-actions .top-btn:first-child{display:none}main{margin:0}.start-card,.role-stage,.case-ribbon,.panel,.solved-card{border-radius:0}.start-content{padding:25px 18px}.tool-row,.mode-grid,.role-grid{grid-template-columns:1fr}.role-card{min-height:170px}.board-grid{grid-template-columns:1fr}.case-ribbon{align-items:flex-start;flex-wrap:wrap}.mode-badges{margin-left:0}.map-panel{min-height:auto}.fair-map{min-height:430px}.map-place{width:128px}.evidence-board{grid-template-columns:1fr}.evidence-bin{min-height:110px}.deduction-panel{grid-column:auto;display:block}.claim-box{margin-top:14px}.solved-actions{flex-direction:column}.solved-actions button{width:100%}}
+    @media(max-width:430px){.fair-map::before{width:145px;height:75px;font-size:12px}.map-place{width:110px;min-height:80px}.token-dock{flex-wrap:wrap}.token-dock>strong{width:100%}.top-btn{padding:0 9px}.start-visual{min-height:220px}.start-visual img{height:190px}}
+    @media(prefers-reduced-motion:reduce){*{animation-duration:.01ms!important;transition-duration:.01ms!important}}
+  </style>
+</head>
+<body>
+<div class="game-shell">
+  <header class="topbar">
+    <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate">
+    <div class="top-copy"><small>BONUS CASE · ORIGINAL STORY</small><strong>The Missing Star Badge</strong></div>
+    <div class="top-actions"><button class="top-btn" type="button" onclick="resetGame()">처음부터</button><button class="top-btn" type="button" onclick="closeGame()">수업으로 돌아가기</button></div>
+  </header>
+  <main>
+    <section class="view" id="startView">
+      <div class="start-card">
+        <div class="start-visual"><div><img src="assets/jelly-detective-magnifier.png" alt="돋보기를 든 젤리 디텍티브"><b>Three reading tools are ready.</b></div></div>
+        <div class="start-content">
+          <span class="case-kicker">BONUS CASE UNLOCKED</span>
+          <h1>사라진 별 배지</h1>
+          <p>리버라이트 탐구 박람회가 끝난 뒤 전시대의 별 배지가 사라졌습니다. 누가 배지를 옮겼고, 어디에 두었으며, 어떤 물건에 넣었는지 직접 조작해 밝혀내세요.</p>
+          <div class="tool-row"><div class="tool-card"><span>01</span><strong>Observation Lens</strong></div><div class="tool-card"><span>02</span><strong>Route Tracker</strong></div><div class="tool-card"><span>03</span><strong>Witness Recorder</strong></div></div>
+          <div class="mode-grid">
+            <button class="mode-card" type="button" onclick="chooseMode('group')"><strong>3인 탐정단</strong><span>각자 다른 단서를 받고 말로 공유합니다. 모든 기기의 보드는 서로 독립적입니다.</span></button>
+            <button class="mode-card" type="button" onclick="chooseMode('solo')"><strong>1대1 Case Master</strong><span>강사가 증인 역할을 맡고 학생 기기에서 단서 묶음을 차례로 공개합니다.</span></button>
+          </div>
+          <p class="privacy-note"><b>자유 활동</b> · 이 게임의 선택, 이동, 정답 시도와 활동 시간은 저장하거나 전송하지 않습니다.</p>
+        </div>
+      </div>
+    </section>
+
+    <section class="view" id="roleView" hidden>
+      <div class="role-stage">
+        <span class="case-kicker">CHOOSE ONE CLUE PACK</span>
+        <h1>나는 어떤 탐정이 될까?</h1>
+        <p>세 명이 서로 다른 역할을 선택하세요. 내 화면의 단서를 팀원에게 직접 설명해야 사건을 해결할 수 있습니다.</p>
+        <div class="role-grid">
+          <button class="role-card" type="button" onclick="startGroupRole('observer')"><span class="role-icon">O</span><strong>Observer</strong><span>시간과 눈에 보이는 장면을 확인합니다.</span><ul><li>before / after</li><li>visible detail</li><li>Fact or Guess</li></ul></button>
+          <button class="role-card" type="button" onclick="startGroupRole('tracker')"><span class="role-icon">T</span><strong>Tracker</strong><span>인물의 방향과 들고 있던 물건을 추적합니다.</span><ul><li>person</li><li>direction</li><li>object</li></ul></button>
+          <button class="role-card" type="button" onclick="startGroupRole('interviewer')"><span class="role-icon">W</span><strong>Interviewer</strong><span>목격자가 본 것과 보지 못한 것을 구분합니다.</span><ul><li>witness</li><li>limit</li><li>changed idea</li></ul></button>
+        </div>
+        <button class="back-btn" type="button" onclick="showView('startView')">이용 방법 다시 선택</button>
+      </div>
+    </section>
+
+    <section class="view" id="boardView" hidden>
+      <div class="case-ribbon">
+        <div><small>ACTIVE CASE</small><strong>Who moved the star badge?</strong></div>
+        <div class="mode-badges"><span class="mode-badge" id="modeBadge">3인 탐정단</span><span class="mode-badge" id="roleBadge">Observer</span></div>
+        <button class="reveal-btn" id="revealButton" type="button" onclick="revealNextPack()" hidden>다음 증인에게 질문하기</button>
+      </div>
+      <div class="board-grid">
+        <aside class="panel clue-panel">
+          <div class="panel-head"><div><small>EVENT LOG</small><strong>사건 기록</strong></div><span>창작 사건</span></div>
+          <ol class="event-log"><li><b>1</b><span>The discovery fair ended after lunch.</span></li><li><b>2</b><span>The lights blinked near the display table.</span></li><li><b>3</b><span>The gold star badge was missing.</span></li><li><b>4</b><span>Three students moved in different directions.</span></li></ol>
+          <div class="clue-title"><span>MY CLUE CARDS</span><small id="cluePackName">Observer Pack</small></div>
+          <div class="clue-deck" id="clueDeck"></div>
+          <p class="touch-help">카드를 끌어 놓거나, 카드와 놓을 칸을 차례로 누르세요.</p>
+        </aside>
+
+        <section class="panel map-panel">
+          <div class="panel-head"><div><small>ROUTE MAP</small><strong>리버라이트 탐구 박람회</strong></div><span>토큰을 직접 이동</span></div>
+          <div class="fair-map" id="fairMap">
+            <i class="map-path path-a"></i><i class="map-path path-b"></i>
+            <div class="map-place" data-location="display" tabindex="0"><b>DISPLAY TABLE</b><small>별 배지가 있던 곳</small><div class="token-slot"></div></div>
+            <div class="map-place" data-location="snack" tabindex="0"><b>SNACK TABLE</b><small>간식과 종이 봉투</small><div class="token-slot"></div></div>
+            <div class="map-place" data-location="photo" tabindex="0"><b>PHOTO BOOTH</b><small>사진 도우미가 있던 곳</small><div class="token-slot"></div></div>
+            <div class="map-place" data-location="exit" tabindex="0"><b>GLASS EXIT</b><small>박람회 출구</small><div class="token-slot"></div></div>
+          </div>
+          <div class="token-dock" id="tokenDock"><strong>PERSON TOKENS</strong><button class="person-token" type="button" data-kind="token" data-person="hana" style="--token-color:#e56f71" aria-label="Hana 토큰">H</button><button class="person-token" type="button" data-kind="token" data-person="minho" style="--token-color:#4b24a5" aria-label="Minho 토큰">M</button><button class="person-token" type="button" data-kind="token" data-person="yuri" style="--token-color:#2785c7" aria-label="Yuri 토큰">Y</button></div>
+          <div class="evidence-board">
+            <section class="evidence-bin" data-bin="fact" tabindex="0"><h3>FACT</h3><p>직접 확인할 수 있는 정보</p><div class="bin-items"></div></section>
+            <section class="evidence-bin" data-bin="guess" tabindex="0"><h3>GUESS</h3><p>아직 확인이 필요한 생각</p><div class="bin-items"></div></section>
+            <section class="evidence-bin" data-bin="question" tabindex="0"><h3>QUESTION</h3><p>팀원에게 물어볼 내용</p><div class="bin-items"></div></section>
+          </div>
+        </section>
+
+        <aside class="panel deduction-panel">
+          <div>
+            <div class="panel-head"><div><small>DEDUCTION SHEET</small><strong>가능성 표시</strong></div><span>누를 때마다 변경</span></div>
+            <table class="deduction-table"><thead><tr><th>Person</th><th>Route</th><th>Object</th><th>Could move it?</th></tr></thead><tbody>
+              <tr><td>Hana</td><td><button class="mark-btn" type="button" aria-label="Hana route 모름">?</button></td><td><button class="mark-btn" type="button" aria-label="Hana object 모름">?</button></td><td><button class="mark-btn" type="button" aria-label="Hana possibility 모름">?</button></td></tr>
+              <tr><td>Minho</td><td><button class="mark-btn" type="button" aria-label="Minho route 모름">?</button></td><td><button class="mark-btn" type="button" aria-label="Minho object 모름">?</button></td><td><button class="mark-btn" type="button" aria-label="Minho possibility 모름">?</button></td></tr>
+              <tr><td>Yuri</td><td><button class="mark-btn" type="button" aria-label="Yuri route 모름">?</button></td><td><button class="mark-btn" type="button" aria-label="Yuri object 모름">?</button></td><td><button class="mark-btn" type="button" aria-label="Yuri possibility 모름">?</button></td></tr>
+            </tbody></table>
+          </div>
+          <div class="claim-box">
+            <strong>Final Claim</strong><p>팀의 말을 들은 뒤 사람·장소·물건을 연결하세요.</p>
+            <div class="claim-fields">
+              <label>Who?<select id="claimPerson"><option value="">Choose a person</option><option value="hana">Hana</option><option value="minho">Minho</option><option value="yuri">Yuri</option></select></label>
+              <label>Where?<select id="claimPlace"><option value="">Choose a place</option><option value="display">Display Table</option><option value="snack">Snack Table</option><option value="photo">Photo Booth</option><option value="exit">Glass Exit</option></select></label>
+              <label>Which item?<select id="claimItem"><option value="">Choose an item</option><option value="paper">Paper Bag</option><option value="camera">Camera Pouch</option><option value="ribbon">Ribbon Box</option></select></label>
+            </div>
+            <button class="claim-btn" type="button" onclick="checkClaim()">가설 시험하기</button>
+            <div class="case-feedback" id="caseFeedback" role="status">첫 추측은 언제든 바꿀 수 있어요. 세 가지를 연결한 뒤 가설을 시험하세요.</div>
+          </div>
+        </aside>
+      </div>
+    </section>
+
+    <section class="view" id="solvedView" hidden>
+      <div class="solved-card"><i class="star"></i><i class="star"></i><i class="star"></i><i class="star"></i><div class="solved-content">
+        <img src="assets/jelly-detective-cheer.png" alt="사건 해결을 축하하는 젤리 디텍티브">
+        <small>JELLY DETECTIVE BONUS CASE</small><h1>CASE SOLVED</h1>
+        <p>새로운 근거에 맞춰 첫 추측을 고쳤습니다. 배지는 도난당한 것이 아니라 안전하게 보관되어 있었습니다.</p>
+        <div class="solution">Minho · Photo Booth · Camera Pouch</div>
+        <p lang="en">At first, we thought someone took the badge. Now we know Minho moved it to keep it safe.</p>
+        <div class="solved-actions"><button class="again" type="button" onclick="resetGame()">다른 역할로 다시 하기</button><button type="button" onclick="closeGame()">수업으로 돌아가기</button></div>
+      </div></div>
+    </section>
+  </main>
+</div>
+<script>
+  const CLUE_PACKS={
+    observer:{label:'Observer Pack',cards:[
+      {id:'o1',label:'BEFORE / AFTER',text:'The star badge was on the display table before the lights blinked.'},
+      {id:'o2',label:'VISIBLE DETAIL',text:'A gray sleeve was beside the display when the lights came back.'},
+      {id:'o3',label:'FIRST IDEA',text:'Maybe the person nearest the display took the badge.'}
+    ]},
+    tracker:{label:'Tracker Pack',cards:[
+      {id:'t1',label:'PERSON · DIRECTION · OBJECT',text:'Hana carried a paper bag to the snack table.'},
+      {id:'t2',label:'PERSON · DIRECTION · OBJECT',text:'Yuri walked toward the glass exit with a ribbon box.'},
+      {id:'t3',label:'ROUTE',text:'Minho moved from the display table to the photo booth.'}
+    ]},
+    interviewer:{label:'Interviewer Pack',cards:[
+      {id:'w1',label:'WHAT THEY SAW',text:'The photo helper saw Minho open a blue camera pouch.'},
+      {id:'w2',label:'WHAT THEY DID NOT SEE',text:'No witness saw anyone leave the fair with the badge.'},
+      {id:'w3',label:'WITNESS STATEMENT',text:'Minho said he picked up the loose badge to keep it safe.'}
+    ]}
+  };
+  const ROLE_LABELS={observer:'Observer',tracker:'Tracker',interviewer:'Interviewer'};
+  const game={mode:null,role:null,revealStage:1,selected:null};
+  function showView(id){document.querySelectorAll('.view').forEach(view=>view.hidden=view.id!==id);window.scrollTo({top:0,behavior:'auto'})}
+  function chooseMode(mode){game.mode=mode;if(mode==='group')showView('roleView');else{game.role='observer';game.revealStage=1;startBoard()}}
+  function startGroupRole(role){game.role=role;game.revealStage=1;startBoard()}
+  function startBoard(){resetBoardState();document.getElementById('modeBadge').textContent=game.mode==='group'?'3인 탐정단':'1대1 Case Master';document.getElementById('roleBadge').textContent=game.mode==='group'?ROLE_LABELS[game.role]:'단서 1 / 3';const reveal=document.getElementById('revealButton');reveal.hidden=game.mode!=='solo';reveal.textContent='다음 증인에게 질문하기';renderClues();showView('boardView')}
+  function activeRoles(){if(game.mode==='group')return[game.role];return['observer','tracker','interviewer'].slice(0,game.revealStage)}
+  function renderClues(){const deck=document.getElementById('clueDeck');const placed=new Set(Array.from(document.querySelectorAll('.evidence-bin [data-clue-id]'),card=>card.dataset.clueId));deck.textContent='';const roles=activeRoles();document.getElementById('cluePackName').textContent=roles.map(role=>CLUE_PACKS[role].label).join(' + ');roles.forEach(role=>CLUE_PACKS[role].cards.forEach(card=>{if(!placed.has(card.id))deck.appendChild(createClueCard(card,role))}));document.getElementById('roleBadge').textContent=game.mode==='group'?ROLE_LABELS[game.role]:'단서 '+game.revealStage+' / 3';const reveal=document.getElementById('revealButton');if(game.mode==='solo'){reveal.hidden=game.revealStage>=3;reveal.textContent=game.revealStage===1?'Tracker 단서 공개':'Witness 단서 공개'}}
+  function createClueCard(card,role){const button=document.createElement('button');button.type='button';button.className='clue-card';button.dataset.kind='clue';button.dataset.clueId=card.id;button.dataset.role=role;button.setAttribute('aria-label',card.label+' 단서 카드: '+card.text);const label=document.createElement('b');label.textContent=card.label;const text=document.createElement('span');text.textContent=card.text;button.append(label,text);bindMovable(button);return button}
+  function revealNextPack(){if(game.mode!=='solo'||game.revealStage>=3)return;game.revealStage+=1;renderClues();const feedback=document.getElementById('caseFeedback');feedback.className='case-feedback';feedback.textContent=game.revealStage===2?'Tracker의 이동 단서가 열렸습니다. 지도 토큰을 옮겨 보세요.':'마지막 Witness 단서가 열렸습니다. 첫 추측을 다시 시험하세요.'}
+  function selectMovable(item){if(game.selected===item){item.classList.remove('selected');item.setAttribute('aria-pressed','false');game.selected=null;return}document.querySelectorAll('.selected').forEach(el=>{el.classList.remove('selected');el.setAttribute('aria-pressed','false')});game.selected=item;item.classList.add('selected');item.setAttribute('aria-pressed','true')}
+  function targetMatches(item,target){return item?.dataset.kind==='clue'&&target.classList.contains('evidence-bin')||item?.dataset.kind==='token'&&target.classList.contains('map-place')}
+  function placeItem(item,target){if(!targetMatches(item,target))return false;if(item.dataset.kind==='clue')target.querySelector('.bin-items').appendChild(item);else target.querySelector('.token-slot').appendChild(item);item.classList.remove('selected');item.setAttribute('aria-pressed','false');game.selected=null;return true}
+  function bindMovable(item){item.addEventListener('click',event=>{if(event.detail===0)selectMovable(item)});item.addEventListener('pointerdown',event=>{if(event.button!==undefined&&event.button!==0)return;const start={x:event.clientX,y:event.clientY};let moved=false;let ghost=null;item.setPointerCapture?.(event.pointerId);const move=moveEvent=>{const distance=Math.hypot(moveEvent.clientX-start.x,moveEvent.clientY-start.y);if(distance<7&&!moved)return;if(!moved){moved=true;ghost=item.cloneNode(true);ghost.classList.add('drag-ghost');ghost.classList.remove('selected');document.body.appendChild(ghost);item.classList.add('drag-source')}ghost.style.left=moveEvent.clientX+12+'px';ghost.style.top=moveEvent.clientY+12+'px';moveEvent.preventDefault()};const finish=endEvent=>{item.removeEventListener('pointermove',move);item.removeEventListener('pointerup',finish);item.removeEventListener('pointercancel',finish);ghost?.remove();item.classList.remove('drag-source');if(moved){const target=document.elementFromPoint(endEvent.clientX,endEvent.clientY)?.closest('.evidence-bin,.map-place');if(target)placeItem(item,target)}else selectMovable(item)};item.addEventListener('pointermove',move);item.addEventListener('pointerup',finish);item.addEventListener('pointercancel',finish)})}
+  function dropSelectedOn(target){if(game.selected)placeItem(game.selected,target)}
+  document.querySelectorAll('.evidence-bin,.map-place').forEach(target=>{target.addEventListener('click',event=>{if(event.target.closest('[data-kind]'))return;dropSelectedOn(target)});target.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();dropSelectedOn(target)}})});
+  document.querySelectorAll('.person-token').forEach(bindMovable);
+  document.querySelectorAll('.mark-btn').forEach(button=>button.addEventListener('click',()=>{const state=button.dataset.state||'unknown';button.classList.remove('yes','no');if(state==='unknown'){button.dataset.state='no';button.classList.add('no');button.textContent='×'}else if(state==='no'){button.dataset.state='yes';button.classList.add('yes');button.textContent='○'}else{button.dataset.state='unknown';button.textContent='?'}button.setAttribute('aria-label',button.getAttribute('aria-label').replace(/(모름|제외|가능)$/,'')+(button.dataset.state==='no'?'제외':button.dataset.state==='yes'?'가능':'모름'))}));
+  function checkClaim(){const person=document.getElementById('claimPerson').value;const place=document.getElementById('claimPlace').value;const item=document.getElementById('claimItem').value;const feedback=document.getElementById('caseFeedback');if(!person||!place||!item){feedback.className='case-feedback retry';feedback.textContent='사람, 장소, 물건을 모두 선택하세요.';return}if(person==='minho'&&place==='photo'&&item==='camera'){showView('solvedView');return}feedback.className='case-feedback retry';if(person!=='minho')feedback.textContent='누가 전시대에서 포토 부스로 이동했는지 다시 물어보세요.';else if(place!=='photo')feedback.textContent='Minho의 이동 경로가 끝난 장소를 지도에서 확인하세요.';else feedback.textContent='사진 도우미가 어떤 물건을 보았는지 Witness에게 물어보세요.'}
+  function resetBoardState(){game.selected=null;document.querySelectorAll('.evidence-bin .bin-items').forEach(bin=>bin.textContent='');const dock=document.getElementById('tokenDock');document.querySelectorAll('.person-token').forEach(token=>{dock.appendChild(token);token.classList.remove('selected','drag-source');token.setAttribute('aria-pressed','false')});document.querySelectorAll('.mark-btn').forEach(button=>{button.dataset.state='unknown';button.classList.remove('yes','no');button.textContent='?'});['claimPerson','claimPlace','claimItem'].forEach(id=>document.getElementById(id).value='');const feedback=document.getElementById('caseFeedback');feedback.className='case-feedback';feedback.textContent='첫 추측은 언제든 바꿀 수 있어요. 세 가지를 연결한 뒤 가설을 시험하세요.'}
+  function resetGame(){game.mode=null;game.role=null;game.revealStage=1;resetBoardState();document.getElementById('clueDeck').textContent='';showView('startView')}
+  function closeGame(){if(window.parent!==window){window.parent.postMessage({type:'oncuvate:close-bonus-case'},window.location.origin)}else location.href='index.html'}
+  document.addEventListener('keydown',event=>{if(event.key==='Escape')closeGame()});
+</script>
+</body>
+</html>
