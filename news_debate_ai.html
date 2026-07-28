@@ -518,6 +518,17 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
 @keyframes qzpop{0%{transform:scale(0) rotate(-14deg);}100%{transform:scale(1) rotate(0);}}
 @keyframes qzbounce{from{transform:translateY(0);}to{transform:translateY(-9px);}}
 @keyframes qzfall{0%{transform:translateY(0) rotate(0);opacity:1;}100%{transform:translateY(150px) rotate(240deg);opacity:0;}}
+
+.pi-frames{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:9px;}
+.pi-ftab{border:2px solid var(--oc-border);background:#fff;border-radius:999px;padding:6px 13px;font-size:12.5px;font-weight:800;color:var(--oc-gray);cursor:pointer;font-family:inherit;}
+.pi-ftab.on{background:var(--oc-purple);color:#fff;border-color:var(--oc-purple);}
+.pi-slot{display:inline-block;border:none;border-bottom:2.5px dashed var(--oc-purple-mid);background:var(--oc-light);border-radius:8px;padding:3px 10px;margin:2px 1px;font-size:14.5px;font-weight:800;color:var(--oc-purple);cursor:pointer;font-family:inherit;line-height:1.9;}
+.pi-slot.empty{color:var(--oc-gray-light);font-weight:800;}
+.pi-slot.active{background:#E3F8FB;box-shadow:0 0 0 3px rgba(27,188,212,.25);}
+.pi-tray{display:flex;flex-wrap:wrap;gap:7px;margin:9px 0 4px;min-height:20px;}
+.pi-chip{border:2px solid var(--oc-cyan);background:#fff;border-radius:12px;padding:9px 13px;font-size:13.5px;font-weight:700;color:var(--oc-dark);cursor:pointer;font-family:inherit;line-height:1.45;text-align:left;}
+.pi-chip:hover{background:#E3F8FB;}
+.pi-tray-hint{font-size:12px;color:var(--oc-gray-light);font-weight:700;align-self:center;}
 </style>
 
 <!-- Firebase (강사→학생 워드서치 힌트 동기화) -->
@@ -960,11 +971,10 @@ body.act-locked .pg .card{pointer-events:none;opacity:.6;}
     <div class="card">
       <div class="tag">의견 게시판</div>
       <div class="card-h">📌 내 생각을 <span class="accent">붙여요</span></div>
-      <p class="pgdesc">문장 빈칸을 채우거나 자유롭게 적고 "붙이기"를 누르면 포스트잇으로 올라가요. 친구 의견에 <b>이모티콘·댓글</b>도 달아봐요!</p>
-      <div class="pi-tmpl">
-        저는 <input class="pi-in" id="piOpinion" placeholder="AI는 참고만 하면 괜찮아요" maxlength="40" autocomplete="off"/>
-        왜냐하면 <input class="pi-in" id="piReason" placeholder="스스로 생각하는 힘이 자라니까" maxlength="40" autocomplete="off"/> 때문이에요.
-      </div>
+      <p class="pgdesc">문장 틀을 고르고 빈칸을 눌러 원하는 말을 골라 채우면 문장이 완성돼요! 타이핑 없이 "붙이기"만 눌러도 올라가요. 친구 의견에 <b>이모티콘·댓글</b>도 달아봐요!</p>
+      <div class="pi-frames" id="piFrames"></div>
+      <div class="pi-tmpl" id="piCompose"></div>
+      <div class="pi-tray" id="piTray"></div>
       <input class="pi-free" id="piFree" placeholder="또는 자유롭게 내 생각을 적어요 ✏️" maxlength="70" autocomplete="off"/>
       <div class="pi-fb" id="piFb"></div>
       <div class="pi-row">
@@ -1734,28 +1744,52 @@ const PI_RX=[{e:'👍',k:'like'},{e:'👏',k:'clap'},{e:'🤝',k:'hand'},{e:'❤
 let piLocal={}, piState={}, piOpenId=null;
 function piEsc(s){ return (s||'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
 function piVal(id){ return (document.getElementById(id).value||'').trim(); }
-function piBuildText(op,rs){
-  op=op.replace(/[.\s]+$/,'');
-  let t='저는 '+op+'.';
-  rs=rs.replace(/[.\s]+$/,'');
-  if(rs) t+=' 왜냐하면 '+rs+' 때문이에요.';
-  return t;
+const OPIN_FRAMES=[
+ {label:'의견', seq:['저는 ',0,' 왜냐하면 ',1,' 때문이에요.'], opts:[['AI를 참고만 하고 스스로 하는 게 좋아요','숙제는 내가 직접 하는 게 좋아요','AI를 도구로 잘 쓰면 좋다고 생각해요','AI 답은 꼭 사실인지 확인해야 해요','어려운 것만 AI에게 물어보면 좋겠어요'],['스스로 생각하는 힘이 자라니까','진짜 내 실력이 늘어야 하니까','틀린 정보를 믿을 수도 있으니까','AI를 똑똑하게 쓸 수 있으니까','편리하게 도움을 받을 수 있으니까']]},
+ {label:'경험', seq:['저는 AI를 ',0,'. 그때 ',1,'.'], opts:[['써 본 적이 있어요','아직 써 본 적이 없어요','가끔 궁금할 때 써요'],['정말 신기했어요','답이 틀린 적도 있었어요','생각보다 편리했어요','내가 한 게 아닌 것 같았어요']]},
+ {label:'다짐', seq:['저는 앞으로 AI를 ',0,' 그리고 ',1,'.'], opts:[['참고만 할래요','먼저 스스로 생각한 뒤에 쓸래요','답이 맞는지 꼭 확인할래요'],['숙제는 직접 해낼래요','모르는 건 스스로 찾아볼래요','도구로 똑똑하게 쓸래요']]},
+];
+let opF=0, opSel={}, opAct=null;
+function opInit(){ if(!document.getElementById('piFrames'))return; opRenderTabs(); opPick(0); }
+function opRenderTabs(){ document.getElementById('piFrames').innerHTML=OPIN_FRAMES.map(function(f,i){return '<button class="pi-ftab'+(i===opF?' on':'')+'" onclick="opPick('+i+')">'+piEsc(f.label)+'</button>';}).join(''); }
+function opPick(i){ opF=i; opSel={}; opAct=null; opRenderTabs(); opCompose(); opTray(); }
+function opCompose(){
+  const f=OPIN_FRAMES[opF];
+  document.getElementById('piCompose').innerHTML=f.seq.map(function(part){
+    if(typeof part==='string') return piEsc(part);
+    const v=opSel[part];
+    const cls='pi-slot'+(v?'':' empty')+(opAct===part?' active':'');
+    return '<button class="'+cls+'" onclick="opSlot('+part+')">'+(v?piEsc(v):'○○ 고르기')+'</button>';
+  }).join('');
+}
+function opSlot(s){ opAct=(opAct===s?null:s); opCompose(); opTray(); }
+function opTray(){
+  const tray=document.getElementById('piTray');
+  if(opAct===null){ tray.innerHTML='<span class="pi-tray-hint">밑줄 친 빈칸을 누르면 보기에서 골라 채울 수 있어요 👆</span>'; return; }
+  const opts=OPIN_FRAMES[opF].opts[opAct];
+  tray.innerHTML=opts.map(function(o){return '<button class="pi-chip" data-v="'+piEsc(o)+'" onclick="opFill('+opAct+',this)">'+piEsc(o)+'</button>';}).join('');
+}
+function opFill(s,btn){ opSel[s]=btn.getAttribute('data-v'); opAct=null; opCompose(); opTray(); }
+function opComposed(){
+  const f=OPIN_FRAMES[opF];
+  for(var i=0;i<f.opts.length;i++){ if(!opSel[i]) return null; }
+  return f.seq.map(function(p){ return typeof p==='string'?p:opSel[p]; }).join('');
 }
 function postIt(){
-  const op=piVal('piOpinion'), rs=piVal('piReason'), free=piVal('piFree'), nm=piVal('piName');
+  const free=piVal('piFree'), nm=piVal('piName');
   const fb=document.getElementById('piFb');
   if(!nm){ fb.textContent='❌ 이름(또는 번호)을 적어요!'; return; }
   let text;
   if(free){ text=free; }
-  else if(op){ text=piBuildText(op,rs); }
-  else { fb.textContent='❌ 문장을 채우거나 자유롭게 적어요!'; return; }
+  else { const c=opComposed(); if(c){ text=c; } else { fb.textContent='❌ 빈칸을 모두 고르거나, 자유롭게 적어요!'; return; } }
   fb.textContent='';
   const id='n'+Date.now()+Math.floor(Math.random()*1000);
   const note={id:id,name:nm,text:text,color:PI_COLORS[Math.floor(Math.random()*PI_COLORS.length)],ts:Date.now()};
   if(window._firebaseReady){ try{ window._set(window._ref(window._db,DEBATE_DB+'/'+id),note); }catch(e){ piLocal[id]=note; renderBoard(piLocal); } }
   else { piLocal[id]=note; renderBoard(piLocal); }
-  ['piOpinion','piReason','piFree'].forEach(x=>document.getElementById(x).value='');
+  document.getElementById('piFree').value=''; opPick(opF);
 }
+opInit();
 function renderBoard(v){
   piState=v||{};
   const grid=document.getElementById('piGrid'); if(!grid)return;
