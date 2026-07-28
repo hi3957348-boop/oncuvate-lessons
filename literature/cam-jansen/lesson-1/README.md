@@ -3,7 +3,7 @@
 ## 배포 경로
 
 - 정적 진입점: `/literature/cam-jansen/lesson-1/`
-- Firebase Hosting의 기존 `cleanUrls` 설정에서 폴더형 URL로 서비스한다.
+- GitHub Pages의 폴더형 URL `https://read.oncuvate.com/literature/cam-jansen/lesson-1/`로 서비스한다.
 - AI API 비밀키, Firebase 설정, 실명 학생 식별자는 이 수업 파일에 넣지 않는다. Web3Forms 공개용 access key만 `activity-config.js`에서 임시로 설정할 수 있다.
 
 ## 진행 데이터 계약
@@ -15,7 +15,9 @@
   type: "oncuvate-lesson-progress",
   schema: "oncuvate.lesson-progress.v1",
   lessonId: "cam-jansen-stolen-diamonds-l01",
-  lessonVersion: 11,
+  lessonVersion: 12,
+  entryMode: "self",
+  roomCode: "",
   currentPage: 1,
   sourceChapters: [1, 2, 3],
   totalPages: 12,
@@ -30,14 +32,16 @@
 
 상위 스튜디오는 `event.origin === window.location.origin`과 `schema`, `lessonId`를 확인한 뒤 서버에 저장한다. 학생의 자유서술 전문은 기본 진행 메시지에 포함하지 않는다.
 
-자율학습은 문항별 사고 힌트를 표시한다. 강사 연동 모드의 `도와주세요` 버튼은 아래처럼 답안 전문 없이 현재 위치만 전달한다.
+첫 진입화면에서 자율활동, 실시간 수업 참여, 강사 화면 중 하나를 선택한다. 자율활동은 문항별 사고 힌트를 표시하고, 실시간 수업은 학생 이름 또는 코드와 숫자 5자리 방 코드를 받아 `도와주세요`를 활성화한다. 강사 화면은 교수용 메모와 진행안 링크를 표시한다. 사이드바에는 역할·지원 모드 전환 버튼을 두지 않으며 상단 `입장 선택`에서만 다시 전환한다.
+
+강사 연동 모드의 `도와주세요` 버튼은 아래처럼 답안 전문 없이 현재 위치만 전달한다.
 
 ```js
 {
   type: "oncuvate-help-request",
   schema: "oncuvate.help-request.v1",
   lessonId: "cam-jansen-stolen-diamonds-l01",
-  lessonVersion: 11,
+  lessonVersion: 12,
   currentPage: 6,
   promptId: "ch1-q1",
   status: "requested",
@@ -55,7 +59,7 @@
 
 전송 레코드 `oncuvate.activity-record.v1`에는 다음이 포함된다.
 
-- 수업용 학생 코드와 익명 세션 ID. 이름·이메일·전화번호는 받지 않는다.
+- 학생이 진입화면에 입력한 이름 또는 수업용 코드와 익명 세션 ID. 기관 운영 시에는 실명 대신 수업용 코드를 사용한다.
 - 객관 문항 정오답, 서술 문항 완성 여부, 확인 시도 횟수
 - 페이지 체류 시간과 문항별 첫 반응 시간
 - 자율 힌트 열람 횟수와 강사 도움 요청 횟수
