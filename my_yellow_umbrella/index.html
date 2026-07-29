@@ -381,23 +381,25 @@
 .ocg-tile.done{cursor:default;}
 .shake{animation:ocgshake .4s;}
 @keyframes ocgshake{0%,100%{transform:translateX(0)}25%{transform:translateX(-7px)}75%{transform:translateX(7px)}}
-/* 단어연결 — 낱말 카드와 그림 카드를 같은 정사각 크기로(행이 1:1로 맞아야 선을 잇는다) */
-.ocg-link{--ocgcard:148px;position:relative;display:flex;justify-content:center;gap:56px;margin-top:10px;
+/* 단어연결 — 낱말 카드와 그림 카드를 같은 정사각 크기로(행이 1:1로 맞아야 선을 잇는다).
+   카드 사이 간격을 넓게 잡고, 행/점을 크게 해서 어린 아이가 쉽게 잇도록. */
+.ocg-link{--ocgcard:150px;position:relative;display:flex;justify-content:center;gap:150px;margin-top:14px;
   touch-action:none;}
 .ocg-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;}
-.ocg-lines line{stroke:#B9AEE4;stroke-width:4;stroke-linecap:round;}
-.ocg-lines line.ok{stroke:#57BE8B;stroke-width:5;}
-.ocg-lines line.tmp{stroke-dasharray:7 6;}
-.ocg-col{display:flex;flex-direction:column;gap:14px;flex:none;}
-.ocg-lrow{display:flex;align-items:center;gap:12px;height:var(--ocgcard);}
+.ocg-lines line{stroke:#B9AEE4;stroke-width:6;stroke-linecap:round;}
+.ocg-lines line.ok{stroke:#57BE8B;stroke-width:8;}
+.ocg-lines line.tmp{stroke-dasharray:8 7;stroke-width:6;}
+.ocg-col{display:flex;flex-direction:column;gap:34px;flex:none;}
+.ocg-lrow{display:flex;align-items:center;gap:14px;height:var(--ocgcard);cursor:pointer;}
 .ocg-lword{width:var(--ocgcard);height:var(--ocgcard);flex:none;font:inherit;font-weight:800;font-size:20px;
   border-radius:16px;cursor:pointer;border:2px solid var(--line);background:#FCFBFF;color:#3E3468;
-  display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;line-height:1.3;}
-.ocg-dot{width:18px;height:18px;border-radius:50%;background:#fff;border:3px solid #B9AEE4;cursor:pointer;flex:none;}
-.ocg-dot.on{background:#B9AEE4;} .ocg-dot.done{background:#57BE8B;border-color:#57BE8B;cursor:default;}
+  display:flex;align-items:center;justify-content:center;padding:6px;text-align:center;line-height:1.3;pointer-events:none;}
+.ocg-dot{width:26px;height:26px;border-radius:50%;background:#fff;border:4px solid #B9AEE4;cursor:pointer;flex:none;}
+.ocg-dot.on{background:#B9AEE4;box-shadow:0 0 0 6px rgba(185,174,228,.35);}
+.ocg-dot.done{background:#57BE8B;border-color:#57BE8B;cursor:default;}
 .ocg-pic{width:var(--ocgcard);height:var(--ocgcard);flex:none;object-fit:contain;padding:4px;
-  border-radius:16px;border:2px solid var(--line);background:#fff;}
-@media (max-width:600px){ .ocg-link{--ocgcard:104px;gap:26px;} .ocg-lword{font-size:15px;} }
+  border-radius:16px;border:2px solid var(--line);background:#fff;pointer-events:none;}
+@media (max-width:600px){ .ocg-link{--ocgcard:110px;gap:60px;} .ocg-col{gap:22px;} .ocg-lword{font-size:16px;} }
 /* 워드서치 힌트 — 글자 힌트와 그림 힌트가 같은 칸 크기(단계 바뀌어도 레이아웃이 안 튄다) */
 .ocg-hints{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin:10px 0 14px;}
 .ocg-hint{width:76px;height:76px;padding:6px;border-radius:14px;border:1.5px solid var(--line);background:#FCFBFF;
@@ -1858,7 +1860,7 @@ function gameLink(){
 
   rows.forEach(function(w){
     var r = el('div','ocg-lrow');
-    var label = el('button','ocg-lword', w); label.onclick = function(){ say(w); };
+    var label = el('button','ocg-lword', w);   // 소리는 탭(pointerup) 에서 재생
     var d = el('span','ocg-dot'); d.dataset.w = w; d.dataset.side='L';
     r.appendChild(label); r.appendChild(d); left.appendChild(r);
     dots['L'+w] = d;
@@ -1871,7 +1873,7 @@ function gameLink(){
     dots['R'+x.w] = d;
   });
 
-  var from = null, temp = null, solved = 0;
+  var from = null, temp = null, solved = 0, moved = false, downXY = null;
   function center(d){
     var a = d.getBoundingClientRect(), b = wrap.getBoundingClientRect();
     return { x: a.left - b.left + a.width/2, y: a.top - b.top + a.height/2 };
@@ -1884,21 +1886,48 @@ function gameLink(){
   }
   function reset(){ if(temp){temp.remove(); temp=null;} if(from) from.classList.remove('on'); from=null; }
 
+  // 손가락 위치에서 가장 가까운 '반대쪽' 점을 찾는다(점을 정확히 안 눌러도 됨 — 어린 아이용)
+  function nearestOpposite(clientX, clientY, fromDot){
+    var best = null, bestD = Infinity;
+    Object.keys(dots).forEach(function(k){
+      var d = dots[k];
+      if (d.dataset.side === fromDot.dataset.side || d.classList.contains('done')) return;
+      var r = d.getBoundingClientRect();
+      var dx = clientX - (r.left + r.width/2), dy = clientY - (r.top + r.height/2);
+      var dist = Math.sqrt(dx*dx + dy*dy);
+      if (dist < bestD){ bestD = dist; best = d; }
+    });
+    return best;   // 4개뿐이라 가장 가까운 것을 무조건 후보로(넉넉하게)
+  }
+  // 행(낱말/그림) 아무 곳에서나 그 행의 점을 시작점으로
+  function dotOfEvent(e){
+    var d = e.target.closest('.ocg-dot'); if (d) return d;
+    var row = e.target.closest('.ocg-lrow'); if (!row) return null;
+    return row.querySelector('.ocg-dot');
+  }
+
   wrap.addEventListener('pointerdown', function(e){
-    var d = e.target.closest('.ocg-dot'); if(!d || d.classList.contains('done')) return;
-    reset(); from = d; d.classList.add('on');
+    var d = dotOfEvent(e); if(!d || d.classList.contains('done')) return;
+    reset(); from = d; moved = false; downXY = [e.clientX, e.clientY];
+    d.classList.add('on');
     temp = line(center(d), center(d), 'tmp');
+    if (wrap.setPointerCapture) try{ wrap.setPointerCapture(e.pointerId); }catch(_){}
   });
   wrap.addEventListener('pointermove', function(e){
     if(!from || !temp) return;
+    if (downXY && (Math.abs(e.clientX-downXY[0])>6 || Math.abs(e.clientY-downXY[1])>6)) moved = true;
     var b = wrap.getBoundingClientRect();
     temp.setAttribute('x2', e.clientX-b.left); temp.setAttribute('y2', e.clientY-b.top);
   });
   wrap.addEventListener('pointerup', function(e){
     if(!from) return;
-    var d = document.elementFromPoint(e.clientX, e.clientY);
-    d = d && d.closest ? d.closest('.ocg-dot') : null;
-    if (d && d !== from && d.dataset.side !== from.dataset.side && !d.classList.contains('done')){
+    // 거의 안 움직였으면 '탭'으로 보고 소리만(낱말 듣기) — 오답 처리하지 않음
+    if (!moved){
+      if (from.dataset.side === 'L') say(from.dataset.w);
+      reset(); return;
+    }
+    var d = nearestOpposite(e.clientX, e.clientY, from);
+    if (d){
       if (d.dataset.w === from.dataset.w){
         line(center(from), center(d), 'ok');
         from.classList.add('done'); d.classList.add('done');
