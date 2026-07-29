@@ -2310,7 +2310,7 @@ G.start = start;
 G.mount = function(container){ root = container; buildChrome(); start(); };
 })();
 </script>
-<script>(function(){var r=document.getElementById('ocgRoot');var g=document.getElementById('mGame');var mounted=false;function go(){ if(!mounted){ OcG.mount(r); mounted=true; } }if(g) g.addEventListener('click', function(){ setTimeout(go,30); });if(g&&g.classList.contains('on')) go();})();</script>
+<script>(function(){['startCurrent','startGame','startTrial','startQuiz','nextTarget','revealSeqTiles'].forEach(function(fn){ try{ if(typeof window[fn]==='function') window[fn]=function(){}; }catch(e){} });try{ if(typeof gStop==='function') gStop(); }catch(e){}var r=document.getElementById('ocgRoot');var g=document.getElementById('mGame');var mounted=false;function go(){ try{ if(typeof gStop==='function') gStop(); }catch(e){}  if(!mounted){ OcG.mount(r); mounted=true; } }if(g) g.addEventListener('click', function(){ setTimeout(go,30); });if(g&&g.classList.contains('on')) go();})();</script>
 <script>(function(){var h=document.getElementById('ocTitle');if(h&&window.OC) h.textContent=OC.render("{이름이}의 장갑은 어디에?", OC.person);})();</script>
 </body>
 </html>
