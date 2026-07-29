@@ -362,6 +362,10 @@
 .ocg-prompt{text-align:center;margin-bottom:12px;}
 .ocg-big{font:inherit;font-weight:800;font-size:15px;padding:11px 20px;border-radius:14px;cursor:pointer;
   border:0;background:var(--accent);color:#fff;box-shadow:0 4px 14px rgba(90,70,180,.25);}
+/* '시작하기' 상태 — 소리 자동재생 대신 이 버튼을 누르면 소리가 난다 */
+.ocg-big.ocg-startbtn{background:#2E9E6B;font-size:17px;padding:13px 30px;
+  box-shadow:0 4px 16px rgba(46,158,107,.35);animation:ocgpulse 1.4s ease-in-out infinite;}
+@keyframes ocgpulse{0%,100%{transform:scale(1)}50%{transform:scale(1.06)}}
 .ocg-inst{margin:10px auto;text-align:center;font-size:14.5px;color:#5C5674;line-height:1.6;max-width:640px;}
 .ocg-need{text-align:center;padding:34px 12px;color:#8B84A3;font-size:15px;line-height:1.9;}
 .ocg-need span{font-size:13px;color:#A9A3BC;}
@@ -426,9 +430,12 @@
 .ocg-slot.given{border-style:solid;background:#EDE9F9;border-color:#B9AEE4;color:#5B4B9E;}
 /* 1단계 — 들어갈 음소를 흐리게 미리 보여 준다 */
 .ocg-slot.ghost{color:#CDC6E4;}
-.ocg-popbox.wordonly{padding:34px 44px;}
+.ocg-popbox.wordonly{padding:30px 44px;}
+.ocg-popread{font-size:15px;font-weight:800;color:#2E9E6B;margin-bottom:14px;}
 .ocg-popword{font-size:60px;font-weight:900;letter-spacing:3px;color:#3E3468;line-height:1.15;}
-@media (max-width:600px){ .ocg-popword{font-size:40px;} }
+.ocg-popbox.sentonly{padding:30px 40px;max-width:560px;}
+.ocg-popsent{font-size:28px;font-weight:800;color:#3E3468;line-height:1.55;word-break:keep-all;}
+@media (max-width:600px){ .ocg-popword{font-size:40px;} .ocg-popsent{font-size:21px;} }
 .ocg-cards{display:flex;gap:8px;flex-wrap:wrap;justify-content:center;}
 .ocg-card{font:inherit;font-weight:900;font-size:22px;width:52px;height:58px;border-radius:13px;cursor:pointer;
   border:2px solid var(--line);background:#FCFBFF;color:#3E3468;}
@@ -1639,6 +1646,18 @@ function sayJamo(j){
 G.say = say; G.sayJamo = sayJamo;
 
 /* ───────── 데이터 ───────── */
+// 소리를 자동 재생하지 않고 '▶ 시작하기'로 대기 — 누르면 소리가 나고 '🔊 다시 듣기'로 바뀐다.
+function armPlay(btn, fn, replayLabel){
+  var started = false;
+  btn.classList.add('ocg-startbtn');
+  btn.textContent = '▶ 시작하기';
+  btn.onclick = function(){
+    fn();
+    if (!started){ started = true; btn.textContent = replayLabel; btn.classList.remove('ocg-startbtn'); }
+  };
+}
+G.armPlay = armPlay;
+
 function words(){ return (window.OC_WORDS||[]).slice(); }
 function imgWords(){ return words().filter(function(x){ return !!x.img; }); }
 function sentences(){
@@ -1672,9 +1691,18 @@ function feedback(msg, ok){
   fb.className = 'ocg-fb' + (msg ? (ok ? ' ok' : ' no') : '');
   if (msg) { clearTimeout(fb._t); fb._t = setTimeout(function(){ fb.textContent=''; fb.className='ocg-fb'; }, 1800); }
 }
+// 빈칸을 맞췄을 때 — 소리 없이 **완성된 문장**을 크게 띄워 스스로 읽게 한다
+function celebrateSentence(sentence){
+  var p = el('div','ocg-pop','<div class="ocg-popbox sentonly"><div class="ocg-popread">📖 소리 내어 읽어 보세요</div>'
+    + '<div class="ocg-popsent">'+sentence+'</div>'
+    + '<button class="ocg-btn primary">다음 ▶</button></div>');
+  p.onclick = function(){ p.remove(); start(); };
+  root.appendChild(p);
+}
 // 낱말을 완성했을 때 — 다른 말 없이 **완성된 낱말만** 크게 보여 준다
 function celebrateWord(word){
-  var p = el('div','ocg-pop','<div class="ocg-popbox wordonly"><div class="ocg-popword">'+word+'</div>'
+  var p = el('div','ocg-pop','<div class="ocg-popbox wordonly"><div class="ocg-popread">📖 소리 내어 읽어 보세요</div>'
+    + '<div class="ocg-popword">'+word+'</div>'
     + '<button class="ocg-btn primary">다음 ▶</button></div>');
   p.onclick = function(){ p.remove(); start(); };
   root.appendChild(p);
@@ -1766,11 +1794,11 @@ function gameFindPhoneme(){
 
   stage.innerHTML = '';
   var prompt = el('div','ocg-prompt');
-  var pb = el('button','ocg-big','🔊 소리 다시 듣기'); pb.onclick = function(){ sayJamo(tj2); };
+  var pb = el('button','ocg-big');
+  armPlay(pb, function(){ sayJamo(tj2); }, '🔊 소리 다시 듣기');
   prompt.appendChild(pb);
   prompt.appendChild(el('div','ocg-inst', label));
   stage.appendChild(prompt);
-  sayJamo(tj2);
 
   var board = el('div','ocg-two'); stage.appendChild(board);
   shuffle([right, wrong]).forEach(function(s){
@@ -1816,11 +1844,11 @@ function gameFind(){
 
   stage.innerHTML = '';
   var prompt = el('div','ocg-prompt');
-  var pb = el('button','ocg-big','🔊 다시 듣기'); pb.onclick = speakFn;
+  var pb = el('button','ocg-big');
+  armPlay(pb, speakFn, '🔊 다시 듣기');
   prompt.appendChild(pb);
   prompt.appendChild(el('div','ocg-inst', label));
   stage.appendChild(prompt);
-  speakFn();
 
   var board = el('div','ocg-grid'); stage.appendChild(board);
   tiles.forEach(function(w){
@@ -2102,7 +2130,7 @@ function gameWrite(){
   stage.innerHTML = '';
   var top = el('div','ocg-wtop');
   var im = el('img','ocg-bigpic'); im.src = x.img; im.alt=''; top.appendChild(im);
-  var pb = el('button','ocg-big','🔊 낱말 듣기'); pb.onclick = function(){ say(w); }; top.appendChild(pb);
+  var pb = el('button','ocg-big'); armPlay(pb, function(){ say(w); }, '🔊 낱말 듣기'); top.appendChild(pb);
   stage.appendChild(top);
 
 
@@ -2113,12 +2141,12 @@ function gameWrite(){
     var go = el('button','ocg-btn primary','확인');
     row.appendChild(inp); row.appendChild(go); stage.appendChild(row);
     go.onclick = function(){
-      if (inp.value.trim() === w){ say(w); setScore(score+3); celebrateWord(w); }
+      if (inp.value.trim() === w){ setScore(score+3); celebrateWord(w); }
       else { feedback('다시 한 번 볼까요?', false); setScore(score-1); inp.select(); }
     };
     inp.onkeydown = function(e){ if(e.key==='Enter') go.click(); };
     setTimeout(function(){ inp.focus(); }, 100);
-    say(w); return;
+    return;
   }
 
   stage.appendChild(el('div','ocg-inst','음소 카드를 <b>순서대로</b> 눌러 낱말을 완성하세요 (카드를 누르면 이름을 들려줘요)'));
@@ -2157,7 +2185,7 @@ function gameWrite(){
       if (j === seq[at]){
         b.classList.add('used'); slots[at].textContent = j;
         slots[at].classList.remove('ghost'); slots[at].classList.add('filled'); at++; setScore(score+1);
-        if (at === seq.length){ setTimeout(function(){ say(w); }, 400); setTimeout(function(){ celebrateWord(w); }, 900); }
+        if (at === seq.length){ setTimeout(function(){ celebrateWord(w); }, 500); }
       } else {
         b.classList.add('shake'); setTimeout(function(){ b.classList.remove('shake'); }, 420);
         feedback('순서가 달라요. 다음에 올 소리는 무엇일까요?', false); setScore(score-1);
@@ -2165,7 +2193,6 @@ function gameWrite(){
     };
     cards.appendChild(b);
   });
-  say(w);
 }
 
 /* ───────── 5. 빈칸 채우기 ───────── */
@@ -2199,7 +2226,7 @@ function gameCloze(){
   else { var sj = splitJosa(core); answer = sj[0]; tail = sj[1] + punct; }
 
   stage.innerHTML = '';
-  var pb = el('button','ocg-big','🔊 문장 듣기'); pb.onclick = function(){ say(s); };
+  var pb = el('button','ocg-big'); armPlay(pb, function(){ say(s); }, '🔊 문장 듣기');
   stage.appendChild(pb);
   stage.appendChild(el('div','ocg-inst',
     level===0 ? '아래 <b>낱말을 끌어다</b> 빈칸에 넣으세요'
@@ -2218,7 +2245,8 @@ function gameCloze(){
   });
   stage.appendChild(line);
 
-  function win(){ say(s); setScore(score+2); setTimeout(function(){ celebrate('맞았어요!'); }, 500); }
+  // 맞추면 소리 대신 완성된 문장을 크게 띄워 스스로 읽게 한다
+  function win(){ setScore(score+2); setTimeout(function(){ celebrateSentence(s); }, 450); }
 
   if (level === 0){
     // 보기는 정답과 같은 종류로 — 서술어면 다른 서술어, 낱말이면 낱말 풀에서
@@ -2267,7 +2295,6 @@ function gameCloze(){
     inp.onkeydown = function(e){ if(e.key==='Enter') go.click(); };
     setTimeout(function(){ inp.focus(); }, 100);
   }
-  say(s);
 }
 
 /* ───────── 시작 ───────── */
