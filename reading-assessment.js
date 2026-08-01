@@ -13,6 +13,19 @@
       .replace(/'/g, "&#039;");
   }
 
+  async function readJsonResponse(response) {
+    var contentType = String(response.headers.get("content-type") || "").toLowerCase();
+    var body = await response.text();
+    if (!contentType.includes("application/json")) {
+      throw new Error("AI 분석 연결이 잠시 지연되고 있어요. 잠시 후 다시 시도해 주세요.");
+    }
+    try {
+      return JSON.parse(body);
+    } catch (_) {
+      throw new Error("분석 결과를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.");
+    }
+  }
+
   function cleanWord(value) {
     return String(value || "")
       .toLowerCase()
@@ -719,7 +732,7 @@
         method: "POST",
         body: form,
       });
-      var data = await response.json();
+      var data = await readJsonResponse(response);
       if (!response.ok) throw new Error(data.error || "음성 분석에 실패했습니다.");
       renderResult(reading, prepared.signal, data.transcript, data.assessment);
     } catch (error) {

@@ -3,6 +3,7 @@
 
   var refs = {};
   var sentences = [];
+  var sentenceElements = [];
   var fullText = "";
   var flow = {
     role: "student",
@@ -28,6 +29,100 @@
   var microphonePermission = "unknown";
   var permissionRequesting = false;
   var syncApplying = false;
+
+  /* ---------- 자율학습 전용: 유창성 결과로 리딩툴스 옵션 조용히 자동 조정 ---------- */
+  // No lessonId in the key: this preset is meant to follow the child across every
+  // 두루책방 title on this device/browser, not just the book the test happened in.
+  var READING_PRESET_KEY = "oncuvate-reading-preset";
+
+  function isSelfStudyMode() {
+    try { return !!(window.OcSession && window.OcSession.selfStudy); } catch (_) { return false; }
+  }
+
+  function starTier(stars) {
+    var value = Number(stars) || 0;
+    if (value < 2.5) return "low";
+    if (value < 4) return "mid";
+    return "high";
+  }
+
+  function buildReadingPreset(assessment) {
+    var phrasing = starTier(assessment.phrasingStars);
+    var pronunciation = starTier(assessment.pronunciationStars);
+    var speed = starTier(assessment.speedStars);
+    return {
+      level: phrasing === "low" ? "word" : phrasing === "mid" ? "chunk" : "sentence",
+      josa: pronunciation !== "high",
+      eomi: pronunciation !== "high",
+      keep: true,
+      slash: phrasing !== "high",
+      voiceOn: speed === "low",
+      rate: speed === "low" ? "0.8" : speed === "mid" ? "1.0" : "1.2"
+    };
+  }
+
+  function setToggleAndFire(id, value) {
+    var el = document.getElementById(id);
+    if (!el || el.checked === !!value) return;
+    el.checked = !!value;
+    el.dispatchEvent(new Event("change", { bubbles: true }));
+  }
+
+  function applyReadingPreset(preset) {
+    if (!preset) return;
+    try {
+      if (typeof window.setLevel === "function") window.setLevel(preset.level);
+      setToggleAndFire("tJosa", preset.josa);
+      setToggleAndFire("tEomi", preset.eomi);
+      setToggleAndFire("tKeep", preset.keep);
+      setToggleAndFire("tSlash", preset.slash);
+      setToggleAndFire("tVoice", preset.voiceOn);
+      var rateEl = document.getElementById("voiceRate");
+      if (rateEl && rateEl.value !== preset.rate) {
+        rateEl.value = preset.rate;
+        rateEl.dispatchEvent(new Event("change", { bubbles: true }));
+      }
+    } catch (_) {}
+  }
+
+  function saveReadingPreset(preset) {
+    try { localStorage.setItem(READING_PRESET_KEY, JSON.stringify(preset)); } catch (_) {}
+  }
+
+  function loadReadingPreset() {
+    try { return JSON.parse(localStorage.getItem(READING_PRESET_KEY) || "null"); } catch (_) { return null; }
+  }
+
+  function showPresetToast() {
+    var name = "";
+    try { name = (window.OcSession && window.OcSession.studentName) || ""; } catch (_) {}
+    var old = document.querySelector(".oc-preset-toast");
+    if (old) old.remove();
+    var toast = document.createElement("div");
+    toast.className = "oc-preset-toast";
+    toast.textContent = (name || "우리 친구") + "에게 딱 맞는 읽기 설정 완료!";
+    document.body.appendChild(toast);
+    window.setTimeout(function () { toast.classList.add("is-visible"); }, 20);
+    window.setTimeout(function () {
+      toast.classList.remove("is-visible");
+      window.setTimeout(function () { toast.remove(); }, 400);
+    }, 3200);
+  }
+
+  function applyFluencyAutoPreset(assessment) {
+    if (!isSelfStudyMode() || !assessment) return;
+    var preset = buildReadingPreset(assessment);
+    saveReadingPreset(preset);
+    applyReadingPreset(preset);
+    showPresetToast();
+  }
+
+  window.addEventListener("oncuvate-session-change", function (event) {
+    var session = (event && event.detail) || {};
+    if (!session.selfStudy) return;
+    var preset = loadReadingPreset();
+    if (preset) applyReadingPreset(preset);
+  });
   var originalGetState = null;
   var originalApplyState = null;
 
@@ -36,6 +131,18 @@
     return String(value == null ? "" : value)
       .replace(/&/g, "&amp;").replace(/</g, "&lt;")
       .replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+  }
+  async function readJsonResponse(response) {
+    var contentType = String(response.headers.get("content-type") || "").toLowerCase();
+    var body = await response.text();
+    if (!contentType.includes("application/json")) {
+      throw new Error("AI 분석 연결이 잠시 지연되고 있어요. 잠시 후 다시 시도해 주세요.");
+    }
+    try {
+      return JSON.parse(body);
+    } catch (_) {
+      throw new Error("분석 결과를 불러오지 못했어요. 잠시 후 다시 시도해 주세요.");
+    }
   }
   function clone(value) { return JSON.parse(JSON.stringify(value)); }
   function isConnected() {
@@ -49,6 +156,7 @@
   }
   function learnerName() {
     try {
+      if (window.OcSession && window.OcSession.studentName) return String(window.OcSession.studentName);
       var context = window.Oc && typeof window.Oc.ctx === "function" ? window.Oc.ctx() : null;
       return context && context.name ? String(context.name) : "학생";
     } catch (_) { return "학생"; }
@@ -58,6 +166,18 @@
   }
   function targetText() {
     return flow.activity === "full" ? fullText : (sentences[flow.sentenceIndex] || sentences[0] || "");
+  }
+  function readingToolClasses() {
+    var reading = byId("reading");
+    return "oc-fluency-target-render " + (reading ? reading.className : "reading level-word keep-word show-slash");
+  }
+  function targetMarkup() {
+    if (!sentenceElements.length) return escapeHtml(targetText());
+    if (flow.activity === "full") {
+      return sentenceElements.map(function (element) { return element.outerHTML; }).join("");
+    }
+    var element = sentenceElements[flow.sentenceIndex] || sentenceElements[0];
+    return element ? element.outerHTML : escapeHtml(targetText());
   }
   function syllableCount(text) {
     var matches = String(text || "").match(/[가-힣]/g);
@@ -132,10 +252,12 @@
     refs.content = byId("ocStudioContent");
     if (!refs.panel || !refs.button || !refs.content) return;
 
-    sentences = Array.prototype.map.call(
+    var sentenceNodes = Array.prototype.filter.call(
       document.querySelectorAll("#reading .sentence"),
       function (element) { return cleanText(element.textContent); }
-    ).filter(Boolean);
+    );
+    sentences = sentenceNodes.map(function (element) { return cleanText(element.textContent); });
+    sentenceElements = sentenceNodes;
     fullText = sentences.join(" ");
 
     refs.panel.innerHTML =
@@ -154,6 +276,15 @@
 
     refs.panel.addEventListener("click", onPanelClick);
     refs.panel.addEventListener("input", onPanelInput);
+
+    // 리딩툴스(조사/어미/단어유지/끊어읽기/수준)를 유창성 테스트 화면이 열려 있는
+    // 동안 바꿔도 표시 중인 목표 문장에 바로 반영되도록 다시 그린다.
+    ["tJosa", "tEomi", "tKeep", "tSlash"].forEach(function (id) {
+      var el = byId(id);
+      if (el) el.addEventListener("change", function () { render(); });
+    });
+    var levelSeg = byId("levelSeg");
+    if (levelSeg) levelSeg.addEventListener("click", function () { window.setTimeout(render, 0); });
     refs.button.onclick = function () {
       if (window.OcLearning) window.OcLearning.showMode("test", true);
       render();
@@ -233,13 +364,12 @@
   }
 
   function renderTeacher() {
-    var target = targetText();
     var report = flow.latestReport;
     refs.body.innerHTML =
       '<div class="oc-fluency-teacher-grid">' +
         '<section class="oc-fluency-target-card"><div class="oc-card-label"><span>학생에게 보이는 글</span>' +
           (flow.activity === "sentence" ? '<b>' + (flow.sentenceIndex + 1) + ' / ' + sentences.length + '</b>' : '<b>전체</b>') +
-        '</div><p>' + escapeHtml(target) + '</p>' +
+        '</div><div class="' + readingToolClasses() + '">' + targetMarkup() + '</div>' +
         (flow.activity === "sentence" ? '<div class="oc-sentence-nav"><button type="button" data-fluency-action="prev-sentence" ' + (flow.sentenceIndex === 0 ? "disabled" : "") + '>이전 문장</button>' +
           '<button type="button" data-fluency-action="next-sentence" ' + (flow.sentenceIndex >= sentences.length - 1 ? "disabled" : "") + '>다음 문장</button></div>' : "") +
         '<small>강사가 문장 또는 활동 유형을 바꾸면 학생 화면에 바로 반영됩니다.</small></section>' +
@@ -282,7 +412,7 @@
     var activityLabel = flow.activity === "full" ? "글 전체 읽기" : "문장 " + (flow.sentenceIndex + 1);
     var content =
       '<section class="oc-student-fluency-card"><div class="oc-student-target-head"><span>' + activityLabel + '</span>' +
-      '<b>' + syllableCount(target) + '음절</b></div><p class="oc-student-target">' + escapeHtml(target) + '</p>';
+      '<b>' + syllableCount(target) + '음절</b></div><div class="oc-student-target ' + readingToolClasses() + '">' + targetMarkup() + '</div>';
 
     if (permissionRequesting) {
       content += '<div class="oc-mic-permission is-checking"><i></i><strong>마이크 연결을 확인하고 있어요</strong><p>권한창이 나타나면 <b>허용</b>을 눌러 주세요.</p></div>';
@@ -457,12 +587,19 @@
       form.append("audio", wav, "reading.wav");
       form.append("targetText", targetText());
       form.append("signalSummary", signalSummary);
+      form.append("activity", flow.activity);
       var response = await fetch("/api/reading-assessment", { method: "POST", body: form });
-      var data = await response.json();
+      var data = await readJsonResponse(response);
       if (!response.ok) throw new Error(data.error || "음성 분석에 실패했습니다.");
-      latestLocalResult = { transcript: data.transcript, assessment: data.assessment, duration: duration };
+      latestLocalResult = {
+        transcript: data.transcript,
+        readTargetText: data.readTargetText || targetText(),
+        assessment: data.assessment,
+        duration: duration
+      };
       status = "result";
       sendReport(latestLocalResult);
+      applyFluencyAutoPreset(data.assessment);
       render();
     } catch (error) {
       latestLocalResult = { error: error && error.message ? error.message : "음성 분석에 실패했습니다." };
@@ -490,7 +627,7 @@
       studentName: learnerName(),
       activity: flow.activity,
       sentenceIndex: flow.sentenceIndex,
-      targetText: targetText(),
+      targetText: result.readTargetText || targetText(),
       transcript: result.transcript || "",
       pronunciationStars: Number(assessment.pronunciationStars) || .5,
       speedStars: Number(assessment.speedStars || assessment.fluencyStars) || .5,

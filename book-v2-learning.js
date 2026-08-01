@@ -2,6 +2,12 @@
   "use strict";
 
   var BOOK_CONFIG = window.ONCUVATE_BOOK_CONFIG || {};
+  var JELLY_ACTIVITY_ICONS = {
+    listen: "assets/jelly-teacher/jelly-teacher-listening.png?v=47",
+    order: "assets/jelly-teacher/jelly-teacher-pointing.png?v=47",
+    anagram: "assets/jelly-teacher/jelly-teacher-puzzle.png?v=47"
+  };
+  var USE_JELLY_ACTIVITY_ICONS = /(?:^|\/)fingernail_fieldmouse(?:\.html)?\/?$/.test(location.pathname);
 
   var GAME_ACTIVITIES = BOOK_CONFIG.gameActivities || {
     listen: {
@@ -100,7 +106,11 @@
     attempts: 0,
     response: null,
     selected: [],
-    revision: 0
+    lengthConfirmed: false,
+    lengthWrong: false,
+    revision: 0,
+    roundSeed: 0,
+    pacingBySection: { game: "teacher", review: "teacher" }
   };
 
   var refs = {};
@@ -190,6 +200,45 @@
       });
     } catch (_) {}
   }
+  function playTrainHorn() {
+    if (isTeacher()) return;
+    try {
+      var AudioContextClass = window.AudioContext || window.webkitAudioContext;
+      if (!AudioContextClass) return;
+      if (!gameAudioContext) gameAudioContext = new AudioContextClass();
+      var context = gameAudioContext;
+      if (context.state === "suspended") context.resume();
+      var now = context.currentTime;
+      [0, 0.28].forEach(function (offset) {
+        [220, 330].forEach(function (frequency) {
+          var start = now + offset;
+          var oscillator = context.createOscillator();
+          var gain = context.createGain();
+          oscillator.type = "sawtooth";
+          oscillator.frequency.setValueAtTime(frequency, start);
+          gain.gain.setValueAtTime(0.0001, start);
+          gain.gain.exponentialRampToValueAtTime(0.07, start + 0.03);
+          gain.gain.exponentialRampToValueAtTime(0.0001, start + 0.22);
+          oscillator.connect(gain);
+          gain.connect(context.destination);
+          oscillator.start(start);
+          oscillator.stop(start + 0.24);
+        });
+      });
+    } catch (_) {}
+  }
+  var PARTICLE_CONFUSE = {
+    "이": ["가", "을", "에"], "가": ["이", "를", "에서"],
+    "은": ["는", "을", "에"], "는": ["은", "를", "에서"],
+    "을": ["를", "이", "에"], "를": ["을", "가", "에게"],
+    "에": ["이", "을", "와"], "에서": ["가", "를", "과"], "에게": ["이", "을", "으로"],
+    "으로": ["로", "가", "를"], "로": ["으로", "이", "을"],
+    "와": ["과", "이", "을"], "과": ["와", "가", "를"]
+  };
+  function josaChoices(correct) {
+    var distractors = PARTICLE_CONFUSE[correct] || ["이", "가", "은", "는", "을", "를", "에", "에서", "에게", "으로", "로", "와", "과"].filter(function (p) { return p !== correct; }).slice(0, 3);
+    return shuffle([correct].concat(distractors));
+  }
   function removeBatchim(character) {
     var code = String(character || "").charCodeAt(0);
     if (code < 0xac00 || code > 0xd7a3) return character;
@@ -200,6 +249,7 @@
     try { return typeof syncClient !== "undefined" && syncClient && syncClient.connected; } catch (_) { return false; }
   }
   function isTeacher() {
+    if (window.OcSession && window.OcSession.role) return window.OcSession.role === "teacher";
     var consoleEl = byId("ocConsole");
     if (isConnected()) return !!consoleEl && consoleEl.style.display === "flex";
     return !/room=/.test(location.hash);
@@ -209,21 +259,42 @@
     return isTeacher() ? "강사 화면" : "학생 화면";
   }
   function activityMap() { return state.section === "review" ? REVIEW_ACTIVITIES : GAME_ACTIVITIES; }
+  function pacing(section) { return (state.pacingBySection || {})[section || state.section] || "teacher"; }
   function currentActivity() { return activityMap()[state.activity] || activityMap()[Object.keys(activityMap())[0]]; }
-  function currentItem() {
+  function currentItems() {
     var activity = currentActivity();
-    return activity.items[Math.max(0, Math.min(state.index, activity.items.length - 1))];
+    if (activity.pool && activity.pool.length) {
+      var count = Math.max(1, Math.min(activity.count || activity.pool.length, activity.pool.length));
+      return stableShuffle(activity.pool, state.roundSeed + ":" + state.section + ":" + state.activity).slice(0, count);
+    }
+    return activity.items || [];
+  }
+  function currentItem() {
+    var items = currentItems();
+    return items[Math.max(0, Math.min(state.index, items.length - 1))];
   }
   function answerText(item) {
     return Array.isArray(item.answer) ? item.answer.join(" → ") : item.answer;
   }
-  function totalItems() { return currentActivity().items.length; }
+  function totalItems() { return currentItems().length; }
+
+  function menuIconMarkup(icon) {
+    var iconNames = {
+      book: "reading",
+      game: "game",
+      review: "review",
+      mic: "fluency",
+      sheet: "worksheet",
+    };
+    var iconName = iconNames[icon] || icon;
+    return '<span class="oc-nav-icon ' + icon + '" aria-hidden="true"><img src="assets/menu-icons/oncuvate-menu-' + iconName + '.png" alt=""></span>';
+  }
 
   function makeNavButton(id, icon, label) {
     var button = document.createElement("button");
     button.id = id;
     button.type = "button";
-    button.innerHTML = '<span class="oc-nav-icon ' + icon + '" aria-hidden="true"></span><span class="oc-nav-label">' + label + "</span>";
+    button.innerHTML = menuIconMarkup(icon) + '<span class="oc-nav-label">' + label + "</span>";
     return button;
   }
 
@@ -274,10 +345,10 @@
     refs.mReview = mReview;
     modebar.insertBefore(mReview, mTest);
 
-    mGame.innerHTML = '<span class="oc-nav-icon game" aria-hidden="true"></span><span class="oc-nav-label">게임</span>';
-    mReading.innerHTML = '<span class="oc-nav-icon book" aria-hidden="true"></span><span class="oc-nav-label">읽기</span>';
-    mTest.innerHTML = '<span class="oc-nav-icon mic" aria-hidden="true"></span><span class="oc-nav-label">유창성 테스트</span>';
-    mWS.innerHTML = '<span class="oc-nav-icon sheet" aria-hidden="true"></span><span class="oc-nav-label">워크시트</span>';
+    mGame.innerHTML = menuIconMarkup("game") + '<span class="oc-nav-label">게임</span>';
+    mReading.innerHTML = menuIconMarkup("book") + '<span class="oc-nav-label">읽기</span>';
+    mTest.innerHTML = menuIconMarkup("mic") + '<span class="oc-nav-label">유창성 테스트</span>';
+    mWS.innerHTML = menuIconMarkup("sheet") + '<span class="oc-nav-label">워크시트</span>';
 
     [mGame, mReading, mReview, mTest, mWS].forEach(function (button) { modebar.appendChild(button); });
 
@@ -289,7 +360,18 @@
     window.OcLearning = {
       showMode: showMode,
       isTeacher: isTeacher,
-      publish: publish
+      publish: publish,
+      getProgress: function () {
+        return {
+          section: state.section,
+          activity: state.activity,
+          phase: state.phase,
+          index: state.index,
+          total: totalItems(),
+          attempts: state.attempts,
+          score: state.score
+        };
+      }
     };
     window.setInterval(refreshRole, 600);
     showMode("game", false);
@@ -297,6 +379,13 @@
 
   function buildLearningPanel(panel, section) {
     var isReview = section === "review";
+    var difficultyControls = USE_JELLY_ACTIVITY_ICONS && !isReview
+      ? '<div class="oc-option-group"><span class="oc-sr-only">난이도</span><div class="oc-option-seg oc-star-difficulty" data-option="difficulty" aria-label="난이도 선택">' +
+          '<button type="button" data-value="easy" aria-label="별 하나 난이도"><span aria-hidden="true">★</span></button><button type="button" data-value="normal" aria-label="별 둘 난이도"><span aria-hidden="true">★★</span></button><button type="button" data-value="challenge" aria-label="별 셋 난이도"><span aria-hidden="true">★★★</span></button>' +
+        '</div></div>'
+      : '<div class="oc-option-group"><span>난이도</span><div class="oc-option-seg" data-option="difficulty" aria-label="난이도 선택">' +
+          '<button type="button" data-value="easy">쉬움</button><button type="button" data-value="normal">보통</button><button type="button" data-value="challenge">도전</button>' +
+        '</div></div>';
     panel.innerHTML =
       '<div class="oc-flow-head">' +
         '<div><span class="oc-flow-kicker">' + (isReview ? "REVIEW LAB" : "LEARNING GAME") + '</span>' +
@@ -309,22 +398,25 @@
         '<div class="oc-option-group" data-unit-wrap><span>읽기 단위</span><div class="oc-option-seg" data-option="unit">' +
           '<button type="button" data-value="syl">1음절</button><button type="button" data-value="word">낱말</button>' +
         '</div></div>' +
-        '<div class="oc-option-group"><span>난이도</span><div class="oc-option-seg" data-option="difficulty">' +
-          '<button type="button" data-value="easy">쉬움</button><button type="button" data-value="normal">보통</button><button type="button" data-value="challenge">도전</button>' +
+        difficultyControls +
+        '<div class="oc-option-group"><span>진행 방식</span><div class="oc-option-seg" data-option="pacing">' +
+          '<button type="button" data-value="teacher">강사주도</button><button type="button" data-value="student">학생주도</button>' +
         '</div></div>' +
       '</div>' +
       '<div class="oc-session-card" data-session></div>';
 
     var activityBox = panel.querySelector("[data-activities]");
     var activities = isReview ? REVIEW_ACTIVITIES : GAME_ACTIVITIES;
+    if (!isReview && USE_JELLY_ACTIVITY_ICONS) activityBox.classList.add("is-jelly-activities");
     Object.keys(activities).forEach(function (key) {
       var item = activities[key];
       var button = document.createElement("button");
       button.type = "button";
       button.dataset.activity = key;
-      button.innerHTML =
-        '<span class="oc-activity-icon ' + item.icon + '" aria-hidden="true"></span>' +
-        '<span><strong>' + item.title + '</strong><small>' + item.note + "</small></span>";
+      button.setAttribute("aria-label", item.title);
+      button.innerHTML = isReview || !USE_JELLY_ACTIVITY_ICONS
+        ? '<span class="oc-activity-icon ' + item.icon + '" aria-hidden="true"></span><span><strong>' + item.title + '</strong><small>' + item.note + "</small></span>"
+        : '<img class="oc-jelly-activity" src="' + JELLY_ACTIVITY_ICONS[key] + '" alt=""><strong class="oc-jelly-label">' + item.title + '</strong>';
       activityBox.appendChild(button);
     });
     if (isReview) panel.querySelector("[data-unit-wrap]").style.display = "none";
@@ -340,22 +432,46 @@
         resetSession();
         publish();
       } else if (optionButton) {
-        if (!isTeacher()) return;
         var name = optionButton.closest("[data-option]").dataset.option;
+        if (name === "pacing") {
+          if (!isTeacher()) return;
+          state.pacingBySection[section] = optionButton.dataset.value;
+          resetSession();
+          publish();
+          return;
+        }
+        var studentMayChange = name === "difficulty" && pacing(section) === "student";
+        if (!isTeacher() && !studentMayChange) return;
         state[name] = optionButton.dataset.value;
-        resetSession();
-        publish();
+        if (isTeacher()) {
+          resetSession();
+          publish();
+        } else {
+          renderLearning();
+          publish();
+        }
       } else if (actionButton) {
         handleAction(actionButton.dataset.action, actionButton);
       }
     });
   }
 
+  var worksheetSet = null;
+  function getWorksheetSet() {
+    if (worksheetSet) return worksheetSet;
+    if (!WORKSHEET_ACTIVITIES.setPool || !WORKSHEET_ACTIVITIES.setPool.length) return null;
+    worksheetSet = shuffle(WORKSHEET_ACTIVITIES.setPool).slice(0, WORKSHEET_ACTIVITIES.setCount || 5);
+    return worksheetSet;
+  }
+
   function buildWorksheet(panel) {
     panel.innerHTML =
       '<div class="oc-flow-head"><div><span class="oc-flow-kicker">A4 ACTIVITY</span><h2>화면에서 풀고, A4로 인쇄해요</h2>' +
       '<p>바로 내려받지 않고 수업 중 작성한 뒤 그대로 인쇄할 수 있습니다.</p></div>' +
-      '<button class="oc-print-btn" type="button" data-print>인쇄하기</button></div>' +
+      '<div class="oc-ws-head-actions">' +
+        '<button class="oc-ws-refresh-btn" type="button" data-ws-refresh title="다른 문장 세트로 바꿔요">↻ 새로고침</button>' +
+        '<button class="oc-print-btn" type="button" data-print>인쇄하기</button>' +
+      '</div></div>' +
       '<div class="oc-ws-tabs">' +
         '<button type="button" class="is-active" data-ws-tab="batchim">빠진 받침</button>' +
         '<button type="button" data-ws-tab="josa">조사 채우기</button>' +
@@ -375,6 +491,11 @@
         renderWorksheet(tab.dataset.wsTab);
       }
       if (event.target.closest("[data-print]")) window.print();
+      if (event.target.closest("[data-ws-refresh]")) {
+        worksheetSet = null;
+        var activeTab = panel.querySelector("[data-ws-tab].is-active");
+        renderWorksheet(activeTab ? activeTab.dataset.wsTab : "batchim");
+      }
       var check = event.target.closest("[data-ws-check]");
       if (check) checkWorksheet(check.dataset.wsCheck);
       var play = event.target.closest("[data-ws-play]");
@@ -390,29 +511,46 @@
 
   function renderWorksheet(type) {
     var sheet = refs.worksheet.querySelector("[data-ws-sheet]");
+    var sharedSet = getWorksheetSet();
     if (type === "josa") {
-      var rows = WORKSHEET_ACTIVITIES.josa || [
-        ["감기", "걸렸어요.", "에"], ["목", "아파요.", "이"], ["안과", "가요.", "에"],
-        ["의사 선생님", "진찰해요.", "이"], ["발목", "삐끗했어요.", "을"]
-      ];
+      var rows = sharedSet
+        ? sharedSet.map(function (item) { return [item.prefix, item.rest, item.particle]; })
+        : WORKSHEET_ACTIVITIES.josaPool && WORKSHEET_ACTIVITIES.josaPool.length
+        ? shuffle(WORKSHEET_ACTIVITIES.josaPool).slice(0, WORKSHEET_ACTIVITIES.josaCount || 5)
+        : WORKSHEET_ACTIVITIES.josa || [
+          ["감기", "걸렸어요.", "에"], ["목", "아파요.", "이"], ["안과", "가요.", "에"],
+          ["의사 선생님", "진찰해요.", "이"], ["발목", "삐끗했어요.", "을"]
+        ];
       sheet.innerHTML = worksheetHeader("조사 채우기", "빈칸에 알맞은 조사를 골라 문장을 완성해 보세요.") +
         '<ol class="oc-ws-list">' + rows.map(function (row, index) {
-          return '<li><span>' + row[0] + '</span><select data-answer="' + row[2] + '"><option value="">고르기</option><option>이</option><option>가</option><option>을</option><option>를</option><option>에</option></select><span>' + row[1] + '</span><i></i></li>';
+          var particles = josaChoices(row[2]);
+          var options = particles.map(function (particle) {
+            return '<option value="' + escapeHtml(particle) + '">' + escapeHtml(particle) + '</option>';
+          }).join("");
+          return '<li><span>' + row[0] + '</span><select data-answer="' + escapeHtml(row[2]) + '"><option value="">고르기</option>' + options + '</select><span>' + row[1] + '</span><i></i></li>';
         }).join("") + '</ol><button class="oc-ws-check" type="button" data-ws-check="josa">확인하기</button>';
     } else if (type === "dictation") {
-      var dictation = WORKSHEET_ACTIVITIES.dictation || ["내과에 가요.", "목이 아파요.", "안과에서 진찰을 받아요.", "피부과에 가야 해요.", "발목을 삐끗했어요."];
+      var dictation = sharedSet
+        ? sharedSet.map(function (item) { return item.sentence; })
+        : WORKSHEET_ACTIVITIES.dictationPool && WORKSHEET_ACTIVITIES.dictationPool.length
+        ? shuffle(WORKSHEET_ACTIVITIES.dictationPool).slice(0, WORKSHEET_ACTIVITIES.dictationCount || 5)
+        : WORKSHEET_ACTIVITIES.dictation || ["내과에 가요.", "목이 아파요.", "안과에서 진찰을 받아요.", "피부과에 가야 해요.", "발목을 삐끗했어요."];
       sheet.innerHTML = worksheetHeader("문장 받아쓰기", "소리를 듣고 문장을 천천히 적어 보세요.") +
         '<ol class="oc-ws-list oc-dictation">' + dictation.map(function (text) {
           return '<li><button type="button" data-ws-play="' + escapeHtml(text) + '">소리 듣기</button><input type="text" data-answer="' + escapeHtml(text.replace(/[.\s]/g, "")) + '" aria-label="받아쓰기 답"><i></i></li>';
         }).join("") + '</ol><button class="oc-ws-check" type="button" data-ws-check="dictation">확인하기</button>';
     } else {
-      var batchim = (WORKSHEET_ACTIVITIES.batchim || [
-        { answer: "감기에 걸렸어요." },
-        { answer: "목이 아파요." },
-        { answer: "발목을 삐끗했어요." },
-        { answer: "눈동자가 시려요." },
-        { answer: "감기약을 먹었어요." }
-      ]).map(function (row) {
+      var batchim = (sharedSet
+        ? sharedSet.map(function (item) { return { answer: item.sentence }; })
+        : WORKSHEET_ACTIVITIES.batchimPool && WORKSHEET_ACTIVITIES.batchimPool.length
+        ? shuffle(WORKSHEET_ACTIVITIES.batchimPool).slice(0, WORKSHEET_ACTIVITIES.batchimCount || 5)
+        : WORKSHEET_ACTIVITIES.batchim || [
+          { answer: "감기에 걸렸어요." },
+          { answer: "목이 아파요." },
+          { answer: "발목을 삐끗했어요." },
+          { answer: "눈동자가 시려요." },
+          { answer: "감기약을 먹었어요." }
+        ]).map(function (row) {
         return typeof row === "string" ? { answer: row } : row;
       });
       sheet.innerHTML = worksheetHeader("빠진 받침 채우기", "소리를 듣고, 받침이 빠진 글자를 완성해서 적어 보세요.") +
@@ -481,6 +619,14 @@
     }
   }
 
+  function modeSwitchLocked() {
+    var lock = window.ocGetLockState ? window.ocGetLockState() : null;
+    if (!lock || lock.isTeacher) return false;
+    if (!(lock.lockPage || lock.lockAct)) return false;
+    if (window.ocLockToast) window.ocLockToast();
+    return true;
+  }
+
   function bindModeButtons() {
     refs.mGame.onclick = function () { showMode("game", true); };
     refs.mRead.onclick = function () { showMode("read", true); };
@@ -490,6 +636,7 @@
   }
 
   function showMode(mode, shouldPublish) {
+    if (shouldPublish && modeSwitchLocked()) return;
     state.mode = mode;
     var visible = { game: refs.game, read: refs.read, review: refs.review, test: refs.test, worksheet: refs.worksheet };
     Object.keys(visible).forEach(function (key) {
@@ -527,6 +674,8 @@
     state.attempts = 0;
     state.response = null;
     state.selected = [];
+    state.lengthConfirmed = false;
+    state.lengthWrong = false;
     heardQuestionKey = "";
     cuePlayingKey = "";
     state.revision++;
@@ -537,10 +686,13 @@
     if (!isTeacher()) return;
     state.phase = "question";
     state.index = 0;
+    state.roundSeed = Date.now() + ":" + Math.random();
     state.score = 0;
     state.attempts = 0;
     state.response = null;
     state.selected = [];
+    state.lengthConfirmed = false;
+    state.lengthWrong = false;
     heardQuestionKey = "";
     cuePlayingKey = "";
     state.revision++;
@@ -549,7 +701,8 @@
   }
 
   function nextQuestion() {
-    if (!isTeacher() || state.phase !== "answered") return;
+    if (state.phase !== "answered") return;
+    if (!isTeacher() && pacing() !== "student") return;
     if (state.index + 1 >= totalItems()) {
       state.phase = "complete";
     } else {
@@ -557,6 +710,8 @@
       state.phase = "question";
       state.response = null;
       state.selected = [];
+      state.lengthConfirmed = false;
+      state.lengthWrong = false;
       heardQuestionKey = "";
       cuePlayingKey = "";
     }
@@ -570,6 +725,8 @@
     if (action === "next") { nextQuestion(); return; }
     if (action === "replay") { if (!isTeacher()) revealAfterCue(currentItem()); return; }
     if (action === "answer") { submitAnswer(button.dataset.value); return; }
+    if (action === "guess-length") { submitLengthGuess(Number(button.dataset.value)); return; }
+    if (action === "find-word") { toggleFindWord(button.dataset.w); return; }
     if (action === "part") { submitPart(button.dataset.value); return; }
     if (action === "remove-part") {
       if (!isTeacher() && state.phase === "question") {
@@ -597,26 +754,105 @@
   function submitPart(value) {
     if (isTeacher() || state.phase !== "question") return;
     var item = currentItem();
+    if (state.activity === "anagram" && !state.lengthConfirmed) return;
     if (state.activity === "order" && state.selected.length >= item.answer.length) return;
     state.selected.push(value);
     playGameSound("select");
     if (state.activity !== "order" && state.selected.length >= item.answer.length) {
-      submitAnswer(state.selected.join("|"));
+      submitAnswer(Array.isArray(item.answer) ? state.selected.join("|") : state.selected.join(""));
     } else {
       renderLearning();
     }
   }
 
+  function findWindowCount() {
+    return state.difficulty === "challenge" ? 7 : state.difficulty === "normal" ? 5 : 3;
+  }
+  function buildFindTextMarkup(highlightStart, highlightLength, centerSentenceIndex, selectedIndices) {
+    var reading = byId("reading");
+    var allSentEls = reading ? Array.prototype.slice.call(reading.querySelectorAll(".sentence")) : [];
+    if (!allSentEls.length) return "";
+    var sentEls = allSentEls;
+    if (typeof centerSentenceIndex === "number") {
+      var count = findWindowCount();
+      var start = Math.max(0, Math.min(centerSentenceIndex - Math.floor(count / 2), allSentEls.length - count));
+      sentEls = allSentEls.slice(start, start + count);
+    }
+    var selectedSet = (selectedIndices || []).map(Number);
+    var container = document.createElement("div");
+    sentEls.forEach(function (el) { container.appendChild(el.cloneNode(true)); });
+    container.querySelectorAll(".word").forEach(function (wordEl) {
+      wordEl.setAttribute("data-action", "find-word");
+      var w = Number(wordEl.dataset.w);
+      if (typeof highlightStart === "number" && w >= highlightStart && w < highlightStart + highlightLength) wordEl.classList.add("is-find-target");
+      if (selectedSet.indexOf(w) >= 0) wordEl.classList.add("is-selected");
+    });
+    return container.innerHTML;
+  }
+  function readingToolClasses() {
+    var reading = byId("reading");
+    return reading ? reading.className : "reading level-word keep-word show-slash";
+  }
+  function toggleFindWord(w) {
+    if (isTeacher() || state.phase !== "question") return;
+    var item = currentItem();
+    var index = state.selected.indexOf(w);
+    if (index >= 0) {
+      state.selected.splice(index, 1);
+      playGameSound("remove");
+      renderLearning();
+      return;
+    }
+    if (state.selected.length >= item.length) return;
+    state.selected.push(w);
+    playGameSound("select");
+    if (state.selected.length >= item.length) {
+      submitAnswer(state.selected.slice());
+    } else {
+      renderLearning();
+    }
+  }
+  function syllableCountOptions(count) {
+    var candidates = [count - 1, count, count + 1, count + 2].filter(function (value) { return value >= 2; });
+    while (candidates.length < 4) candidates.push(candidates[candidates.length - 1] + 1);
+    return shuffle(candidates.slice(0, 4));
+  }
+
+  function submitLengthGuess(count) {
+    if (isTeacher() || state.phase !== "question" || state.lengthConfirmed) return;
+    var item = currentItem();
+    if (count === item.parts.length) {
+      state.lengthConfirmed = true;
+      state.lengthWrong = false;
+      playGameSound("correct");
+    } else {
+      state.lengthWrong = true;
+      playGameSound("wrong");
+    }
+    renderLearning();
+  }
+
   function submitAnswer(value) {
     if (isTeacher() || state.phase !== "question") return;
     var item = currentItem();
-    var expected = Array.isArray(item.answer) ? item.answer.join("|") : item.answer;
-    var correct = value === expected;
+    var correct;
+    if (state.activity === "find") {
+      var expectedIndices = [];
+      for (var i = 0; i < item.length; i++) expectedIndices.push(item.startW + i);
+      expectedIndices.sort(function (a, b) { return a - b; });
+      var selectedIndices = (Array.isArray(value) ? value : [value]).map(Number).sort(function (a, b) { return a - b; });
+      correct = selectedIndices.length === expectedIndices.length &&
+        selectedIndices.every(function (v, idx) { return v === expectedIndices[idx]; });
+    } else {
+      var expected = Array.isArray(item.answer) ? item.answer.join("|") : item.answer;
+      correct = value === expected;
+    }
     state.attempts++;
     state.response = { value: value, correct: correct, at: Date.now() };
     state.phase = "answered";
     if (correct) state.score++;
     playGameSound(correct ? "correct" : "wrong");
+    if (correct && state.activity === "order") playTrainHorn();
     renderLearning();
     publish();
   }
@@ -631,12 +867,15 @@
     });
     panel.querySelectorAll("[data-option] button").forEach(function (button) {
       var name = button.closest("[data-option]").dataset.option;
-      button.classList.toggle("is-active", state[name] === button.dataset.value);
-      button.disabled = !isTeacher();
+      var activeValue = name === "pacing" ? pacing(state.section) : state[name];
+      button.classList.toggle("is-active", activeValue === button.dataset.value);
+      var studentMayChange = name === "difficulty" && pacing(state.section) === "student";
+      button.disabled = !isTeacher() && !studentMayChange;
       if (name === "difficulty") {
-        var labels = { easy: "쉬움", normal: "보통", challenge: "도전" };
-        button.innerHTML = "<strong>" + labels[button.dataset.value] + "</strong><small>" +
-          difficultyHint(state.activity, button.dataset.value) + "</small>";
+        var stars = { easy: "★", normal: "★★", challenge: "★★★" };
+        var starLabels = { easy: "별 하나 난이도", normal: "별 둘 난이도", challenge: "별 셋 난이도" };
+        button.setAttribute("aria-label", starLabels[button.dataset.value]);
+        button.innerHTML = '<span aria-hidden="true">' + stars[button.dataset.value] + '</span>';
       }
     });
     var session = panel.querySelector("[data-session]");
@@ -650,7 +889,7 @@
     session.className = "oc-session-card is-intro";
     session.innerHTML =
       '<div class="oc-session-ribbon"><span>준비</span><strong>시작과 끝이 있는 ' + totalItems() + '문제</strong></div>' +
-      '<div class="oc-intro-visual"><span class="oc-big-activity ' + activity.icon + '"></span></div>' +
+      '<div class="oc-intro-visual">' + (state.section === "game" && USE_JELLY_ACTIVITY_ICONS ? '<img class="oc-jelly-intro" src="' + JELLY_ACTIVITY_ICONS[state.activity] + '" alt="">' : '<span class="oc-big-activity ' + activity.icon + '"></span>') + '</div>' +
       '<h3>' + activity.title + '</h3><p>' + activity.note + '</p>' +
       '<div class="oc-session-guide"><span>1</span> 선생님이 시작해요 <i></i><span>2</span> 학생이 풀어요 <i></i><span>3</span> 선생님이 다음 문제로 넘겨요</div>' +
       (isTeacher()
@@ -663,7 +902,7 @@
     var item = currentItem();
     var activity = currentActivity();
     var answered = state.phase === "answered";
-    var needsListening = !teacher && !answered && state.section === "game" && (state.activity === "listen" || state.activity === "order");
+    var needsListening = !teacher && !answered && state.section === "game" && (state.activity === "listen" || state.activity === "order" || state.activity === "anagram");
     var currentKey = questionKey();
     var choicesReady = !needsListening || heardQuestionKey === currentKey;
     var progress = Math.round(((state.index + (answered ? 1 : 0)) / totalItems()) * 100);
@@ -691,9 +930,12 @@
     } else {
       result = '<div class="oc-teacher-wait"><span></span><div><small>학생 응답 대기</small><strong>학생 화면에서 문제를 풀고 있어요</strong></div></div>';
     }
+    var findHint = state.activity === "find"
+      ? '<div class="oc-find-text oc-find-teacher-hint ' + readingToolClasses() + '">' + buildFindTextMarkup(item.startW, item.length, item.sentenceIndex) + '</div>'
+      : "";
     return '<div class="oc-teacher-console">' +
-      '<div class="oc-teacher-cue"><span>현재 문제</span><strong>' + escapeHtml(Array.isArray(item.cue) ? item.cue.join(" · ") : item.cue) + '</strong>' +
-      '<small>강사 화면에서는 소리가 재생되지 않습니다.</small></div>' + result +
+      '<div class="oc-teacher-cue"><span>현재 문제</span><strong>' + escapeHtml(Array.isArray(item.cue) ? item.cue.join(" · ") : (item.cue || answerText(item))) + '</strong>' +
+      '<small>강사 화면에서는 소리가 재생되지 않습니다.</small></div>' + findHint + result +
       '<div class="oc-teacher-actions">' +
         '<span>' + (answered ? "학생이 충분히 읽었는지 확인한 뒤 이동하세요." : "학생의 응답이 오면 정답·오답만 표시됩니다.") + '</span>' +
         '<button type="button" data-action="next" ' + (!answered ? "disabled" : "") + '>' + (state.index + 1 >= totalItems() ? "학습 마치기" : "다음 문제") + '</button>' +
@@ -709,18 +951,36 @@
         '<span class="oc-feedback-icon">' + (correct ? "✓" : "↻") + '</span>' +
         '<h3>' + (correct ? "정확하게 읽었어요!" : "한 번 더 소리 내어 읽어 봐요") + '</h3>' +
         '<p>정답: <strong>' + escapeHtml(answerText(item)) + '</strong></p>' +
-        '<div class="oc-waiting"><b></b> 선생님이 확인하고 다음 문제로 넘겨 줄 거예요</div></div>';
+        (pacing() === "student"
+          ? '<button class="oc-primary-action" type="button" data-action="next">' + (state.index + 1 >= totalItems() ? "학습 마치기" : "다음 문제") + '</button>'
+          : '<div class="oc-waiting"><b></b> 선생님이 확인하고 다음 문제로 넘겨 줄 거예요</div>') + '</div>';
     }
 
     var isListeningGame = state.section === "game" && (state.activity === "listen" || state.activity === "order");
-    var cue = isListeningGame
+    var cue = state.activity === "find"
+      ? (item.length > 1 ? "아래 본문에서 이 표현을 이루는 낱말을 순서 상관없이 모두 눌러 보세요." : "아래 본문에서 이 표현을 찾아 눌러 보세요.")
+      : state.activity === "anagram"
+      ? (!choicesReady ? "소리가 끝나면 글자수를 골라요." : !state.lengthConfirmed ? "몇 글자였는지 골라 보세요." : "글자를 순서대로 눌러 조립해요.")
+      : isListeningGame
       ? (choicesReady ? "이제 보기에서 골라 보세요." : "소리가 끝나면 보기가 나타나요.")
       : (Array.isArray(item.cue) ? "소리의 순서를 기억하세요" : item.cue);
-    var replay = state.section === "game" && (state.activity === "listen" || state.activity === "order")
+    var replay = state.section === "game" && (state.activity === "listen" || state.activity === "order" || state.activity === "anagram")
       ? '<button class="oc-listen-button" type="button" data-action="replay"><span></span>' + (choicesReady ? "다시 듣기" : "소리 듣기") + '</button>' : "";
     var answerArea = "";
     if (!choicesReady) {
       answerArea = '<div class="oc-listening-gate"><i></i><strong>먼저 소리를 잘 들어 보세요</strong><span>재생이 끝나면 글자 카드가 나타나요.</span></div>';
+    } else if (state.activity === "find") {
+      answerArea = '<div class="oc-find-answer">' +
+        '<div class="oc-find-target">"' + escapeHtml(item.answer) + '"<small>' + state.selected.length + ' / ' + item.length + '개 낱말 선택</small></div>' +
+        '<div class="oc-find-text ' + readingToolClasses() + '">' + buildFindTextMarkup(undefined, undefined, item.sentenceIndex, state.selected) + '</div>' +
+        '</div>';
+    } else if (state.activity === "anagram" && !state.lengthConfirmed) {
+      var lengthOptions = syllableCountOptions(item.parts.length).map(function (value) {
+        return '<button type="button" data-action="guess-length" data-value="' + value + '">' + value + '자</button>';
+      }).join("");
+      answerArea = '<div class="oc-order-answer oc-length-guess' + (state.lengthWrong ? " is-wrong" : "") + '">' +
+        '<div class="oc-answer-grid is-length-options">' + lengthOptions + '</div>' +
+        (state.lengthWrong ? '<p class="oc-length-hint">다시 들어보고 골라 보세요.</p>' : "") + '</div>';
     } else if (state.activity === "order") {
       var orderPool = item.answer.concat((item.distractors || []).slice(0, distractorCount("order")));
       var remaining = stableShuffle(orderPool, questionKey()).slice();
@@ -796,7 +1056,7 @@
 
   function playCue(item) {
     if (isTeacher()) return Promise.resolve(false);
-    var text = Array.isArray(item.cue) ? item.cue.join(", ") : item.cue;
+    var text = state.activity === "anagram" ? item.answer : Array.isArray(item.cue) ? item.cue.join(", ") : item.cue;
     return playText(text);
   }
 
@@ -919,7 +1179,20 @@
       return;
     }
     if (!teacher && incoming.role === "teacher") {
-      state = Object.assign(state, clone(incoming));
+      var incomingSection = incoming.section || state.section;
+      var incomingPacing = (incoming.pacingBySection || {})[incomingSection] || "teacher";
+      var sameRoundInProgress = incomingPacing === "student" &&
+        state.activity === incoming.activity &&
+        state.roundSeed === incoming.roundSeed &&
+        state.phase !== "intro";
+      if (sameRoundInProgress) {
+        var keepFields = ["index", "phase", "score", "attempts", "response", "selected", "lengthConfirmed", "lengthWrong", "difficulty"];
+        var preserved = {};
+        keepFields.forEach(function (key) { preserved[key] = state[key]; });
+        state = Object.assign(state, clone(incoming), preserved);
+      } else {
+        state = Object.assign(state, clone(incoming));
+      }
       ensureActivityForSection();
       showMode(state.mode || "game", false);
       renderLearning();
