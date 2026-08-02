@@ -8,8 +8,8 @@
 <meta name="description" content="게임·읽기·복습·유창성 검사·워크시트를 한 화면에서 진행하는 온큐베이트 손톱 먹은 들쥐 리더기">
 <meta property="og:title" content="온큐베이트 리더기 · 손톱 먹은 들쥐">
 <meta property="og:description" content="읽고, 듣고, 연습하고, 유창성을 확인해요.">
-<link rel="stylesheet" href="reading-assessment.css?v=1">
-<link rel="stylesheet" href="book-v2.css?v=63">
+<link rel="stylesheet" href="reading-assessment.css?v=2">
+<link rel="stylesheet" href="book-v2.css?v=66">
 <script>
   document.documentElement.classList.add("oc-entry-pending");
   window.addEventListener("load",function(){
@@ -1459,12 +1459,33 @@ window.Oc=(function(){
 
   /* ── 학생 로스터(교사) / 다했어요·도와주세요(학생) ── */
   var roster={};
-  var myPresence={done:false, help:false, lastPage:-1};
+  var myPresence={done:false, help:false, lastPage:-1, visitedPages:{}, completedPages:{}};
   var ROSTER_STALE_MS=20000;
 
   function activityLabel(a){
     var map={listen:'듣고 고르기',order:'순서대로 고르기',anagram:'낱말조립',quiz:'내용 퀴즈',find:'표현 찾기'};
     return map[a]||a||'';
+  }
+  function pageProgressMarkup(s){
+    var total=Math.max(1,Number(s.pagesTotal)||pages.length||1);
+    var current=Math.max(0,Math.min(total-1,Number(s.page)||0));
+    var visited={};
+    var completed={};
+    (s.visitedPages||[]).forEach(function(page){ visited[Number(page)]=true; });
+    (s.completedPages||[]).forEach(function(page){ completed[Number(page)]=true; });
+    var completeCount=Object.keys(completed).filter(function(page){ return completed[page]; }).length;
+    var label=(current+1)+' / '+total+'쪽 · 완료 '+completeCount+'쪽';
+    var segments=[];
+    for(var page=0;page<total;page++){
+      var state=completed[page]?'is-complete':page===current?'is-current':visited[page]?'is-visited':'is-pending';
+      var stateText=completed[page]?'완료':page===current?'진행 중':visited[page]?'확인함':'미시작';
+      segments.push('<span class="oc-page-progress-segment '+state+'" title="'+(page+1)+'쪽 · '+stateText+'"></span>');
+    }
+    return '<div class="oc-student-page-progress" role="progressbar" aria-label="'+label+'" aria-valuemin="1" aria-valuemax="'+total+'" aria-valuenow="'+(current+1)+'">'
+      +'<div class="oc-student-page-meta"><span>페이지 진행</span><strong>'+(current+1)+' / '+total+'쪽</strong></div>'
+      +'<div class="oc-page-progress-track" aria-hidden="true">'+segments.join('')+'</div>'
+      +'<div class="oc-student-page-status">'+(s.done?'현재 쪽 활동 완료':'현재 쪽 활동 중')+' · 완료 '+completeCount+'쪽</div>'
+      +'</div>';
   }
   function renderRoster(){
     var wrap=document.getElementById('tcRoster'), count=document.getElementById('tcRosterCount');
@@ -1479,20 +1500,29 @@ window.Oc=(function(){
       var badge = s.help ? '<span style="background:#FCE3C9;color:#9A5A12;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:900">🙋 도움</span>'
         : s.done ? '<span style="background:#DCF3E4;color:#1F7A45;border-radius:999px;padding:2px 7px;font-size:10px;font-weight:900">✅ 완료</span>' : '';
       var stat = s.total ? (s.attempts||0)+'문제 · 정답 '+(s.score||0)+' · 오답 '+Math.max(0,(s.attempts||0)-(s.score||0)) : '읽기 중';
-      return '<div style="display:flex;flex-direction:column;gap:2px;border:1px solid #EEEBF6;border-radius:9px;padding:6px 8px">'
-        +'<div style="display:flex;align-items:center;justify-content:space-between;gap:6px">'
-        +'<strong style="font-size:12px;color:#3D3560">'+(s.name||'학생')+'</strong>'+badge+'</div>'
-        +'<div style="font-size:10px;color:#8A84A0">'+activityLabel(s.activity)+' · '+stat+'</div>'
+      return '<div class="oc-roster-item">'
+        +'<div class="oc-roster-heading">'
+        +'<strong>'+(s.name||'학생')+'</strong>'+badge+'</div>'
+        +'<div class="oc-roster-activity">'+activityLabel(s.activity)+' · '+stat+'</div>'
+        +pageProgressMarkup(s)
       +'</div>';
     }).join('');
   }
   function publishPresence(){
     if(!syncClient || !syncClient.connected || isTeacher) return;
-    if(currentPage!==myPresence.lastPage){ myPresence.done=false; myPresence.help=false; myPresence.lastPage=currentPage; }
+    if(currentPage!==myPresence.lastPage){
+      myPresence.done=!!myPresence.completedPages[currentPage];
+      myPresence.help=false;
+      myPresence.lastPage=currentPage;
+    }
+    myPresence.visitedPages[currentPage]=true;
     var progress=(window.OcLearning && window.OcLearning.getProgress) ? window.OcLearning.getProgress() : {};
     var payload={ id:myId, name:(window.OcSession && window.OcSession.studentName) || '학생', page:currentPage,
       done:myPresence.done, help:myPresence.help, section:progress.section, activity:progress.activity,
-      attempts:progress.attempts||0, score:progress.score||0, total:progress.total||0, at:Date.now() };
+      attempts:progress.attempts||0, score:progress.score||0, total:progress.total||0,
+      pagesTotal:pages.length, visitedPages:Object.keys(myPresence.visitedPages).map(Number),
+      completedPages:Object.keys(myPresence.completedPages).filter(function(page){ return myPresence.completedPages[page]; }).map(Number),
+      at:Date.now() };
     try{ syncClient.publish(roomTopic+'/presence/'+myId, JSON.stringify(payload), {retain:true}); }catch(e){}
   }
   function handlePresenceMessage(topic, payload){
@@ -1516,7 +1546,13 @@ window.Oc=(function(){
     +'<button id="sbHelp" style="border:1px solid #F0BF83;background:#fff;color:#9A5A12;font:inherit;font-weight:900;font-size:12.5px;padding:9px 12px;border-radius:999px;cursor:pointer;white-space:nowrap;box-shadow:0 8px 20px rgba(60,50,120,.16)">🙋 도와주세요</button>';
   document.body.appendChild(sBar);
   var sbDone=document.getElementById('sbDone'), sbHelp=document.getElementById('sbHelp');
-  sbDone.onclick=function(){ myPresence.done=!myPresence.done; if(myPresence.done) myPresence.help=false; refreshStudentBar(); publishPresence(); };
+  sbDone.onclick=function(){
+    myPresence.done=!myPresence.done;
+    myPresence.completedPages[currentPage]=myPresence.done;
+    myPresence.visitedPages[currentPage]=true;
+    if(myPresence.done) myPresence.help=false;
+    refreshStudentBar(); publishPresence();
+  };
   sbHelp.onclick=function(){ myPresence.help=!myPresence.help; if(myPresence.help) myPresence.done=false; refreshStudentBar(); publishPresence(); };
   function refreshStudentBar(){
     sBar.style.display=(typeof syncClient!=='undefined' && syncClient && !isTeacher) ? 'flex' : 'none';
@@ -1866,7 +1902,7 @@ window.Oc=(function(){
  });
 })();
 </script>
-<script src="reading-assessment.js?v=3"></script>
+<script src="reading-assessment.js?v=4"></script>
 <script>
   window.ILLU[2]="assets/fingernail-fieldmouse-page-3-landscape.png?v=36";
   if(typeof currentPage==="number"&&currentPage===2){
@@ -1874,8 +1910,8 @@ window.Oc=(function(){
     if(pageThreeArt)pageThreeArt.src=window.ILLU[2];
   }
 </script>
-<script src="common/runtime-config.js?v=60"></script>
-<script src="book-v2.js?v=61"></script>
+<script src="common/runtime-config.js?v=61"></script>
+<script src="book-v2.js?v=65"></script>
 <script id="oc-reader-paging-inline-script">
 (function(){
   function applyPaging(){
@@ -1968,8 +2004,8 @@ window.Oc=(function(){
 })();
 </script>
 <script src="fingernail-fieldmouse-config.js?v=66"></script>
-<script src="book-v2-learning.js?v=73"></script>
-<script src="book-v2-fluency.js?v=3"></script>
-<script src="common/activity-tracker.js?v=60" defer></script>
+<script src="book-v2-learning.js?v=74"></script>
+<script src="book-v2-fluency.js?v=4"></script>
+<script src="common/activity-tracker.js?v=61" defer></script>
 </body>
 </html>
