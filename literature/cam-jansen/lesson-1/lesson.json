@@ -22,12 +22,14 @@
   "drawingModes": ["mini-board", "screen-annotation"],
   "bonusGame": {
     "file": "bonus-case.html",
+    "gameVersion": 5,
     "title": "The Missing Star Badge",
     "participantModes": ["three-player-role-packs", "one-to-one-case-master"],
     "deviceMode": "independent-per-device",
     "persistence": "none",
     "activityRecord": "excluded",
-    "copyrightMode": "fully-original-scenario"
+    "copyrightMode": "fully-original-scenario",
+    "interactionModel": "camouflaged-neon-hunt-deduction-sheet-scene-rebuild-retelling"
   },
   "liveRoomCodeFormat": "5-digit-numeric",
   "activityConfig": "activity-config.js",
