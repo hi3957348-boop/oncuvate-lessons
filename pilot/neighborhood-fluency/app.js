@@ -1419,29 +1419,35 @@ function observationCardOwner(card, seating = currentObservationSeating()) {
   return { kind: 'child', id: ids[0] || null, label: ids[0] || '아동' };
 }
 
+// 덱 길이는 인원에 비례한다. 목표 낱말을 아이들끼리 나눠 가지면 넷일 때 한 아이가
+// 한두 낱말만 읽게 되는데, 그 정도로는 그 아이의 기준선이 되지 못한다.
+// 그래서 **아이마다 목표 낱말 전부**를 주고, 대신 덱이 길어지는 쪽을 택한다.
+// 선생님 카드는 1:1에서만 넣는다 — 그룹에서는 다른 아이 차례가 그 역할을 대신한다.
+function observationDeckPlan(step, seating = currentObservationSeating()) {
+  const perChild = (step.items || []).length;
+  const seats = seating.childColors.length;
+  const budget = Math.max(0, (step.rounds || perChild * 2) - perChild);
+  const coach = seating.coachColor === null ? 0 : Math.min(budget, Math.round(perChild * COACH_CARD_RATIO));
+  return { perChild, seats, coach, total: perChild * seats + coach };
+}
+
 function buildColorObservationDeck(step) {
   const items = (step.items || []).map(normalizedObservationItem);
   const seating = currentObservationSeating();
-  const childColors = seating.childColors;
-  // 목표 낱말은 아이들에게 돌아가며 배분한다 — 한 아이만 계속 읽지 않게.
-  const ownCards = items.map((item, index) => ({
-    id: `target-${state.lesson}-${index}`,
+  const plan = observationDeckPlan(step, seating);
+  const ownCards = seating.childColors.flatMap((color, seatIndex) => items.map((item, index) => ({
+    id: `target-${state.lesson}-${seatIndex}-${index}`,
     ...item,
-    color: childColors[index % childColors.length],
+    color,
     observed: true
-  }));
+  })));
   const fillerItems = step.fillerItems || [];
-  const budget = Math.max(0, (step.rounds || items.length * 2) - ownCards.length);
-  // 그룹이면 남는 카드도 아이들 몫이고, 1:1이면 선생님 몫을 아동의 절반으로 묶는다.
-  const extraCount = seating.coachColor === null ? budget : Math.min(budget, Math.round(ownCards.length * COACH_CARD_RATIO));
-  const extraCards = Array.from({ length: extraCount }, (_, index) => ({
+  const extraCards = Array.from({ length: plan.coach }, (_, index) => ({
     id: `filler-${state.lesson}-${index}`,
     word: fillerItems[index % fillerItems.length] || '쉬어 가요',
     itemIndex: null,
     exposure: 'filler',
-    color: seating.coachColor === null
-      ? childColors[(items.length + index) % childColors.length]
-      : seating.coachColor,
+    color: seating.coachColor,
     observed: false
   }));
   return shuffledValues([...ownCards, ...extraCards]);
@@ -1476,6 +1482,8 @@ function colorObservationView(step) {
   const canAdvance = serviceMode === 'independent' || coachSurface;
   const seating = currentObservationSeating();
   const groupPlay = seating.coachColor === null;
+  // 시작 전에 분량을 알려 준다 — 인원에 따라 덱 길이가 달라지므로 코치가 미리 가늠해야 한다.
+  const plan = observationDeckPlan(step, seating);
   const palette = COLOR_OBSERVATION_PALETTE.slice(0, seating.count);
   const childColor = COLOR_OBSERVATION_PALETTE[seating.childColors[0]];
   const myColorIndex = myObservationColor(seating);
@@ -1507,8 +1515,8 @@ function colorObservationView(step) {
       <div class="color-observation-ready"><strong>${groupPlay
         ? `참가 아동 ${Object.keys(seating.seats).length}명이 각자 색을 맡아요`
         : `<i class="${childColor.className}"></i>아동은 ${childColor.name} · 선생님은 ${COLOR_OBSERVATION_PALETTE[seating.coachColor].name}`}</strong><span>${groupPlay
-        ? '선생님은 색 없이 진행과 기록을 맡아요.'
-        : '아동 색 카드가 선생님 카드보다 많이 나와요.'}</span><button class="btn btn-primary" data-action="start-color-observation">카드 섞고 시작</button></div>
+        ? `선생님은 색 없이 진행과 기록을 맡아요. 카드 ${plan.total}장 · 한 명이 ${plan.perChild}장씩 읽어요.`
+        : `아동 색 카드가 선생님 카드보다 많이 나와요. 카드 ${plan.total}장 · 아동 ${plan.perChild}장, 선생님 ${plan.coach}장.`}</span><button class="btn btn-primary" data-action="start-color-observation">카드 섞고 시작</button></div>
     </section>` : !started ? `<section class="color-observation-waiting">
       <div class="waiting-card-back"><img src="assets/color-card-back-light.png" alt="뒤집기 전 카드 뒷면"></div>
       <p>카드를 준비하고 있어요.</p>
