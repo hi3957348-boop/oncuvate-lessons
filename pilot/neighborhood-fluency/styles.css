@@ -1596,3 +1596,17 @@ h1, h2, h3, p { margin-top: 0; }
 .challenge-result > span { display: block; font-size: .8rem; color: #6b6b7b; margin-top: .2rem; }
 .challenge-result p { margin: .5rem 0 0; font-size: .9rem; }
 .challenge-result small { color: #8a8a99; }
+
+/* ── 처음으로 되돌리기 ────────────────────────────────────────────────
+   진행이 저장돼 있어 다시 열어도 하던 자리에서 이어진다. 그것을 푸는 버튼은
+   어느 화면에서든 닿아야 하되, 아이가 하는 활동을 가리지 않게 구석에 조용히 둔다. */
+.restart-corner { position: fixed; left: 12px; bottom: 12px; z-index: 40; display: flex; flex-wrap: wrap; align-items: center; gap: 8px; max-width: min(420px, calc(100vw - 24px)); }
+.restart-corner .restart-button { min-height: 34px; padding: 6px 12px; border-radius: 10px; font-size: 12px; font-weight: 700; opacity: .62; }
+.restart-corner .restart-button:hover,
+.restart-corner .restart-button:focus-visible { opacity: 1; }
+.restart-corner.is-asking { padding: 12px 14px; border: 1px solid var(--line, #e3e0ee); border-radius: 14px; background: #fff; box-shadow: 0 12px 28px rgba(20,18,40,.16); }
+.restart-corner.is-asking .restart-button { opacity: 1; }
+.restart-corner.is-asking p { flex: 1 0 100%; margin: 0; color: #4a4a58; font-size: 12.5px; line-height: 1.5; }
+@media (max-width: 720px) {
+  .restart-corner { left: 8px; right: 8px; bottom: 8px; max-width: none; }
+}

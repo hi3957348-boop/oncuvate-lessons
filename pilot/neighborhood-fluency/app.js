@@ -17,6 +17,9 @@ const childId = platformRuntime?.child || runtimeParams.get('child') || null;
 // 이 파일이 담당하는 회차 — sessionNN-data.js가 주입한다. 한 파일에는 한 회차만 있다.
 const SESSION = Number(window.ONCUVATE_SESSION) || 1;
 const serviceMode = activeRoom ? 'coaching' : 'independent';
+// 파일럿 빌드에만 회차·역할·입장코드를 고르는 화면(index.html)이 따로 있고, 거기서 표시를 달아 보낸다.
+// 납품본과 플랫폼 수업에는 그런 화면이 없다 — 주소는 플랫폼이 정하므로 콘텐츠가 옮기지 않는다.
+const entryScreenAvailable = !platformRuntime && runtimeParams.get('entry') === '1';
 const coachSurface = serviceMode === 'coaching' && viewSurface === 'coach';
 const showPerformanceRecording = serviceMode !== 'coaching' || coachSurface;
 // 자율학습이면 맞출 화면이 없다 — 동기화 자체를 끈다.
@@ -164,8 +167,14 @@ const state = {
   timerStart: null,
   timerValue: 0,
   timerHandle: null,
-  readingEvaluationEnabled: true
+  readingEvaluationEnabled: true,
+  // 「처음으로」를 한 번 눌렀는가. 실수로 눌러 진행이 날아가지 않도록 두 번 묻는다.
+  restartAsking: false
 };
+
+// 처음 상태를 그대로 떠 둔다 — 「처음으로」가 필드 하나를 빠뜨리지 않게.
+// 아직 저장소를 읽기 전이라 이 값이 곧 「아무것도 안 한 상태」다.
+const INITIAL_STATE = JSON.parse(JSON.stringify(state));
 
 let letterGameAutoTimer = null;
 let letterGameAdvanceTimer = null;
@@ -218,6 +227,8 @@ const LOCAL_ONLY_KEYS = [
   'letterGameResponses', 'colorObservationResponses',
   // ⑶ 코치 기록·참가자 목록 — 아동 화면에 코치 메모를 노출하지 않는다(12번 §8)
   'supportEntries', 'coachPanelOpen', 'pendingSupport', 'participants', 'selectedParticipant',
+  // 「처음으로」 확인 단계는 누른 사람 화면에서만 뜬다
+  'restartAsking',
   // ⑷ **활동 진행은 아동마다 다르다.** 그룹에서 같은 페이지를 보더라도 활동 속도는 제각각이므로
   //    이 값들을 공유하면 서로의 진행을 덮어쓴다. 코치는 `prog`로 각자의 진행을 본다.
   ...ACTIVITY_PROGRESS_KEYS
@@ -434,6 +445,8 @@ function progressPayload() {
 // 진행은 클릭뿐 아니라 **시간 초과·자동 진행으로도 바뀐다**. 그래서 렌더마다 확인하되
 // 값이 실제로 달라졌을 때만 보낸다(67B짜리라 비교 비용이 전송보다 싸다).
 let lastProgressSent = '';
+// 되돌리는 동안에는 아무것도 발행하지 않는다(아래 restartSession 참고).
+let restarting = false;
 let lastInteractionAt = performance.now();
 app.addEventListener('pointerdown', () => { lastInteractionAt = performance.now(); }, true);
 function publishProgressIfChanged() {
@@ -472,7 +485,8 @@ function armProgressDisconnect() {
 }
 
 function publishSessionSnapshot() {
-  if (serviceMode !== 'coaching') return;
+  // 「처음으로」를 누른 클릭에도 발행이 예약돼 있다. 그대로 두면 방금 지운 진행을 도로 써 버린다.
+  if (serviceMode !== 'coaching' || restarting) return;
   const payload = {
     source: sessionSource,
     revision: Date.now() * 1000 + Math.floor(Math.random() * 1000),
@@ -2460,6 +2474,49 @@ function supportEditor(id, p) {
   </div>`;
 }
 
+// ── 처음으로 되돌리기 ────────────────────────────────────────────────
+// 진행이 저장소에 남아 있어서 다시 열어도 하던 자리에서 이어진다. 그래서 다음 아이를
+// 앉히거나 처음부터 다시 해 보려면 그것을 지울 수단이 화면에 늘 있어야 한다.
+function restartControl() {
+  const label = entryScreenAvailable ? '처음 화면으로' : '처음부터 다시';
+  if (!state.restartAsking) {
+    return `<div class="restart-corner">
+      <button class="btn btn-ghost restart-button" data-action="restart-ask">${label}</button>
+    </div>`;
+  }
+  // 실수로 눌러 진행이 통째로 날아가는 일이 없도록 한 번 더 묻는다.
+  const scope = serviceMode === 'coaching' && coachSurface
+    ? '지금까지의 진행이 지워지고 아이들 화면도 함께 처음으로 돌아가요.'
+    : serviceMode === 'coaching'
+      ? '내 화면만 처음으로 돌아가요. 수업 진행은 그대로예요.'
+      : '지금까지의 진행이 지워져요.';
+  return `<div class="restart-corner is-asking" role="group" aria-label="처음으로 돌아가기 확인">
+    <p>${scope}</p>
+    <button class="btn btn-primary restart-button" data-action="restart-confirm">${label}</button>
+    <button class="btn btn-ghost restart-button" data-action="restart-cancel">그만두기</button>
+  </div>`;
+}
+
+function restartSession() {
+  // 수업에서는 코치만 전체를 되돌린다 — 아이가 누르면 반 전체 진행이 날아간다.
+  const authoritative = serviceMode !== 'coaching' || coachSurface;
+  restarting = true;
+  if (authoritative) {
+    try {
+      localStorage.removeItem(sessionStorageKey);
+      localStorage.removeItem(flipStorageKey);
+    } catch { /* 저장 불가 환경 */ }
+  }
+  // 입장 화면으로 나가는 길에는 잠금을 풀지 않는다 — 떠나기 전에 예약된 발행이 되살아난다.
+  if (entryScreenAvailable) { location.href = 'index.html'; return; }
+  resetStepState();
+  Object.assign(state, JSON.parse(JSON.stringify(INITIAL_STATE)));
+  lastProgressSent = null;
+  restarting = false;
+  render();
+  publishSessionSnapshot();
+}
+
 function sessionGateRequired() {
   return serviceMode === 'coaching' && !state.lessonStarted;
 }
@@ -2484,7 +2541,8 @@ function sessionGateView() {
 
 function render(preserveScroll = false) {
   const previousScroll = window.scrollY;
-  app.innerHTML = sessionGateRequired() ? sessionGateView() : lessonView();
+  // 「처음으로」는 화면 종류와 무관하게 늘 붙인다 — 입장 대기 화면에서도, 다 마친 뒤에도 필요하다.
+  app.innerHTML = (sessionGateRequired() ? sessionGateView() : lessonView()) + restartControl();
   markHintControls();
   publishProgressIfChanged();
   requestAnimationFrame(drawColoredFinalSyllables);
@@ -2873,7 +2931,15 @@ app.addEventListener('click', event => {
   const actionButton = event.target.closest('[data-action]');
   if (actionButton) {
     const action = actionButton.dataset.action;
-    if (action === 'start-session') {
+    if (action === 'restart-ask') {
+      state.restartAsking = true;
+      render(true);
+    } else if (action === 'restart-cancel') {
+      state.restartAsking = false;
+      render(true);
+    } else if (action === 'restart-confirm') {
+      restartSession();
+    } else if (action === 'start-session') {
       // 코치가 진도를 연다. 역할·방은 서버가 정해서 들어오므로 여기서 고르는 것은 없다.
       if (coachSurface) { state.lessonStarted = true; render(); }
     } else if (action === 'signal-done') {

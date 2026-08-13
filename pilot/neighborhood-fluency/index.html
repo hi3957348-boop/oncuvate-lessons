@@ -148,7 +148,8 @@
         codeInput.focus();
         return;
       }
-      const params = new URLSearchParams({ room: code });
+      // entry=1 은 「돌아올 입장 화면이 있다」는 표시다 — 수업 화면의 「처음 화면으로」가 이걸 보고 여기로 돌려보낸다.
+      const params = new URLSearchParams({ room: code, entry: '1' });
       if (role === 'coach') params.set('view', 'coach');
       // 학생에게는 화면 구석 표시용 식별코드를 준다(실명이 아닌 임시 코드).
       else params.set('child', `P${code.slice(0, 4)}`);
