@@ -19,6 +19,8 @@ const SESSION = Number(window.ONCUVATE_SESSION) || 1;
 const serviceMode = activeRoom ? 'coaching' : 'independent';
 const coachSurface = serviceMode === 'coaching' && viewSurface === 'coach';
 const showPerformanceRecording = serviceMode !== 'coaching' || coachSurface;
+// 자율학습이면 맞출 화면이 없다 — 동기화 자체를 끈다.
+// 「젤리티처와 1:1로 겨루는 판인가」는 이것과 별개다(참가자 수로 정해진다 → soloFlipMode).
 const independentFlipMode = serviceMode !== 'coaching';
 // 저장소 키·채널 이름에 회차를 넣어 같은 방에서도 회차끼리 상태를 덮어쓰지 않게 한다.
 const flipStorageKey = `oncuvate-neighborhood-flip-s${SESSION}-${roomKey}`;
@@ -43,6 +45,9 @@ function createFlipGameState() {
     coachSide: 'closed',
     // 그룹수업에서는 참가자 식별코드별로 두 편을 배정한다.
     teamAssignments: {},
+    // 아이가 한 명뿐이면 편을 가를 수 없다 — 젤리티처가 상대편을 맡는다.
+    // 참가자 수를 아는 것은 코치 화면뿐이라 판정을 여기 실어 아동 화면까지 보낸다.
+    solo: false,
     turn: 'child',
     turns: 0,
     maxTurns: 100,
@@ -109,8 +114,11 @@ const state = {
   soundRound: 0,
   phenomenonChoice: null,
   soundChoice: [],
-  colorObservationCount: 4,
+  colorObservationCount: 2,
   colorObservationMyColor: 0,
+  // 색 주인 배정 — { count, seats: {참가자ID: 색}, childColors, coachColor }.
+  // 시작할 때 코치가 한 번 정해 굳히고 화면 간에 공유한다(도중에 바뀌면 카드 주인이 흔들린다).
+  colorObservationSeating: null,
   colorObservationDeck: [],
   colorObservationIndex: 0,
   colorObservationRevealed: false,
@@ -187,7 +195,8 @@ const ACTIVITY_PROGRESS_KEYS = [
   'letterGameRound', 'letterGameChoice', 'letterGameScore', 'letterGameDone',
   'letterGamePhase', 'letterGameSummary',
   'soundRound', 'phenomenonChoice', 'soundChoice',
-  'colorObservationIndex', 'colorObservationRevealed', 'colorObservationDone',
+  // ⚠️ 컬러카드(colorObservation*)는 여기 없다 — 한 장씩 함께 보는 **공유 보드**라서
+  //    카드 위치·뒤집힘·색 주인을 모두가 같은 값으로 봐야 한다. 코치가 넘기고 아이들은 따라온다.
   'generalizationResult', 'generalizationFinished', 'generalizationRecords',
   'transferContext', 'transferCoachContinued',
   't1SpeedMode', 't1SpeedActive', 't1SpeedFinished', 't1SpeedTimeLeft',
@@ -260,6 +269,7 @@ function subscribeParticipants() {
         const value = typeof snapshot?.val === 'function' ? snapshot.val() : snapshot;
         // `prog` 아래에 참가자 ID를 키로 한 객체가 온다는 전제. 확인 뒤 조정한다.
         state.participants = value && typeof value === 'object' ? value : {};
+        refreshSoloFlipMode();
         render(true);
       });
     } catch { /* 전체 구독이 막혀 있으면 목록은 비어 있고 수업 진행은 유지된다 */ }
@@ -273,8 +283,12 @@ function subscribeParticipants() {
       const p = event.data;
       if (!p?.child) return;
       state.participants = { ...state.participants, [p.child]: p };
+      refreshSoloFlipMode();
       render(true);
     });
+    // 아이가 먼저 들어와 있으면 그 알림은 이미 지나갔다. 한 번 불러 다시 알리게 한다
+    // — 그러지 않으면 아이가 뭔가 누를 때까지 코치 화면에 아무도 없는 것처럼 보인다.
+    try { participantChannel.postMessage({ type: 'roll-call' }); } catch { /* 무시 */ }
   }
 }
 
@@ -438,7 +452,13 @@ function publishProgressIfChanged() {
 function publishProgressLocal() {
   if (platformRuntime || serviceMode !== 'coaching' || viewSurface === 'coach') return;
   if (!('BroadcastChannel' in window)) return;
-  participantChannel = participantChannel || new BroadcastChannel(`${sessionStorageKey}-prog`);
+  if (!participantChannel) {
+    participantChannel = new BroadcastChannel(`${sessionStorageKey}-prog`);
+    // 코치가 뒤늦게 들어와 점호하면 그 자리에서 다시 자기를 알린다.
+    participantChannel.addEventListener('message', event => {
+      if (event.data?.type === 'roll-call') publishProgressLocal();
+    });
+  }
   try { participantChannel.postMessage(progressPayload()); } catch { /* 무시 */ }
 }
 
@@ -1002,8 +1022,30 @@ function flipTeamMembers(side, game = currentLessonFlipGame()) {
   return Object.keys(assignments).filter(id => assignments[id] === side);
 }
 
+function flipParticipantCount() {
+  return Object.keys(state.participants || {}).length;
+}
+
+// 젤리티처와 1:1로 겨루는 판인가. 자율학습에는 상대가 없으니 언제나 그렇고,
+// 코칭 수업에서는 코치가 내려 준 판정(game.solo)을 따른다.
+function soloFlipMode(game = currentLessonFlipGame()) {
+  return independentFlipMode || game.solo === true;
+}
+
+// 참가자 목록은 코치 화면만 가지고 있다. 접속 상황이 바뀔 때마다 코치가 다시 판정해
+// 게임 상태에 실어 보낸다. 진행 중에는 건드리지 않는다 — 판이 도중에 바뀌면 안 된다.
+function refreshSoloFlipMode() {
+  if (independentFlipMode || !coachSurface) return;
+  const current = currentLessonFlipGame();
+  if (current.active) return;
+  const solo = flipParticipantCount() <= 1;
+  if (current.solo === solo && state.flipGame.lessonId === state.lesson) return;
+  state.flipGame = { ...current, lessonId: state.lesson, solo };
+  syncFlipGame();
+}
+
 function currentParticipantFlipSide(game = currentLessonFlipGame()) {
-  if (independentFlipMode) return game.childSide;
+  if (soloFlipMode(game)) return game.childSide;
   return childId ? flipTeamAssignments(game)[childId] || null : null;
 }
 
@@ -1056,7 +1098,8 @@ function startFlipGame() {
   if (flipOpponentTimer) clearTimeout(flipOpponentTimer);
   if (flipClockTimer) clearInterval(flipClockTimer);
   const previous = currentLessonFlipGame();
-  if (!independentFlipMode && (!flipTeamMembers('open', previous).length || !flipTeamMembers('closed', previous).length)) return;
+  const solo = independentFlipMode || flipParticipantCount() <= 1;
+  if (!solo && (!flipTeamMembers('open', previous).length || !flipTeamMembers('closed', previous).length)) return;
   const durationSeconds = [20, 30, 60].includes(previous.durationSeconds) ? previous.durationSeconds : 30;
   state.flipGame = {
     ...createFlipGameState(),
@@ -1066,6 +1109,7 @@ function startFlipGame() {
     childSide: previous.childSide,
     coachSide: previous.coachSide,
     teamAssignments: { ...flipTeamAssignments(previous) },
+    solo,
     maxTurns: 100,
     durationSeconds,
     // 카드 뒤집기 종료 시각은 두 화면이 공유하므로 벽시계여야 한다.
@@ -1085,7 +1129,7 @@ function finishFlipGame() {
   const coachCount = counts[game.coachSide];
   game.active = false;
   game.completed = true;
-  game.winner = independentFlipMode
+  game.winner = soloFlipMode(game)
     ? (childCount === coachCount ? 'tie' : childCount > coachCount ? 'child' : 'coach')
     : (counts.open === counts.closed ? 'tie' : counts.open > counts.closed ? 'open' : 'closed');
   if (flipOpponentTimer) clearTimeout(flipOpponentTimer);
@@ -1129,10 +1173,16 @@ function makeFlipMove(cardId, actor, participantId = null) {
   render(true);
 }
 
+// 젤리티처는 한 화면에서만 움직여야 한다. 두 화면이 각자 돌리면 한 번에 두 장이 넘어간다.
+// 코칭 수업에서는 코치 화면이, 자율학습에서는 아동 화면이 상대 역할을 맡는다.
+function jellyDrivesHere() {
+  return independentFlipMode || coachSurface;
+}
+
 function scheduleJellyFlip() {
-  if (!independentFlipMode || flipOpponentTimer) return;
+  if (!jellyDrivesHere() || flipOpponentTimer) return;
   const game = state.flipGame;
-  if (!game.active || game.lessonId !== state.lesson) return;
+  if (!game.active || game.lessonId !== state.lesson || !soloFlipMode(game)) return;
   flipOpponentTimer = setTimeout(() => {
     flipOpponentTimer = null;
     const current = state.flipGame;
@@ -1165,17 +1215,18 @@ function scheduleFlipClock() {
 function flipGameView() {
   const game = currentLessonFlipGame();
   const counts = flipCounts(game);
-  const opponentName = independentFlipMode ? '젤리티처' : '코치';
+  const solo = soloFlipMode(game);
+  const opponentName = solo ? '젤리티처' : '코치';
   const myTeamSide = currentParticipantFlipSide(game);
   const openMembers = flipTeamMembers('open', game);
   const closedMembers = flipTeamMembers('closed', game);
   const childCount = counts[game.childSide] || 0;
   const coachCount = counts[game.coachSide] || 0;
-  const canAct = game.active && (independentFlipMode || (!coachSurface && myTeamSide));
-  const actingSide = independentFlipMode ? game.childSide : myTeamSide;
+  const canAct = game.active && !coachSurface && (solo || myTeamSide);
+  const actingSide = solo ? game.childSide : myTeamSide;
   const winnerText = game.winner === 'tie'
     ? '두 편이 같은 수로 마쳤어요!'
-    : independentFlipMode
+    : solo
       ? (game.winner === 'child' ? '아동 편이 더 많이 보여요!' : `${opponentName} 편이 더 많이 보여요!`)
       : `${flipTeamLabel(game.winner)}이 더 많이 보여요!`;
 
@@ -1188,17 +1239,17 @@ function flipGameView() {
     </button>`;
   }).join('');
 
-  const childTeamReady = !independentFlipMode && !coachSurface
+  const childTeamReady = !solo && !coachSurface
     ? (myTeamSide
       ? `<div class="flip-my-team side-${myTeamSide}"><small>내가 참가할 편</small><strong>${flipTeamLabel(myTeamSide)}</strong><span>${flipSideLabel(myTeamSide)}</span></div>`
       : '<div class="flip-my-team waiting"><small>편 배정 대기</small><strong>코치가 편을 나누고 있어요</strong><span>배정이 끝나면 내 편이 여기에 표시돼요.</span></div>')
     : '';
   const readyPanel = `<div class="flip-ready-panel">
     <img src="assets/jelly-confidence-3.png" alt="카드 뒤집기를 준비하는 젤리티처">
-    <div><span class="eyebrow">정해진 시간 동안 최대한 많이</span><h3>${independentFlipMode ? '젤리티처와 빠르게 뒤집어요' : coachSurface ? '참가 아동을 두 편으로 나눠요' : '우리 편과 함께 준비해요'}</h3>
+    <div><span class="eyebrow">정해진 시간 동안 최대한 많이</span><h3>${solo ? '젤리티처와 빠르게 뒤집어요' : coachSurface ? '참가 아동을 두 편으로 나눠요' : '우리 편과 함께 준비해요'}</h3>
     <p>상대편 색 카드를 보이는 즉시 눌러 내 편 글자로 바꿔요.</p>
     ${childTeamReady}
-    ${independentFlipMode ? '<button class="btn btn-primary" data-action="flip-start">30초 게임 시작</button>' : coachSurface ? '' : '<small>코치가 시작하면 모든 아동 화면에서 동시에 시작해요.</small>'}</div>
+    ${independentFlipMode ? '<button class="btn btn-primary" data-action="flip-start">30초 게임 시작</button>' : coachSurface ? '' : `<small>${solo ? '코치가 시작하면 젤리티처와 겨뤄요.' : '코치가 시작하면 모든 아동 화면에서 동시에 시작해요.'}</small>`}</div>
   </div>`;
 
   const participantIds = Object.keys(state.participants || {}).sort((a, b) => a.localeCompare(b, 'ko'));
@@ -1208,12 +1259,14 @@ function flipGameView() {
   }).join('') : '<p class="flip-team-empty">참가 아동이 접속하면 이곳에 표시됩니다.</p>';
   const teamsReady = openMembers.length > 0 && closedMembers.length > 0;
   const coachControls = coachSurface ? `<aside class="flip-coach-controls" aria-label="코치 게임 설정">
-    <div class="flip-team-builder"><div class="flip-team-builder-head"><strong>참가 아동 편 나누기</strong><span>보라팀 ${openMembers.length}명 · 하늘팀 ${closedMembers.length}명</span><button data-action="flip-balance-teams" ${game.active || participantIds.length < 2 ? 'disabled' : ''}>자동 균등 배정</button><button data-action="flip-swap-teams" ${game.active || !participantIds.length ? 'disabled' : ''}>양 편 바꾸기</button></div><div class="flip-team-participants">${teamParticipantRows}</div></div>
+    ${solo ? `<div class="flip-team-builder"><div class="flip-team-builder-head"><strong>젤리티처와 1:1</strong><span>참가 아동 ${participantIds.length}명</span></div>
+    <p class="flip-team-empty">아이가 한 명이면 편을 가르지 않고 젤리티처가 상대편을 맡아요. 두 명 이상 접속하면 편 나누기가 나타나요.</p></div>` : ''}
+    ${solo ? '' : `<div class="flip-team-builder"><div class="flip-team-builder-head"><strong>참가 아동 편 나누기</strong><span>보라팀 ${openMembers.length}명 · 하늘팀 ${closedMembers.length}명</span><button data-action="flip-balance-teams" ${game.active || participantIds.length < 2 ? 'disabled' : ''}>자동 균등 배정</button><button data-action="flip-swap-teams" ${game.active || !participantIds.length ? 'disabled' : ''}>양 편 바꾸기</button></div><div class="flip-team-participants">${teamParticipantRows}</div></div>`}
     <div class="flip-time-settings"><strong>게임 시간</strong><button class="${(game.durationSeconds || 30) === 20 ? 'selected' : ''}" data-flip-length="20" ${game.active ? 'disabled' : ''}>20초</button><button class="${(game.durationSeconds || 30) === 30 ? 'selected' : ''}" data-flip-length="30" ${game.active ? 'disabled' : ''}>30초</button><button class="${game.durationSeconds === 60 ? 'selected' : ''}" data-flip-length="60" ${game.active ? 'disabled' : ''}>60초</button></div>
-    <div class="flip-coach-actions"><button class="btn btn-primary" data-action="flip-start" ${!game.active && !teamsReady ? 'disabled' : ''}>${game.active ? '처음부터 시작' : '두 편 동시에 시작'}</button>${game.active ? '<button class="btn btn-ghost" data-action="flip-end">지금 종료</button>' : !teamsReady ? '<small>두 편에 한 명 이상 배정하면 시작할 수 있어요.</small>' : ''}</div>
+    <div class="flip-coach-actions"><button class="btn btn-primary" data-action="flip-start" ${!game.active && !solo && !teamsReady ? 'disabled' : ''}>${game.active ? '처음부터 시작' : solo ? '젤리티처와 시작' : '두 편 동시에 시작'}</button>${game.active ? '<button class="btn btn-ghost" data-action="flip-end">지금 종료</button>' : !solo && !teamsReady ? '<small>두 편에 한 명 이상 배정하면 시작할 수 있어요.</small>' : ''}</div>
   </aside>` : '';
 
-  const lastMoveText = !game.lastMove ? '' : independentFlipMode
+  const lastMoveText = !game.lastMove ? '' : solo
     ? (game.lastMove.passed ? `${game.lastMove.actor === 'child' ? '아동은' : `${opponentName}는`} 뒤집을 카드가 없어 차례를 넘겼어요.` : `${game.lastMove.actor === 'child' ? '아동이' : `${opponentName}가`} ${game.lastMove.open}↔${game.lastMove.closed} 카드를 뒤집었어요.`)
     : `${game.lastMove.participantId ? `${esc(game.lastMove.participantId)} · ` : ''}${flipTeamLabel(game.lastMove.to)}이 ${game.lastMove.open}↔${game.lastMove.closed} 카드를 뒤집었어요.`;
 
@@ -1221,9 +1274,9 @@ function flipGameView() {
     <div class="flip-game-head"><div><span class="eyebrow">끝소리 카드 뒤집기</span><h2>${game.completed ? winnerText : '우리 편 글자가 더 많이 보이게 해요'}</h2><p>카드 앞뒤에는 서로 짝이 되는 글자가 들어 있어요.</p></div><div class="flip-turn-count"><b class="flip-time-value">${remainingFlipSeconds(game)}</b><span>초</span></div></div>
     ${coachControls}
     ${game.active || game.completed ? `<div class="flip-scoreboard">
-      <section class="child"><small>${independentFlipMode ? `아동 · ${flipSideLabel(game.childSide)}` : `${flipTeamLabel('open')} · ${flipSideLabel('open')} · ${openMembers.length}명`}</small><strong>${independentFlipMode ? childCount : counts.open}</strong></section>
-      <div class="flip-turn-status"><span>${game.completed ? '게임 끝' : '빠르게 뒤집어요'}</span><b>${game.completed ? winnerText : `두 편이 동시에 진행해요 · ${game.turns}장 뒤집음`}</b></div>
-      <section class="coach"><small>${independentFlipMode ? `${opponentName} · ${flipSideLabel(game.coachSide)}` : `${flipTeamLabel('closed')} · ${flipSideLabel('closed')} · ${closedMembers.length}명`}</small><strong>${independentFlipMode ? coachCount : counts.closed}</strong></section>
+      <section class="child"><small>${solo ? `아동 · ${flipSideLabel(game.childSide)}` : `${flipTeamLabel('open')} · ${flipSideLabel('open')} · ${openMembers.length}명`}</small><strong>${solo ? childCount : counts.open}</strong></section>
+      <div class="flip-turn-status"><span>${game.completed ? '게임 끝' : '빠르게 뒤집어요'}</span><b>${game.completed ? winnerText : `${solo ? '젤리티처와 동시에 진행해요' : '두 편이 동시에 진행해요'} · ${game.turns}장 뒤집음`}</b></div>
+      <section class="coach"><small>${solo ? `${opponentName} · ${flipSideLabel(game.coachSide)}` : `${flipTeamLabel('closed')} · ${flipSideLabel('closed')} · ${closedMembers.length}명`}</small><strong>${solo ? coachCount : counts.closed}</strong></section>
     </div>${lastMoveText ? `<div class="flip-last-move">${lastMoveText}</div>` : ''}<div class="flip-card-grid">${cards}</div>${game.completed ? '<button class="btn btn-secondary flip-restart" data-action="flip-start">같은 편으로 다시 하기</button>' : ''}` : readyPanel}
   </div>`;
 }
@@ -1307,25 +1360,70 @@ function normalizedObservationItem(item, index) {
     : { ...item, itemIndex: index };
 }
 
+// 선생님 카드는 아동 카드의 절반만 넣는다 — 읽을 기회를 갖는 것이 관찰의 목적이라
+// 아동 색이 확실히 더 자주 나와야 한다.
+const COACH_CARD_RATIO = 0.5;
+
+// 색 주인 정하기 — 아이가 둘 이상이면 아이들끼리 색을 나눠 갖고(선생님은 색 없이 진행만 한다),
+// 1:1이면 남은 한 색을 선생님이 갖는다.
+function assignObservationSeating() {
+  const ids = Object.keys(state.participants || {}).sort((a, b) => a.localeCompare(b, 'ko'));
+  if (ids.length >= 2) {
+    const count = Math.min(ids.length, COLOR_OBSERVATION_PALETTE.length);
+    const seats = {};
+    ids.forEach((id, index) => { seats[id] = index % count; });
+    return { count, seats, childColors: Array.from({ length: count }, (_, index) => index), coachColor: null };
+  }
+  const childColor = state.colorObservationMyColor === 1 ? 1 : 0;
+  return {
+    count: 2,
+    seats: ids.length ? { [ids[0]]: childColor } : {},
+    childColors: [childColor],
+    coachColor: childColor === 0 ? 1 : 0
+  };
+}
+
+function currentObservationSeating() {
+  return state.colorObservationSeating || assignObservationSeating();
+}
+
+// 내 색 — 코치는 1:1에서만 색을 갖는다(그룹에서는 null, 즉 읽을 카드가 없다).
+function myObservationColor(seating = currentObservationSeating()) {
+  if (coachSurface) return seating.coachColor;
+  if (childId && seating.seats[childId] !== undefined) return seating.seats[childId];
+  return seating.childColors[0];
+}
+
+function observationCardOwner(card, seating = currentObservationSeating()) {
+  if (!card) return null;
+  if (seating.coachColor !== null && card.color === seating.coachColor) return { kind: 'coach', id: null, label: '선생님' };
+  const ids = Object.keys(seating.seats).filter(id => seating.seats[id] === card.color);
+  return { kind: 'child', id: ids[0] || null, label: ids[0] || '아동' };
+}
+
 function buildColorObservationDeck(step) {
   const items = (step.items || []).map(normalizedObservationItem);
-  const count = Math.max(2, Math.min(4, state.colorObservationCount));
-  const myColor = Math.min(state.colorObservationMyColor, count - 1);
-  const otherColors = Array.from({ length: count }, (_, index) => index).filter(index => index !== myColor);
+  const seating = currentObservationSeating();
+  const childColors = seating.childColors;
+  // 목표 낱말은 아이들에게 돌아가며 배분한다 — 한 아이만 계속 읽지 않게.
   const ownCards = items.map((item, index) => ({
     id: `target-${state.lesson}-${index}`,
     ...item,
-    color: myColor,
+    color: childColors[index % childColors.length],
     observed: true
   }));
   const fillerItems = step.fillerItems || [];
-  const extraCount = Math.max(0, (step.rounds || items.length * 2) - ownCards.length);
+  const budget = Math.max(0, (step.rounds || items.length * 2) - ownCards.length);
+  // 그룹이면 남는 카드도 아이들 몫이고, 1:1이면 선생님 몫을 아동의 절반으로 묶는다.
+  const extraCount = seating.coachColor === null ? budget : Math.min(budget, Math.round(ownCards.length * COACH_CARD_RATIO));
   const extraCards = Array.from({ length: extraCount }, (_, index) => ({
     id: `filler-${state.lesson}-${index}`,
     word: fillerItems[index % fillerItems.length] || '쉬어 가요',
     itemIndex: null,
     exposure: 'filler',
-    color: otherColors[index % otherColors.length],
+    color: seating.coachColor === null
+      ? childColors[(items.length + index) % childColors.length]
+      : seating.coachColor,
     observed: false
   }));
   return shuffledValues([...ownCards, ...extraCards]);
@@ -1333,8 +1431,9 @@ function buildColorObservationDeck(step) {
 
 function ensureIndependentColorObservation(step) {
   if (serviceMode !== 'independent' || state.colorObservationDeck.length) return;
-  state.colorObservationCount = Math.max(2, Math.min(4, step.colorCount || 4));
+  state.colorObservationCount = 2;
   state.colorObservationMyColor = 0;
+  state.colorObservationSeating = assignObservationSeating();
   state.colorObservationDeck = buildColorObservationDeck(step);
 }
 
@@ -1354,9 +1453,22 @@ function colorObservationView(step) {
   ensureIndependentColorObservation(step);
   const started = state.colorObservationDeck.length > 0;
   const canConfigure = coachSurface;
-  const palette = COLOR_OBSERVATION_PALETTE.slice(0, state.colorObservationCount);
-  const myColor = palette[state.colorObservationMyColor] || palette[0];
+  // 카드를 뒤집고 넘기는 것은 코치가 쥔다 — 읽기 양상을 보면서 진행해야 하기 때문이다.
+  // 자율학습에는 코치가 없으므로 아동이 직접 넘긴다.
+  const canAdvance = serviceMode === 'independent' || coachSurface;
+  const seating = currentObservationSeating();
+  const groupPlay = seating.coachColor === null;
+  const palette = COLOR_OBSERVATION_PALETTE.slice(0, seating.count);
+  const childColor = COLOR_OBSERVATION_PALETTE[seating.childColors[0]];
+  const myColorIndex = myObservationColor(seating);
+  const myColor = myColorIndex === null ? null : COLOR_OBSERVATION_PALETTE[myColorIndex];
   const card = state.colorObservationDeck[state.colorObservationIndex];
+  const owner = observationCardOwner(card, seating);
+  const isMine = myColorIndex !== null && !!card && card.color === myColorIndex;
+  const seatRows = Object.keys(seating.seats).sort((a, b) => a.localeCompare(b, 'ko')).map(id => {
+    const color = COLOR_OBSERVATION_PALETTE[seating.seats[id]];
+    return `<div class="color-seat"><span>${esc(id)}</span><strong class="color-swatch ${color.className}"><i></i>${color.name}</strong></div>`;
+  }).join('');
 
   if (state.colorObservationDone) return `<div class="activity-card color-observation-card color-observation-complete">
     <img src="assets/jelly-confidence-3.png" alt="색깔 카드 활동을 마친 젤리티처">
@@ -1371,24 +1483,33 @@ function colorObservationView(step) {
       ${started || canConfigure ? '<img src="assets/jelly-listen-v2.png" alt="자기 색을 기다리는 젤리티처">' : ''}
     </header>
     ${!started && canConfigure ? `<section class="color-observation-setup">
-      <div class="color-count-setting"><span>함께 사용할 색</span><div>${[2, 3, 4].map(count => `<button class="${state.colorObservationCount === count ? 'selected' : ''}" data-color-count="${count}" aria-pressed="${state.colorObservationCount === count}">${count}색</button>`).join('')}</div></div>
-      <div class="my-color-setting"><span>아동의 색</span><div>${palette.map((color, index) => `<button class="color-swatch ${color.className} ${state.colorObservationMyColor === index ? 'selected' : ''}" data-my-color="${index}" aria-pressed="${state.colorObservationMyColor === index}"><i></i>${color.name}</button>`).join('')}</div></div>
-      <div class="color-observation-ready"><strong><i class="${myColor.className}"></i>아동 색은 ${myColor.name}</strong><span>설정은 아동 화면에 보이지 않아요.</span><button class="btn btn-primary" data-action="start-color-observation">카드 섞고 시작</button></div>
+      ${groupPlay
+        ? `<div class="color-seat-list"><span>아이들이 색을 나눠 가져요</span><div>${seatRows}</div></div>`
+        : `<div class="my-color-setting"><span>아동의 색</span><div>${palette.map((color, index) => `<button class="color-swatch ${color.className} ${seating.childColors[0] === index ? 'selected' : ''}" data-my-color="${index}" aria-pressed="${seating.childColors[0] === index}"><i></i>${color.name}</button>`).join('')}</div></div>`}
+      <div class="color-observation-ready"><strong>${groupPlay
+        ? `참가 아동 ${Object.keys(seating.seats).length}명이 각자 색을 맡아요`
+        : `<i class="${childColor.className}"></i>아동은 ${childColor.name} · 선생님은 ${COLOR_OBSERVATION_PALETTE[seating.coachColor].name}`}</strong><span>${groupPlay
+        ? '선생님은 색 없이 진행과 기록을 맡아요.'
+        : '아동 색 카드가 선생님 카드보다 많이 나와요.'}</span><button class="btn btn-primary" data-action="start-color-observation">카드 섞고 시작</button></div>
     </section>` : !started ? `<section class="color-observation-waiting">
       <div class="waiting-card-back"><img src="assets/color-card-back-light.png" alt="뒤집기 전 카드 뒷면"></div>
       <p>카드를 준비하고 있어요.</p>
     </section>` : `<section class="color-observation-play">
-      <div class="color-observation-progress"><span>${state.colorObservationIndex + 1} / ${state.colorObservationDeck.length}</span><i><b style="width:${(state.colorObservationIndex / state.colorObservationDeck.length) * 100}%"></b></i><strong><i class="${myColor.className}"></i>내 색 ${myColor.name}</strong></div>
+      <div class="color-observation-progress"><span>${state.colorObservationIndex + 1} / ${state.colorObservationDeck.length}</span><i><b style="width:${(state.colorObservationIndex / state.colorObservationDeck.length) * 100}%"></b></i>${myColor ? `<strong><i class="${myColor.className}"></i>내 색 ${myColor.name}</strong>` : '<strong>진행·기록</strong>'}</div>
       <div class="color-card-stage">
         <div class="color-card-stack" aria-hidden="true"></div>
-        <button class="color-flip-card ${state.colorObservationRevealed ? `is-revealed ${COLOR_OBSERVATION_PALETTE[card.color].className}` : 'is-card-back'}" data-action="flip-color-observation" ${state.colorObservationRevealed ? 'disabled' : ''} aria-label="${state.colorObservationRevealed ? `${card.word} 카드` : '컬러카드 뒤집기'}">
+        <button class="color-flip-card ${state.colorObservationRevealed ? `is-revealed ${COLOR_OBSERVATION_PALETTE[card.color].className}` : 'is-card-back'}" data-action="flip-color-observation" ${state.colorObservationRevealed || !canAdvance ? 'disabled' : ''} aria-label="${state.colorObservationRevealed ? `${card.word} 카드` : '컬러카드 뒤집기'}">
           ${state.colorObservationRevealed ? `<strong>${card.word}</strong>` : '<img class="color-card-back-image" src="assets/color-card-back-light.png" alt=""><span>카드 뒤집기</span>'}
         </button>
       </div>
-      <div class="color-observation-feedback ${state.colorObservationRevealed ? (card.color === state.colorObservationMyColor ? 'my-turn' : 'other-turn') : ''}" aria-live="polite">
-        ${!state.colorObservationRevealed ? '<span>카드를 눌러 어떤 색과 낱말이 나오는지 확인해요.</span>' : card.color === state.colorObservationMyColor
-          ? `<span><b>내 색이에요.</b> 보이는 낱말을 소리 내어 읽어요.</span><button class="btn btn-primary" data-action="complete-color-observation-card">읽었어요</button>${observationJudgement(card.word)}`
-          : `<span>${COLOR_OBSERVATION_PALETTE[card.color].name} 차례예요.</span><button class="btn btn-secondary" data-action="next-color-observation-card">다음 카드</button>`}
+      <div class="color-observation-feedback ${state.colorObservationRevealed ? (isMine ? 'my-turn' : 'other-turn') : ''}" aria-live="polite">
+        ${!state.colorObservationRevealed
+          ? `<span>${canAdvance ? '카드를 눌러 어떤 색과 낱말이 나오는지 확인해요.' : '선생님이 카드를 뒤집어요.'}</span>`
+          : coachSurface
+            ? `<span>${owner.kind === 'coach' ? '선생님 차례예요.' : `<b>${esc(owner.label)}</b> · ${COLOR_OBSERVATION_PALETTE[card.color].name} 차례예요.`}</span>${owner.kind === 'child' ? observationJudgement(card.word) : ''}<button class="btn btn-secondary" data-action="next-color-observation-card">다음 카드</button>`
+            : isMine
+              ? `<span><b>내 색이에요.</b> 보이는 낱말을 소리 내어 읽어요.</span>${canAdvance ? `<button class="btn btn-primary" data-action="complete-color-observation-card">읽었어요</button>` : ''}`
+              : `<span>${COLOR_OBSERVATION_PALETTE[card.color].name} 차례예요.</span>${canAdvance ? '<button class="btn btn-secondary" data-action="next-color-observation-card">다음 카드</button>' : ''}`}
       </div>
     </section>`}
   </div>`;
@@ -1397,8 +1518,8 @@ function colorObservationView(step) {
 function armColorObservationTiming() {
   const step = state.lesson ? lessons[state.lesson]?.steps[state.step] : null;
   const card = state.colorObservationDeck[state.colorObservationIndex];
-  const responseButton = document.querySelector('[data-action="complete-color-observation-card"]');
-  if (step?.type !== 'colorobservation' || !state.colorObservationRevealed || !card || !responseButton) {
+  // 카드가 보인 순간부터 잰다 — 수업에서는 코치가 판정할 때, 자율학습에서는 아동이 「읽었어요」를 누를 때 쓰인다.
+  if (step?.type !== 'colorobservation' || !state.colorObservationRevealed || !card) {
     colorObservationTimingKey = null;
     colorObservationVisibleAt = null;
     return;
@@ -2364,15 +2485,19 @@ function render(preserveScroll = false) {
   publishProgressIfChanged();
   requestAnimationFrame(drawColoredFinalSyllables);
   const currentStep = state.lesson ? lessons[state.lesson]?.steps[state.step] : null;
-  if (currentStep?.type === 'colorobservation') requestAnimationFrame(armColorObservationTiming);
+  // 상태만 보고 재므로 그리기를 기다릴 필요가 없다. rAF에 얹으면 화면이 가려졌을 때 무장되지 않아
+  // 반응시간이 통째로 결측이 된다.
+  if (currentStep?.type === 'colorobservation') armColorObservationTiming();
   else {
     colorObservationTimingKey = null;
     colorObservationVisibleAt = null;
   }
-  if (currentStep?.type === 'flipgame') requestAnimationFrame(() => {
+  // 여기도 rAF에 얹지 않는다 — 코치 화면이 가려지면 젤리티처가 멈추고 시계도 서 버린다.
+  // 둘 다 방금 그린 DOM만 보므로 바로 불러도 안전하다.
+  if (currentStep?.type === 'flipgame') {
     scheduleJellyFlip();
     scheduleFlipClock();
-  });
+  }
   else if (flipOpponentTimer) {
     clearTimeout(flipOpponentTimer);
     flipOpponentTimer = null;
@@ -2472,8 +2597,9 @@ function resetStepState() {
   state.soundRound = 0;
   state.phenomenonChoice = null;
   state.soundChoice = [];
-  state.colorObservationCount = 4;
+  state.colorObservationCount = 2;
   state.colorObservationMyColor = 0;
+  state.colorObservationSeating = null;
   state.colorObservationDeck = [];
   state.colorObservationIndex = 0;
   state.colorObservationRevealed = false;
@@ -2872,6 +2998,9 @@ app.addEventListener('click', event => {
       render(true);
     } else if (action === 'start-color-observation' && coachSurface) {
       const step = lessons[state.lesson].steps[state.step];
+      // 접속 인원으로 색 주인을 정하고 굳힌다 — 시작 뒤에 사람이 들락거려도 카드 주인은 그대로다.
+      state.colorObservationSeating = assignObservationSeating();
+      state.colorObservationCount = state.colorObservationSeating.count;
       state.colorObservationDeck = buildColorObservationDeck(step);
       state.colorObservationIndex = 0;
       state.colorObservationRevealed = false;
@@ -2881,20 +3010,44 @@ app.addEventListener('click', event => {
       colorObservationVisibleAt = null;
       render(true);
     } else if (action === 'flip-color-observation' && state.colorObservationDeck.length) {
+      // 수업 중에는 코치가 뒤집는다. 아이들 화면은 같은 카드를 함께 본다.
+      if (serviceMode === 'coaching' && !coachSurface) return;
       state.colorObservationRevealed = true;
       colorObservationTimingKey = null;
       colorObservationVisibleAt = null;
       render(true);
     } else if (action === 'complete-color-observation-card' || action === 'next-color-observation-card') {
+      if (serviceMode === 'coaching' && !coachSurface) return;
       const card = state.colorObservationDeck[state.colorObservationIndex];
-      if (action === 'complete-color-observation-card' && card?.observed && card.color === state.colorObservationMyColor) {
+      // 코치가 판정 없이 넘어가면 「못 쟀음」으로 남긴다 — 빈칸을 통과로 세지 않는다.
+      if (coachSurface && card?.observed && !state.colorObservationResponses.some(entry => entry.cardId === card.id)) {
+        const sealed = {
+          lesson: state.lesson,
+          cardId: card.id,
+          item: card.word,
+          itemIndex: card.itemIndex,
+          child: observationCardOwner(card)?.id || null,
+          responseTimeMs: null,
+          observationPhase: 'pre_observation',
+          supportLevel: 'none',
+          result: RESULT.UNMEASURED,
+          expectedPronunciation: card.expectedPronunciation || null,
+          targetRule: card.targetRule || null,
+          exposure: card.exposure || 'unseen'
+        };
+        state.colorObservationResponses.push(sealed);
+        window.dispatchEvent(new CustomEvent('oncuvate:pre-observation-response', { detail: sealed }));
+      }
+      if (action === 'complete-color-observation-card' && card?.observed && card.color === myObservationColor()) {
         const responseTimeMs = Number.isFinite(colorObservationVisibleAt)
           ? Math.max(0, Math.round(performance.now() - colorObservationVisibleAt))
           : null;
         const response = {
           lesson: state.lesson,
+          cardId: card.id,
           item: card.word,
           itemIndex: card.itemIndex,
+          child: childId,
           responseTimeMs,
           observationPhase: 'pre_observation',
           supportLevel: 'none',
@@ -2962,16 +3115,31 @@ app.addEventListener('click', event => {
   if (observationResult && coachSurface) {
     const card = state.colorObservationDeck[state.colorObservationIndex];
     const value = observationResult.dataset.observationResult;
-    state.colorObservationResponses.push({
+    // 카드 주인이 누구인지 함께 남긴다 — 그룹수업에서는 같은 활동 안에 여러 아이의 기록이 섞인다.
+    const owner = observationCardOwner(card);
+    const responseTimeMs = Number.isFinite(colorObservationVisibleAt)
+      ? Math.max(0, Math.round(performance.now() - colorObservationVisibleAt))
+      : null;
+    const response = {
+      lesson: state.lesson,
+      cardId: card?.id ?? null,
       word: card?.word ?? null,
+      item: card?.word ?? null,
+      itemIndex: card?.itemIndex ?? null,
+      child: owner?.id || null,
+      responseTimeMs,
+      observationPhase: 'pre_observation',
+      supportLevel: 'none',
       expectedPronunciation: card?.expectedPronunciation ?? null,
       targetRule: card?.targetRule ?? null,
+      exposure: card?.exposure || 'unseen',
       result: value,
       judgedBy: 'coach',
       at: Math.round(performance.now())
-    });
+    };
+    state.colorObservationResponses.push(response);
     window.dispatchEvent(new CustomEvent('oncuvate:observation-judged', {
-      detail: { word: card?.word, result: value, context: currentProgress() }
+      detail: { ...response, context: currentProgress() }
     }));
     render(true);
     return;
@@ -3010,17 +3178,11 @@ app.addEventListener('click', event => {
     return;
   }
 
-  const colorCountButton = event.target.closest('[data-color-count]');
-  if (colorCountButton && coachSurface && !state.colorObservationDeck.length) {
-    state.colorObservationCount = Math.max(2, Math.min(4, Number(colorCountButton.dataset.colorCount) || 4));
-    if (state.colorObservationMyColor >= state.colorObservationCount) state.colorObservationMyColor = 0;
-    render(true);
-    return;
-  }
-
+  // 색 개수는 더 이상 고르지 않는다 — 접속한 아이 수가 정한다(1:1이면 아동+선생님 2색).
+  // 1:1에서 아동이 어느 색을 가질지만 코치가 고른다.
   const myColorButton = event.target.closest('[data-my-color]');
   if (myColorButton && coachSurface && !state.colorObservationDeck.length) {
-    state.colorObservationMyColor = Math.max(0, Math.min(state.colorObservationCount - 1, Number(myColorButton.dataset.myColor) || 0));
+    state.colorObservationMyColor = Number(myColorButton.dataset.myColor) === 1 ? 1 : 0;
     render(true);
     return;
   }
@@ -3079,8 +3241,10 @@ app.addEventListener('click', event => {
 
   const flipCard = event.target.closest('[data-flip-card]');
   if (flipCard) {
-    if (independentFlipMode) makeFlipMove(flipCard.dataset.flipCard, 'child');
-    else if (!coachSurface) {
+    // 코치는 관전한다 — 젤리티처의 수는 scheduleJellyFlip이 대신 둔다.
+    if (coachSurface) return;
+    if (soloFlipMode()) makeFlipMove(flipCard.dataset.flipCard, 'child', childId);
+    else {
       const side = currentParticipantFlipSide();
       if (side) makeFlipMove(flipCard.dataset.flipCard, side, childId);
     }
@@ -3163,7 +3327,6 @@ app.addEventListener('click', event => {
   const interactive = event.target.closest([
     '[data-action]',
     '[data-scale]',
-    '[data-color-count]',
     '[data-my-color]',
     '[data-sound-letter]',
     '[data-word]',

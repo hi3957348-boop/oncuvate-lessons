@@ -487,14 +487,16 @@ h1, h2, h3, p { margin-top: 0; }
 .color-observation-head p { margin: 0; color: var(--muted); font-size: 15px; }
 .color-observation-head img { width: 104px; height: 104px; object-fit: contain; }
 .color-observation-setup { display: grid; gap: 18px; padding: 24px; border: 1px solid #d9e4eb; border-radius: 22px; background: rgba(255,255,255,.9); }
-.color-count-setting,
+.color-seat-list,
 .my-color-setting { display: grid; grid-template-columns: 160px 1fr; align-items: center; gap: 16px; }
-.color-count-setting > span,
+.color-seat-list > span,
 .my-color-setting > span { color: #4b5e70; font-size: 14px; font-weight: 760; }
-.color-count-setting > div,
+.color-seat-list > div,
 .my-color-setting > div { display: flex; flex-wrap: wrap; gap: 10px; }
-.color-count-setting button { min-width: 72px; min-height: 44px; border: 1px solid #ccd9e3; border-radius: 12px; color: #526578; background: #fff; font-size: 14px; font-weight: 720; cursor: pointer; }
-.color-count-setting button.selected { border-color: #6485a1; color: #fff; background: #6485a1; box-shadow: 0 7px 16px rgba(60,88,112,.18); }
+/* 그룹수업의 색 배정표 — 코치가 누구 색인지 한눈에 본다(고르는 것이 아니라 확인용이다). */
+.color-seat { display: inline-flex; align-items: center; gap: 10px; padding: 8px 13px; border: 1px solid #d5dfe7; border-radius: 13px; background: #fff; }
+.color-seat > span { color: #526578; font-size: 13px; font-weight: 760; }
+.color-seat .color-swatch { min-width: 0; min-height: 0; padding: 0; border: 0; background: none; cursor: default; }
 .color-swatch { display: inline-flex; align-items: center; gap: 8px; min-width: 94px; min-height: 46px; padding: 8px 13px; border: 1px solid #d5dfe7; border-radius: 13px; color: #435568; background: #fff; font-size: 13px; font-weight: 700; cursor: pointer; }
 .color-swatch i,
 .color-observation-ready i,
@@ -1098,7 +1100,7 @@ h1, h2, h3, p { margin-top: 0; }
   .scale-options { grid-template-columns: repeat(2, 1fr); }
   .color-observation-head { grid-template-columns: 1fr 76px; }
   .color-observation-head img { width: 76px; height: 76px; }
-  .color-count-setting,
+  .color-seat-list,
   .my-color-setting { grid-template-columns: 1fr; }
   .color-observation-ready,
   .color-observation-feedback { align-items: stretch; flex-direction: column; text-align: center; }
