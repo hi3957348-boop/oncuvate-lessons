@@ -1026,10 +1026,14 @@ function flipParticipantCount() {
   return Object.keys(state.participants || {}).length;
 }
 
-// 젤리티처와 1:1로 겨루는 판인가. 자율학습에는 상대가 없으니 언제나 그렇고,
-// 코칭 수업에서는 코치가 내려 준 판정(game.solo)을 따른다.
+// 젤리티처와 1:1로 겨루는 판인가.
 function soloFlipMode(game = currentLessonFlipGame()) {
-  return independentFlipMode || game.solo === true;
+  if (independentFlipMode) return true;
+  // 판이 돌기 시작하면 시작할 때 정한 값을 지킨다 — 도중에 인원이 바뀌어도 판은 흔들리지 않는다.
+  if (game.active || game.completed) return game.solo === true;
+  // 시작 전에는 접속 인원이 곧 답이다. 그 수를 아는 것은 코치 화면뿐이라
+  // 아동 화면은 코치가 보내 준 값(game.solo)을 쓴다.
+  return coachSurface ? flipParticipantCount() <= 1 : game.solo === true;
 }
 
 // 참가자 목록은 코치 화면만 가지고 있다. 접속 상황이 바뀔 때마다 코치가 다시 판정해
