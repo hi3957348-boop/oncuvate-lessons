@@ -26,6 +26,9 @@
     .field { display: flex; flex-direction: column; gap: .45rem; }
     .field > span { font-size: .8rem; color: #4a4a58; font-weight: 600; }
     .role-group { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    /* 혼자 하기는 나머지 둘과 성격이 달라 한 줄을 통째로 쓴다 — 방에 들어가는 게 아니라 방 없이 시작한다. */
+    .role-group .role-solo { grid-column: 1 / -1; flex-direction: row; justify-content: center; gap: .5rem; }
+    .role-group .role-solo small { font-size: .74rem; }
     .role-group button {
       border: 1px solid rgba(20, 18, 40, .16); background: #fff; cursor: pointer;
       border-radius: .8rem; padding: .8rem .6rem; display: flex; flex-direction: column;
@@ -81,12 +84,13 @@
       <div class="field">
         <span>누구인가요?</span>
         <div class="role-group" role="group" aria-label="역할 선택">
-          <button type="button" data-role="child" aria-pressed="true">학생<small>수업에 참여해요</small></button>
+          <button type="button" data-role="child" aria-pressed="true">학생<small>선생님과 함께해요</small></button>
           <button type="button" data-role="coach" aria-pressed="false">선생님<small>진행하고 기록해요</small></button>
+          <button type="button" data-role="solo" aria-pressed="false" class="role-solo">혼자 하기<small>선생님 없이 바로 시작해요</small></button>
         </div>
       </div>
 
-      <label class="field" for="code">
+      <label class="field" for="code" id="code-field">
         <span>입장코드 (숫자 5자리)</span>
         <div class="code-row">
           <input id="code" name="code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5"
@@ -98,7 +102,7 @@
 
       <button class="entry-go" type="submit">수업 열기</button>
 
-      <p class="entry-note">
+      <p class="entry-note" id="entry-note">
         선생님이 먼저 들어가 「수업 시작」을 누르면 학생 화면이 열립니다.
         학생은 같은 코드를 넣으면 됩니다.
       </p>
@@ -123,7 +127,20 @@
         });
       });
     }
-    pickGroup('[data-role]', 'role', value => { role = value; });
+    const codeField = document.getElementById('code-field');
+    const noteBox = document.getElementById('entry-note');
+
+    // 혼자 하기는 방에 들어가는 것이 아니므로 입장코드가 필요 없다.
+    function syncRoleFields() {
+      const solo = role === 'solo';
+      codeField.hidden = solo;
+      errorBox.textContent = '';
+      noteBox.textContent = solo
+        ? '선생님을 기다리지 않고 바로 시작해요. 처음부터 끝까지 혼자 할 수 있어요.'
+        : '선생님이 먼저 들어가 「수업 시작」을 누르면 학생 화면이 열립니다. 학생은 같은 코드를 넣으면 됩니다.';
+    }
+
+    pickGroup('[data-role]', 'role', value => { role = value; syncRoleFields(); });
     pickGroup('[data-session]', 'session', value => { session = value; });
 
     // 숫자만, 5자리까지
@@ -142,6 +159,8 @@
 
     form.addEventListener('submit', event => {
       event.preventDefault();
+      // 방 없이 열면 콘텐츠가 자율학습으로 돈다 — 기다릴 선생님이 없으므로 첫 화면이 바로 열린다.
+      if (role === 'solo') { location.href = `session0${session}.html?entry=1`; return; }
       const code = codeInput.value;
       if (!/^[0-9]{5}$/.test(code)) {
         errorBox.textContent = '숫자 5자리를 넣어 주세요.';
