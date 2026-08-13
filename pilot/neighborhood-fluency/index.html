@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#6c55d9">
+  <title>온큐베이트 읽기유창성 · 동네 한 바퀴 (파일럿)</title>
+  <link rel="stylesheet" href="styles.css?v=pilot-20260813">
+  <style>
+    /* 공개 파일럿 전용 진입 화면.
+       ⚠️ 이 화면은 **납품본에 넣지 않습니다.** 제작규격 5장(자체 로그인·입장 코드·역할 전환 금지)
+       때문이며, 실제 플랫폼에서는 window.ONCUVATE가 역할과 수업방을 주입합니다.
+       여기서는 플랫폼이 없으므로 그 값을 사람이 정해 주소로 넘깁니다. */
+    .entry { min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 1.5rem; }
+    .entry-card {
+      width: min(28rem, 100%); background: #fff; border-radius: 1.2rem;
+      border: 1px solid rgba(20, 18, 40, .1); box-shadow: 0 1rem 2.5rem rgba(20, 18, 40, .12);
+      padding: 2rem 1.8rem; display: flex; flex-direction: column; gap: 1.1rem;
+    }
+    .entry-brand { display: flex; align-items: center; gap: .6rem; }
+    .entry-brand img { height: 1.7rem; width: auto; }
+    .entry-brand span { font-size: .72rem; color: #6b6b7b; letter-spacing: .06em; }
+    .entry-card h1 { margin: 0; font-size: 1.5rem; line-height: 1.35; }
+    .entry-card h1 b { color: #6c55d9; }
+    .entry-lead { margin: 0; color: #6b6b7b; font-size: .9rem; }
+    .field { display: flex; flex-direction: column; gap: .45rem; }
+    .field > span { font-size: .8rem; color: #4a4a58; font-weight: 600; }
+    .role-group { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .role-group button {
+      border: 1px solid rgba(20, 18, 40, .16); background: #fff; cursor: pointer;
+      border-radius: .8rem; padding: .8rem .6rem; display: flex; flex-direction: column;
+      align-items: center; gap: .2rem; font-size: .95rem;
+    }
+    .role-group button small { font-size: .72rem; color: #8a8a99; font-weight: 400; }
+    .role-group button[aria-pressed="true"] { background: #6c55d9; border-color: transparent; color: #fff; }
+    .role-group button[aria-pressed="true"] small { color: rgba(255, 255, 255, .8); }
+    #code {
+      font-size: 1.8rem; letter-spacing: .5em; text-align: center; font-variant-numeric: tabular-nums;
+      padding: .7rem .5rem .7rem 1rem; border-radius: .7rem; border: 1px solid rgba(20, 18, 40, .18);
+      font-family: inherit;
+    }
+    #code:focus { outline: 2px solid #6c55d9; outline-offset: 1px; }
+    .code-row { display: flex; gap: .5rem; }
+    .code-row button {
+      flex: none; border: 1px solid rgba(20, 18, 40, .16); background: #fff;
+      border-radius: .7rem; padding: 0 .8rem; cursor: pointer; font-size: .8rem; color: #4a4a58;
+    }
+    .session-group { display: grid; grid-template-columns: 1fr 1fr; gap: .5rem; }
+    .session-group button {
+      border: 1px solid rgba(20, 18, 40, .16); background: #fff; cursor: pointer;
+      border-radius: .8rem; padding: .6rem; font-size: .88rem;
+    }
+    .session-group button[aria-pressed="true"] { background: rgba(108, 85, 217, .12); border-color: #6c55d9; }
+    .entry-go {
+      border: 0; background: #6c55d9; color: #fff; cursor: pointer;
+      border-radius: .8rem; padding: .85rem; font-size: 1rem; font-weight: 600;
+    }
+    .entry-go:disabled { background: rgba(20, 18, 40, .16); cursor: not-allowed; }
+    .entry-note { margin: 0; font-size: .76rem; color: #8a8a99; line-height: 1.6; }
+    .entry-error { margin: 0; font-size: .8rem; color: #c0392b; min-height: 1.1em; }
+  </style>
+</head>
+<body>
+  <main class="entry">
+    <form class="entry-card" id="entry">
+      <div class="entry-brand">
+        <img src="assets/oncuvate-brand-logo.png" alt="온큐베이트">
+        <span>파일럿</span>
+      </div>
+      <h1>동네 한 바퀴<br><b>읽기유창성 수업</b></h1>
+      <p class="entry-lead">같은 입장코드를 넣으면 선생님 화면과 학생 화면이 이어집니다.</p>
+
+      <label class="field">
+        <span>회차</span>
+        <div class="session-group" role="group" aria-label="회차 선택">
+          <button type="button" data-session="1" aria-pressed="true">1회차 · 낯선 동네를 걸어요</button>
+          <button type="button" data-session="2" aria-pressed="false">2회차 · 빵집을 찾아가요</button>
+        </div>
+      </label>
+
+      <div class="field">
+        <span>누구인가요?</span>
+        <div class="role-group" role="group" aria-label="역할 선택">
+          <button type="button" data-role="child" aria-pressed="true">학생<small>수업에 참여해요</small></button>
+          <button type="button" data-role="coach" aria-pressed="false">선생님<small>진행하고 기록해요</small></button>
+        </div>
+      </div>
+
+      <label class="field" for="code">
+        <span>입장코드 (숫자 5자리)</span>
+        <div class="code-row">
+          <input id="code" name="code" inputmode="numeric" pattern="[0-9]{5}" maxlength="5"
+                 autocomplete="off" placeholder="00000" aria-describedby="code-error">
+          <button type="button" id="make-code">새로 만들기</button>
+        </div>
+      </label>
+      <p class="entry-error" id="code-error" role="alert"></p>
+
+      <button class="entry-go" type="submit">수업 열기</button>
+
+      <p class="entry-note">
+        선생님이 먼저 들어가 「수업 시작」을 누르면 학생 화면이 열립니다.
+        학생은 같은 코드를 넣으면 됩니다.
+      </p>
+    </form>
+  </main>
+
+  <script>
+    // 파일럿 전용 진입 처리 — 고른 값을 주소로 넘길 뿐, 아무것도 저장·전송하지 않습니다.
+    // 실제 플랫폼에서는 이 화면 없이 window.ONCUVATE가 역할과 수업방을 주입합니다.
+    const form = document.getElementById('entry');
+    const codeInput = document.getElementById('code');
+    const errorBox = document.getElementById('code-error');
+    let role = 'child';
+    let session = '1';
+
+    function pickGroup(selector, attr, onPick) {
+      document.querySelectorAll(selector).forEach(button => {
+        button.addEventListener('click', () => {
+          document.querySelectorAll(selector).forEach(other => other.setAttribute('aria-pressed', 'false'));
+          button.setAttribute('aria-pressed', 'true');
+          onPick(button.dataset[attr]);
+        });
+      });
+    }
+    pickGroup('[data-role]', 'role', value => { role = value; });
+    pickGroup('[data-session]', 'session', value => { session = value; });
+
+    // 숫자만, 5자리까지
+    codeInput.addEventListener('input', () => {
+      codeInput.value = codeInput.value.replace(/[^0-9]/g, '').slice(0, 5);
+      errorBox.textContent = '';
+    });
+
+    document.getElementById('make-code').addEventListener('click', () => {
+      const digits = new Uint32Array(1);
+      crypto.getRandomValues(digits);
+      codeInput.value = String(10000 + (digits[0] % 90000));
+      errorBox.textContent = '';
+      codeInput.focus();
+    });
+
+    form.addEventListener('submit', event => {
+      event.preventDefault();
+      const code = codeInput.value;
+      if (!/^[0-9]{5}$/.test(code)) {
+        errorBox.textContent = '숫자 5자리를 넣어 주세요.';
+        codeInput.focus();
+        return;
+      }
+      const params = new URLSearchParams({ room: code });
+      if (role === 'coach') params.set('view', 'coach');
+      // 학생에게는 화면 구석 표시용 식별코드를 준다(실명이 아닌 임시 코드).
+      else params.set('child', `P${code.slice(0, 4)}`);
+      location.href = `session0${session}.html?${params}`;
+    });
+  </script>
+</body>
+</html>
