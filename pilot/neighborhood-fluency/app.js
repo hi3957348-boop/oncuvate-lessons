@@ -17,9 +17,11 @@ const childId = platformRuntime?.child || runtimeParams.get('child') || null;
 // 이 파일이 담당하는 회차 — sessionNN-data.js가 주입한다. 한 파일에는 한 회차만 있다.
 const SESSION = Number(window.ONCUVATE_SESSION) || 1;
 const serviceMode = activeRoom ? 'coaching' : 'independent';
-// 파일럿 빌드에만 회차·역할·입장코드를 고르는 화면(index.html)이 따로 있고, 거기서 표시를 달아 보낸다.
-// 납품본과 플랫폼 수업에는 그런 화면이 없다 — 주소는 플랫폼이 정하므로 콘텐츠가 옮기지 않는다.
-const entryScreenAvailable = !platformRuntime && runtimeParams.get('entry') === '1';
+// 파일럿 빌드에만 회차·역할·입장코드를 고르는 화면이 따로 있다. 그 빌드의 부트스트랩이
+// 아래 전역에 파일명을 넣어 알려 준다. 납품본·플랫폼 수업에는 그런 화면이 없어 값이 비고,
+// 그래서 콘텐츠가 주소를 옮기는 일도 없다 — 주소는 플랫폼이 정한다.
+const entryScreenPage = typeof window.ONCUVATE_PILOT_ENTRY === 'string' ? window.ONCUVATE_PILOT_ENTRY : null;
+const entryScreenAvailable = !!entryScreenPage;
 const coachSurface = serviceMode === 'coaching' && viewSurface === 'coach';
 const showPerformanceRecording = serviceMode !== 'coaching' || coachSurface;
 // 자율학습이면 맞출 화면이 없다 — 동기화 자체를 끈다.
@@ -2516,7 +2518,7 @@ function restartSession() {
     } catch { /* 저장 불가 환경 */ }
   }
   // 입장 화면으로 나가는 길에는 잠금을 풀지 않는다 — 떠나기 전에 예약된 발행이 되살아난다.
-  if (entryScreenAvailable) { location.href = 'index.html'; return; }
+  if (entryScreenPage) { location.href = entryScreenPage; return; }
   resetStepState();
   Object.assign(state, JSON.parse(JSON.stringify(INITIAL_STATE)));
   lastProgressSent = null;

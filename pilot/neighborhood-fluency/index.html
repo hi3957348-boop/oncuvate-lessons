@@ -160,18 +160,17 @@
     form.addEventListener('submit', event => {
       event.preventDefault();
       // 방 없이 열면 콘텐츠가 자율학습으로 돈다 — 기다릴 선생님이 없으므로 첫 화면이 바로 열린다.
-      if (role === 'solo') { location.href = `session0${session}.html?entry=1`; return; }
+      if (role === 'solo') { location.href = `session0${session}.html`; return; }
       const code = codeInput.value;
       if (!/^[0-9]{5}$/.test(code)) {
         errorBox.textContent = '숫자 5자리를 넣어 주세요.';
         codeInput.focus();
         return;
       }
-      // entry=1 은 「돌아올 입장 화면이 있다」는 표시다 — 수업 화면의 「처음 화면으로」가 이걸 보고 여기로 돌려보낸다.
-      const params = new URLSearchParams({ room: code, entry: '1' });
+      // 역할과 방만 넘긴다. 아동 식별코드는 pilot-runtime.js가 창마다 새로 만든다
+      // — 여기서 방 코드로 만들면 같은 방의 아이들이 전부 같은 코드를 갖게 된다.
+      const params = new URLSearchParams({ room: code });
       if (role === 'coach') params.set('view', 'coach');
-      // 학생에게는 화면 구석 표시용 식별코드를 준다(실명이 아닌 임시 코드).
-      else params.set('child', `P${code.slice(0, 4)}`);
       location.href = `session0${session}.html?${params}`;
     });
   </script>
