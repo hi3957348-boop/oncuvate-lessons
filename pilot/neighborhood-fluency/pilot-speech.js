@@ -20,6 +20,7 @@
   let status = '대기';
   let pending = null;      // 지금 판정 중인 요청
   let last = null;         // 마지막 결과 — 인식률을 눈으로 보려고 남긴다
+  let tryText = '책방';    // 「바로 시험」에 넣어 둘 목표 텍스트
 
   function creds() {
     try { return JSON.parse(sessionStorage.getItem(STORE_KEY) || 'null'); } catch { return null; }
@@ -36,6 +37,22 @@
       document.head.appendChild(tag);
     });
     return sdkLoading;
+  }
+
+  // 마이크를 먼저 명시적으로 연다. SDK에 맡기면 거부·미연결이 조용히 실패로만 나와
+  // 「버튼이 안 뜬다」의 원인을 알 수 없다.
+  async function ensureMic() {
+    if (!navigator.mediaDevices?.getUserMedia) throw new Error('이 브라우저는 마이크를 지원하지 않습니다');
+    if (!window.isSecureContext) throw new Error('https 또는 localhost에서만 마이크가 열립니다');
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      // 권한만 확인하고 바로 놓아준다 — SDK가 자기 스트림을 다시 연다.
+      stream.getTracks().forEach(track => track.stop());
+    } catch (error) {
+      if (error.name === 'NotAllowedError') throw new Error('마이크가 차단돼 있습니다 — 주소창 자물쇠 → 사이트 설정 → 마이크 허용');
+      if (error.name === 'NotFoundError') throw new Error('마이크를 찾지 못했습니다 — 장치가 연결돼 있는지 확인해 주세요');
+      throw new Error(`마이크를 열지 못했습니다 (${error.name})`);
+    }
   }
 
   // 목표 텍스트를 주고 그것과 대조해 채점한다 — 자유 받아쓰기가 아니다.
@@ -97,6 +114,9 @@
     if (detail?.evaluationEnabled === false) return;
     if (!creds()) { status = '키를 먼저 넣어 주세요'; panelOpen = true; render(); return; }
 
+    try { await ensureMic(); }
+    catch (error) { status = error.message; panelOpen = true; render(); return; }
+
     pending = {
       reference: referenceText,
       mode: detail?.mode || '',
@@ -116,7 +136,8 @@
       const accuracy = outcome.scores?.accuracy ?? 0;
       last = { ...outcome, reference: referenceText, bar, at: new Date().toLocaleTimeString('ko-KR') };
       status = outcome.scores ? '판정 완료' : `못 알아들었어요 (${outcome.reason})`;
-      answer(outcome.scores && accuracy >= bar ? 'accurate' : 'support');
+      // 직접 시험은 콘텐츠 진행을 건드리지 않는다 — 재 보기만 하는 자리다.
+      if (!detail?.silent) answer(outcome.scores && accuracy >= bar ? 'accurate' : 'support');
     } catch (error) {
       status = error.message === 'no-credentials' ? '키를 먼저 넣어 주세요' : `실패: ${error.message}`;
       last = null;
@@ -168,6 +189,11 @@
              <button data-speech="save">저장</button>
              <small>브라우저 안에만 저장되고 창을 닫으면 지워집니다. 어디로도 보내지 않습니다.</small>
            </div>`}
+      ${cred ? `<div class="speech-lab-try">
+        <label>바로 시험<input type="text" data-speech-try value="${esc(tryText)}" placeholder="읽을 낱말이나 문장"></label>
+        <button data-speech="try" ${pending ? 'disabled' : ''}>${pending ? '듣는 중…' : '누르고 읽기'}</button>
+        <small>수업 흐름과 무관하게 지금 바로 마이크를 열어 재 봅니다.</small>
+      </div>` : ''}
       ${last ? `<div class="speech-lab-result">
         <div><span>목표</span><b>${esc(last.reference)}</b></div>
         <div><span>들린 것</span><b class="${last.recognized ? '' : 'miss'}">${esc(last.recognized || '(없음)')}</b></div>
@@ -189,6 +215,11 @@
     if (action === 'open') { panelOpen = true; render(); }
     else if (action === 'close') { panelOpen = false; render(); }
     else if (action === 'forget') { sessionStorage.removeItem(STORE_KEY); status = '키를 지웠습니다'; render(); }
+    else if (action === 'try') {
+      tryText = host.querySelector('[data-speech-try]')?.value.trim() || tryText;
+      // 수업 흐름과 무관한 직접 시험 — 콘텐츠에 결과를 돌려보내지 않는다.
+      handleRequest({ mode: 'manual-test', correctionRules: { minimumSimilarity: .75 }, silent: true }, tryText);
+    }
     else if (action === 'save') {
       const key = host.querySelector('[data-speech-key]')?.value.trim();
       const region = host.querySelector('[data-speech-region]')?.value.trim();

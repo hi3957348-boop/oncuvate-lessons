@@ -1639,3 +1639,9 @@ h1, h2, h3, p { margin-top: 0; }
 .speech-lab-words span.miss { border-color: #e8b4ae; background: #fdf2f0; color: #c0392b; }
 .speech-lab-words b { margin-left: 4px; font-size: 10.5px; color: #8a8a99; }
 .speech-lab-result small { color: #a8a8b5; font-size: 10.5px; }
+.speech-lab-try { display: grid; gap: 6px; margin-bottom: 8px; padding-bottom: 8px; border-bottom: 1px solid var(--line, #e3e0ee); }
+.speech-lab-try label { display: grid; gap: 3px; font-size: 11.5px; }
+.speech-lab-try input { padding: 6px 8px; border: 1px solid var(--line, #e3e0ee); border-radius: 8px; font: inherit; }
+.speech-lab-try button { justify-self: start; padding: 5px 12px; border: 0; border-radius: 8px; background: #6c55d9; color: #fff; font-size: 12px; font-weight: 700; cursor: pointer; }
+.speech-lab-try button:disabled { background: rgba(20,18,40,.16); cursor: not-allowed; }
+.speech-lab-try small { color: #8a8a99; font-size: 11px; }
