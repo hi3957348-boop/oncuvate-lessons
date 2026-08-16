@@ -377,6 +377,9 @@ function activityStats(step) {
     return { itemsDone: records.length, itemsTotal: items.length,
              correct: score.independent, wrong: score.supported,
              unmeasured: score.unscorable || 0,
+             // 수행조건은 학습 기록 최상위 `condition`으로 간다(규격 v1.5 · 27번 별첨 7-1).
+             // 속도·A0 기준선이 「이전 회차의 같은 유형 문항 중앙값」이라 유형을 가릴 칸이 필요하다.
+             condition: level.code,
              level: level.code, item: items[records.length] ?? null };
   }
 
@@ -688,7 +691,7 @@ function goalView(step) {
       <img src="assets/scenes/scene-${state.lesson === 1 ? '02' : '06'}.jpg" alt="동네를 둘러보는 아이">
     </div>
     <footer class="goal-book-rights">
-      <span>원작 그림책 《동네 한 바퀴》 · 글 박철주 · 그림 나은현</span>
+      <span>원작 그림책 《동네 한 바퀴》 · 글 박철주 · 그림 박은현</span>
       <span>© 2019 Enuma, Inc. &amp; The Foundation SeeArt for Book Culture · <a href="https://creativecommons.org/licenses/by/4.0/deed.ko" target="_blank" rel="noopener noreferrer">CC BY 4.0</a></span>
       <span class="oncuvate-rights">읽기유창성 훈련 콘텐츠(수업 설계·문항·활동·UI·코드) © 2026 Oncuvate. All rights reserved. 원작의 CC BY 4.0 적용 부분을 제외한 온큐베이트 제작물은 사전 서면 허가 없이 복제·배포할 수 없습니다.</span>
     </footer>
@@ -1571,14 +1574,18 @@ function currentGeneralizationItems(level) {
 //   ② 수행결과가 정답·오답·미판정 중 무엇인가 → RESULT
 //   ③ 그 결과를 독립 전이 통과 판정에 쓸 수 있는가 → countsAsIndependentTransfer()
 // 영문 코드는 정본 확정 전까지 내부 명칭이다(12번 보완서 §12).
+// 저장값은 규격 v1.5에서 확정된 영문 코드를 그대로 쓴다(27번 별첨 7-1).
+// 「콘텐츠가 직접 쓰는 값은 영문」이 경계이고, 화면 문구는 플랫폼이 한국어로 바꿔 보여 준다.
 const RESULT = {
   ACCURATE: 'accurate',             // 처음부터 정확 — 독립 정확
   SELF_CORRECTED: 'self-corrected', // 스스로 고쳐 읽음 — 독립 정확
   SUPPORT: 'support',               // 도움 받은 수행 — 결과는 보존하되 독립 통과율의 분자에서 제외
-  AWAITING: 'awaiting-judgement',   // 판정 대기 — 수행 중
-  UNMEASURED: 'unmeasured',         // 못 쟀음 — 활동이 끝났는데 판정값을 얻지 못함
-  SKIPPED: 'skipped',               // 건너뜀
-  ABORTED: 'aborted'                // 중단
+  AWAITING: 'needsReview',          // 판정 대기 — 사람이 봐야 하는 자리(규격: 검토 필요)
+  UNMEASURED: 'notMeasured',        // 못 쟀음 — 재는 지표인데 이번 회차에 값이 없음
+  NOT_APPLICABLE: 'notApplicable',  // 해당 없음 — 이 콘텐츠가 원래 그 지표를 안 잼
+  AUTO_UNAVAILABLE: 'autoUnavailable', // 자동판정 불가
+  SKIPPED: 'notMeasured',           // 건너뜀도 「못 쟀음」이다 — 빈칸을 만들지 않는다
+  ABORTED: 'notMeasured'            // 중단도 마찬가지. 어디서 멈췄는지는 진행 기록에 남는다
 };
 const INDEPENDENT_CORRECT = [RESULT.ACCURATE, RESULT.SELF_CORRECTED];
 // 정오를 확인할 수 있어 통과율의 분모에 들어가는 값
@@ -2038,7 +2045,7 @@ function requestT3SentenceReading(sentence, itemIndex) {
   state.t3SelectedIndex = null;
   state.t3ReadingStatus = state.readingEvaluationEnabled ? 'evaluating' : 'reading';
   render(true);
-  window.dispatchEvent(new CustomEvent('oncuvate:generalization-evaluation-request', { detail: { lesson: state.lesson, level: 'T3', item: sentence, itemIndex, mode: 'sentence-order-reading', evaluationEnabled: state.readingEvaluationEnabled, correctionRules: { minimumSimilarity: .75, equivalentVowels: [['ㅐ', 'ㅔ']], allowInitialPlainAspiratedCorrection: true, allowFinalMieumOmissionAtWordEnd: true } } }));
+  window.dispatchEvent(new CustomEvent('oncuvate:generalization-evaluation-request', { detail: { lesson: state.lesson, condition: 'T3', level: 'T3', item: sentence, itemIndex, mode: 'sentence-order-reading', evaluationEnabled: state.readingEvaluationEnabled, correctionRules: { minimumSimilarity: .75, equivalentVowels: [['ㅐ', 'ㅔ']], allowInitialPlainAspiratedCorrection: true, allowFinalMieumOmissionAtWordEnd: true } } }));
 }
 
 function moveT3SentencePiece(fromIndex, toIndex, sentence, itemIndex) {
@@ -2826,7 +2833,7 @@ app.addEventListener('click', event => {
       state.t1SpeedRevealed.push(index);
       if (state.t1SpeedMode === 'challenge') {
         records.push(RESULT.AWAITING);
-        window.dispatchEvent(new CustomEvent('oncuvate:generalization-evaluation-request', { detail: { lesson: state.lesson, level: level.code, item: deck[index], itemIndex: records.length - 1, mode: 'speed-reading' } }));
+        window.dispatchEvent(new CustomEvent('oncuvate:generalization-evaluation-request', { detail: { lesson: state.lesson, condition: level.code, level: level.code, item: deck[index], itemIndex: records.length - 1, mode: 'speed-reading' } }));
         if (records.length >= items.length) {
           clearT1SpeedTimer();
           state.t1SpeedActive = false;
