@@ -1,0 +1,38 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>물놀이 글쓰기 파일럿</title>
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="pilot.css">
+</head>
+<body class="pilot-entry">
+  <main class="pilot-entry-card">
+    <p class="pilot-entry-brand">WATER PLAY WRITING PILOT</p>
+    <h1>별명으로 시작해요</h1>
+    <p class="pilot-entry-lead">실명은 적지 않아요. 아래 별명 중 하나를 골라 안전하게 글쓰기 수업에 참여하세요.</p>
+    <div class="nickname-grid" id="nicknameGrid" aria-label="별명 선택"></div>
+    <p class="pilot-entry-note">선택한 별명은 이 기기에만 저장되고, 글을 제출할 때 메일의 학습자 이름으로 사용됩니다.</p>
+    <button class="pilot-enter-button" id="enterButton" type="button" disabled>별명을 골라 주세요</button>
+  </main>
+  <script src="pilot-config.js"></script>
+  <script>
+    (()=>{
+      const config=window.WATER_PLAY_PILOT_CONFIG;
+      const grid=document.getElementById("nicknameGrid"),button=document.getElementById("enterButton");
+      let picked=localStorage.getItem(config.nicknameStorageKey)||"";
+      const allowedNext=/^(course\.html|session0[1-4]-(life|explanation|persuasion|poem)\.html)$/;
+      const requested=new URLSearchParams(location.search).get("next")||"course.html";
+      const next=allowedNext.test(requested)?requested:"course.html";
+      function draw(){
+        grid.innerHTML=config.nicknames.map(name=>`<button type="button" class="nickname-option ${name===picked?"on":""}" aria-pressed="${name===picked}" data-name="${name}">${name}</button>`).join("");
+        button.disabled=!picked;button.textContent=picked?`${picked}(으)로 들어가기`:"별명을 골라 주세요";
+      }
+      grid.addEventListener("click",event=>{const option=event.target.closest("[data-name]");if(!option)return;picked=option.dataset.name;draw()});
+      button.addEventListener("click",()=>{if(!config.nicknames.includes(picked))return;localStorage.setItem(config.nicknameStorageKey,picked);location.href=next});
+      draw();
+    })();
+  </script>
+</body>
+</html>
