@@ -108,8 +108,16 @@
     if(!payload.after_revision){toast("완성 글이 아직 없어요.");return}
     if(!payload.access_key){if(status)status.textContent="제출 설정을 확인해 주세요.";return}
     button.disabled=true;button.textContent="제출하는 중…";if(status)status.textContent=nickname+" 이름으로 첨삭 전·후 글을 보내고 있어요.";
-    try{const response=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(payload)}),result=await response.json().catch(()=>({}));if(!response.ok||result.success===false)throw new Error(result.message||"submission_failed");state.submittedAt=new Date().toISOString();save(false);render();toast("선생님께 제출했어요.")}
-    catch(error){button.disabled=false;button.textContent="다시 제출하기";if(status)status.textContent="제출하지 못했어요. 인터넷 연결을 확인하고 다시 눌러 주세요."}
+    try{
+      const response=await fetch("https://api.web3forms.com/submit",{method:"POST",headers:{"Content-Type":"application/json",Accept:"application/json"},body:JSON.stringify(payload)});
+      const result=await response.json().catch(()=>({}));
+      if(!response.ok||result.success===false){const submitError=new Error(result.message||"submission_failed");submitError.status=response.status;throw submitError}
+      state.submittedAt=new Date().toISOString();save(false);render();toast("선생님께 제출했어요.")
+    }catch(error){
+      const limited=error?.status===429||/rate.?limit|too many requests/i.test(String(error?.message||""));
+      if(limited){button.disabled=true;button.textContent="1시간 후 다시 제출";if(status)status.textContent="인터넷 문제가 아니에요. Web3Forms 요청이 많아 1시간 동안 제한되었어요. 작성한 글은 이 기기에 저장되어 있으니 나중에 다시 제출해 주세요.";return}
+      button.disabled=false;button.textContent="다시 제출하기";if(status)status.textContent="전송하지 못했어요. 잠시 후 다시 시도해 주세요. 작성한 글은 이 기기에 저장되어 있어요."
+    }
   }
   function render(){const p=lesson.pages[state.page],i=state.page;document.body.dataset.lessonPage=String(i);document.getElementById("topTitle").textContent=lesson.title;document.title=`${lesson.session} · ${lesson.title} | Oncuvate`;const renderers={choice:choicePage,brainstorm:brainstormPage,read:readPage,sequence:sequencePage,write:writePage,reasons:reasonsPage,review:reviewPage,finish:finishPage};const strategy=(p.type==="write"||p.type==="reasons")?"":strategyTip(p,i),content=renderers[p.type](p,i).replace('<div class="lesson-body">',`<div class="lesson-body">${strategy}`);const childActivityLocked=role!=="coach"&&coach.activityLocked,lockChip=role!=="coach"&&(coach.pageLocked||coach.activityLocked)?`<div class="student-lock-chip">${coach.pageLocked?"페이지 잠금 · 코치 화면과 함께 이동해요.":""}${coach.pageLocked&&coach.activityLocked?"  |  ":""}${coach.activityLocked?"활동 잠금 · 설명을 들으며 기다려 주세요.":""}</div>`:"",lockCover=childActivityLocked?'<div class="activity-lock-cover"><div><b>활동이 잠시 잠겼어요</b><p>코치의 설명을 들으며 이 화면에서 기다려 주세요.</p></div></div>':"";document.getElementById("page").innerHTML=`${lockChip}<section class="panel ${childActivityLocked?"activity-locked":""}">${content}${lockCover}</section>${coachPanel()}`;if(childActivityLocked)document.querySelector(".panel .lesson-body")?.setAttribute("inert","");enterPage(i);document.getElementById("nav").innerHTML=`<button class="prev" ${i===0?"disabled":""} onclick="WaterLesson.go(${i-1})">이전 단계</button><span>${i+1} / ${lesson.pages.length}</span><button class="next" ${i===lesson.pages.length-1?"disabled":""} onclick="WaterLesson.next()">다음 단계</button>`;renderJourney();window.scrollTo({top:0,behavior:"smooth"})}
   /* ===== 콘텐츠 안의 코치 화면 — 수업 중 진행을 보고 화면을 맞추는 자리.
