@@ -1,0 +1,35 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="theme-color" content="#24144f">
+  <title>1회차 기억에 남는 물놀이 · 파일럿 입장</title>
+  <link rel="stylesheet" href="shared.css">
+  <link rel="stylesheet" href="session04-pilot.css">
+</head>
+<body class="poem-pilot-entry">
+  <main class="poem-entry-shell">
+    <section class="poem-entry-card" aria-labelledby="entryTitle">
+      <div class="poem-entry-visual">
+        <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate">
+        <div class="poem-wave" aria-hidden="true"><i></i><i></i><i></i></div>
+        <p><small>WATER PLAY WRITING · 1회차</small><strong>기억에 남는 물놀이</strong><span>생활문 파일럿 수업</span></p>
+      </div>
+      <div class="poem-entry-content">
+
+        <small class="entry-kicker">LIVE CLASS ENTRY</small>
+        <h1 id="entryTitle">어떻게 입장할까요?</h1>
+        <p class="entry-lead">코치와 학생이 같은 다섯 자리 룸코드를 사용하면 잠금과 판서가 연결됩니다.</p>
+        <div class="entry-tabs" role="tablist" aria-label="입장 역할"><button id="studentTab" type="button" role="tab" aria-selected="true" aria-controls="studentPanel">학생</button><button id="coachTab" type="button" role="tab" aria-selected="false" aria-controls="coachPanel">코치</button></div>
+        <section class="entry-role-panel" id="studentPanel" role="tabpanel" aria-labelledby="studentTab"><label class="entry-label">별명 선택</label><div class="entry-nicknames" id="nicknameGrid"></div><label class="entry-label" for="studentRoom">코치가 알려 준 룸코드</label><input class="entry-room-input" id="studentRoom" inputmode="numeric" autocomplete="one-time-code" maxlength="5" placeholder="00000"><p class="entry-help">한 수업방에서는 같은 별명을 두 명이 사용할 수 없어요.</p><button class="entry-primary" id="joinStudent" type="button">학생으로 입장</button></section>
+        <section class="entry-role-panel" id="coachPanel" role="tabpanel" aria-labelledby="coachTab" hidden><div class="entry-ticket"><small>오늘의 룸코드</small><input class="entry-room-input" id="coachRoom" inputmode="numeric" autocomplete="off" maxlength="5" placeholder="00000" aria-label="코치가 정한 다섯 자리 룸코드"><span>코치가 다섯 자리 코드를 적고 학생에게 알려 주세요.</span></div><div class="entry-coach-actions"><button class="entry-secondary" id="newRoom" type="button">무작위 코드</button><button class="entry-primary" id="joinCoach" type="button">수업방 만들기</button></div><p class="entry-help">룸은 만든 뒤 3시간 동안 사용할 수 있습니다.</p></section>
+        <div class="entry-status" id="entryStatus" role="status" aria-live="polite">실시간 수업방을 확인하고 있어요.</div>
+      </div>
+    </section>
+  </main>
+  <script>window.WATER_PLAY_ENTRY={key:"life",file:"session01-life.html",session:"1회차",title:"기억에 남는 물놀이",genre:"생활문"}</script>
+  <script src="pilot-config.js"></script>
+  <script src="pilot-entry.js"></script>
+</body>
+</html>
