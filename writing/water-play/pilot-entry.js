@@ -6,12 +6,14 @@
   const studentRoom=document.getElementById('studentRoom'),coachRoom=document.getElementById('coachRoom');
   const status=document.getElementById('entryStatus'),grid=document.getElementById('nicknameGrid');
   let picked=localStorage.getItem(config.nicknameStorageKey)||'',relayReady=false,apiPromise=null;
+  const evergreenRoom=/^\d{5}$/.test(String(config.evergreenRoomCode||""))?String(config.evergreenRoomCode):"";
+  if(evergreenRoom){studentRoom.value=evergreenRoom;coachRoom.value=evergreenRoom}
   function makeRoom(){return String(Math.floor(10000+Math.random()*90000))}
   function childCode(){const key='oncuvate.pilot.water-play.child-code';let value=localStorage.getItem(key)||'';if(!/^[A-Z2-9]{4}$/.test(value)){const chars='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';value=Array.from({length:4},()=>chars[Math.floor(Math.random()*chars.length)]).join('');localStorage.setItem(key,value)}return value}
   function renderNames(){grid.innerHTML=config.nicknames.map(name=>`<button type="button" class="entry-nickname ${picked===name?'on':''}" aria-pressed="${picked===name}" data-name="${name}">${name}</button>`).join('')}
   function showRole(role){const student=role==='student';studentTab.setAttribute('aria-selected',String(student));coachTab.setAttribute('aria-selected',String(!student));studentPanel.hidden=!student;coachPanel.hidden=student;requestAnimationFrame(()=>student?studentRoom.focus():coachRoom.focus())}
   async function api(){return apiPromise||(apiPromise=import('./session04-pilot-firebase.js'))}
-  async function checkRelay(){try{await api();relayReady=true;status.className='entry-status ready';status.textContent='실시간 수업방 준비 완료'}catch(_){relayReady=false;status.className='entry-status error';status.textContent='수업방에 연결할 수 없어요. 인터넷 연결을 확인해 주세요.'}}
+  async function checkRelay(){try{await api();relayReady=true;status.className='entry-status ready';status.textContent=evergreenRoom?'실시간 수업방 준비 완료 · 언제든 입장 코드 '+evergreenRoom:'실시간 수업방 준비 완료'}catch(_){relayReady=false;status.className='entry-status error';status.textContent='수업방에 연결할 수 없어요. 인터넷 연결을 확인해 주세요.'}}
   function normalize(input){input.value=input.value.replace(/\D/g,'').slice(0,5)}
   grid.addEventListener('click',event=>{const button=event.target.closest('[data-name]');if(!button)return;picked=button.dataset.name;renderNames()});
   studentTab.addEventListener('click',()=>showRole('student'));coachTab.addEventListener('click',()=>showRole('coach'));
