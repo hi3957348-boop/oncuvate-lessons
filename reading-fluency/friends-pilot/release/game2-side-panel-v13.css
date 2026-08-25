@@ -1,0 +1,121 @@
+.progression-game2 .g2p-layout {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) clamp(280px,29vw,350px) !important;
+  align-items:start !important;
+  gap:12px !important;
+  width:100% !important;
+  overflow:visible !important;
+}
+.progression-game2 .g2p-board-panel { width:100% !important; min-width:0 !important; }
+.progression-game2 .g2p-side {
+  position:sticky !important;
+  top:8px !important;
+  display:flex !important;
+  flex-direction:column !important;
+  align-self:start !important;
+  gap:8px !important;
+  width:100% !important;
+  min-width:0 !important;
+  max-height:calc(100vh - 24px) !important;
+  padding:12px !important;
+  overflow-x:hidden !important;
+  overflow-y:auto !important;
+  border:1px solid #dbe4e8 !important;
+  border-radius:20px !important;
+  background:#f9fbfb !important;
+  box-shadow:0 8px 24px rgb(35 54 70 / .08) !important;
+}
+.progression-game2 .g2p-reading {
+  display:flex !important;
+  flex-direction:column !important;
+  align-items:stretch !important;
+  gap:7px !important;
+  padding:14px !important;
+  border:0 !important;
+  border-radius:15px !important;
+  background:#fff !important;
+  color:#203547 !important;
+}
+.progression-game2 .g2p-reading strong {
+  order:-1;
+  font-size:clamp(20px,2.25vw,30px) !important;
+  line-height:1.35 !important;
+  color:#172b3e !important;
+  word-break:keep-all;
+}
+.progression-game2 .g2p-reading p { margin:0 !important; font-size:13px !important; color:#687886 !important; }
+.progression-game2 .g2p-reading button {
+  align-self:flex-start;
+  min-height:44px;
+  padding:0 14px;
+  border:1px solid #c9d9df;
+  border-radius:12px;
+  background:#edf5f7;
+  color:#28495b;
+  font-weight:800;
+  white-space:nowrap;
+}
+.progression-game2 .g2p-decisions {
+  display:grid !important;
+  grid-template-columns:repeat(2,minmax(0,1fr)) !important;
+  gap:8px !important;
+  width:100%;
+}
+.progression-game2 .g2p-decisions button {
+  display:flex !important;
+  align-items:center !important;
+  justify-content:center !important;
+  gap:7px !important;
+  min-height:56px !important;
+  padding:7px 9px !important;
+  border:1px solid #d5e0e4 !important;
+  border-radius:14px !important;
+  background:#fff !important;
+  color:#21384a !important;
+  font-weight:900 !important;
+  white-space:nowrap !important;
+}
+.progression-game2 .g2p-decisions button:disabled { opacity:.45 !important; cursor:not-allowed; }
+.progression-game2 .g2p-decisions img { width:38px !important; height:38px !important; object-fit:contain; }
+.progression-game2 .g2p-message { min-height:20px !important; margin:0 !important; padding:7px 9px !important; font-size:13px !important; }
+.progression-game2 .g2p-recognition { margin:0 !important; }
+
+.progression-game2 .g2p-cell,
+.progression-game2 .g2p-cell.fixed-clue,
+.progression-game2 .g2p-cell.user-hypothesis {
+  opacity:1 !important;
+  filter:none !important;
+  background:var(--region) !important;
+}
+.progression-game2 .g2p-cell.pending {
+  z-index:4;
+  outline:2px solid #fff !important;
+  outline-offset:-4px !important;
+  box-shadow:inset 0 0 0 3px #2786b3,0 0 0 3px rgb(56 164 207 / .28),0 0 18px rgb(56 164 207 / .42) !important;
+  animation:g2v13-selected 1.15s ease-in-out infinite alternate;
+}
+.progression-game2 .g2p-cell.fixed-clue .g2p-state-icon,
+.progression-game2 .g2p-cell.user-hypothesis .g2p-state-icon { opacity:1 !important; }
+@keyframes g2v13-selected {
+  from { box-shadow:inset 0 0 0 3px #2786b3,0 0 0 3px rgb(56 164 207 / .22),0 0 10px rgb(56 164 207 / .28); }
+  to { box-shadow:inset 0 0 0 3px #2786b3,0 0 0 4px rgb(56 164 207 / .34),0 0 20px rgb(56 164 207 / .5); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .progression-game2 .g2p-cell.pending { animation:none !important; }
+}
+
+@media (max-width:899px) {
+  .progression-game2 .g2p-layout {
+    grid-template-columns:minmax(0,1fr) !important;
+    align-items:start !important;
+    gap:10px !important;
+  }
+  .progression-game2 .g2p-side {
+    position:relative !important;
+    top:auto !important;
+    max-height:none !important;
+    overflow:visible !important;
+  }
+  .progression-game2 .g2p-reading { min-height:0 !important; }
+}

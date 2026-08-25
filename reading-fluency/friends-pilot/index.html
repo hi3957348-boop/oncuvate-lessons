@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="robots" content="noindex,noarchive">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>우리는 친구 · 수업 들어가기</title>
+<style>
+  /* ⚠️ 수업 화면 하한 987×521(클래스인)에서 **스크롤 없이** 닿아야 한다.
+     Chromium 109 하한이라 110+ 문법은 쓰지 않는다. */
+  :root { --ink:#2f3648; --dim:#6b7280; --line:#e4e2ec; --accent:#4a3a8f; --cream:#fbf9f4; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
+    background: var(--cream); color: var(--ink);
+    font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  }
+  .card {
+    width: min(720px, 100%); background: #fff; border: 1px solid var(--line);
+    border-radius: 18px; padding: 22px 24px; box-shadow: 0 14px 40px rgba(37,20,78,.08);
+  }
+  h1 { margin: 0 0 2px; font-size: 20px; }
+  .sub { margin: 0 0 16px; color: var(--dim); font-size: 13px; }
+  .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
+  @media (max-width: 700px) { .lanes { grid-template-columns: 1fr; } }
+  fieldset { margin: 0; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
+  legend { padding: 0 6px; font-size: 13px; font-weight: 800; color: var(--dim); }
+  label { display: block; margin: 8px 0 4px; font-size: 12px; font-weight: 700; color: var(--dim); }
+  input, select {
+    width: 100%; height: 40px; padding: 0 10px; font: inherit; color: var(--ink);
+    border: 1px solid var(--line); border-radius: 10px; background: #fff;
+  }
+  input:focus, select:focus { outline: 3px solid rgba(74,58,143,.28); outline-offset: 1px; }
+  .code { font-size: 22px; font-weight: 800; letter-spacing: .18em; text-align: center; }
+  button {
+    width: 100%; height: 44px; margin-top: 12px; font: inherit; font-weight: 800;
+    border: 0; border-radius: 10px; background: var(--accent); color: #fff; cursor: pointer;
+  }
+  button.quiet { background: #fff; color: var(--dim); border: 1px solid var(--line); }
+  .made { margin-top: 10px; padding: 10px; border-radius: 10px; background: #efeafd;
+          color: var(--accent); font-weight: 800; text-align: center; letter-spacing: .18em; font-size: 24px; }
+  .hint { margin: 8px 0 0; font-size: 12px; line-height: 1.6; color: var(--dim); }
+  .warn { margin: 14px 0 0; padding: 10px 12px; border-radius: 10px;
+          background: #fdf6ec; color: #8a6a33; font-size: 12px; line-height: 1.6; }
+  [hidden] { display: none !important; }
+</style>
+</head>
+<body>
+<main class="card">
+  <h1>우리는 친구</h1>
+  <p class="sub">코치는 방을 만들고, 학생은 코드를 받아 들어옵니다.</p>
+
+  <div class="lanes">
+    <fieldset>
+      <legend>학생</legend>
+      <label for="code">코치가 알려 준 코드</label>
+      <input id="code" class="code" inputmode="numeric" maxlength="5" placeholder="00000" autocomplete="off">
+      <label for="s1">회차</label>
+      <select id="s1"><option value="session01">1회차 · 서로서로 도와줘요</option><option value="session02">2회차 · 서로 달라도 우리는 친구예요</option></select>
+      <button id="join">들어가기</button>
+      <p class="hint">코드는 숫자 5자리입니다.</p>
+    </fieldset>
+
+    <fieldset>
+      <legend>코치</legend>
+      <label for="key">코치 암호</label>
+      <input id="key" type="password" placeholder="코치 암호" autocomplete="off">
+      <label for="s2">회차</label>
+      <select id="s2"><option value="session01">1회차 · 서로서로 도와줘요</option><option value="session02">2회차 · 서로 달라도 우리는 친구예요</option></select>
+      <button id="make">방 만들기</button>
+      <div id="made" class="made" hidden></div>
+      <button id="go" class="quiet" hidden>이 방으로 수업 열기</button>
+      <p class="hint">만들어진 숫자를 학생에게 알려 주세요.</p>
+    </fieldset>
+  </div>
+
+  <p class="warn">이 화면은 <b>파일럿용 임시 통로</b>입니다. 코치 암호는 아이가 코치 화면을 여는 것을
+  막는 정도이지 정식 인증이 아닙니다. 코치 주소는 코치에게만 알려 주세요.</p>
+</main>
+
+<script>
+(() => {
+  "use strict";
+  const KEY = "onq-pilot-2026";                       // 다리와 같은 값이어야 한다
+  const $ = (id) => document.getElementById(id);
+  const roomOf = (v) => String(v || "").replace(/\D/g, "").slice(0, 5);
+
+  // 방 번호를 사람이 부르기 쉬운 5자리로. 앞자리 0은 읽어 주기 어려워 1~9로 시작한다.
+  function newRoom() {
+    return String(Math.floor(10000 + Math.random() * 90000));
+  }
+  const url = (session, room, coach) => {
+    const q = new URLSearchParams({ ocroom: room });
+    if (coach) { q.set("ocrole", "coach"); q.set("ockey", KEY); }
+    return `${session}.html?${q.toString()}`;
+  };
+
+  $("code").addEventListener("input", (e) => { e.target.value = roomOf(e.target.value); });
+  $("code").addEventListener("keydown", (e) => { if (e.key === "Enter") $("join").click(); });
+
+  $("join").addEventListener("click", () => {
+    const room = roomOf($("code").value);
+    if (room.length !== 5) { $("code").focus(); alert("숫자 5자리를 넣어 주세요."); return; }
+    location.href = url($("s1").value, room, false);
+  });
+
+  let made = "";
+  $("make").addEventListener("click", () => {
+    if ($("key").value !== KEY) { $("key").focus(); alert("코치 암호가 맞지 않습니다."); return; }
+    made = newRoom();
+    $("made").textContent = made;
+    $("made").hidden = false;
+    $("go").hidden = false;
+  });
+  $("go").addEventListener("click", () => {
+    if (!made) return;
+    location.href = url($("s2").value, made, true);
+  });
+})();
+</script>
+</body>
+</html>

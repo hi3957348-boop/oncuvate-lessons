@@ -1,0 +1,64 @@
+{
+  "oncuvate": 2,
+  "id": "reading_fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-08-23",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "우리는 친구 · 1회차 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L3",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "우리는 친구",
+        "author": "제이드 매티슨 (Jade Mathieson) · 그림 헤랄 판 와익 (Gerhard Van Wyk) · 한국어 김은파",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    },
+    "session02.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "우리는 친구 · 2회차 읽기유창성",
+      "order": 2,
+      "minDurationMin": 40,
+      "level": "L3",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "우리는 친구",
+        "author": "제이드 매티슨 (Jade Mathieson) · 그림 헤랄 판 와익 (Gerhard Van Wyk) · 한국어 김은파",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    }
+  }
+}

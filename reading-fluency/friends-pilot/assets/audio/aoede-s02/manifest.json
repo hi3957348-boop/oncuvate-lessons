@@ -1,0 +1,275 @@
+[
+  {
+    "text": "얼룩말이에요",
+    "file": "assets/audio/aoede-s02/s02-01.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "기린이에요",
+    "file": "assets/audio/aoede-s02/s02-02.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "가렵지만",
+    "file": "assets/audio/aoede-s02/s02-03.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "긁을",
+    "file": "assets/audio/aoede-s02/s02-04.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "긁어",
+    "file": "assets/audio/aoede-s02/s02-05.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "위험한",
+    "file": "assets/audio/aoede-s02/s02-06.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "생겼지만",
+    "file": "assets/audio/aoede-s02/s02-07.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "상관없어요",
+    "file": "assets/audio/aoede-s02/s02-08.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "즐거워요",
+    "file": "assets/audio/aoede-s02/s02-09.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "동물이",
+    "file": "assets/audio/aoede-s02/s02-10.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "듣는",
+    "file": "assets/audio/aoede-s02/s02-11.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "친구니까요",
+    "file": "assets/audio/aoede-s02/s02-12.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "나는 기린이에요.",
+    "file": "assets/audio/aoede-s02/s02-13.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "머리가 가렵지만 긁을 수가 없어요.",
+    "file": "assets/audio/aoede-s02/s02-14.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "긁을 수가 없어요.",
+    "file": "assets/audio/aoede-s02/s02-15.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "가려운 곳을 긁어 주지요.",
+    "file": "assets/audio/aoede-s02/s02-16.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "나는 얼룩말이에요.",
+    "file": "assets/audio/aoede-s02/s02-17.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "나이가 들어서 먼 곳이 잘 안 보여요.",
+    "file": "assets/audio/aoede-s02/s02-18.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "먼 곳이 잘 안 보여요.",
+    "file": "assets/audio/aoede-s02/s02-19.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "위험한 동물이 오는지 감시해요.",
+    "file": "assets/audio/aoede-s02/s02-20.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "새는 감시해 주지요.",
+    "file": "assets/audio/aoede-s02/s02-21.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "아주 다르게 생겼지만 상관없어요.",
+    "file": "assets/audio/aoede-s02/s02-22.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "그건 상관없어요.",
+    "file": "assets/audio/aoede-s02/s02-23.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "새가 부르는 노래를 들어요.",
+    "file": "assets/audio/aoede-s02/s02-24.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "노래를 듣는 것도 즐거워요.",
+    "file": "assets/audio/aoede-s02/s02-25.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "우리는 친구니까요.",
+    "file": "assets/audio/aoede-s02/s02-26.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "새는 가려운 곳을 긁어 주지요.",
+    "file": "assets/audio/aoede-s02/s02-27.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "아, 시원해!",
+    "file": "assets/audio/aoede-s02/s02-28.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "새는 위험한 동물이 오는지 감시해 주지요.",
+    "file": "assets/audio/aoede-s02/s02-29.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "새는 우리와 아주 다르게 생겼지만 그건 상관없어요.",
+    "file": "assets/audio/aoede-s02/s02-30.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "새가 부르는 노래를 듣는 것도 즐거워요.",
+    "file": "assets/audio/aoede-s02/s02-31.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "우리는 친구니까요!",
+    "file": "assets/audio/aoede-s02/s02-32.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "목이 긴 동물은 기린이에요.",
+    "file": "assets/audio/aoede-s02/s02-33.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "손이 가렵지만 조금 참았어요.",
+    "file": "assets/audio/aoede-s02/s02-34.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "등을 긁을 도구를 찾아요.",
+    "file": "assets/audio/aoede-s02/s02-35.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "강아지의 등을 살살 긁어 줘요.",
+    "file": "assets/audio/aoede-s02/s02-36.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "초원에서 얼룩말이에요 하고 인사해요.",
+    "file": "assets/audio/aoede-s02/s02-37.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "모양이 조금 달라도 상관없어요.",
+    "file": "assets/audio/aoede-s02/s02-38.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  },
+  {
+    "text": "전체 글을 처음부터 끝까지 읽은 뒤 질문에 답해요.",
+    "file": "assets/audio/aoede-s02/s02-39.wav",
+    "model": "gemini-3.1-flash-tts-preview",
+    "voice": "Aoede",
+    "playback_rate": 1.1
+  }
+]

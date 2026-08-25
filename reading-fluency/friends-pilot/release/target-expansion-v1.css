@@ -1,0 +1,228 @@
+/* Session 02 target-to-expansion reading practice. */
+.reading-sentence .onq-target-trigger {
+  appearance: none;
+  border: 0;
+  border-radius: 5px;
+  padding: 0 .04em .05em;
+  margin: 0;
+  color: inherit;
+  background: linear-gradient(to top, rgba(75, 201, 220, .2) 0 .28em, transparent .28em);
+  box-shadow: none;
+  font: inherit;
+  font-weight: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.reading-sentence .onq-target-trigger:hover {
+  background: linear-gradient(to top, rgba(75, 201, 220, .34) 0 .34em, transparent .34em);
+}
+
+.reading-sentence .onq-target-trigger:focus-visible {
+  outline: 3px solid rgba(75, 201, 220, .62);
+  outline-offset: 3px;
+}
+
+.onq-expansion-panel {
+  position: fixed;
+  z-index: 90;
+  right: clamp(18px, 3vw, 38px);
+  top: 50%;
+  width: min(350px, calc(100vw - 36px));
+  max-height: min(520px, calc(100dvh - 40px));
+  transform: translateY(-50%);
+  overflow: auto;
+  box-sizing: border-box;
+  padding: 20px;
+  border: 1px solid var(--oc-line, #e8e3f3);
+  border-radius: 20px;
+  background: rgba(255, 254, 251, .98);
+  box-shadow: 0 18px 48px rgba(37, 20, 78, .16);
+  color: var(--oc-ink, #29243a);
+  font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+}
+
+.onq-expansion-head,
+.onq-expansion-progress,
+.onq-expansion-actions {
+  display: flex;
+  align-items: center;
+}
+
+.onq-expansion-head {
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.onq-expansion-kicker {
+  color: #777187;
+  font-size: 12px;
+  font-weight: 800;
+}
+
+.onq-expansion-close,
+.onq-expansion-audio {
+  display: inline-grid;
+  place-items: center;
+  width: 42px;
+  height: 42px;
+  padding: 0;
+  border: 1px solid var(--oc-line, #e8e3f3);
+  border-radius: 12px;
+  background: #fff;
+  color: #4b24a5;
+  cursor: pointer;
+}
+
+.onq-expansion-close { color: #777187; font-size: 24px; line-height: 1; }
+.onq-expansion-audio svg { width: 22px; height: 22px; }
+
+.onq-expansion-source {
+  margin: 18px 0 4px;
+  color: #777187;
+  font-size: 14px;
+  font-weight: 700;
+}
+
+.onq-expansion-word {
+  min-height: 1.55em;
+  margin: 0;
+  font-size: clamp(28px, 3vw, 38px);
+  line-height: 1.5;
+  font-weight: 800;
+  letter-spacing: -.035em;
+  word-break: keep-all;
+}
+
+.onq-expansion-progress {
+  justify-content: space-between;
+  margin: 16px 0 10px;
+  color: #777187;
+  font-size: 12px;
+  font-weight: 750;
+}
+
+.onq-expansion-track {
+  flex: 1;
+  height: 5px;
+  margin-left: 12px;
+  overflow: hidden;
+  border-radius: 999px;
+  background: #eeeaf4;
+}
+
+.onq-expansion-track > span {
+  display: block;
+  height: 100%;
+  border-radius: inherit;
+  background: #4bc9dc;
+  transition: width .22s ease;
+}
+
+.onq-expansion-status {
+  min-height: 3em;
+  margin: 0;
+  padding: 11px 13px;
+  border-radius: 12px;
+  background: #f7f6f8;
+  color: #5f5a68;
+  font-size: 14px;
+  line-height: 1.5;
+}
+
+.onq-expansion-actions { gap: 10px; margin-top: 12px; }
+.onq-expansion-actions button {
+  min-height: 44px;
+  border-radius: 12px;
+  font: inherit;
+  font-weight: 800;
+  cursor: pointer;
+}
+
+.onq-expansion-audio { flex: 0 0 44px; }
+.onq-expansion-next {
+  flex: 1;
+  border: 0;
+  background: #4b24a5;
+  color: #fff;
+}
+.onq-expansion-skip {
+  border: 1px solid #d9cff5;
+  background: #fff;
+  color: #4b24a5;
+  padding-inline: 14px;
+}
+
+@media (max-width: 834px) {
+  .onq-expansion-panel {
+    right: 14px;
+    top: auto;
+    bottom: 14px;
+    max-height: min(420px, calc(100dvh - 28px));
+    transform: none;
+  }
+}
+
+@media print {
+  .onq-expansion-panel { display: none !important; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .onq-expansion-track > span { transition: none; }
+}
+
+/* ── 코치 화면 ─────────────────────────────────────────────────────
+   패널은 **뷰포트** 오른쪽에 붙는다. 코치 화면에서는 그 자리를 콘솔 도크가
+   차지하고 있어 패널이 도크 밑으로 들어갔다(z-index 90 vs 2147483100).
+   coach-mode-v2.css가 세운 원칙 — 「콘솔이 수업 화면을 덮지 않는다.
+   코치도 아이와 같은 내용을 봐야 한다」 — 을 패널에도 그대로 적용한다:
+   도크가 차지한 폭만큼 **왼쪽으로 물린다**. 겹치지 않으니 가릴 일도 없다. */
+html[data-oncuvate-role="coach"] .onq-expansion-panel {
+  z-index: 2147483050;            /* 알림(…3000) 위 · 도크(…3100) 아래 */
+}
+html[data-oncuvate-role="coach"][data-coach-dock="open"] .onq-expansion-panel {
+  right: calc(var(--onq-dock-w, 360px) + 30px + clamp(18px, 3vw, 38px));
+  width: min(350px, calc(100vw - var(--onq-dock-w, 360px) - 60px));
+}
+/* 접으면 손잡이(44px)만 남는다 — 그만큼만 비켜 준다 */
+html[data-oncuvate-role="coach"][data-coach-dock="closed"] .onq-expansion-panel {
+  right: calc(clamp(18px, 3vw, 38px) + 52px);
+}
+
+/* 녹음 중 — 「다 읽었어요」로 바뀐 버튼과 표시등 */
+.onq-expansion-next.recording { background: #b3453c; border-color: #b3453c; }
+.onq-expansion-next[disabled] { opacity: .55; cursor: default; }
+.onq-expansion-panel .rec-indicator { margin-top: 12px; }
+
+/* 다섯 낱말을 한눈에 — 한 번에 읽고 한 번에 평가받는 화면 */
+.onq-expansion-list {
+  margin: 14px 0 0; padding: 0 0 0 4px; list-style: none;
+  display: grid; gap: 7px; counter-reset: exp;
+}
+.onq-expansion-list li {
+  counter-increment: exp;
+  display: flex; align-items: center; gap: 10px;
+  font-size: clamp(19px, 2vw, 24px); font-weight: 800; color: var(--oc-ink, #29243a);
+}
+.onq-expansion-list li::before {
+  content: counter(exp);
+  display: grid; place-items: center;
+  width: 22px; height: 22px; flex: 0 0 22px;
+  border-radius: 50%; background: #efeafd; color: #6f5bc4;
+  font-size: 12px; font-weight: 800;
+}
+.onq-expansion-panel .reading-annotate { margin-top: 12px; padding: 12px 14px; }
+.onq-expansion-panel .ra-text { font-size: clamp(17px, 1.8vw, 21px); line-height: 1.95; }
+
+/* 두 길을 나란히 — 강조는 「읽기 시작」 하나, 건너뛰기는 조용하게.
+   좁으면 접혀 내려가되 둘 다 스크롤 없이 닿아야 한다(수업 화면 하한 987×521). */
+.onq-expansion-actions { flex-wrap: wrap; }
+.onq-expansion-actions .onq-expansion-next { flex: 1 1 auto; }
+.onq-expansion-actions .onq-expansion-skip {
+  flex: 0 0 auto; white-space: nowrap;
+  background: none; border: 1px solid var(--oc-line, #e8e3f3);
+  color: #6b7280; font-weight: 700;
+}
+.onq-expansion-actions .onq-expansion-skip:hover { background: #faf9ff; color: #3f4757; }
