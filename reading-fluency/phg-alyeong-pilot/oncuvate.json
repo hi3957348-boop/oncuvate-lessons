@@ -1,0 +1,89 @@
+{
+  "oncuvate": 2,
+  "id": "phg_alyeong_fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-08-25",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "박혁거세와 알영 · 1회차 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L4",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "박혁거세와 알영",
+        "author": "글 이한 · 그림 이소리 · 편집 김은파, 이수인",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    },
+    "session02.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "박혁거세와 알영 · 2회차 읽기유창성",
+      "order": 2,
+      "minDurationMin": 40,
+      "level": "L4",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "박혁거세와 알영",
+        "author": "글 이한 · 그림 이소리 · 편집 김은파, 이수인",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    },
+    "session03.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "박혁거세와 알영 · 3회차 읽기유창성",
+      "order": 3,
+      "minDurationMin": 40,
+      "level": "L4",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "박혁거세와 알영",
+        "author": "글 이한 · 그림 이소리 · 편집 김은파, 이수인",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    }
+  }
+}

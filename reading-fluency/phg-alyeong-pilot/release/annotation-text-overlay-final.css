@@ -1,0 +1,87 @@
+/* Text annotations live in an isolated absolute layer inside the activity frame. */
+#app .activity-shell {
+  position: relative;
+  isolation: isolate;
+}
+
+#app .annotation-text-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 42;
+  overflow: hidden;
+  border-radius: inherit;
+  pointer-events: none;
+  contain: layout paint;
+}
+
+#app .annotation-text-input,
+#app .annotation-text-note {
+  position: absolute;
+  box-sizing: border-box;
+  max-width: min(320px, calc(100% - 24px));
+  min-width: 132px;
+  margin: 0;
+  border-radius: 9px;
+  color: #14112b;
+  background: rgba(255, 255, 255, .97);
+  font-family: Pretendard, "Noto Sans KR", sans-serif;
+  font-size: 17px;
+  font-weight: 750;
+  line-height: 1.35;
+  word-break: keep-all;
+  overflow-wrap: normal;
+  box-shadow: 0 5px 18px rgba(28, 23, 54, .18);
+}
+
+#app .annotation-text-input {
+  z-index: 2;
+  width: min(260px, calc(100% - 24px));
+  height: 42px;
+  padding: 7px 10px;
+  border: 3px solid #2d6da0;
+  outline: 3px solid rgba(255, 255, 255, .94);
+  outline-offset: 1px;
+  pointer-events: auto;
+  caret-color: #111827;
+}
+
+#app .annotation-text-input:focus {
+  border-color: #125b8f;
+  box-shadow: 0 0 0 4px rgba(52, 143, 196, .24), 0 6px 20px rgba(28, 23, 54, .2);
+}
+
+#app .annotation-text-note {
+  z-index: 1;
+  min-width: 0;
+  padding: 5px 8px;
+  border: 2px solid rgba(38, 93, 132, .62);
+  white-space: pre-wrap;
+  pointer-events: none;
+}
+
+/* Every book image is clipped by its frame; raster shadows cannot leak outside. */
+#app :is(.cover-art, .scene-card, .word-scene-collage__item, .sentence-art) {
+  overflow: hidden !important;
+  isolation: isolate;
+}
+
+#app :is(.cover-art, .scene-card, .word-scene-collage__item, .sentence-art) > img {
+  border-radius: inherit !important;
+  box-shadow: none !important;
+  filter: none !important;
+}
+
+@media (max-width: 620px) {
+  #app .annotation-text-input,
+  #app .annotation-text-note { font-size: 16px; }
+
+  #app .annotation-text-input {
+    width: min(230px, calc(100% - 20px));
+    min-width: 118px;
+    height: 44px;
+  }
+}
+
+@media print {
+  #app .annotation-text-overlay { display: none !important; }
+}

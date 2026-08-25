@@ -1,0 +1,294 @@
+/* 읽기 첨삭 — 공책에 형광펜으로 표시한 느낌.
+   틀린 곳만 형광펜 + 물결 밑줄로 짚는다. 끊어읽기 표시는 하지 않는다. */
+
+.reading-annotate {
+  margin-top: 14px;
+  padding: 18px 20px 16px;
+  border: 1px solid #e6e2d8;
+  border-radius: 18px;
+  background: #fffdf7;
+}
+
+.ra-caption {
+  margin: 0 0 10px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #8a8578;
+}
+
+.ra-text {
+  margin: 0;
+  font-size: clamp(21px, 2.3vw, 28px);
+  font-weight: 700;
+  line-height: 2.1;
+  color: #2f3648;
+  word-break: keep-all;
+}
+
+.ra-word {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  padding: 0 2px;
+}
+
+/* 형광펜은 글자 아래쪽만 덮어 글자가 또렷하게 남게 한다 */
+.ra-word.wrong {
+  position: relative;
+  cursor: pointer;
+  border-radius: 5px;
+  background: linear-gradient(to top, #ffe38a 46%, transparent 46%);
+  text-decoration: underline wavy #e07a5f 2px;
+  text-underline-offset: 7px;
+  transition: background .15s, transform .12s;
+}
+.ra-word.wrong:hover,
+.ra-word.wrong:focus-visible { background: linear-gradient(to top, #ffd75c 52%, transparent 52%); }
+.ra-word.wrong.open {
+  background: linear-gradient(to top, #ffd043 58%, transparent 58%);
+  transform: translateY(-1px);
+}
+.ra-word.wrong::after {
+  content: "";
+  position: absolute; right: -3px; top: -2px;
+  width: 6px; height: 6px; border-radius: 50%;
+  background: #e07a5f;
+}
+
+
+/* ── 눌렀을 때 뜨는 설명 ───────────────────────────────── */
+.ra-detail {
+  margin-top: 14px;
+  padding: 14px 16px;
+  border-radius: 14px;
+  background: #fff;
+  border: 1px solid #e6e2d8;
+  box-shadow: 0 8px 20px rgba(80, 70, 40, .07);
+}
+.ra-detail-head { display: flex; align-items: center; gap: 10px; }
+.ra-detail-head strong { font-size: 19px; font-weight: 800; color: #2f3648; }
+
+.ra-listen {
+  display: inline-flex; align-items: center; gap: 5px;
+  padding: 7px 13px;
+  border: 1px solid var(--line, #e3e0d8);
+  border-radius: 999px;
+  background: #fff;
+  font-size: 14px; font-weight: 800; color: #4d566b;
+  cursor: pointer;
+}
+.ra-listen:hover { border-color: #c9c2b2; background: #fffaf0; }
+.ra-close {
+  margin-left: auto;
+  width: 30px; height: 30px;
+  border: 0; border-radius: 50%;
+  background: #f3f0e8; color: #8a8578;
+  font-size: 14px; cursor: pointer;
+}
+
+.ra-compare {
+  display: flex; align-items: flex-end; gap: 12px;
+  margin: 12px 0 0; flex-wrap: wrap;
+}
+.ra-compare span { display: grid; gap: 3px; }
+.ra-compare small { font-size: 12.5px; font-weight: 700; color: #9a948a; }
+.ra-compare b {
+  font-size: clamp(19px, 2vw, 24px); font-weight: 800;
+  color: #b0603f;
+  text-decoration: line-through;
+  text-decoration-color: rgba(176, 96, 63, .45);
+}
+.ra-compare .right b { color: #3f8a63; text-decoration: none; }
+.ra-compare i { font-style: normal; color: #b6b0a4; font-size: 20px; padding-bottom: 4px; }
+
+.ra-rule {
+  margin: 12px 0 0;
+  padding: 8px 12px;
+  border-radius: 10px;
+  background: #eef4ff;
+  color: #3f5590;
+  font-size: 15px; font-weight: 800;
+}
+.ra-note { margin: 8px 0 0; font-size: 15px; line-height: 1.65; color: #5c6478; }
+
+/* ── 코치 콘솔의 속도 칸 (아이 화면에는 안 낸다) ──────────── */
+.onq-spm { display: grid; gap: 2px; padding: 10px 12px; border-radius: 10px; background: #f5f7fb; }
+.onq-spm strong { font-size: 18px; font-weight: 800; color: #2f3648; font-variant-numeric: tabular-nums; }
+.onq-spm small { font-size: 11.5px; color: #8a90a0; }
+
+@media (prefers-reduced-motion: reduce) {
+  .ra-word.wrong { transition: none; }
+}
+
+/* 평가를 기다리는 동안 — 목표 문장을 흐리게 세워 두고 표시만 나중에 채운다 */
+.ra-word.pending { opacity: .38; }
+.ra-spin {
+  display: inline-block; width: 12px; height: 12px; margin-right: 6px;
+  border: 2px solid #d8d2c4; border-top-color: #8a8578; border-radius: 50%;
+  vertical-align: -1px; animation: ra-spin .8s linear infinite;
+}
+@keyframes ra-spin { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) { .ra-spin { animation: none; } }
+
+/* ══ 아래 띠 버튼 정리 (2026-08-24) ═══════════════════════════════════
+   ⑴ 너무 컸다 — 아이 화면의 주인공은 글과 그림이지 버튼이 아니다.
+   ⑵ 색이 셋이었다(보라 그러데이션·청록·보라 테두리). 눈이 갈 곳을 못 정한다.
+       ⇒ **강조는 「다음」 하나**. 나머지는 조용한 회색으로 내린다.
+   ⑶ 삽화가 높아 스크롤이 났다 — 화면 높이에 맞춰 줄인다.            */
+
+/* ── 버튼 크기 ─────────────────────────────────── */
+#app .bottombar .quiet-btn,
+#app .bottombar .primary-btn,
+#app .activity-shell > .annotation-launcher {
+  min-height: 34px !important;
+  padding: 0 13px !important;
+  border-radius: 9px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  min-width: 0 !important;
+}
+#app .bottombar { padding: 7px 12px !important; gap: 8px !important; }
+#app .bottombar .bottom-actions { gap: 7px !important; }
+
+/* ── 색: 강조 하나, 나머지는 조용히 ─────────────── */
+#app .bottombar .primary-btn {
+  background: var(--violet-800, #4a3a8f) !important;   /* 그러데이션을 뺀 단색 */
+  border: 0 !important;
+  box-shadow: none !important;
+}
+#app .bottombar .quiet-btn,
+#app .activity-shell > .annotation-launcher {
+  color: #6b7280 !important;
+  background: #fff !important;
+  border: 1px solid #e4e2ec !important;
+  box-shadow: none !important;
+}
+#app .bottombar .quiet-btn:hover,
+#app .activity-shell > .annotation-launcher:hover {
+  color: #3f4757 !important;
+  border-color: #cfcbdd !important;
+  background: #fafaff !important;
+}
+/* 「활동 안내」의 보라 테두리와 「판서」의 청록을 걷어낸다 */
+#app .bottombar .instruction-btn { color: #6b7280 !important; border-color: #e4e2ec !important; background: #fff !important; }
+
+/* 활동 안쪽 「다음」도 같은 크기로 */
+#app .vocab-panel .primary-btn,
+#app .word-quiz-card .primary-btn {
+  min-height: 34px; padding: 0 15px; border-radius: 9px;
+  font-size: 14px; background: var(--violet-800, #4a3a8f); box-shadow: none;
+}
+
+/* ── 삽화 높이 — 스크롤이 안 나게 ────────────────── */
+#app .vocab-layout { align-items: center; }
+#app .vocab-layout .vocab-art,
+#app .vocab-layout .vocab-panel {
+  min-height: 0 !important;
+  height: clamp(230px, 42vh, 330px) !important;
+}
+#app .vocab-layout .vocab-panel { height: auto !important; max-height: none !important; padding: clamp(18px, 2.2vw, 28px) !important; }
+#app .vocab-layout .vocab-art img { min-height: 0 !important; height: 100% !important; object-fit: contain !important; }
+#app .vocab-frame { font-size: clamp(20px, 2.1vw, 27px) !important; margin: 6px 0 14px !important; }
+#app .vocab-choice { padding: 13px 10px !important; font-size: clamp(16px, 1.6vw, 20px) !important; }
+
+/* ⚠️ 「판서」 버튼 하나를 **여섯 파일**이 칠하고 있다(interface-cleanup·long-reading-guide·
+   ui-refinement·shell-panels·common-shell-annotation·child-shell). 앞 규칙만으로는 안 이겨서
+   그 파일들이 쓰는 선택자와 같은 모양으로 다시 적는다. 새 override 파일을 또 만들지 않는다 —
+   그러면 일곱 번째가 된다. */
+#app .studio .bottombar .bottom-actions > .annotation-launcher,
+#app .bottom-actions > .annotation-launcher,
+#app .activity-shell.annotation-eligible > .annotation-launcher:not([hidden]),
+#app .activity-shell > .annotation-launcher,
+#app .bottom-actions > :is(.activity-guide-action, .annotation-launcher),
+.bottom-actions > .activity-guide-action,
+.bottom-actions > .annotation-launcher {
+  min-height: 34px !important;
+  height: 34px !important;
+  padding: 0 13px !important;
+  border-radius: 9px !important;
+  font-size: 13.5px !important;
+  font-weight: 700 !important;
+  color: #6b7280 !important;
+  background: #fff !important;
+  border: 1px solid #e4e2ec !important;
+  box-shadow: none !important;
+}
+#app .studio .bottombar .bottom-actions > .annotation-launcher:hover,
+#app .bottom-actions > .annotation-launcher:hover,
+.bottom-actions > .activity-guide-action:hover {
+  color: #3f4757 !important;
+  border-color: #cfcbdd !important;
+  background: #fafaff !important;
+}
+/* 판서가 켜져 있을 때만 색으로 알린다 — 끄고 켜는 상태 표시는 남겨야 한다 */
+#app .bottom-actions > .annotation-launcher[aria-expanded="true"] {
+  color: #fff !important;
+  background: #3b8d94 !important;
+  border-color: #3b8d94 !important;
+}
+
+/* 판서는 **런타임에 주입되는 CSS**(ui-refinement-v24 등)가 뒤에 실려 앞 규칙을 이겼다.
+   html 을 앞에 붙여 한 단계 더 구체적으로 잡는다. */
+html #app .studio .bottombar .bottom-actions > .annotation-launcher,
+html #app .bottom-actions > .annotation-launcher {
+  color: #6b7280 !important;
+  background: #fff !important;
+  border: 1px solid #e4e2ec !important;
+}
+html #app .bottom-actions > .annotation-launcher[aria-expanded="true"] {
+  color: #fff !important;
+  background: #3b8d94 !important;
+  border-color: #3b8d94 !important;
+}
+
+/* ── 전체 읽기 — ▶ 를 글자 첫 줄에 **정확히 나란히** ─────────────────
+   종전에는 margin-top 어림값이라 글자 크기가 바뀌면 어긋났다.
+   줄 높이와 아이콘 높이의 차이를 그대로 계산해 맞춘다. */
+/* ▶ 를 글자 첫 줄에 정확히 맞춘다.
+   margin·vertical-align 어림값은 글자 크기·줄높이가 바뀔 때마다 어긋난다.
+   ⇒ 아이콘 칸을 **정확히 한 줄 높이(1lh)**로 두고 그 안에서 가운데 정렬한다.
+      줄높이가 어떻게 바뀌든 늘 첫 줄 한가운데다. */
+#app .text-sentence.listen {
+  display: grid !important;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0 9px;
+  align-items: start;
+  line-height: 1.9;
+}
+#app .text-sentence.listen .ts-play {
+  display: grid !important;
+  place-items: center;
+  width: 20px;
+  /* ⚠️ font-size를 여기서 줄이면 `1lh`가 **아이콘 자기 글자 기준**으로 계산돼
+     줄 높이보다 짧아지고 위로 붙는다. 글자 크기는 물려받고, 글리프만 줄인다. */
+  font-size: inherit;
+  line-height: inherit;        /* 이걸 빼면 1lh가 1×글자크기로 줄어 칸이 짧아진다 */
+  height: 1lh;                 /* 정확히 한 줄 높이 */
+  margin: 0;
+  background: none;
+}
+#app .text-sentence.listen .ts-play::before {
+  content: "▶";
+  display: grid;
+  place-items: center;
+  width: 20px; height: 20px;
+  border-radius: 50%;
+  background: var(--violet-100, #efeafd);
+  color: #6f5bc4;
+  font-size: 9px;
+  line-height: 1;
+}
+
+/* ── 옛 「켬/끔」 스위치를 4페이지 ON/OFF 띠와 같은 얼굴로 ─────────────
+   스위치가 화면마다 다른 모양이면 아이가 매번 새로 배워야 한다.
+   .mode-btn 자기 크기 규칙이 shared.css에 있어 그것만 걷어내면
+   .sentence-segmented button 스타일이 그대로 입혀진다. */
+.sentence-segmented .mode-btn {
+  min-width: 34px; min-height: 22px; padding: 0 9px;
+  border-radius: 6px; font-size: 11px; font-weight: 700;
+  background: transparent; color: #77848f;
+}
+#app .sentence-segmented .mode-btn.active,
+#app .sentence-segmented .mode-btn[aria-pressed="true"] { color: #fff !important; background: #4d7f88 !important; }
+#app .sentence-segmented .mode-btn:not(.active) { background: transparent !important; color: #77848f !important; }
