@@ -73,11 +73,24 @@
       window._firebaseReady = true;
 
       // 다리가 늦게 붙어도 화면이 스스로 다시 맞추도록 알린다.
-      window.dispatchEvent(new CustomEvent("oncuvate:runtime-ready", { detail: { role, room } }));
       console.info(`[oncuvate] 실시간 다리 연결 — 방 ${room} · ${role === "coach" ? "코치" : "학생"}`);
+      startCoachMode();
     })
     .catch((error) => {
       // 못 붙어도 수업은 돌아야 한다. 같은 PC 안에서는 폴백 통로가 계속 쓰인다.
       console.warn("[oncuvate] 실시간 다리를 붙이지 못했습니다 — 이 PC 안에서만 맞춰집니다.", error);
+      startCoachMode();   // 못 붙어도 수업은 돌아야 한다
     });
+
+  // 코치 모드는 **다리가 선 뒤에** 띄운다. 위 주석의 이유 그대로다.
+  let started = false;
+  function startCoachMode() {
+    if (started) return;
+    started = true;
+    const script = document.createElement("script");
+    script.src = "release/coach-mode-v2.js?rev=20260825pilot";
+    document.body.appendChild(script);
+  }
+  // 다리가 아주 오래 걸려도 수업이 멈추지 않게 마지막 방어선.
+  setTimeout(startCoachMode, 8000);
 })();
