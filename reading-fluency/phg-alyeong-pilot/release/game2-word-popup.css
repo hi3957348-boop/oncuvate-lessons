@@ -1,0 +1,28 @@
+/* 젤리캡쳐 낱말 팝업 — 누른 칸 바로 옆에 크게.
+   판 위쪽 띠는 시선이 안 가서, 읽을 것을 손이 있는 자리로 가져온다. */
+.onq-g2-word {
+  position: fixed;
+  z-index: 2147482500;          /* 판 위 · 코치 도크(…3100) 아래 */
+  max-width: min(320px, 86vw);
+  padding: 12px 20px;
+  border: 2px solid #4a3a8f;
+  border-radius: 14px;
+  background: #fff;
+  color: #2f3648;
+  font-size: clamp(24px, 3.4vw, 40px);
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  word-break: keep-all;
+  box-shadow: 0 14px 34px rgba(37, 20, 78, .22);
+  cursor: pointer;
+  animation: onq-g2-pop .16s ease-out;
+}
+@keyframes onq-g2-pop {
+  from { transform: scale(.9); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .onq-g2-word { animation: none; }
+}
+.onq-g2-word[hidden] { display: none !important; }
