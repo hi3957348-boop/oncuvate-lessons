@@ -23,25 +23,55 @@
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = `oncuvate:friends:game2:v2:${sessionKey}`;
 
-  // 타일은 **content-pack에서 만든다.** 예전에는 회차별 목록을 이 파일에 박아 두었는데,
-  // 그러면 책이 바뀔 때마다 여기까지 고쳐야 하고 실제로 다른 책에서 엉뚱한 낱말이 떴다.
-  //   목표(target:true)  = game2의 낱말 — 오늘 겨냥하는 소리
-  //   아닌 것(false)     = wordPool의 related:false — 분명히 이 책 밖의 낱말
+  // 타일은 **content-pack에서 만든다.** 예전에는 회차별 목록을 이 파일에 박아 두어
+  // ①책을 바꾸면 지난 책 낱말이 뜨고 ②그 낱말은 음성 목록에 없어 **소리가 안 났다.**
+  //
+  //   목표(target:true) = game2의 낱말 — 오늘 겨냥하는 소리
+  //   아닌 것(false)    = wordPool의 related:false — 분명히 이 책 밖의 낱말
+  //
+  // 두 가지를 더 거른다.
+  //   · 띄어쓴 것 — 소리가 구·문장으로 나간다(이 활동은 낱말 하나를 읽는 자리다)
+  //   · 음성이 없는 것 — 눌렀는데 조용한 칸이 생긴다
   const source = (() => {
     const lesson = window.ONQ_CONTENT_PACK?.sessions?.[sessionKey] || {};
+    const audio = window.ONQ_AOEDE_AUDIO_MAP || null;
     const tag = sessionKey.replace("session", "s");
-    // 낱말 하나짜리만 쓴다 — 띄어쓴 것이 섞이면 소리가 구·문장으로 나간다.
-    const oneWord = (value) => {
+
+    // 소리가 있는 낱말 하나짜리만 타일이 된다.
+    //  · 띄어쓴 것 — 소리가 구·문장으로 나간다(여기는 낱말 하나를 읽는 자리다)
+    //  · 소리 없는 것 — 눌렀는데 조용한 칸이 된다
+    const usable = (value) => {
       const text = String(value || "").trim();
-      return text && !/\s/.test(text) ? text : "";
+      if (!text || text.length < 2 || /\s/.test(text)) return "";
+      if (audio && !audio[text]) return "";
+      return text;
     };
-    const targets = (lesson.game2 || []).map(item => oneWord(item.word)).filter(Boolean)
-      .map((word, i) => ({ id: `${tag}-t${i + 1}`, shortLabel: word, prompt: word, target: true }));
-    const others = (lesson.wordPool || []).filter(item => item.related === false)
-      .map(item => oneWord(item.word)).filter(Boolean)
-      .map((word, i) => ({ id: `${tag}-o${i + 1}`, shortLabel: word, prompt: word, target: false }));
-    // 목표가 절반쯤 되도록 섞는다 — 다 목표면 고르는 일이 아니게 된다.
-    return [...targets, ...others.slice(0, Math.max(4, Math.round(targets.length / 2)))];
+
+    const targets = [];
+    const seen = new Set();
+    (lesson.game2 || []).forEach((item) => {
+      const word = usable(item.word);
+      if (!word || seen.has(word)) return;
+      seen.add(word);
+      targets.push({ id: `${tag}-t${targets.length + 1}`, shortLabel: word, prompt: word, target: true });
+    });
+
+    // 나머지 칸은 **본문 어절**로 채운다 — 같은 낱말만 돌면 지루하다.
+    const others = [];
+    const pushOther = (value) => {
+      const word = usable(value);
+      if (!word || seen.has(word)) return;
+      seen.add(word);
+      others.push({ id: `${tag}-o${others.length + 1}`, shortLabel: word, prompt: word, target: false });
+    };
+    (lesson.wordPool || []).forEach((item) => { if (item.related === false) pushOther(item.word); });
+    (lesson.sentences || []).forEach((item) => {
+      String(item.text || "").replace(/[.,!?"\u201c\u201d\u2018\u2019]/g, " ")
+        .split(/\s+/).forEach(pushOther);
+    });
+
+    // 겨냥이 묻히지 않게 아닌 것을 너무 많이 넣지는 않는다.
+    return [...targets, ...others.slice(0, Math.max(12, targets.length * 3))];
   })();
 
   function rng(seed) {

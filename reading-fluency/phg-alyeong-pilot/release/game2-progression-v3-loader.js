@@ -6,7 +6,7 @@
     return source.replace(before, after);
   }
 
-  fetch("release/game2-progression-v1.js?rev=20260825m")
+  fetch("release/game2-progression-v1.js?rev=20260825r2")
     .then(response => {
       if (!response.ok) throw new Error(`Game2 engine load failed: ${response.status}`);
       return response.text();

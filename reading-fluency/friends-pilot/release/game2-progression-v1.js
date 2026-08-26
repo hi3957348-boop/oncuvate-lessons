@@ -23,36 +23,56 @@
   const reducedMotion = matchMedia("(prefers-reduced-motion: reduce)");
   const storageKey = `oncuvate:friends:game2:v2:${sessionKey}`;
 
-  const source = sessionKey === "session01" ? [
-    { id:"s1-friends", shortLabel:"우리에게는", prompt:"우리에게는", target:true },
-    { id:"s1-good-friend", shortLabel:"친구", prompt:"친구", target:false },
-    { id:"s1-different", shortLabel:"전혀", prompt:"전혀", target:true },
-    { id:"s1-our-friend", shortLabel:"다르게", prompt:"다르게", target:false },
-    { id:"s1-rhino", shortLabel:"코뿔소예요", prompt:"코뿔소예요", target:false },
-    { id:"s1-small-bugs", shortLabel:"작은", prompt:"작은", target:true },
-    { id:"s1-bother", shortLabel:"괴롭혀요", prompt:"괴롭혀요", target:true },
-    { id:"s1-all-bugs", shortLabel:"벌레들이", prompt:"벌레들이", target:false },
-    { id:"s1-catch", shortLabel:"잡아", prompt:"잡아", target:true },
-    { id:"s1-after-food", shortLabel:"모두", prompt:"모두", target:false },
-    { id:"s1-brush", shortLabel:"닦을", prompt:"닦을", target:true },
-    { id:"s1-beak", shortLabel:"주지요", prompt:"주지요", target:false },
-    { id:"s1-clean", shortLabel:"깨끗이", prompt:"깨끗이", target:true }
-  ] : [
-    { id:"s2-place", shortLabel:"곳이", prompt:"곳이", target:true },
-    { id:"s2-danger", shortLabel:"위험한", prompt:"위험한", target:true },
-    { id:"s2-appeared", shortLabel:"생겼지만", prompt:"생겼지만", target:true },
-    { id:"s2-does-not-matter", shortLabel:"상관없어요", prompt:"상관없어요", target:true },
-    { id:"s2-joyful", shortLabel:"즐거워요", prompt:"즐거워요", target:true },
-    { id:"s2-because-friends", shortLabel:"친구니까요", prompt:"친구니까요", target:false },
-    { id:"s2-giraffe", shortLabel:"기린이에요", prompt:"기린이에요", target:true },
-    { id:"s2-itchy", shortLabel:"가렵지만", prompt:"가렵지만", target:false },
-    { id:"s2-scratch", shortLabel:"긁어", prompt:"긁어", target:true },
-    { id:"s2-cool", shortLabel:"시원해", prompt:"시원해", target:false },
-    { id:"s2-zebra", shortLabel:"얼룩말", prompt:"얼룩말", target:true },
-    { id:"s2-listen", shortLabel:"듣는", prompt:"듣는", target:true },
-    { id:"s2-cannot-scratch", shortLabel:"긁을", prompt:"긁을", target:true },
-    { id:"s2-watch", shortLabel:"감시해", prompt:"감시해", target:false }
-  ];
+  // 타일은 **content-pack에서 만든다.** 예전에는 회차별 목록을 이 파일에 박아 두어
+  // ①책을 바꾸면 지난 책 낱말이 뜨고 ②그 낱말은 음성 목록에 없어 **소리가 안 났다.**
+  //
+  //   목표(target:true) = game2의 낱말 — 오늘 겨냥하는 소리
+  //   아닌 것(false)    = wordPool의 related:false — 분명히 이 책 밖의 낱말
+  //
+  // 두 가지를 더 거른다.
+  //   · 띄어쓴 것 — 소리가 구·문장으로 나간다(이 활동은 낱말 하나를 읽는 자리다)
+  //   · 음성이 없는 것 — 눌렀는데 조용한 칸이 생긴다
+  const source = (() => {
+    const lesson = window.ONQ_CONTENT_PACK?.sessions?.[sessionKey] || {};
+    const audio = window.ONQ_AOEDE_AUDIO_MAP || null;
+    const tag = sessionKey.replace("session", "s");
+
+    // 소리가 있는 낱말 하나짜리만 타일이 된다.
+    //  · 띄어쓴 것 — 소리가 구·문장으로 나간다(여기는 낱말 하나를 읽는 자리다)
+    //  · 소리 없는 것 — 눌렀는데 조용한 칸이 된다
+    const usable = (value) => {
+      const text = String(value || "").trim();
+      if (!text || text.length < 2 || /\s/.test(text)) return "";
+      if (audio && !audio[text]) return "";
+      return text;
+    };
+
+    const targets = [];
+    const seen = new Set();
+    (lesson.game2 || []).forEach((item) => {
+      const word = usable(item.word);
+      if (!word || seen.has(word)) return;
+      seen.add(word);
+      targets.push({ id: `${tag}-t${targets.length + 1}`, shortLabel: word, prompt: word, target: true });
+    });
+
+    // 나머지 칸은 **본문 어절**로 채운다 — 같은 낱말만 돌면 지루하다.
+    const others = [];
+    const pushOther = (value) => {
+      const word = usable(value);
+      if (!word || seen.has(word)) return;
+      seen.add(word);
+      others.push({ id: `${tag}-o${others.length + 1}`, shortLabel: word, prompt: word, target: false });
+    };
+    (lesson.wordPool || []).forEach((item) => { if (item.related === false) pushOther(item.word); });
+    (lesson.sentences || []).forEach((item) => {
+      String(item.text || "").replace(/[.,!?"\u201c\u201d\u2018\u2019]/g, " ")
+        .split(/\s+/).forEach(pushOther);
+    });
+
+    // 겨냥이 묻히지 않게 아닌 것을 너무 많이 넣지는 않는다.
+    return [...targets, ...others.slice(0, Math.max(12, targets.length * 3))];
+  })();
 
   function rng(seed) {
     let value = seed >>> 0;

@@ -26,3 +26,35 @@
   .onq-g2-word { animation: none; }
 }
 .onq-g2-word[hidden] { display: none !important; }
+
+/* 이지모드 — 왜 안 되는지 짚어 주는 말풍선. 낱말은 위, 까닭은 아래에 둔다. */
+.onq-g2-why {
+  position: fixed;
+  z-index: 2147482600;
+  max-width: min(300px, 86vw);
+  padding: 10px 14px;
+  border: 2px solid #c46a4e;
+  border-radius: 12px;
+  background: #fff7f1;
+  color: #8a4a2f;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  word-break: keep-all;
+  box-shadow: 0 12px 28px rgba(120, 60, 30, .18);
+  cursor: pointer;
+}
+.onq-g2-why[hidden] { display: none !important; }
+
+/* 판 도구 줄의 이지모드 스위치 */
+.onq-g2-easy {
+  border: 1px solid #ddd9e8 !important;
+  background: #fff !important;
+  color: #6b7280 !important;
+}
+.onq-g2-easy[aria-pressed="true"] {
+  border-color: #4a3a8f !important;
+  background: #4a3a8f !important;
+  color: #fff !important;
+}
