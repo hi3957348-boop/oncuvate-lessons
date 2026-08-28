@@ -1,0 +1,205 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="robots" content="noindex,nofollow">
+  <title>『오만과 편견』 독후감 첨삭 활동지 | Oncuvate</title>
+  <style>
+    :root{
+      --v950:#24144f;--v900:#35206f;--v800:#4b24a5;--v700:#5932b6;
+      --v500:#8d70d7;--v200:#d9cff5;--v100:#eee9fb;--v050:#f8f6fd;
+      --cyan:#4bc9dc;--ink:#29243a;--muted:#777187;--paper:#fffefb;
+      --line:#e8e3f3;--good:#25865f;--good-bg:#f0fbf6;--red:#d94c56;
+      --amber:#8a5b12;--amber-bg:#fff9e8;--shadow:0 18px 48px rgba(37,20,78,.15);
+      --ui:Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif;
+    }
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;background:var(--v050);color:var(--ink);font-family:var(--ui);line-height:1.65;word-break:keep-all}
+    button,textarea,select,input{font:inherit}
+    button{cursor:pointer}
+    button:focus-visible,textarea:focus-visible,select:focus-visible,input:focus-visible,[data-note]:focus-visible{outline:3px solid rgba(75,201,220,.68);outline-offset:3px}
+    .top{position:sticky;z-index:20;top:0;min-height:66px;display:flex;align-items:center;justify-content:space-between;gap:14px;padding:10px max(18px,calc((100vw - 1120px)/2));background:linear-gradient(115deg,var(--v950),var(--v800));color:#fff}
+    .brand{display:flex;align-items:center;gap:12px}.brand img{width:132px;height:34px;object-fit:contain}.brand span{padding-left:12px;border-left:1px solid #ffffff40;font-size:12px;font-weight:800}
+    .tools{display:flex;gap:8px}.tool{min-height:40px;padding:0 13px;border:1px solid #ffffff4d;border-radius:11px;background:#ffffff1a;color:#fff;font-size:12px;font-weight:800}
+    .shell{width:min(1120px,calc(100% - 28px));margin:18px auto 44px}
+    .hero{padding:32px clamp(22px,4vw,42px);border:2px solid #e1b72cb3;border-radius:28px;background:linear-gradient(135deg,var(--v950),var(--v800) 70%,#2874a4);box-shadow:var(--shadow);color:#fff}
+    .kicker{margin:0 0 9px;color:#bdf5fb;font-size:11px;font-weight:900;letter-spacing:.13em}.hero h1{margin:0;font-size:clamp(31px,5vw,49px);line-height:1.1;letter-spacing:-.045em}.hero h1 span{color:#ffe784}.hero>p:last-of-type{max-width:790px;margin:12px 0 0;color:#e9e3f8;font-size:14px}
+    .meta{display:flex;flex-wrap:wrap;gap:7px;margin-top:14px}.meta span{padding:5px 10px;border:1px solid #ffffff38;border-radius:999px;background:#ffffff17;font-size:10px;font-weight:800}
+    .nickname{display:grid;grid-template-columns:1fr 240px;gap:14px;align-items:center;margin-top:18px;padding:18px 20px;border:1px solid var(--v200);border-radius:18px;background:#fff}.nickname h2{margin:0;font-size:18px}.nickname p{margin:2px 0 0;color:var(--muted);font-size:11px}.nickname select{width:100%;min-height:48px;padding:0 12px;border:1.5px solid var(--v200);border-radius:12px;background:#fff;color:var(--ink);font-weight:800}
+    .growth{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin:18px 0}.growth article{padding:17px;border:1px solid var(--line);border-radius:18px;background:#fff}.growth article:first-child{border-color:#bfe8d5;background:var(--good-bg)}.growth b{display:block;margin-bottom:4px;color:var(--v800);font-size:14px}.growth p{margin:0;color:#615b6d;font-size:12px}
+    .guide{margin:26px 0 12px;text-align:center}.guide small{color:var(--v700);font-weight:900;letter-spacing:.12em}.guide h2{margin:4px 0;font-size:clamp(25px,3vw,34px);letter-spacing:-.04em}.guide p{margin:0;color:var(--muted);font-size:13px}
+    .legend{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;margin-top:10px}.legend span{padding:5px 9px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:10px;font-weight:800}.legend .l-keep{box-shadow:inset 0 -7px #4bc9dc57}.legend .l-fix{text-decoration:line-through 2px var(--red)}.legend .l-space{background:#d9f7fb}.legend .l-word{background:#ffeeb0}.legend .l-grammar{border-color:var(--v500);background:var(--v100);text-decoration:underline double var(--v700) 2px;text-underline-offset:3px}
+    .notebook{padding:25px clamp(16px,4vw,40px);border:1px solid #e5dfcf;border-radius:12px 24px 24px 12px;background:#fffdf7;box-shadow:var(--shadow)}
+    .draft{display:grid;grid-template-columns:minmax(0,1fr) 190px;gap:18px;padding:22px 0;border-bottom:2px dashed #5932b624}.draft:last-child{border:0}.label{display:flex;align-items:center;gap:9px;margin-bottom:9px;color:var(--v800);font-size:12px;font-weight:900}.label b{width:30px;height:30px;display:grid;place-items:center;border-radius:9px;background:var(--v800);color:#fff}
+    .original{margin:0;font-size:18px;line-height:1.78}.keep{background:linear-gradient(transparent 62%,#4bc9dc57 62%)}.fix{color:#625b69;text-decoration:line-through 2px var(--red)}.word{padding:0 3px;border-radius:4px;background:#ffeeb0;color:#704a09}.grammar{padding:0 3px;border-radius:4px;background:var(--v100);text-decoration:underline double var(--v700) 2px;text-underline-offset:3px}.space{display:inline-grid;place-items:center;width:17px;height:17px;margin:0 2px;border-radius:50%;background:var(--cyan);color:var(--v950);font-size:11px;font-weight:900;vertical-align:middle}.note{align-self:center;padding:12px;border:1px solid #edce75;border-radius:9px;background:#fff5bd;color:#68470d;font-size:12px;visibility:hidden;opacity:0;transform:translateX(10px);transition:.18s}.note.show{visibility:visible;opacity:1;transform:none}[data-note]{border-radius:4px;cursor:pointer}[data-note].selected{box-shadow:0 0 0 3px #e1b72c80}
+    .model{margin-top:15px;padding:12px 14px;border-left:4px solid var(--v500);border-radius:0 13px 13px 0;background:var(--v100);user-select:none;cursor:zoom-in}.model b{display:block;margin-bottom:5px;color:var(--v800);font-size:11px}.model p{margin:0;color:transparent;text-shadow:0 0 10px #4b24a5a6;filter:blur(4px);font-size:16px}.model:after{content:"누르고 있는 동안만 예시가 보여요";display:inline-flex;margin-top:8px;padding:3px 8px;border-radius:999px;background:#fff;color:var(--v700);font-size:10px;font-weight:800}.model.revealing p{color:var(--ink);text-shadow:none;filter:none}.model.revealing:after{content:"손을 떼면 다시 가려져요"}
+    .edit{margin-top:14px;padding:13px;border:1px solid var(--v200);border-radius:14px;background:#fff}.edit-head{display:flex;justify-content:space-between;gap:12px;margin-bottom:7px}.edit-head b{color:var(--v800);font-size:12px}.edit-head span{color:var(--muted);font-size:10px}.edit textarea{width:100%;min-height:132px;resize:vertical;padding:12px;border:1.5px solid var(--v200);border-radius:11px;color:var(--ink);font-size:17px;line-height:1.65}.edit textarea:focus{border-color:var(--cyan)}.edit-foot{display:flex;justify-content:space-between;gap:10px;margin-top:5px;color:var(--muted);font-size:10px}.saved{color:var(--good);font-weight:800}
+    .mission-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:14px;margin-top:18px}.mission,.tips{padding:22px;border:1px solid var(--line);border-radius:20px;background:#fff}.mission h2,.tips h2{margin:0 0 5px;font-size:21px}.mission>p,.tips>p{margin:0 0 14px;color:var(--muted);font-size:12px}.checks{display:grid;gap:8px}.checks label{display:grid;grid-template-columns:24px 1fr;align-items:center;gap:9px;padding:9px;border:1px solid var(--line);border-radius:11px;background:var(--v050);font-size:12px;font-weight:700}.checks input{width:20px;height:20px;accent-color:var(--good)}.tip{padding:10px 11px;border-radius:11px;background:var(--amber-bg);color:#6c4b14;font-size:12px}.tip+.tip{margin-top:7px}.tip b{color:var(--amber)}
+    .preview{margin-top:18px;padding:22px;border:1px solid var(--v200);border-radius:20px;background:#fff}.preview h2{margin:0 0 4px;font-size:21px}.preview>p{margin:0 0 12px;color:var(--muted);font-size:12px}.preview-paper{min-height:90px;padding:17px;border-left:4px solid var(--cyan);border-radius:0 14px 14px 0;background:var(--v050);white-space:pre-wrap;font-size:15px;line-height:1.75}.preview-paper.empty{color:var(--muted)}
+    .submit{margin-top:18px;padding:23px;border:2px solid var(--v200);border-radius:20px;background:linear-gradient(135deg,var(--v050),#fff)}.submit h2{margin:0 0 5px;color:var(--v900);font-size:23px}.submit>p{margin:0 0 14px;color:var(--muted);font-size:12px}.privacy{display:flex;align-items:center;gap:10px;padding:11px;border:1px solid var(--v200);border-radius:11px;background:#fff;font-size:12px;font-weight:700}.privacy input{width:21px;height:21px;accent-color:var(--v700)}.submit-actions{display:flex;align-items:center;gap:13px;flex-wrap:wrap;margin-top:13px}.submit-button{min-height:50px;padding:0 22px;border:0;border-radius:13px;background:linear-gradient(135deg,var(--v800),var(--v500));box-shadow:0 8px 20px #522baf38;color:#fff;font-size:14px;font-weight:900}.submit-button:disabled{border:1px solid var(--v200);background:var(--v100);box-shadow:none;color:var(--v700);cursor:not-allowed}.status{margin:0;color:var(--muted);font-size:12px;font-weight:700}.status.success{color:var(--good)}.status.error{color:var(--red)}
+    .closing{margin-top:18px;padding:19px 23px;border:1px solid #bfe5d5;border-radius:18px;background:var(--good-bg)}.closing h2{margin:0 0 3px;color:#226d51;font-size:21px}.closing p{margin:0;color:#4f7465;font-size:12px}
+    body.clean .fix,body.clean .grammar{text-decoration:none;color:inherit}body.clean .word,body.clean .keep,body.clean .grammar{background:none}body.clean .space{display:none}
+    @media(max-width:800px){.growth,.mission-grid{grid-template-columns:1fr}.draft{grid-template-columns:1fr}.note:not(.show){display:none}.top{position:static}.brand span{display:none}.nickname{grid-template-columns:1fr}}
+    @media(max-width:560px){.shell{width:calc(100% - 16px)}.tools{flex-direction:column}.hero{padding:24px 19px}.notebook{padding:15px}.original{font-size:16px}.edit-head,.edit-foot{flex-direction:column}.nickname{padding:15px}}
+    @media print{.tools,.submit,.model,.edit,.mission,.preview{display:none!important}@page{size:A4;margin:11mm}body{background:#fff}.top{position:static}.shell{width:100%;margin:8px auto}.hero,.notebook{box-shadow:none}.growth{grid-template-columns:repeat(3,1fr)}.draft{grid-template-columns:1fr;padding:11px 0}.note{display:none}.original{font-size:12px}.tips{break-inside:avoid}.nickname select{border:0}}
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="brand"><img src="assets/oncuvate-brand-logo.png" alt="Oncuvate"><span>학생 맞춤 첨삭 활동지</span></div>
+    <div class="tools"><button class="tool" id="toggleMarks" type="button">첨삭 표시 숨기기</button><button class="tool" type="button" onclick="window.print()">인쇄 · PDF</button></div>
+  </header>
+  <main class="shell">
+    <section class="hero">
+      <p class="kicker">GRADE 5 · READING RESPONSE</p>
+      <h1><span>『오만과 편견』</span><br>독후감 고쳐 쓰기</h1>
+      <p>4학년 어린이가 쓴 초고를 읽고, 작품의 흐름과 생각은 살리면서 맞춤법·문장 연결·표현을 5학년 수준으로 다듬어 봐요.</p>
+      <div class="meta"><span>대상 · 초등 5학년</span><span>글의 종류 · 독후감</span><span>핵심 · 편견과 생각의 변화</span></div>
+    </section>
+
+    <section class="nickname">
+      <div><h2>별명을 골라 시작해요</h2><p>실명 대신 선택한 별명으로 제출됩니다.</p></div>
+      <select id="nickname" aria-label="별명 선택">
+        <option value="">별명 선택</option><option>책갈피</option><option>보라별</option><option>구름책</option><option>민트여우</option><option>달빛콩</option><option>파란연필</option><option>생각나무</option><option>은하수</option>
+      </select>
+    </section>
+
+    <section class="growth">
+      <article><b>초고의 좋은 점</b><p>사건의 흐름을 따라 엘리자베스와 다아시의 생각이 어떻게 달라졌는지 잘 설명했어요.</p></article>
+      <article><b>이번 수정 목표</b><p>붙여 쓴 말을 바로잡고, 반복되는 표현과 구어체를 자연스러운 문장으로 고쳐요.</p></article>
+      <article><b>생각을 더 선명하게</b><p>책 속 장면, 나의 경험, 앞으로의 실천이 자연스럽게 이어지도록 문단을 다듬어요.</p></article>
+    </section>
+
+    <header class="guide">
+      <small>READ · NOTICE · REWRITE</small>
+      <h2>표시를 눌러 고칠 이유를 확인해요</h2>
+      <p>원문을 먼저 읽고, 표시된 부분을 눌러 도움말을 본 뒤 아래 칸에 문단을 다시 써 보세요.</p>
+      <div class="legend"><span class="l-keep">살릴 내용</span><span class="l-fix">다듬을 표현</span><span class="l-space">띄어쓰기</span><span class="l-word">낱말·맞춤법</span><span class="l-grammar">문장 호응·조사·어미</span></div>
+    </header>
+
+    <section class="notebook">
+      <article class="draft">
+        <div>
+          <div class="label"><b>1</b> 책 소개</div>
+          <p class="original">나는 어린이용으로 <span class="word" data-note="‘바꾸어 쓰다’는 두 낱말이므로 ‘바꾸어 쓴’으로 띄어 써요.">바꿔쓴</span> 『오만과 편견』을 읽었다. <span class="grammar" data-note="[주어–서술어] ‘오만’이라는 태도가 스스로 생각하는 것처럼 연결되었어요. ‘오만은 자신이 남보다 낫다고 여기는 태도이다’로 고쳐 보세요.">오만은 내가 남들보다 잘났다고 생각한다.</span> 편견은 잘 알지도 못하면서 그냥 <span class="word" data-note="‘것’은 앞말과 띄어 써서 ‘이럴 거라고’로 적어요.">이럴거라고</span> 생각하는 것이다.</p>
+          <div class="model"><b>책 소개 예시</b><p>나는 어린이용으로 바꾸어 쓴 『오만과 편견』을 읽었다. 오만은 자신이 남보다 낫다고 여기는 태도이고, 편견은 충분히 알기 전에 한쪽으로 굳힌 생각이다.</p></div>
+          <section class="edit"><div class="edit-head"><b>책 소개를 고쳐 써요</b><span>책 제목과 핵심 낱말</span></div><textarea data-part="책 소개" placeholder="읽은 책을 밝히고 ‘오만’과 ‘편견’의 뜻을 알기 쉽게 적어 보세요."></textarea><div class="edit-foot"><span>‘그냥’ 대신 뜻이 분명한 표현을 찾아보세요.</span><span class="saved">기기에 자동 저장</span></div></section>
+        </div>
+        <aside class="note">표시된 부분을 누르면 설명이 나타나요.</aside>
+      </article>
+
+      <article class="draft">
+        <div>
+          <div class="label"><b>2</b> 처음 판단</div>
+          <p class="original">처음 엘리자베스는 다아시를 <span class="fix" data-note="‘되게’는 말할 때 자주 쓰는 표현이에요. 글에서는 ‘매우’나 문맥에 맞는 구체적인 말로 바꾸어 보세요.">되게</span> 무례하고 <span class="word" data-note="‘잘난 척’은 띄어 써요.">잘난척</span> 하는 사람이라고 생각했다. <span class="grammar" data-note="[어미] ‘왜냐하면 … 했기 때문에이다’는 문장 끝 표현이 어색해요. ‘왜냐하면 … 했기 때문이다’로 고쳐요.">왜냐하면 다아시는 파티에서도 사람들과 잘 안어울리고 말도 차갑게 했기 때문에이다.</span> 그리고 위컴이 다아시 때문에 자기가 <span class="word" data-note="‘힘들어지다’는 한 낱말이므로 ‘힘들어졌다고’로 붙여 써요.">힘들어 졌다고</span> 말했다. <span class="keep" data-note="엘리자베스가 위컴의 말을 쉽게 믿은 까닭을 밝힌 점이 좋아요.">엘리자베스는 원래 다아시가 싫었기 때문에 위컴말을 바로 믿어 버렸다.</span></p>
+          <div class="model"><b>처음 판단 예시</b><p>처음에 엘리자베스는 다아시가 무례하고 잘난 척하는 사람이라고 생각했다. 다아시가 사람들과 잘 어울리지 않고 차갑게 말했기 때문이다. 엘리자베스는 이미 다아시를 싫어하고 있어서 위컴의 말을 쉽게 믿었다.</p></div>
+          <section class="edit"><div class="edit-head"><b>처음 판단을 고쳐 써요</b><span>생각과 까닭</span></div><textarea data-part="처음 판단" placeholder="엘리자베스가 다아시를 어떻게 생각했는지, 왜 그렇게 판단했는지 이어 적어 보세요."></textarea><div class="edit-foot"><span>‘왜냐하면’ 뒤에는 앞 문장의 까닭이 분명히 와야 해요.</span><span class="saved">기기에 자동 저장</span></div></section>
+        </div>
+        <aside class="note">표시된 부분을 누르면 설명이 나타나요.</aside>
+      </article>
+
+      <article class="draft">
+        <div>
+          <div class="label"><b>3</b> 생각이 바뀐 과정</div>
+          <p class="original">그런데 다아시가 준 편지를 읽고 생각이 조금 바뀌었다. <span class="grammar" data-note="[조사·서술어] ‘사실을 적혀 있었다’는 목적격 조사와 서술어가 어울리지 않아요. ‘다른 사실이 적혀 있었다’ 또는 ‘다른 사실을 적어 놓았다’로 고쳐요.">편지에는 위컴이 말한거랑 다른 사실을 적혀 있었다.</span> 엘리자베스는 <span class="word" data-note="‘한 사람’과 ‘나쁜 사람’은 각각 띄어 써요.">한사람</span> 말만 듣고 다아시를 <span class="word" data-note="사람을 나타내는 ‘사람’은 앞말과 띄어 써요.">나쁜사람</span>이라고 <span class="word" data-note="‘판단한 것을’처럼 풀어 쓰면 글이 더 또렷해요.">판단한걸</span> 알게 되었다. <span class="grammar" data-note="[주어–서술어] ‘다아시의 말과 행동’이 깨달은 것이 아니에요. ‘다아시는 자신의 말과 행동이 다른 사람에게 상처를 주었음을 깨달았다’로 고쳐 보세요.">다아시의 말과 행동은 다른사람 마음을 아프게 했다는걸 깨달았다.</span> 나중에 다아시는 <span class="grammar" data-note="[조사] ‘돕다’의 도움을 받는 대상에는 ‘에게’가 아니라 ‘을/를’을 써요. ‘엘리자베스의 가족을 몰래 도와준다’가 알맞아요.">엘리자베스 가족에게 힘들때 몰래 도와준다.</span> 그래서 엘리자베스는 다아시가 생각보다 <span class="fix" data-note="‘착한 것 같다’만으로 끝내기보다, 그의 어떤 행동을 보고 판단을 바꾸었는지 밝혀 보세요.">착한것 같다고 생각하고</span> 처음 생각을 고친다.</p>
+          <div class="model"><b>생각의 변화 예시</b><p>하지만 다아시의 편지에는 위컴의 말과 다른 사실이 적혀 있었다. 엘리자베스는 한 사람의 말만 믿고 다아시를 판단했음을 깨달았다. 그 뒤 다아시가 어려움에 놓인 가족을 조용히 돕는 모습을 보고 처음의 판단을 고쳤다.</p></div>
+          <section class="edit"><div class="edit-head"><b>생각이 바뀐 과정을 고쳐 써요</b><span>계기 → 깨달음 → 행동</span></div><textarea data-part="생각의 변화" placeholder="편지에서 알게 된 사실, 두 인물의 깨달음, 다아시의 행동을 차례로 적어 보세요."></textarea><div class="edit-foot"><span>‘하지만’, ‘그 뒤’, ‘그래서’를 알맞게 사용해 보세요.</span><span class="saved">기기에 자동 저장</span></div></section>
+        </div>
+        <aside class="note">표시된 부분을 누르면 설명이 나타나요.</aside>
+      </article>
+
+      <article class="draft">
+        <div>
+          <div class="label"><b>4</b> 나의 경험과 느낌</div>
+          <p class="original"><span class="grammar" data-note="[조사·서술어] ‘장면을 인상 깊었다’는 서로 어울리지 않아요. ‘장면이 인상 깊었다’ 또는 ‘장면을 인상 깊게 보았다’로 고쳐요.">나는 엘리자베스가 자기가 틀렸다고 인정하는 장면을 인상 깊었다.</span> <span class="grammar" data-note="[조사] ‘용기가 필요하다’ 앞에는 ‘것은’보다 ‘데에는’이 자연스러워요. ‘생각을 바꾸는 데에는 용기가 필요하다’로 고쳐 보세요.">자기 생각을 바꾸는 것은 용기가 필요하다.</span> 나도 친구가 누구랑 싸웠다는 얘기를 듣고 그 친구가 <span class="word" data-note="‘나쁜 아이’와 ‘생각한 적’은 띄어 써요.">나쁜애라고 생각한적</span>이 있다. <span class="fix" data-note="독후감에서는 ‘근데’보다 ‘하지만’이나 ‘그런데’가 자연스러워요.">근데</span> <span class="grammar" data-note="[주어–서술어] ‘오해가 줄일 수 있었다’에서 ‘오해’는 줄이는 행동을 할 수 없어요. ‘오해를 줄일 수 있었다’로 고쳐요.">친구에게 직접 물어보니까 오해가 줄일 수 있었다.</span> 그때 한쪽 말만 믿으면 <span class="word" data-note="‘안 되다’의 뜻이므로 ‘안 된다는’으로 써요.">않된다는</span> 것을 알았다.</p>
+          <div class="model"><b>경험과 느낌 예시</b><p>나는 엘리자베스가 자신의 잘못을 인정한 장면이 인상 깊었다. 나도 친구에 관한 한쪽 이야기만 듣고 그 친구를 미리 판단한 적이 있다. 하지만 직접 이야기를 듣고 나서 내 생각이 성급했음을 깨달았다.</p></div>
+          <section class="edit"><div class="edit-head"><b>나의 경험과 느낌을 고쳐 써요</b><span>장면 → 느낌 → 비슷한 경험</span></div><textarea data-part="나의 경험" placeholder="인상 깊은 장면, 그렇게 느낀 까닭, 떠오른 나의 경험을 자연스럽게 연결해 보세요."></textarea><div class="edit-foot"><span>책 이야기와 나의 경험 사이에 공통점을 밝혀 보세요.</span><span class="saved">기기에 자동 저장</span></div></section>
+        </div>
+        <aside class="note">표시된 부분을 누르면 설명이 나타나요.</aside>
+      </article>
+
+      <article class="draft">
+        <div>
+          <div class="label"><b>5</b> 깨달음과 실천</div>
+          <p class="original"><span class="word" data-note="‘이 책’은 띄어 써요.">이책</span>을 읽고 사람을 첫인상만 보고 판단하면 안 된다고 생각했다. 앞으로는 누가 친구 욕을 해도 바로 <span class="word" data-note="‘것’은 앞말과 띄어 ‘믿지 않을 것이다’로 써요.">믿지 않을것이다.</span> 그리고 직접 물어보고 행동을 천천히 보고 나서 생각할 것이다. <span class="grammar" data-note="[어미] ‘하겠다라고’처럼 두 표현을 겹쳐 쓰지 않아요. ‘내 생각도 고치겠다고 다짐했다’ 또는 ‘내 생각도 고치도록 하겠다’로 고쳐요.">새로운 사실을 알게 되면 내 생각도 고치도록 하겠다라고 다짐했다.</span></p>
+          <div class="model"><b>깨달음과 실천 예시</b><p>이 책을 읽고 사람을 첫인상이나 한쪽 이야기만으로 판단하지 말아야겠다고 생각했다. 앞으로는 당사자의 말을 직접 듣고 행동을 천천히 살펴본 뒤 판단하겠다. 새로운 사실을 알게 되면 내 생각도 고치겠다.</p></div>
+          <section class="edit"><div class="edit-head"><b>깨달음과 실천을 고쳐 써요</b><span>배운 점 → 앞으로의 행동</span></div><textarea data-part="깨달음과 실천" placeholder="책에서 배운 점과 앞으로 실제로 어떻게 행동할지 두세 문장으로 적어 보세요."></textarea><div class="edit-foot"><span>‘잘하겠다’보다 눈에 보이는 행동을 쓰면 좋아요.</span><span class="saved">기기에 자동 저장</span></div></section>
+        </div>
+        <aside class="note">표시된 부분을 누르면 설명이 나타나요.</aside>
+      </article>
+    </section>
+
+    <section class="mission-grid">
+      <div class="mission"><h2>고쳐 쓰기 확인</h2><p>다섯 문단을 쓴 뒤 스스로 살펴봐요.</p><div class="checks"><label><input type="checkbox"><span>책 제목과 핵심 낱말을 정확히 소개했다.</span></label><label><input type="checkbox"><span>인물의 처음 생각과 달라진 생각이 드러난다.</span></label><label><input type="checkbox"><span>주어와 서술어가 자연스럽게 어울린다.</span></label><label><input type="checkbox"><span>조사와 문장 끝의 어미를 알맞게 썼다.</span></label><label><input type="checkbox"><span>책 속 장면과 나의 경험을 자연스럽게 연결했다.</span></label><label><input type="checkbox"><span>붙여 쓰거나 띄어 쓸 말을 확인했다.</span></label><label><input type="checkbox"><span>앞으로의 행동을 구체적으로 적었다.</span></label></div></div>
+      <div class="tips"><h2>이번 글에서 기억할 점</h2><p>맞춤법만 고치는 것이 아니라 문장의 짝과 생각의 흐름도 살펴요.</p><div class="tip"><b>문장 호응</b> 누가 또는 무엇이 어떤 행동을 하는지 주어와 서술어를 짝지어 읽습니다.</div><div class="tip"><b>조사와 어미</b> ‘이/가·을/를·에게’와 문장 끝 표현이 앞말에 어울리는지 확인합니다.</div><div class="tip"><b>작품과 나</b> 인물의 변화, 나의 경험, 앞으로의 실천을 자연스럽게 이어 씁니다.</div></div>
+    </section>
+
+    <section class="preview"><h2>내가 고쳐 쓴 독후감</h2><p>다섯 칸의 문장이 아래에 한 편의 글로 모입니다.</p><div class="preview-paper empty" id="preview">각 문단을 고쳐 쓰면 여기에 완성 글이 나타나요.</div></section>
+
+    <section class="submit">
+      <h2>수정한 글 제출하기</h2><p>별명을 고르고 다섯 문단을 모두 고쳐 쓴 뒤 선생님께 전송해요.</p>
+      <label class="privacy"><input type="checkbox" id="privacy"><span>실명, 학교명, 학년·반, 연락처, 친구의 실명을 적지 않았어요.</span></label>
+      <div class="submit-actions"><button class="submit-button" id="submitButton" type="button" disabled>수정한 글 제출하기</button><p class="status" id="status" role="status" aria-live="polite">별명을 고르고 다섯 문단을 모두 작성해 주세요.</p></div>
+    </section>
+    <section class="closing"><h2>생각을 바꾸는 용기는 글을 고치는 과정과 닮았어요.</h2><p>처음 쓴 문장을 부끄러워하지 말고, 새롭게 알게 된 점을 받아들여 더 정확하고 깊은 글로 바꾸어 보세요.</p></section>
+  </main>
+
+  <script src="../../writing/water-play/pilot-config.js"></script>
+  <script>
+    const storageKey='oncuvate-feedback-pride-prejudice-grade5';
+    let saved={};
+    try{saved=JSON.parse(localStorage.getItem(storageKey)||'{}')}catch(_){}
+    const areas=[...document.querySelectorAll('.edit textarea')];
+    const nickname=document.getElementById('nickname');
+    const privacy=document.getElementById('privacy');
+    const button=document.getElementById('submitButton');
+    const status=document.getElementById('status');
+    const preview=document.getElementById('preview');
+    nickname.value=saved.nickname||'';
+    areas.forEach((area,index)=>{
+      area.value=(saved.parts&&saved.parts[index])||'';
+      area.addEventListener('input',()=>{persist();renderPreview();refresh()});
+    });
+    function persist(){
+      saved={nickname:nickname.value,parts:areas.map(area=>area.value)};
+      try{localStorage.setItem(storageKey,JSON.stringify(saved));areas.forEach(area=>{const tag=area.closest('.edit').querySelector('.saved');tag.textContent='저장됨 ✓';clearTimeout(area._timer);area._timer=setTimeout(()=>tag.textContent='기기에 자동 저장',900)})}catch(_){areas.forEach(area=>area.closest('.edit').querySelector('.saved').textContent='현재 입력 유지')}
+    }
+    nickname.addEventListener('change',()=>{persist();refresh()});
+    function renderPreview(){
+      const text=areas.map(area=>area.value.trim()).filter(Boolean).join('\n\n');
+      preview.textContent=text||'각 문단을 고쳐 쓰면 여기에 완성 글이 나타나요.';
+      preview.classList.toggle('empty',!text);
+    }
+    const targets=[...document.querySelectorAll('[data-note]')];
+    function closeNotes(){document.querySelectorAll('.note.show').forEach(note=>note.classList.remove('show'));targets.forEach(target=>target.classList.remove('selected'))}
+    targets.forEach(target=>{
+      target.tabIndex=0;target.setAttribute('role','button');
+      const open=()=>{const note=target.closest('.draft').querySelector('.note'),same=target.classList.contains('selected');closeNotes();if(!same){note.textContent=target.dataset.note;note.classList.add('show');target.classList.add('selected')}};
+      target.addEventListener('click',open);target.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();open()}});
+    });
+    document.getElementById('toggleMarks').addEventListener('click',event=>{const clean=document.body.classList.toggle('clean');event.currentTarget.textContent=clean?'첨삭 표시 다시 보기':'첨삭 표시 숨기기';closeNotes()});
+    const models=[...document.querySelectorAll('.model')];
+    models.forEach(model=>{model.tabIndex=0;const show=()=>model.classList.add('revealing'),hide=()=>model.classList.remove('revealing');model.addEventListener('pointerdown',show);model.addEventListener('pointerup',hide);model.addEventListener('pointerleave',hide);model.addEventListener('pointercancel',hide);model.addEventListener('keydown',event=>{if(event.key==='Enter'||event.key===' '){event.preventDefault();show()}});model.addEventListener('keyup',hide);model.addEventListener('blur',hide);model.addEventListener('copy',event=>event.preventDefault())});
+    document.addEventListener('pointerup',()=>models.forEach(model=>model.classList.remove('revealing')));
+    function complete(){return nickname.value&&areas.every(area=>area.value.trim())&&privacy.checked}
+    function refresh(){const ready=complete();button.disabled=!ready;status.className='status';if(ready){status.textContent='고쳐 쓴 독후감을 제출할 수 있어요.'}else if(!nickname.value){status.textContent='실명 대신 별명을 먼저 골라 주세요.'}else if(areas.some(area=>!area.value.trim())){status.textContent='다섯 문단을 모두 고쳐 써 주세요.'}else{status.textContent='개인정보 확인에 체크해 주세요.'}}
+    privacy.addEventListener('change',refresh);
+    button.addEventListener('click',async()=>{
+      if(!complete()){refresh();return}
+      const accessKey=window.WATER_PLAY_PILOT_CONFIG?.web3formsAccessKey;
+      if(!accessKey){status.className='status error';status.textContent='제출 설정을 불러오지 못했어요.';return}
+      const revised=areas.map(area=>'['+area.dataset.part+']\n'+area.value.trim()).join('\n\n');
+      const message='『오만과 편견』 독후감 첨삭 후 수정글 제출\n\n별명: '+nickname.value+'\n대상: 초등 5학년\n글의 종류: 독후감\n\n[수정한 글]\n'+revised;
+      button.disabled=true;button.textContent='제출하는 중…';status.textContent='선생님께 보내고 있어요.';
+      try{
+        const response=await fetch('https://api.web3forms.com/submit',{method:'POST',headers:{'Content-Type':'application/json',Accept:'application/json'},body:JSON.stringify({access_key:accessKey,subject:'[첨삭 후 수정글] '+nickname.value+' · 오만과 편견 독후감',from_name:'온큐베이트 첨삭자료 · '+nickname.value,name:nickname.value,nickname:nickname.value,grade:'초등 5학년',genre:'독후감',lesson_title:'오만과 편견 독후감',submission_type:'첨삭 후 수정글',message,botcheck:''})});
+        const result=await response.json().catch(()=>({}));if(!response.ok||result.success===false)throw new Error('submission failed');
+        button.textContent='제출 완료';status.className='status success';status.textContent='수정한 독후감을 제출했어요.';
+      }catch(_){button.disabled=false;button.textContent='다시 제출하기';status.className='status error';status.textContent='전송하지 못했어요. 인터넷 연결을 확인하고 다시 시도해 주세요.'}
+    });
+    renderPreview();refresh();
+  </script>
+</body>
+</html>
