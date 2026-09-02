@@ -1,0 +1,421 @@
+.compact-activity-bar {
+  min-height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 8px;
+  margin-bottom: 10px;
+}
+
+.compact-progress {
+  min-width: 54px;
+  padding: 7px 11px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  color: var(--muted);
+  background: rgba(255,255,255,.78);
+  font-size: 12px;
+  font-weight: 800;
+  text-align: center;
+}
+
+.compact-info {
+  min-height: 34px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  color: var(--ink);
+  background: #fff;
+  font-size: 12px;
+  font-weight: 780;
+  cursor: pointer;
+}
+
+.page-head { display: none !important; }
+.activity-view { padding-top: 12px; }
+
+.override-game {
+  /* 화면 높이(100vh)를 기준 삼으면 머리말·바닥글에 먹히는 자리를 빼지 못해
+   * 활동칸(약 455px)보다 큰 650px이 강제되어 스크롤이 났다.
+   * 실제로 남은 자리(부모의 100%)를 넘지 않게 한다. */
+  min-height: min(650px, 100%);
+  display: grid;
+  align-content: start;
+  gap: 14px;
+}
+
+.override-hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.override-hud-copy {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.override-hud-copy strong { font-size: 15px; }
+.override-hud-copy span { color: var(--muted); font-size: 12px; }
+.override-controls { display: flex; gap: 8px; flex-wrap: wrap; justify-content: flex-end; }
+
+.mini-control {
+  min-height: 36px;
+  padding: 0 12px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: #fff;
+  color: var(--ink);
+  font-size: 12px;
+  font-weight: 780;
+  cursor: pointer;
+}
+.mini-control.active { border-color: rgba(75,201,220,.72); background: var(--cyan-soft); }
+
+.conveyor-layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0,1fr);
+  gap: 14px;
+  min-height: 500px;
+}
+
+.conveyor-guide {
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 8px;
+  padding: 18px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: linear-gradient(160deg, var(--violet-050), var(--blue-soft));
+  text-align: center;
+}
+.conveyor-guide img { width: 104px; height: 104px; object-fit: contain; }
+.conveyor-guide button { border: 0; background: transparent; cursor: pointer; border-radius: 22px; }
+.conveyor-guide p { margin: 0; color: var(--muted); font-size: 13px; }
+
+.conveyor-stage {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+  display: grid;
+  grid-template-rows: auto minmax(280px,1fr) auto;
+  gap: 12px;
+  padding: 20px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255,253,247,.92);
+}
+.assembly-dock { display: flex; justify-content: center; gap: 8px; min-height: 64px; }
+.assembly-slot {
+  min-width: 64px;
+  height: 60px;
+  display: grid;
+  place-items: center;
+  border: 2px dashed var(--violet-200);
+  border-radius: 16px;
+  background: #fff;
+  color: var(--violet-900);
+  font-size: 27px;
+  font-weight: 850;
+}
+.assembly-slot.filled { border-style: solid; border-color: rgba(75,201,220,.7); box-shadow: 0 8px 20px rgba(75,201,220,.16); }
+
+.belt-window {
+  position: relative;
+  overflow: hidden;
+  min-height: 300px;
+  border-radius: 20px;
+  background: linear-gradient(180deg, #f5f8fb 0 62%, #e8edf3 62% 69%, #dce3eb 69% 75%, #f8fafc 75%);
+}
+.belt-window::after {
+  content: "";
+  position: absolute;
+  left: 0; right: 0; top: 68%; height: 6px;
+  background: repeating-linear-gradient(90deg, #b8c4d0 0 22px, transparent 22px 36px);
+  opacity: .72;
+}
+.moving-syllable {
+  --duration: 8s;
+  --delay: 0s;
+  position: absolute;
+  z-index: 2;
+  top: calc(18% + (var(--lane, 0) * 15%));
+  left: -100px;
+  width: 72px;
+  height: 66px;
+  border: 1px solid var(--violet-200);
+  border-radius: 17px;
+  background: #fff;
+  color: var(--violet-950);
+  box-shadow: 0 12px 24px rgba(43,34,77,.12);
+  font-size: 29px;
+  font-weight: 860;
+  cursor: pointer;
+  animation: syllable-conveyor var(--duration) linear var(--delay) infinite;
+}
+.moving-syllable:hover { border-color: var(--cyan); }
+.moving-syllable.wrong { animation: wrong-shake .34s ease, syllable-conveyor var(--duration) linear var(--delay) infinite; }
+.moving-syllable.hint { border-color: var(--cyan); box-shadow: 0 0 0 5px rgba(75,201,220,.18), 0 12px 24px rgba(43,34,77,.12); }
+.moving-syllable.captured { animation: capture-pop .38s ease forwards; }
+
+@keyframes syllable-conveyor { from { transform: translateX(0); } to { transform: translateX(calc(100vw + 260px)); } }
+@keyframes wrong-shake { 0%,100% { margin-left: 0; } 35% { margin-left: -9px; } 70% { margin-left: 9px; } }
+@keyframes capture-pop { to { transform: translateY(-55px) scale(.7); opacity: 0; } }
+
+.conveyor-status {
+  min-height: 46px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 14px;
+  border-radius: 14px;
+  color: var(--muted);
+  background: var(--violet-050);
+  font-size: 13px;
+  text-align: center;
+}
+.conveyor-status.hint { color: #167487; background: var(--cyan-soft); font-weight: 750; }
+
+.mine-layout {
+  display: grid;
+  grid-template-columns: minmax(0,1fr) 280px;
+  gap: 14px;
+  min-height: 520px;
+}
+.mine-panel, .mine-side {
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: rgba(255,253,247,.94);
+}
+.mine-panel { display: grid; gap: 12px; padding: 16px; }
+.mine-side { padding: 16px; display: grid; align-content: start; gap: 12px; }
+.mine-rules-mini { display: grid; gap: 8px; }
+.mine-rule { padding: 10px 12px; border-radius: 12px; background: var(--violet-050); font-size: 12px; line-height: 1.45; }
+.mine-rule b { color: var(--violet-800); }
+
+.word-mine-board {
+  --size: 5;
+  width: min(100%, 680px);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: repeat(var(--size), minmax(0,1fr));
+  grid-template-rows: repeat(var(--size), minmax(0,1fr));
+  border: 2px solid #8aa5b4;
+  border-radius: 16px;
+  overflow: hidden;
+  background: #fff;
+}
+.mine-cell {
+  position: relative;
+  min-width: 0;
+  padding: 5px;
+  border: 0;
+  border-right: 1px solid #d7dee5;
+  border-bottom: 1px solid #d7dee5;
+  background: var(--region-bg, #f7f8fb);
+  color: var(--ink);
+  font-size: clamp(11px,1.15vw,16px);
+  font-weight: 780;
+  line-height: 1.2;
+  cursor: pointer;
+}
+.mine-cell.region-top { border-top: 3px solid var(--region-line, #7994a3); }
+.mine-cell.region-right { border-right: 3px solid var(--region-line, #7994a3); }
+.mine-cell.region-bottom { border-bottom: 3px solid var(--region-line, #7994a3); }
+.mine-cell.region-left { border-left: 3px solid var(--region-line, #7994a3); }
+.mine-cell.safe::after { content: "×"; position: absolute; inset: 0; display: grid; place-items: center; color: #738091; font-size: 30px; background: rgba(255,255,255,.48); }
+.mine-cell.mine::after { content: "●"; position: absolute; right: 6px; top: 4px; color: #566f7f; font-size: 15px; }
+.mine-cell.pending { box-shadow: inset 0 0 0 3px var(--cyan); z-index: 2; }
+.mine-cell.guide { animation: soft-glow 1.2s ease-in-out infinite alternate; }
+@keyframes soft-glow { to { box-shadow: inset 0 0 0 3px rgba(75,201,220,.9), 0 0 18px rgba(75,201,220,.25); } }
+
+.mine-progress { display: flex; align-items: center; justify-content: space-between; gap: 10px; color: var(--muted); font-size: 12px; }
+.scan-card { min-height: 170px; padding: 16px; border-radius: 18px; background: linear-gradient(150deg,var(--blue-soft),var(--paper)); }
+.scan-card h3 { margin: 0 0 10px; font-size: 18px; line-height: 1.5; }
+.scan-card mark { padding: 1px 4px; border-radius: 5px; color: inherit; background: rgba(75,201,220,.2); }
+.scan-card p { margin: 0; color: var(--muted); font-size: 12px; }
+.mine-decisions { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.mine-decisions button { min-height: 44px; border-radius: 12px; border: 1px solid var(--line); background: #fff; font-weight: 820; cursor: pointer; }
+.mine-decisions button:disabled { opacity: .42; cursor: wait; }
+.mine-message { min-height: 42px; padding: 10px 12px; border-radius: 12px; background: var(--violet-050); color: var(--muted); font-size: 12px; line-height: 1.45; }
+.mine-tools { display: flex; gap: 7px; flex-wrap: wrap; }
+.mine-tools button { flex: 1; min-width: 74px; }
+
+@media (prefers-reduced-motion: reduce) {
+  .moving-syllable { position: relative; inset: auto; display: inline-grid; place-items: center; margin: 8px; animation: none !important; }
+  .belt-window { display: flex; align-items: center; justify-content: center; flex-wrap: wrap; align-content: center; }
+  .mine-cell.guide { animation: none; box-shadow: inset 0 0 0 3px rgba(75,201,220,.9); }
+}
+
+@media (max-width: 900px) {
+  .conveyor-layout, .mine-layout { grid-template-columns: 1fr; }
+  .conveyor-guide { grid-template-columns: auto 1fr; justify-content: center; }
+  .conveyor-guide img { width: 72px; height: 72px; }
+  .mine-side { grid-template-columns: 1fr 1fr; align-items: start; }
+  .scan-card { min-height: 0; }
+}
+
+@media (max-width: 620px) {
+  .activity-view { padding-top: 6px; }
+  .override-game { min-height: 0; }
+  .override-hud { align-items: flex-start; }
+  .override-hud-copy span { display: none; }
+  .conveyor-stage { min-height: 430px; padding: 12px; }
+  .belt-window { min-height: 260px; }
+  .moving-syllable { width: 62px; height: 58px; font-size: 25px; }
+  .mine-side { grid-template-columns: 1fr; }
+  .word-mine-board { max-height: 58vh; }
+  .mine-cell { font-size: 10px; }
+}
+
+/* ── 문장 완성 — 어절 카드로 순서 맞추기 (카드는 움직이지 않는다) ──────
+ * 흐르는 컨베이어(.conveyor-layout)는 min-height:500px 이라 화면(약 455px)을
+ * 넘겨 스크롤이 났다. 여기는 내용만큼만 차지하고 스크롤을 만들지 않는다. */
+.word-order-layout {
+  display: grid;
+  grid-template-columns: 170px minmax(0, 1fr);
+  gap: 14px;
+  align-items: stretch;
+}
+.word-order-stage {
+  display: grid;
+  align-content: start;
+  gap: 14px;
+  min-width: 0;
+  padding: 18px 20px;
+  border: 1px solid var(--line);
+  border-radius: 22px;
+  background: #fbfaff;
+}
+.word-order-stage .assembly-dock {
+  display: flex; flex-wrap: wrap; gap: 9px; justify-content: center;
+}
+.word-card-grid {
+  display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+}
+.word-card {
+  min-height: 52px;
+  padding: 10px 18px;
+  border: 1px solid var(--line);
+  border-radius: 15px;
+  background: #fff;
+  box-shadow: 0 3px 10px rgba(37, 20, 78, .07);
+  font-size: clamp(18px, 1.9vw, 24px);
+  font-weight: 800;
+  color: var(--violet-900, #2f1f66);
+  cursor: pointer;
+}
+.word-card:hover { border-color: var(--violet-300, #b9a8ea); }
+.word-card.hint { border-color: rgba(75, 201, 220, .8); background: var(--cyan-soft, #eafaff); }
+.word-card.wrong { border-color: #e8a0a0; background: #fdf1f1; }
+.word-card.captured { border-color: #9fd6b0; background: #f1fbf4; }
+.word-card.used, .word-card[disabled] { opacity: .32; box-shadow: none; cursor: default; }
+
+/* 문장 완성 상자는 남는 세로를 위아래로 나눠 갖는다.
+ * min-height는 건드리지 않는다 — 늘리면 활동칸을 넘겨 스크롤이 난다.
+ * 다른 활동(젤리캡쳐 등)은 그대로 `start`로 둔다. */
+.override-game.override-game1 {
+  align-content: center;
+  align-content: safe center;
+}
+
+/* 이지모드 시범 — 정답 순서대로 카드가 하나씩 빛난다.
+ * 글자로 정답을 알려 주지 않고 **순서만** 보여 준다.
+ * 보여 주는 동안은 눌러도 반응하지 않는다(막는 것은 JS가 한 번 더 막는다). */
+.word-card { transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease, opacity .18s ease; }
+.override-game1.is-demo .word-card { pointer-events: none; }
+.override-game1.is-demo .word-card:not(.demo-glow) { opacity: .5; }
+.word-card.demo-glow {
+  border-color: rgba(75, 201, 220, .95);
+  background: var(--cyan-soft, #eafaff);
+  box-shadow: 0 0 0 5px rgba(75, 201, 220, .24), 0 10px 22px rgba(37, 20, 78, .14);
+  transform: scale(1.09);
+  opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .word-card { transition: none; }
+  .word-card.demo-glow { transform: none; }
+}
+
+@media (max-width: 899px) {
+  .word-order-layout { grid-template-columns: 1fr; }
+}
+
+
+/* ── 문장 완성 — 다 놓은 뒤 「완성 확인」 ────────────────────────────
+ * 마지막 낱말을 놓자마자 넘어가면 아이가 자기가 만든 문장을 볼 틈이 없다.
+ * 만든 문장을 크게 세우고, 읽어 본 뒤 스스로 「다음」을 누른다. */
+.word-order-done {
+  display: grid;
+  justify-items: center;
+  gap: 14px;
+  padding: 6px 4px 2px;
+}
+.word-order-sentence {
+  margin: 0;
+  text-align: center;
+  font-size: clamp(20px, 2.4vw, 30px);
+  font-weight: 800;
+  line-height: 1.5;
+  color: var(--violet-900, #2f1f66);
+  word-break: keep-all;
+}
+.word-order-done-actions { display: flex; flex-wrap: wrap; gap: 9px; justify-content: center; }
+
+/* ── 어절이 많은 문장에서는 카드와 자리를 좁힌다 ─────────────────────────
+ * 한 문단이 한 쪽인 글(L8·L9)은 한 문장이 열 어절을 넘는다. 기본 크기로는
+ * 자리가 두 줄·카드가 세 줄이 되어 987×521(클래스인 CEF 하한)에서 넘쳤다.
+ * 예전에는 개수를 `:has(.assembly-slot:nth-child(N))`으로 셌다. 그런데 다 맞춘
+ * 뒤 자리를 지우면서 셀 것이 없어져, 긴 문장 완성 화면의 글자가 도로 커졌다.
+ * 이제는 자바스크립트가 어절을 세어 `.is-long`(9개부터)·`.is-xlong`(12개부터)을
+ * 붙인다 — 자리를 지운 완성 화면에서도 그대로 남는다.
+ * 짧은 문장 화면은 그대로 둔다. */
+
+/* 아홉 어절부터 */
+.word-order-stage.is-long { gap: 10px; padding: 12px 16px; }
+.word-order-stage.is-long .assembly-dock { gap: 7px; min-height: 44px; }
+.word-order-stage.is-long .assembly-slot {
+  min-width: 50px; height: 44px; font-size: 20px; border-radius: 13px;
+}
+.word-order-stage.is-long .word-card-grid { gap: 8px; }
+.word-order-stage.is-long .word-card {
+  min-height: 42px; padding: 7px 13px; border-radius: 13px;
+  font-size: clamp(16px, 1.6vw, 20px);
+}
+.word-order-stage.is-long .conveyor-status { padding: 8px 12px; font-size: 14px; }
+.word-order-stage.is-long .word-order-sentence { font-size: clamp(17px, 1.9vw, 23px); }
+
+/* 열두 어절부터 한 번 더 */
+.word-order-stage.is-xlong .assembly-slot {
+  min-width: 42px; height: 38px; font-size: 17px;
+}
+.word-order-stage.is-xlong .word-card {
+  min-height: 36px; padding: 6px 11px; font-size: clamp(15px, 1.5vw, 18px);
+}
+.word-order-stage.is-xlong .word-order-sentence {
+  font-size: clamp(17px, 2vw, 23px); line-height: 1.42;
+}
+
+/* 완성 화면은 짧은 문장에서도 5px쯤 넘쳤다 — 위아래 여백만 줄여 0으로 만든다. */
+.word-order-done { gap: 10px; padding: 2px 4px 0; }
+
+/* ── 다 맞춘 뒤 — 완성한 문장 하나만 ────────────────────────────────
+ * 자리·카드·젤리티처 안내는 자바스크립트가 그리지 않는다(감추는 것이 아니다).
+ * 여기서는 남은 것을 활동 칸 가운데로 모으는 일만 한다.
+ * 애니메이션은 넣지 않는다 — 자극을 줄이려고 하는 일이다. */
+.word-order-layout.is-done { grid-template-columns: minmax(0, 1fr); }
+.word-order-stage.is-done {
+  align-content: center;
+  /* 카드가 사라지면서 상자가 폭삭 주저앉지 않게 최소 높이만 잡아 둔다.
+   * 활동 칸(약 455px)보다 낮아 넘침을 만들지 않는다. */
+  min-height: 208px;
+  padding: 18px 20px;
+}
+.word-order-stage.is-done.is-long { padding: 14px 18px; }

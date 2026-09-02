@@ -1,0 +1,45 @@
+.studio {
+  grid-template-rows: 54px minmax(0, 1fr) 66px;
+}
+
+.topbar {
+  min-height: 54px;
+  padding: 7px 14px;
+  border-radius: 17px;
+}
+
+.brand {
+  gap: 0;
+}
+
+.brand img {
+  width: 116px;
+  height: 30px;
+}
+
+.lesson-meta,
+.nav-title {
+  display: none !important;
+}
+
+.sidebar {
+  padding: 12px;
+}
+
+.step-nav {
+  align-content: start;
+}
+
+.cover-book-title {
+  margin: 0 0 10px;
+  color: var(--violet-800);
+  font-size: clamp(18px, 2vw, 24px);
+  font-weight: 820;
+  letter-spacing: -.035em;
+}
+
+@media (max-width: 620px) {
+  .studio { grid-template-rows: 50px minmax(0, 1fr) 62px; }
+  .topbar { min-height: 50px; padding: 6px 10px; }
+  .brand img { width: 106px; height: 28px; }
+}

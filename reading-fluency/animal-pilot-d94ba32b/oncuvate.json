@@ -1,0 +1,35 @@
+{
+  "oncuvate": 2,
+  "id": "l8-animal-lifecycle-fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-08-30",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "동물은 어떻게 자랄까요? 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L8",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "동물은 어떻게 자랄까요?",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    }
+  }
+}
