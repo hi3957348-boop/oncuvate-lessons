@@ -13,7 +13,14 @@
   function create(options){
     options=options||{};
     var words=(options.words||[]).map(normalize),onOpen=typeof options.onOpen==='function'?options.onOpen:function(){},onClose=typeof options.onClose==='function'?options.onClose:function(){};
-    var openedAt=0,openItem=null,views={};
+    var openedAt=0,openItem=null;
+    /* 같은 낱말을 몇 번, 얼마 만에 다시 여는지 — 새로고침 뒤에도 이어지도록 sessionStorage에 둔다 */
+    var viewKey=(options.storageKey||'case')+':vocab-views';
+    var views={},lastAt={};
+    try{var savedViews=JSON.parse(sessionStorage.getItem(viewKey)||'null');if(savedViews){views=savedViews.views||{};lastAt=savedViews.lastAt||{}}}catch(_){}
+    function saveViews(){try{sessionStorage.setItem(viewKey,JSON.stringify({views:views,lastAt:lastAt}))}catch(_){}}
+    var lastOpenInfo=null;
+    function stats(){var keys=Object.keys(views),opens=0,max=0,rep=[];keys.forEach(function(w){opens+=views[w];if(views[w]>max)max=views[w];if(views[w]>=2)rep.push(w+'×'+views[w])});return{wordOpens:opens,wordsOpened:keys.length,wordsReopened:rep.length,maxWordViews:max,repeatedWords:rep.join(', ')}}
     var lookup=new Map();
     words.forEach(function(item){item.forms.forEach(function(form){lookup.set(String(form).toLowerCase(),item)})});
     var forms=Array.from(lookup.keys()).sort(function(a,b){return b.length-a.length});
@@ -22,12 +29,11 @@
     dialog.innerHTML='<div class="case-vocab-shell"><header><small>MY CASE WORD</small><strong></strong></header><p class="case-vocab-read"><small>READ IT · 이렇게 읽어요</small><span></span></p><p class="case-vocab-meaning"></p><div class="case-vocab-example"><small>ENGLISH EXAMPLE</small><p></p></div><button class="case-vocab-close" type="button">BACK TO THE CASE</button></div>';
     document.body.appendChild(dialog);
     var title=dialog.querySelector('strong'),meaning=dialog.querySelector('.case-vocab-meaning'),example=dialog.querySelector('.case-vocab-example p'),readLine=dialog.querySelector('.case-vocab-read'),readText=readLine.querySelector('span');
-    function open(item){title.textContent=item.word;readText.textContent=item.read;readLine.hidden=!item.read;meaning.textContent=item.meaningKo;example.textContent=item.example;onOpen(item.word);openItem=item;openedAt=Date.now();views[item.word]=(views[item.word]||0)+1;dialog.showModal()}
+    function open(item){title.textContent=item.word;readText.textContent=item.read;readLine.hidden=!item.read;meaning.textContent=item.meaningKo;example.textContent=item.example;var now=Date.now();var since=lastAt[item.word]?now-lastAt[item.word]:undefined;views[item.word]=(views[item.word]||0)+1;lastAt[item.word]=now;saveViews();lastOpenInfo={viewNo:views[item.word],sinceLastViewMs:since,reopened:views[item.word]>1};onOpen(item.word,lastOpenInfo);openItem=item;openedAt=now;dialog.showModal()}
     /* 카드를 얼마나 오래 보았나 — 뜻·예문·읽기 줄 글자 수 기준 최소 시간과 견준다(120ms/글자 + 300ms) */
-    function report(){if(!openItem||!openedAt)return;var item=openItem,openMs=Date.now()-openedAt;var textLen=(item.meaningKo+item.example+item.read).replace(/\s+/g,'').length,minMs=300+120*textLen;openItem=null;openedAt=0;try{onClose(item.word,{openMs:openMs,visibleTextLen:textLen,expectedMinMs:minMs,tooFast:openMs<minMs,viewNo:views[item.word]||1,hasExample:Boolean(item.example)})}catch(_){}}
+    function report(){if(!openItem||!openedAt)return;var item=openItem,openMs=Date.now()-openedAt;var textLen=(item.meaningKo+item.example+item.read).replace(/\s+/g,'').length,minMs=300+120*textLen;openItem=null;openedAt=0;try{onClose(item.word,{openMs:openMs,visibleTextLen:textLen,expectedMinMs:minMs,tooFast:openMs<minMs,viewNo:views[item.word]||1,sinceLastViewMs:lastOpenInfo&&lastOpenInfo.sinceLastViewMs,reopened:(views[item.word]||1)>1,hasExample:Boolean(item.example)})}catch(_){}}
     dialog.querySelector('.case-vocab-close').addEventListener('click',function(){dialog.close();report()});
     dialog.addEventListener('cancel',function(e){e.preventDefault();dialog.close();report()});
-    dialog.addEventListener('close',report);
     function render(element,text){
       element.replaceChildren();
       var source=String(text||'');
@@ -40,7 +46,7 @@
       }
       if(last<source.length)element.append(document.createTextNode(source.slice(last)));
     }
-    return{render:render,open:open};
+    return{render:render,open:open,stats:stats};
   }
   window.OncuvateCaseVocab={create:create};
 }());

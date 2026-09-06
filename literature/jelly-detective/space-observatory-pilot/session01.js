@@ -152,9 +152,10 @@
   let goalKoreanVisible = false;
   const caseVocab = window.OncuvateCaseVocab?.create({
     words,
-    onOpen(word) {
+    storageKey,
+    onOpen(word, info) {
       if (!state.openedWords.includes(word)) state.openedWords.push(word);
-      signals.log('word-open', { activityId: screenActivity[state.screen] || state.screen, word });
+      signals.log('word-open', Object.assign({ activityId: screenActivity[state.screen] || state.screen, screenName: state.screen, word }, info || {}));
       updateWordBank(); saveState();
     },
     onClose(word, info) {
@@ -1053,7 +1054,7 @@
     signals.log('retell-text', { activityId: 'retell', itemId: 'retell', text, chars: text.length, words, sentences: (text.match(/[.!?]+/g) || []).length, accuracy: 'notApplicable', hintUsed: state.retellHint, evidenceMentioned: ['jupiter', 'venus', 'sun', 'moon', 'evidence', 'telescope'].filter(key => text.toLowerCase().includes(key)).join(',') });
     signals.fire(byId('retellDoneMarker'));
     signals.activityComplete('retell', { chars: text.length, words });
-    signals.lessonComplete({ retellChars: text.length });
+    signals.lessonComplete(Object.assign({ retellChars: text.length }, caseVocab?.stats?.() || {}));
     showScreen('solved');
   }
   function updateWordBank() {

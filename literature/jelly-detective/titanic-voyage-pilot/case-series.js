@@ -25,7 +25,7 @@
     game:C.strategy.game,check:C.strategy.check,reading:'정보글을 한 문장씩 읽어요',
     organize:'정보 관계를 눈에 보이게 정리해요',retell:'정리한 정보를 내 말로 설명해요',solved:'오늘 사용한 해결 방법을 돌아봐요'
   };
-  const caseVocab=window.OncuvateCaseVocab?.create({words:C.words,onOpen:function(word){if(!S.vocabOpened.includes(word))S.vocabOpened.push(word);signals.log('word-open',{activityId:screenActivity[S.screen]||S.screen,word:word});save();updateChrome()},onClose:function(word,info){signals.log('word-card',Object.assign({activityId:screenActivity[S.screen]||S.screen,screenName:S.screen,word:word},info))}});
+  const caseVocab=window.OncuvateCaseVocab?.create({words:C.words,storageKey:C.storage,onOpen:function(word,info){if(!S.vocabOpened.includes(word))S.vocabOpened.push(word);signals.log('word-open',Object.assign({activityId:screenActivity[S.screen]||S.screen,screenName:S.screen,word:word},info||{}));save();updateChrome()},onClose:function(word,info){signals.log('word-card',Object.assign({activityId:screenActivity[S.screen]||S.screen,screenName:S.screen,word:word},info))}});
   const focusGuide=window.OncuvateFocusGuide?.create({
     key:C.storage,
     replayButton:'focusGuideReplay',
@@ -342,7 +342,7 @@
   $('organizeContinue').addEventListener('click',()=>{signals.activityComplete('organize',{attempts:S.organizeAttempts});show('retell')});
   $('retellInput').addEventListener('input',updateRetell);
   $('retellHint').addEventListener('click',()=>{S.hint=!S.hint;if(S.hint)signals.hint('retell','retell',{helpLevel:'A2',helpType:'sentence-frame',trigger:'child-request'});save();renderRetell()});
-  $('finishButton').addEventListener('click',()=>{const text=S.retell.trim();if(text.length<28)return;const words=text.split(/\s+/).filter(Boolean).length;signals.log('retell-text',{activityId:'retell',itemId:'retell',text:text,chars:text.length,words:words,sentences:(text.match(/[.!?]+/g)||[]).length,accuracy:'notApplicable',hintUsed:S.hint});signals.fire($('retellDoneMarker'));signals.activityComplete('retell',{chars:text.length,words:words});signals.lessonComplete({retellChars:text.length});show('solved')});
+  $('finishButton').addEventListener('click',()=>{const text=S.retell.trim();if(text.length<28)return;const words=text.split(/\s+/).filter(Boolean).length;signals.log('retell-text',{activityId:'retell',itemId:'retell',text:text,chars:text.length,words:words,sentences:(text.match(/[.!?]+/g)||[]).length,accuracy:'notApplicable',hintUsed:S.hint});signals.fire($('retellDoneMarker'));signals.activityComplete('retell',{chars:text.length,words:words});signals.lessonComplete(Object.assign({retellChars:text.length},caseVocab&&caseVocab.stats?caseVocab.stats():{}));show('solved')});
   $('restartButton').addEventListener('click',()=>{signals.log('restart',{});try{sessionStorage.removeItem(C.storage)}catch(_){}location.reload()});
   $('homeButton').addEventListener('click',home);
   const menuKey='titanic-voyage:menu-collapsed';
