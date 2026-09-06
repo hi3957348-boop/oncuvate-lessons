@@ -84,24 +84,24 @@
     ]
   };
   const words = [
-    { word: "observatory", meaning: "a building used to study the sky · 관측소 : 하늘과 우주를 관찰하는 시설", example: "The astronomer studied Jupiter from the observatory.", forms: ["observatory", "observatories"], read: "ob·ser·va·to·ry [업저버토리]" },
-    { word: "observe", meaning: "to watch carefully · 관찰하다 : 어떤 대상이나 현상을 자세히 살펴보다", example: "Astronomers observe the sky through a telescope.", forms: ["observe", "observes", "observed", "observation", "observations"], read: "ob·serve [업저브]" },
-    { word: "record", meaning: "information saved for later · 기록 : 나중에 확인할 수 있도록 남겨 둔 정보", example: "The astronomer wrote each observation in the record.", forms: ["record", "records", "recorded"], read: "re·cord [레코드]" },
-    { word: "orbit", meaning: "to move around another object · 공전하다 : 한 천체가 다른 천체의 둘레를 돌다", example: "Earth and the other planets orbit the Sun.", forms: ["orbit", "orbits", "orbited", "orbiting"], read: "or·bit [오빗]" },
-    { word: "evidence", meaning: "a fact that helps us decide · 근거 : 어떤 판단이 맞는지 확인하는 데 도움이 되는 사실", example: "The changing shape of Venus was important evidence.", forms: ["evidence"], read: "ev·i·dence [에비던스]" },
-    { word: "archive", meaning: "a place or collection that keeps old records · 기록 보관소 : 오래된 기록을 모아 보관하는 곳", example: "The team found an old sky record in the archive.", forms: ["archive", "archives"], read: "ar·chive [아카이브] · ch가 「ㅋ」" },
-    { word: "claim", meaning: "a statement said to be true · 주장 : 사실이라고 내세우는 말", example: "The archive card makes a claim about how objects move.", forms: ["claim", "claims", "claimed"], read: "claim [클레임]" },
-    { word: "restore", meaning: "to return something to an earlier state · 복원하다 : 이전의 상태로 되돌리다", example: "The program restored the old sky model.", forms: ["restore", "restores", "restored", "restoring"], read: "re·store [리스토어]" },
-    { word: "mistaken", meaning: "based on a wrong idea · 잘못된 : 사실과 다르게 알고 있거나 판단한", example: "The old card contained a mistaken idea.", forms: ["mistaken"], read: "mis·tak·en [미스테이큰]" },
-    { word: "astronomer", meaning: "a person who studies stars and planets · 천문학자 : 별과 행성을 연구하는 사람", example: "The astronomer looked at Jupiter every night.", forms: ["astronomer", "astronomers"], read: "as·tron·o·mer [어스트라너머]" },
-    { word: "telescope", meaning: "a tool that makes far things look close · 망원경 : 멀리 있는 것을 가깝게 보이게 하는 도구", example: "They looked at the Moon through a telescope.", forms: ["telescope", "telescopes"], read: "tel·e·scope [텔러스코프]" },
-    { word: "crescent", meaning: "a thin curved moon shape · 초승달 모양 : 얇고 굽은 달 모양", example: "Venus looked like a crescent.", forms: ["crescent"], read: "cres·cent [크레슨트] · sc는 「ㅅ」" },
-    { word: "incident", meaning: "something that happened · 사건 : 일어난 일", example: "The incident report tells what happened at 9:20.", forms: ["incident"], read: "in·ci·dent [인시던트]" },
-    { word: "unresolved", meaning: "not yet solved · 아직 풀리지 않은 : 아직 해결되지 않은", example: "One unresolved question is left.", forms: ["unresolved"], read: "un·re·solved [언리잘브드]" },
-    { word: "position", meaning: "the place where something is · 위치 : 어떤 것이 있는 자리", example: "The moons change their positions every night.", forms: ["position", "positions"], read: "po·si·tion [퍼지션] · tion은 「션」" },
-    { word: "appear", meaning: "to be seen · 보이다 : 눈에 보이게 되다", example: "Venus appears as a crescent.", forms: ["appear", "appears", "appeared"], read: "ap·pear [어피어]" },
-    { word: "believe", meaning: "to think something is true · 믿다", example: "People believed Earth stood at the center.", forms: ["believe", "believed"], read: "be·lieve [빌리브] · ie는 「이」" },
-    { word: "lit", meaning: "with light on it · 빛을 받은 : light(빛을 비추다)의 과거형", example: "Only the lit side of Venus can be seen.", forms: ["lit"], read: "lit [릿]" }
+    { word: "observatory", meaning: "a building used to study the sky · 관측소 : 하늘과 우주를 관찰하는 시설", example: "The astronomer studied Jupiter from the observatory.", forms: ["observatory", "observatories"], read: "ob·ser·va·to·ry" },
+    { word: "observe", meaning: "to watch carefully · 관찰하다 : 어떤 대상이나 현상을 자세히 살펴보다", example: "Astronomers observe the sky through a telescope.", forms: ["observe", "observes", "observed", "observation", "observations"], read: "ob·serve" },
+    { word: "record", meaning: "information saved for later · 기록 : 나중에 확인할 수 있도록 남겨 둔 정보", example: "The astronomer wrote each observation in the record.", forms: ["record", "records", "recorded"], read: "re·cord" },
+    { word: "orbit", meaning: "to move around another object · 공전하다 : 한 천체가 다른 천체의 둘레를 돌다", example: "Earth and the other planets orbit the Sun.", forms: ["orbit", "orbits", "orbited", "orbiting"], read: "or·bit" },
+    { word: "evidence", meaning: "a fact that helps us decide · 근거 : 어떤 판단이 맞는지 확인하는 데 도움이 되는 사실", example: "The changing shape of Venus was important evidence.", forms: ["evidence"], read: "ev·i·dence" },
+    { word: "archive", meaning: "a place or collection that keeps old records · 기록 보관소 : 오래된 기록을 모아 보관하는 곳", example: "The team found an old sky record in the archive.", forms: ["archive", "archives"], read: "ar·chive" },
+    { word: "claim", meaning: "a statement said to be true · 주장 : 사실이라고 내세우는 말", example: "The archive card makes a claim about how objects move.", forms: ["claim", "claims", "claimed"], read: "claim" },
+    { word: "restore", meaning: "to return something to an earlier state · 복원하다 : 이전의 상태로 되돌리다", example: "The program restored the old sky model.", forms: ["restore", "restores", "restored", "restoring"], read: "re·store" },
+    { word: "mistaken", meaning: "based on a wrong idea · 잘못된 : 사실과 다르게 알고 있거나 판단한", example: "The old card contained a mistaken idea.", forms: ["mistaken"], read: "mis·tak·en" },
+    { word: "astronomer", meaning: "a person who studies stars and planets · 천문학자 : 별과 행성을 연구하는 사람", example: "The astronomer looked at Jupiter every night.", forms: ["astronomer", "astronomers"], read: "as·tron·o·mer" },
+    { word: "telescope", meaning: "a tool that makes far things look close · 망원경 : 멀리 있는 것을 가깝게 보이게 하는 도구", example: "They looked at the Moon through a telescope.", forms: ["telescope", "telescopes"], read: "tel·e·scope" },
+    { word: "crescent", meaning: "a thin curved moon shape · 초승달 모양 : 얇고 굽은 달 모양", example: "Venus looked like a crescent.", forms: ["crescent"], read: "cres·cent" },
+    { word: "incident", meaning: "something that happened · 사건 : 일어난 일", example: "The incident report tells what happened at 9:20.", forms: ["incident"], read: "in·ci·dent" },
+    { word: "unresolved", meaning: "not yet solved · 아직 풀리지 않은 : 아직 해결되지 않은", example: "One unresolved question is left.", forms: ["unresolved"], read: "un·re·solved" },
+    { word: "position", meaning: "the place where something is · 위치 : 어떤 것이 있는 자리", example: "The moons change their positions every night.", forms: ["position", "positions"], read: "po·si·tion" },
+    { word: "appear", meaning: "to be seen · 보이다 : 눈에 보이게 되다", example: "Venus appears as a crescent.", forms: ["appear", "appears", "appeared"], read: "ap·pear" },
+    { word: "believe", meaning: "to think something is true · 믿다", example: "People believed Earth stood at the center.", forms: ["believe", "believed"], read: "be·lieve" },
+    { word: "lit", meaning: "with light on it · 빛을 받은 : light(빛을 비추다)의 과거형", example: "Only the lit side of Venus can be seen.", forms: ["lit"], read: "lit" }
   ];
   const wordHuntItems = [
     { id: 'wh1', words: ['Four', 'of', 'Jupiter’s', 'moons', 'travel', 'around', 'the', 'plant.'], wrong: 7, decoy: 3, answer: 'planet', choices: ['planet', 'plant', 'plane'], ko: '목성의 위성 네 개는 그 행성 주위를 돌아요.' },
@@ -1219,7 +1219,6 @@
   applyGoalLanguage(false);
   showScreen(state.screen || 'start', { skipSave: true });
 }());
-
 
 
 
