@@ -105,3 +105,9 @@ body.coach-role .stage-help-button{display:none}
   body.menu-collapsed .menu-steps button b{display:inline-grid;place-items:center;width:26px;height:26px;border-radius:8px;background:rgba(255,255,255,.12)}
   body.menu-collapsed .focus-guide-replay{padding:0;font-size:0}body.menu-collapsed .focus-guide-replay::before{content:"?";font-size:15px}
 }
+
+/* Session-specific historical clue scenes */
+.image-hero{position:absolute;inset:-6% -6% -14%;border-radius:20px;background-position:center;background-repeat:no-repeat;background-size:contain}
+.titanic-decks-image{background-image:url("assets/titanic-decks-search.webp")}
+.titanic-warnings-image{background-image:url("assets/titanic-warnings-search.webp")}
+.titanic-safety-image{background-image:url("assets/titanic-safety-search.webp")}

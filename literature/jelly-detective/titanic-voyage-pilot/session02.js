@@ -1,10 +1,10 @@
 window.CASE_SESSION={
-  id:'02',storage:'titanic-voyage-02:state:v1',lab:'Grand Decks 02',hero:'ship-hero',
-  start:{eyebrow:'JELLY SEA DETECTIVES · TITANIC CASE 02',title:'The Mystery of<br><em>the Missing Ticket</em>',lead:'갑판 네 구역을 직접 조사하고 같은 두 질문으로 비교해, 잃어버린 표의 주인이 어느 구역 사람인지 찾아내세요.'},
+  id:'02',storage:'titanic-voyage-02:state:v1',lab:'Grand Decks 02',hero:'image-hero titanic-decks-image',
+  start:{eyebrow:'JELLY SEA DETECTIVES · TITANIC CASE 02',title:'The Mystery of<br><em>the Missing Ticket</em>',lead:'세 승객 구역과 승무원 작업 구역을 조사하고 같은 질문으로 비교해, 잃어버린 표의 주인이 어느 승객 구역 사람인지 찾아내세요.'},
   caseLines:[
     ['DECK REPORT · THURSDAY, APRIL 11','A steward found a wet ticket on a stairway between two decks. Salt water washed away the class printed on it.'],
-    ['SHIP RULE','Once the voyage began, the three classes of passengers were not allowed to mix. Every ticket holder must return to the right area.'],
-    ['UNRESOLVED QUESTION','Which area does the lost ticket belong to? Compare every area by the same two questions: What was on the table? Where was their place on the ship?']
+    ['SHIP LAYOUT','Passenger rooms, dining areas, and many decks were separated by class. Crew members worked in assigned areas and did not use passenger tickets.'],
+    ['UNRESOLVED QUESTION','Which passenger area does the lost ticket belong to? Compare the three passenger areas by the same two questions: What was on the table? Where was their place on the ship?']
   ],
   goal:{question:['What must we find?','무엇을 찾아야 할까요?'],correct:'area',choices:[
     ['count','Count every passenger on the ship.','배에 탄 모든 승객을 센다.'],
@@ -18,10 +18,10 @@ window.CASE_SESSION={
     {en:'Read its report, then mark one deck note.',ko:'보고를 읽은 뒤 갑판 메모 하나를 표시해요.'}
   ]},
   game:{type:'planets',title:'Walk the decks and check four areas.',eyebrow:'EXPLORE THE DECK PLAN',intro:'Tap an area. Read its report, remember the key facts, and mark one note.',items:[
-    {id:'first',name:'FIRST CLASS',fact:'First-class rooms were on the upper decks. Dinner offered fresh lobster, roast duckling, and French ice cream while an orchestra played.',question:'What should the deck log record?',correct:'Upper decks · lobster and many choices',options:['Upper decks · lobster and many choices','Lower decks · soups and stews','Boiler rooms · cooked and served the meals']},
-    {id:'second',name:'SECOND CLASS',fact:'Second-class passengers paid much less, but their rooms were still very nice. They ate similar food at long tables with fewer choices. They had their own deck and library.',question:'What should the deck log record?',correct:'Own deck and library · similar food, fewer choices',options:['Upper decks · lobster and many choices','Own deck and library · similar food, fewer choices','Boiler rooms · cooked and served the meals']},
+    {id:'first',name:'FIRST CLASS',fact:'First-class rooms were on the upper decks. Dinner offered fresh lobster, roast duckling, and French ice cream.',question:'What should the deck log record?',correct:'Upper decks · lobster and many choices',options:['Upper decks · lobster and many choices','Lower decks · soups and stews','Crew work area · no passenger ticket']},
+    {id:'second',name:'SECOND CLASS',fact:'Second-class passengers paid much less, but their rooms were still very nice. They ate similar food at long tables with fewer choices. They had their own deck and library.',question:'What should the deck log record?',correct:'Own deck and library · similar food, fewer choices',options:['Upper decks · lobster and many choices','Own deck and library · similar food, fewer choices','Crew work area · no passenger ticket']},
     {id:'third',name:'THIRD CLASS',fact:'Most passengers traveled in third class, and many were immigrants. Their rooms were simple, clean, and comfortable, far from the top deck. Meals were soups, stews, biscuits, and potatoes.',question:'What should the deck log record?',correct:'Lower decks · soups and stews',options:['Own deck and library · similar food, fewer choices','Lower decks · soups and stews','Upper decks · lobster and many choices']},
-    {id:'crew',name:'CREW',fact:'More than 800 crew members worked on the ship. Stokers shoveled coal into the boilers far below the decks. Chefs and stewards cooked and served the passengers’ meals.',question:'What should the deck log record?',correct:'Boiler rooms · cooked and served the meals',options:['Lower decks · soups and stews','Boiler rooms · cooked and served the meals','Upper decks · lobster and many choices']}
+    {id:'crew',name:'CREW',fact:'More than 800 crew members worked on the ship. Stokers shoveled coal into the boilers far below the decks. Chefs and stewards cooked and served the passengers’ meals. Crew members did not use passenger tickets.',question:'What should the deck log record?',correct:'Crew work area · no passenger ticket',options:['Lower decks · soups and stews','Crew work area · no passenger ticket','Upper decks · lobster and many choices']}
   ]},
   check:{title:'Which area does the lost ticket belong to?',lead:'The owner remembers a dinner with fresh lobster and a room on the upper decks. Use all four deck notes.',correct:'first',choices:[
     ['second','SECOND CLASS · Long tables and fewer choices.'],['first','FIRST CLASS · Upper decks and a menu with lobster.'],['third','THIRD CLASS · Soups, stews, and rooms far below.']
@@ -29,14 +29,19 @@ window.CASE_SESSION={
   reading:{title:'Three Classes, One Ship',easy:[
     'The rooms on the Titanic were divided into first, second, and third class.','First-class passengers had rooms on the upper decks and ate fancy meals like fresh lobster.','Second-class passengers ate similar food at long tables, but they had fewer choices.','Third-class rooms were simple but comfortable, and meals were soups, stews, and biscuits.','More than 800 crew members cooked, cleaned, and shoveled coal to keep the ship moving.'
   ],challenge:[
-    'Each class on the Titanic had its own dining room, outside deck, and style of meals.','The first-class dining room could seat over 550 people, making it the largest room at sea.','An orchestra played for first- and second-class passengers, while third-class passengers made their own music.','Most passengers traveled in third class, and many were immigrants starting a new life in America.','Comparing every area by the same two questions helps a detective place one lost ticket correctly.'
+    'Passenger rooms, dining areas, and many decks on the Titanic were separated by class.','The first-class dining room could seat more than 550 people, and its menus offered many choices.','Second-class passengers had comfortable rooms and a library, while third-class meals were simpler.','Most passengers traveled in third class, and many were immigrants beginning a new life in America.','Crew members worked in assigned areas, so a passenger ticket would not belong in the boiler room.'
   ]},
   organize:{type:'planet-sort',title:'Build a deck comparison board.',lead:'Choose an area card, place it in the correct group, and complete the comparison sentence.',bank:'AREA CARDS',zones:[
-    ['music','ORCHESTRA AT MEALS · WIDE MENU'],['work','NO ORCHESTRA · SIMPLE MEALS OR WORK']
+    ['passenger','PASSENGER TICKET AREA'],['work','CREW WORK AREA · NO PASSENGER TICKET']
   ],cards:[
-    ['first','FIRST CLASS','music'],['second','SECOND CLASS','music'],['third','THIRD CLASS','work'],['crew','CREW','work']
+    ['first','FIRST CLASS','passenger'],['second','SECOND CLASS','passenger'],['third','THIRD CLASS','passenger'],['crew','CREW','work']
   ],blank:['We compared every area by the same two','.'],answer:'questions'},
   retell:{title:'Where does the ticket belong?',prompt:'Write 2–3 English sentences. Compare first class with at least one other area.',placeholder:'First-class passengers... Third-class passengers... The ticket...',frame:'First-class passengers ate ____ on the ____ decks. ____ passengers ate ____. The ticket belongs to ____ because ____.'},
   solved:{eyebrow:'CASE 02 · TICKET RETURNED',title:'같은 두 질문으로 비교해<br>잃어버린 표의 주인을 찾았어요!',text:'비교할 대상이 여러 개일 때는 같은 질문을 같은 순서로 물으면 중요한 차이가 한눈에 보입니다.'},
-  coach:{watch:'구역마다 질문을 바꾸지 않고 「무엇을 먹었나 · 어디에 있었나」 두 칸을 반복해서 채우는지 관찰합니다.',answer:'증거 확인: FIRST CLASS(신선한 바닷가재 + 위 갑판). 정리 묶음: 오케스트라 first·second / 없음 third·crew. 빈칸: questions.'}
+  coach:{watch:'세 승객 구역에는 「무엇을 먹었나 · 어디에 있었나」를 반복해 묻고, 승무원은 승객 표가 없는 작업 구역임을 구분하는지 관찰합니다.',answer:'증거 확인: FIRST CLASS(신선한 바닷가재 + 위 갑판). 정리 묶음: 승객 표 구역 first·second·third / 승무원 작업 구역 crew. 빈칸: questions.'}
 };
+window.CASE_SESSION.words = window.CASE_SESSION.words.map(entry => {
+  if (entry[0] === 'biscuit') return ['biscuit', 'a small crisp baked snack · 비스킷 : 작고 바삭하게 구운 과자', entry[2], entry[3], entry[4]];
+  if (entry[0] === 'allowed') return ['allowed', 'given permission · 허락된 : 해도 좋다고 정해진', 'Passengers used the areas assigned to their class.', entry[3], entry[4]];
+  return entry;
+}).filter(entry => entry[0] !== 'orchestra');

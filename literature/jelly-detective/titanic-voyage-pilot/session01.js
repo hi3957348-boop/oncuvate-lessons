@@ -28,8 +28,8 @@
   };
   const caseLines = [
     {
-      label: "SHIPYARD RECORD · APRIL 1912",
-      text: "In April 1912, a record in the shipyard office called the new ship Titanic unsinkable. The Titanic was the biggest ship in the world, as long as three football fields.",
+      label: "CASE STORY NOTE · APRIL 1912",
+      text: "In April 1912, some people described the new ship Titanic as unsinkable. It was the largest ship in the world and almost as long as three 100-yard football fields.",
       next: "다음 사건 기록"
     },
     {
@@ -46,10 +46,10 @@
   const clues = [
     {
       id: 'compartment', title: 'Compartment Drawing', symbol: 'compartment',
-      sentence: 'The lower part of the ship had 16 compartments. It could stay afloat with four flooded compartments.',
-      correct: 'The ship could stay afloat with only four flooded compartments.',
-      options: ['The ship could stay afloat with any number of flooded compartments.', 'The ship could stay afloat with only four flooded compartments.', 'The ship had no compartments at all.'],
-      reviewPrompt: 'How many flooded compartments could the ship stay afloat with?', wordUnlock: 2
+      sentence: 'The lower part of the ship was divided into 16 compartments. The compartments were designed to limit flooding.',
+      correct: 'The ship had 16 compartments designed to limit flooding.',
+      options: ['The compartments proved that the whole ship could never sink.', 'The ship had 16 compartments designed to limit flooding.', 'The ship had no compartments to limit flooding.'],
+      reviewPrompt: 'What were the 16 compartments designed to do?', wordUnlock: 2
     },
     {
       id: 'lifeboat', title: 'Lifeboat Count', symbol: 'lifeboat',
@@ -69,18 +69,18 @@
   const readingTexts = {
     easy: [
       'In 1912, many people believed the new ship Titanic was so safe it could never sink.',
-      'Its lower part was divided into 16 compartments that could be sealed off from each other.',
-      'Thomas Andrews designed the ship so it could stay afloat with four flooded compartments.',
-      'Because of this careful design, some people called the Titanic unsinkable.',
+      'Its lower part was divided into 16 compartments.',
+      'The compartments were designed to limit flooding by closing off parts of the ship.',
+      'This safety design made the Titanic seem very strong.',
       'But the ship carried only 20 lifeboats, enough for about half of the people on board.',
-      'The evidence shows a strong ship, but the unsinkable claim went further than the facts.'
+      'The evidence showed that the ship had safety features, but it did not prove that the whole ship could never sink.'
     ],
     challenge: [
-      'On its first voyage in April 1912, the Titanic was the biggest ship in the world.',
-      'Its lower part was divided into 16 compartments, and any flooded compartment could be sealed off.',
-      'Thomas Andrews believed his design could keep the ship afloat with four flooded compartments.',
-      'Yet its 20 lifeboats had room for only about half of the passengers and crew.',
-      'The evidence shows a careful design, but the claim that it could never sink was mistaken.'
+      'On its first voyage in April 1912, the Titanic was the largest passenger ship in the world.',
+      'Its lower hull was divided into 16 compartments, and watertight doors could isolate a damaged section.',
+      'These safety features were intended to limit flooding, but they did not prove that the entire ship was unsinkable.',
+      'The ship also carried only 20 lifeboats, with space for about half of the passengers and crew.',
+      'The evidence supports the idea that the Titanic was carefully designed, not the stronger claim that it could never sink.'
     ]
   };
   const words = [
@@ -92,7 +92,7 @@
     { word: "mistaken", meaning: "based on a wrong idea · 잘못된 : 사실과 다르게 알고 있거나 판단한", example: "The old claim was a mistaken idea.", forms: ["mistaken"], read: "mis·tak·en" },
     { word: "shipyard", meaning: "a place where ships are built · 조선소 : 배를 만드는 곳", example: "The Titanic was built at a shipyard in Belfast.", forms: ["shipyard", "shipyards"], read: "ship·yard" },
     { word: "compartment", meaning: "one closed part inside a ship · 구획 : 배 안을 나누어 막은 칸", example: "The ship had 16 compartments.", forms: ["compartment", "compartments"], read: "com·part·ment" },
-    { word: "afloat", meaning: "floating on the water · 물에 떠 있는 : 가라앉지 않고 물 위에 떠 있는", example: "The ship could stay afloat with four flooded compartments.", forms: ["afloat"], read: "a·float" },
+    { word: "afloat", meaning: "floating on the water · 물에 떠 있는 : 가라앉지 않고 물 위에 떠 있는", example: "The ship was designed to stay afloat after some damage.", forms: ["afloat"], read: "a·float" },
     { word: "flood", meaning: "to fill with water · 물에 잠기다 : 물이 차서 잠기다", example: "Water flooded the lower compartments.", forms: ["flood", "flooded", "floods"], read: "flood" },
     { word: "seal", meaning: "to close tightly so nothing gets in · 밀봉하다 : 물이 못 들어오게 꼭 막다", example: "A flooded compartment could be sealed off.", forms: ["seal", "sealed"], read: "seal" },
     { word: "divide", meaning: "to split into parts · 나누다 : 여러 부분으로 가르다", example: "The lower part was divided into 16 compartments.", forms: ["divide", "divided"], read: "di·vide" },
@@ -103,7 +103,7 @@
     { word: "captain", meaning: "the person in charge of a ship · 선장 : 배를 지휘하는 사람", example: "Captain Smith was in charge of the Titanic.", forms: ["captain"], read: "cap·tain" },
     { word: "voyage", meaning: "a long trip by ship · 항해 : 배를 타고 가는 긴 여행", example: "The first voyage was from England to New York.", forms: ["voyage", "voyages"], read: "voy·age" },
     { word: "Southampton", meaning: "a port city in England · 사우샘프턴 : 타이타닉이 출항한 영국의 항구 도시", example: "The Titanic sailed from Southampton.", forms: ["Southampton"], read: "South·amp·ton" },
-    { word: "board", meaning: "on board means on the ship · 배에 탄 : on board는 「배 안에 타고 있는」", example: "About half of the people on board could fit in the lifeboats.", forms: ["board"], read: "board" }
+    { word: "on board", meaning: "on or inside a ship · 승선한 : 배에 타고 있거나 배 안에 있는", example: "About half of the people on board could fit in the lifeboats.", forms: ["on board"], read: "on board" }
   ];
   const wordHuntItems = [
     { id: 'wh1', words: ['Passengers', 'crowded', 'the', 'desk', 'as', 'the', 'ship', 'left', 'Southampton.'], wrong: 3, decoy: 1, answer: 'deck', choices: ['deck', 'desk', 'disk'], ko: '배가 사우샘프턴을 떠날 때 승객들이 갑판에 모여들었어요.' },
@@ -117,7 +117,7 @@
   const wordHuntActivity = 'sound-alike-words';
   const wordHuntMeasure = 'case.sound-alike-word';
   const mindMapCards = [
-    { id: 'compartment', target: 'compartment', before: 'The ship could stay afloat with ', answer: 'four', after: ' flooded compartments.' },
+    { id: 'compartment', target: 'compartment', before: 'The ship had ', answer: 'sixteen', after: ' compartments designed to limit flooding.' },
     { id: 'new', target: 'new', before: 'The unsinkable claim was not supported by the ', answer: 'evidence', after: '.' },
     { id: 'old', target: 'old', before: 'People once believed the Titanic could never ', answer: 'sink', after: '.' },
     { id: 'lifeboat', target: 'lifeboat', before: 'The lifeboats had room for about ', answer: 'half', after: ' of the people.' }
@@ -1224,8 +1224,6 @@
   applyGoalLanguage(false);
   showScreen(state.screen || 'start', { skipSave: true });
 }());
-
-
 
 
 

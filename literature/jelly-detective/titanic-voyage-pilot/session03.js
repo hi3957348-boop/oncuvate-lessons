@@ -1,10 +1,10 @@
 window.CASE_SESSION={
-  id:'03',storage:'titanic-voyage-03:state:v1',lab:'Bridge Watch 03',hero:'iceberg-hero',
-  start:{eyebrow:'JELLY SEA DETECTIVES · TITANIC CASE 03',title:'The Mystery of<br><em>the Silent Warnings</em>',lead:'얼음 경고가 왜 함교에 닿지 않았는지 읽고, 망루·무선실·조타 세 자리를 계획한 순서대로 하나씩 점검하세요.'},
+  id:'03',storage:'titanic-voyage-03:state:v1',lab:'Bridge Watch 03',hero:'image-hero titanic-warnings-image',
+  start:{eyebrow:'JELLY SEA DETECTIVES · TITANIC CASE 03',title:'The Mystery of<br><em>the Missed Warnings</em>',lead:'얼음 경고가 왜 모두 함교에 닿지 않았는지 읽고, 망루·무선실·조타 세 자리를 계획한 순서대로 하나씩 점검하세요.'},
   caseLines:[
-    ['WATCH REPORT · SUNDAY, APRIL 14','Other ships sent ice warnings all day. By two o’clock, Captain Smith had received several of them.'],
-    ['NIGHT LOG','The night was clear and the sea was very calm. The ship kept running at nearly top speed, about 26 miles per hour.'],
-    ['UNRESOLVED QUESTION','Why did the warnings stay silent? Plan a short sequence, then check each station until every warning reaches the bridge.']
+    ['WATCH REPORT · SUNDAY, APRIL 14','Other ships sent ice warnings throughout the day. Several warnings reached the Titanic, but not every message reached the bridge in time.'],
+    ['NIGHT LOG','The night was clear and the sea was very calm. The ship kept running at high speed, about 25 miles per hour.'],
+    ['UNRESOLVED QUESTION',"Why didn't every warning reach the bridge? Plan a short sequence, then check each station until every warning reaches the bridge."]
   ],
   goal:{question:['What is the best watch goal?','가장 알맞은 점검 목표는 무엇일까요?'],correct:'deliver',choices:[
     ['fast','Press every control as fast as possible.','모든 조작 버튼을 최대한 빨리 누른다.'],
@@ -21,20 +21,26 @@ window.CASE_SESSION={
   game:{type:'systems',title:'Keep every warning moving to the bridge.',eyebrow:'BRIDGE WATCH',intro:'Choose a watch order. Then test one control in each station.',items:[
     {id:'lookout',name:'LOOKOUT · CROW’S NEST',problem:'A dark, clear night and a very calm sea. The lookouts have no binoculars and must spot ice early.',correct:'Keep a careful watch and phone the bridge the moment a shape appears.',options:['Keep a careful watch and phone the bridge the moment a shape appears.','Wait until the shape is very close, then ring the bell.','Watch the passengers on the deck instead of the sea.']},
     {id:'wireless',name:'WIRELESS ROOM',problem:'Ice warnings arrive between a big stack of passenger telegrams. One warning is written down and set aside.',correct:'Carry every ice warning to the bridge before sending more passenger telegrams.',options:['Answer “I am busy” and keep sending passenger telegrams.','Carry every ice warning to the bridge before sending more passenger telegrams.','Send the ice warning back to the ship that sent it.']},
-    {id:'bridge',name:'BRIDGE · STEERING',problem:'The ship runs at nearly top speed, about 26 miles per hour. Its course leads straight into the ice.',correct:'Reduce speed and steer farther south, away from the reported ice.',options:['Keep top speed so the ship reaches New York early.','Turn off the engines and stop in the dark.','Reduce speed and steer farther south, away from the reported ice.']}
+    {id:'bridge',name:'BRIDGE · STEERING',problem:'The ship runs at high speed, about 25 miles per hour. Its course leads into an area where ice was reported.',correct:'Reduce speed and change course away from the reported ice.',options:['Keep top speed so the ship reaches New York early.','Turn off the engines and stop in the dark.','Reduce speed and change course away from the reported ice.']}
   ]},
   check:{title:'Which watch report matches the night?',lead:'Look at the three safe stations and choose the complete report.',correct:'complete',choices:[
     ['lookout','Only the lookouts needed a change.'],['complete','The lookout, the wireless room, and the bridge each needed a matching action.'],['random','Pressing controls in any order made the warnings arrive.']
   ],success:'Watch complete. A short plan kept one warning from being forgotten.'},
-  reading:{title:'Warnings That Never Reached the Bridge',easy:[
-    'On Sunday, April 14, the Titanic sailed into waters where other ships had reported ice.','Captain Smith moved the ship farther south and told the lookouts to watch carefully.','More ice warnings reached the wireless room, but two were never delivered to the bridge.','One operator was busy with passenger telegrams and set an important warning aside.','A lookout saw the iceberg just before 11:40 P.M., too late to steer the ship away.'
+  reading:{title:'Why Some Warnings Were Missed',easy:[
+    'On Sunday, April 14, the Titanic sailed into waters where other ships had reported ice.','Several ice warnings reached the ship during the day.','Some warnings reached the bridge, but another was set aside in the busy wireless room.','The sea was very calm, so there were few waves around the dark iceberg.','A lookout saw the iceberg just before 11:40 P.M., too late for the ship to turn away.'
   ],challenge:[
-    'By two o’clock on Sunday afternoon, Captain Smith had received several ice warnings from other ships.','He steered farther south but did not reduce the ship’s speed, about 26 miles per hour.','The assistant operator carried a 7:30 warning to the bridge, but the captain was at dinner.','Another warning was set aside because the busy wireless operator was sending passenger telegrams.','The officer slowed the engines and turned the wheel, but the ship still struck the iceberg.'
+    'Throughout Sunday, other ships sent the Titanic several reports of ice ahead.','Some messages reached the bridge, but another was set aside in the busy wireless room.','The ship continued at high speed through a clear night and an unusually calm sea.','When the lookout saw the iceberg at 11:40 P.M., an officer slowed the engines and turned the wheel.','The ship was already too close to avoid the collision.'
   ]},
   organize:{type:'repair-order',title:'Turn the night into a clear sequence.',lead:'Place the three event cards in the order they happened. Then type the final checking word.',bank:'EVENT CARDS',cards:[
     ['warn','Ice warnings arrive in the wireless room.'],['spot','The lookout sees a dark shape and phones the bridge.'],['turn','The officer slows the engines and turns the wheel.']
   ],blank:['After every warning,','that the bridge received it.'],answer:'check'},
-  retell:{title:'Why did the warnings stay silent?',prompt:'Write a short watch report in English. Use order words and name at least two stations.',placeholder:'First, the wireless room... Next... Finally...',frame:'First, the ____ received ____. Next, the ____ did not ____. Finally, the bridge ____.'},
-  solved:{eyebrow:'CASE 03 · WARNINGS DELIVERED',title:'계획하고 하나씩 확인해<br>조용한 경고를 함교까지 전했어요!',text:'해야 할 일이 여러 개일 때는 짧은 순서를 만들고, 한 단계가 끝날 때마다 결과를 확인하면 빠뜨리는 경고가 줄어듭니다.'},
-  coach:{watch:'정답 버튼을 찾는 속도보다, 시작 전에 세 자리(망루·무선실·함교)의 순서를 스스로 정하고 완료 표시를 따라가는지 관찰합니다.',answer:'LOOKOUT: careful watch + phone the bridge at once. WIRELESS: carry every ice warning to the bridge first. BRIDGE: reduce speed + steer farther south. 순서 카드 3장(경고 도착→발견·전화→감속·조타)을 모두 놓으면 통과. 빈칸: check.'}
+  retell:{title:"Why didn't every warning reach the bridge?",prompt:'Write a short watch report in English. Use order words and name at least two stations.',placeholder:'First, the wireless room... Next... Finally...',frame:'First, the ____ received ____. Next, the ____ did not ____. Finally, the bridge ____.'},
+  solved:{eyebrow:'CASE 03 · WARNINGS DELIVERED',title:'계획하고 하나씩 확인해<br>놓칠 수 있던 경고를 함교까지 전했어요!',text:'해야 할 일이 여러 개일 때는 짧은 순서를 만들고, 한 단계가 끝날 때마다 결과를 확인하면 빠뜨리는 경고가 줄어듭니다.'},
+  coach:{watch:'정답 버튼을 찾는 속도보다, 시작 전에 세 자리(망루·무선실·함교)의 순서를 스스로 정하고 완료 표시를 따라가는지 관찰합니다.',answer:'LOOKOUT: careful watch + phone the bridge at once. WIRELESS: carry every ice warning to the bridge first. BRIDGE: reduce speed + change course away from the reported ice. 순서 카드 3장(경고 도착→발견·전화→감속·조타)을 모두 놓으면 통과. 빈칸: check.'}
 };
+window.CASE_SESSION.words = window.CASE_SESSION.words.map(entry => {
+  if (entry[0] === 'binoculars') return ['binoculars', 'a tool with two tubes that makes far things look close · 쌍안경 : 먼 곳을 두 눈으로 크게 보는 도구', entry[2], entry[3], entry[4]];
+  if (entry[0] === 'deliver') return ['deliver', 'to carry something to the right place · 전달하다 : 가야 할 곳까지 가져다주다', 'An ice warning was delivered to the bridge.', entry[3], entry[4]];
+  if (entry[0] === 'steer') return ['steer', 'to guide a ship in a direction · 조종하다 : 배가 갈 방향을 잡다', 'The officer steered away from the reported ice.', entry[3], entry[4]];
+  return entry;
+}).filter(entry => entry[0] !== 'farther');

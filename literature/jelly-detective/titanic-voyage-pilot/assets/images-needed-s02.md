@@ -1,15 +1,9 @@
-# 이미지 요청 · Jelly Sea Detectives 2~4회차 (titanic-voyage)
+# 이미지 기록 · Jelly Sea Detectives 2~4회차 (titanic-voyage)
 
-2~4회차는 **새 이미지를 쓰지 않는다.** 시작 화면의 배·빙산·구명보트와 2회차 갑판 판은 모두 `series.css`의 CSS 도형(`.ship-hero` · `.iceberg-hero` · `.lifeboat-hero` · `.space-map`)으로 그렸고, 기존 `jelly-detective-magnifier.png` · `jelly-detective-cheer.png` · `oncuvate-brand-logo.png`만 그대로 참조한다.
+2~4회차는 각 사건의 단서를 탐색할 수 있는 역사 교육용 장면을 사용한다. 시작 화면에서 사건의 공간을 먼저 살펴보고, 본 활동에서는 기존 비교·순서 점검·안전 설계 상호작용을 그대로 수행한다.
 
-| 파일명 | 용도 | 크기·형식 | 그림 지시(한 줄) |
+| 파일명 | 용도 | 크기·형식 | 장면과 숨은 단서 |
 |---|---|---|---|
-| (없음) | — | — | 2·3·4회차 신규 이미지 요청 없음 |
-
-※ 나중에 CSS 도형을 그림으로 바꾸고 싶을 때만 아래를 참고한다(지금은 만들지 않는다).
-
-| 후보 파일명 | 용도 | 크기·형식 | 그림 지시(한 줄) |
-|---|---|---|---|
-| titanic-decks-hero.webp | 2회차 시작 화면 `.ship-hero` 대체 | 900×600 WebP q82 | 밤바다 위 네 굴뚝의 여객선 옆모습, 창에 불빛 |
-| titanic-iceberg-hero.webp | 3회차 시작 화면 `.iceberg-hero` 대체 | 900×600 WebP q82 | 맑은 밤, 잔잔한 바다 위 빙산과 멀리 작은 배 |
-| titanic-lifeboat-hero.webp | 4회차 시작 화면 `.lifeboat-hero` 대체 | 900×600 WebP q82 | 새벽 바다의 구명보트, 노 젓는 사람들, 멀리 로켓 불빛 |
+| `titanic-decks-search.webp` | 2회차 갑판 비교 장면 | 1440×810 WebP q82 | 1·2·3등석과 승무원 구역을 한 화면에 비교. 메뉴 카드·도서 카드·식권·승무원 표식이 각 구역에 섞여 있음. |
+| `titanic-warnings-search.webp` | 3회차 경고 전달 장면 | 1440×810 WebP q82 | 망루·무선실·함교를 왼쪽부터 연결. 쌍안경 가방·얼음 경고 전보·조타 장치가 배경에 섞여 있음. |
+| `titanic-safety-search.webp` | 4회차 안전 규칙 장면 | 1440×810 WebP q82 | 구명보트·무선·빙산 감시·훈련·망보기를 한 공간에 배치. 정원 카드·헤드폰·지도 표식·호루라기·쌍안경이 숨어 있음. |
