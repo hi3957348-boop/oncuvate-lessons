@@ -1,0 +1,139 @@
+{
+  "oncuvate": 2,
+  "id": "space-observatory-pilot",
+  "version": "0.4.0",
+  "updatedAt": "2026-09-06",
+  "engine": "jelly-detective case studio v1 (session01 bespoke · space-series.js v6 for 02-04) + case-signals.js v1 + live-mirror.js v1",
+  "files": {
+    "pilot-entry.html": { "use": "부속" },
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.4.0",
+      "title": "Jelly Space Detectives 1 · The Mystery of the Mixed-Up Sky",
+      "order": 1,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "우주",
+        "작업기억",
+        "소리닮은말",
+        "마인드맵"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    },
+    "session02.html": {
+      "use": "콘텐츠",
+      "version": "0.3.0",
+      "title": "Jelly Space Detectives 2 · The Mystery of the Lost Planet Route",
+      "order": 2,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "우주",
+        "비교",
+        "정보정리"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    },
+    "session03.html": {
+      "use": "콘텐츠",
+      "version": "0.3.0",
+      "title": "Jelly Space Detectives 3 · The Mystery of the Silent Moon Lander",
+      "order": 3,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "우주",
+        "계획",
+        "정보정리"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    },
+    "session04.html": {
+      "use": "콘텐츠",
+      "version": "0.3.0",
+      "title": "Jelly Space Detectives 4 · The Mystery of the Last Cargo Window",
+      "order": 4,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "우주",
+        "설계",
+        "정보정리"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    }
+  }
+}

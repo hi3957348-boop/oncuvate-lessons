@@ -1,0 +1,19 @@
+/* Coach panel · 접속한 학생 목록 (live-mirror.js renderList) */
+.coach-participants { margin: 8px 0 0; padding: 0; list-style: none; display: grid; gap: 8px; }
+.coach-participants li { padding: 9px 10px; border-radius: 10px; background: rgba(127, 127, 127, .14); font-size: 12px; line-height: 1.45; }
+.coach-participants li.done { outline: 1px solid rgba(53, 169, 120, .7); }
+.coach-participants li b { display: inline-block; margin-right: 6px; padding: 1px 7px; border-radius: 6px; color: #14213a; background: var(--oc-cyan, var(--cyan, #4bc9dc)); font-size: 11px; letter-spacing: .06em; }
+.coach-participants li span { font-weight: 800; }
+.coach-participants li small, .coach-participants li em, .coach-participants li i { display: block; margin-top: 4px; color: inherit; font-style: normal; }
+.coach-participants li small { opacity: .85; }
+.coach-participants li em { padding: 6px 8px; border-radius: 8px; background: rgba(127, 127, 127, .16); white-space: pre-wrap; word-break: break-word; }
+.coach-participants li i { font-size: 10px; opacity: .6; }
+.coach-participants li.asking { outline: 2px solid var(--oc-gold, var(--gold, #e1b72c)); }
+.coach-help-flag { display: block; margin-top: 5px; padding: 5px 8px; border-radius: 8px; color: #3b2a00; background: #ffe9a6; font-size: 12px; }
+.coach-note { margin-top: 8px; }
+.coach-note textarea { width: 100%; min-height: 48px; padding: 7px 9px; border: 1px solid rgba(127,127,127,.35); border-radius: 8px; color: inherit; background: rgba(255,255,255,.08); font: inherit; font-size: 12px; line-height: 1.4; resize: vertical; }
+.coach-note textarea::placeholder { color: inherit; opacity: .55; }
+.coach-note > div { margin-top: 5px; display: flex; align-items: center; gap: 8px; }
+.coach-note button { min-height: 30px; padding: 0 10px; border: 1px solid rgba(127,127,127,.35); border-radius: 8px; color: inherit; background: rgba(255,255,255,.12); font-size: 11px; font-weight: 800; cursor: pointer; }
+.coach-note button:disabled { opacity: .5; }
+.coach-note i { font-size: 10px; font-style: normal; opacity: .8; }

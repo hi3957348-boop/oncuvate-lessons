@@ -1,0 +1,80 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="space-observatory" data-lesson-title="Jelly Space Detectives 4 · The Mystery of the Last Cargo Window" data-lesson-version="0.3.0">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Jelly Space Detectives 4 · The Mystery of the Last Cargo Window</title>
+  <link rel="stylesheet" href="series.css?v=7">
+  <link rel="stylesheet" href="focus-guide.css?v=2">
+  <link rel="stylesheet" href="case-vocab.css?v=2">
+  <link rel="stylesheet" href="self-check.css?v=1">
+  <link rel="stylesheet" href="live-mirror.css?v=2">
+</head>
+<body>
+  <script src="pilot-bootstrap.js"></script>
+  <div class="child-watermark" id="childWatermark" aria-hidden="true"></div>
+  <div class="app">
+    <aside class="studio-sidebar">
+    <header class="header">
+      <div class="brand"><img src="assets/oncuvate-brand-logo.png" alt="Oncuvate"><div><small>JELLY SPACE DETECTIVE</small><strong>Moon Base 04</strong></div></div>
+      <div class="progress"><span id="progressLabel">준비</span><div class="dots" id="progressDots" aria-hidden="true"></div></div>
+    </header>
+    <nav class="menu" id="lessonMenu" hidden>
+      <button class="nav-back nav-home" id="homeButton" type="button" aria-label="이 회차의 메인 화면으로 이동"><svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M3.5 11.2 12 4l8.5 7.2v8.3a.5.5 0 0 1-.5.5h-5.2v-5.7H9.2V20H4a.5.5 0 0 1-.5-.5z"/></svg><b>메인 화면</b></button>
+      <div class="menu-steps" id="menuSteps"></div>
+      <button class="focus-guide-replay" id="focusGuideReplay" type="button" hidden data-track="hint" data-help-level="A1" data-help-type="guide-replay">? GUIDE</button>
+      <button class="menu-toggle" id="menuToggle" type="button" aria-expanded="true" aria-label="메뉴 접기"><i aria-hidden="true">‹</i><span>메뉴 접기</span></button>
+    </nav>
+    </aside>
+    <main class="stage">
+      <div class="stage-tools">
+        <button class="quiet stage-word-button stage-help-button" id="helpButton" type="button" data-track="hint" data-help-type="child-request" data-tap="tool" aria-label="코치에게 도움 요청"><span aria-hidden="true">🙋</span> 도와주세요</button>
+        <button class="quiet stage-word-button" id="wordButton" type="button" aria-haspopup="dialog" aria-label="내가 눌러 본 단어 카드 열기"><span class="book-icon" aria-hidden="true"></span>MY WORDS <b id="wordCount">0</b>/<span id="wordTotal">4</span></button>
+      </div>
+      <section class="screen start active" id="startScreen" data-screen="start">
+        <div class="start-copy"><p class="eyebrow" id="startEyebrow"></p><h1 id="startTitle"></h1><p class="lead" id="startLead"></p><button class="primary" id="startButton" type="button" data-track="activity-complete" data-activity-id="case-start">사건 파일 열기 →</button></div>
+        <div class="hero" aria-hidden="true"><div class="hero-scene" id="heroScene"></div><img src="assets/jelly-detective-magnifier.png" alt=""></div>
+      </section>
+      <section class="screen" id="caseScreen" data-screen="case" hidden>
+        <div class="card"><div class="marker"><span>1</span> 사건 파일</div><div class="case-line"><small id="caseLabel"></small><p id="caseText"></p></div><div class="actions"><button class="primary" id="caseNext" type="button">다음 기록</button></div></div>
+      </section>
+      <section class="screen" id="goalScreen" data-screen="goal" hidden>
+        <div class="card" data-activity-id="goal" data-measure-id="case.goal" data-trend-group-id="trend.comprehension"><div class="goal-head"><div class="marker"><span>2</span><b data-bilingual data-en="Choose the mission goal." data-ko="오늘 해결할 목표를 골라요.">Choose the mission goal.</b></div><button class="hold" id="holdKorean" type="button" data-track="hint" data-help-level="A1" data-help-type="korean-hold">KO · Hold for Korean</button></div><h2 data-bilingual id="goalQuestion"></h2><div class="choices" id="goalChoices"></div><p class="feedback" id="goalFeedback" role="status">Choose the one problem we need to solve.</p><button class="primary" id="goalContinue" type="button" disabled data-track="activity-complete" data-activity-id="goal">임무 시작하기</button></div>
+      </section>
+      <section class="screen" id="gameScreen" data-screen="game" hidden>
+        <div class="workspace" data-activity-id="game" data-measure-id="case.game"><div class="workspace-head"><div><p class="eyebrow" id="gameEyebrow"></p><h2 id="gameTitle"></h2></div><strong class="counter" id="gameCounter"></strong></div><div id="gameArea"></div><p class="feedback" id="gameFeedback" role="status"></p><div class="actions"><button class="primary" id="gameContinue" type="button" disabled data-track="activity-complete" data-activity-id="game">기록 확인하기</button></div></div>
+      </section>
+      <section class="screen" id="checkScreen" data-screen="check" hidden>
+        <div class="card" data-activity-id="check" data-measure-id="case.check" data-trend-group-id="trend.comprehension"><div class="marker"><span>4</span> 증거 확인</div><h2 id="checkTitle"></h2><p class="lead" id="checkLead"></p><div class="choices" id="checkChoices"></div><p class="feedback" id="checkFeedback" role="status"></p><button class="primary" id="checkContinue" type="button" disabled data-track="activity-complete" data-activity-id="check">정보글 읽기</button></div>
+      </section>
+      <section class="screen" id="readingScreen" data-screen="reading" hidden>
+        <div class="card" data-activity-id="information-reading" data-measure-id="case.reading"><div class="reading-head"><div><div class="marker"><span>5</span> 완성된 정보글</div><h2 id="readingTitle"></h2></div><button class="quiet" id="readingLevel" type="button">도전 글로 보기</button></div><div class="reading-box" id="readingBox"><small id="sentenceCounter"></small><p id="sentenceText"></p></div><button class="primary" id="sentenceNext" type="button">다음 문장</button><div id="fullReading" hidden><div class="reading-box"><small>NOW READ THE WHOLE PARAGRAPH</small><p id="paragraphText"></p></div><div class="self-check" id="readingSelfCheck"><small>CHECK YOURSELF · 문단을 읽고 나서</small><div class="self-check-row"><button class="quiet" type="button" data-self-check="understood">이해했어요</button><button class="quiet" type="button" data-self-check="reread" data-track="hint" data-help-level="A1" data-help-type="reread">다시 볼래요</button><button class="quiet" type="button" data-self-check="unsure" data-track="hint" data-help-level="A1" data-help-type="self-check-unsure">잘 모르겠어요</button></div><p class="feedback" id="readingSelfCheckFeedback" role="status">읽은 느낌을 하나 골라요. 어느 것을 골라도 괜찮아요.</p></div><button class="primary" id="readingContinue" type="button" data-track="activity-complete" data-activity-id="information-reading">정보 정리하기</button></div></div>
+      </section>
+      <section class="screen" id="organizeScreen" data-screen="organize" hidden>
+        <div class="workspace" data-activity-id="organize" data-measure-id="case.organize"><div class="marker"><span>6</span> 정보를 눈에 보이게 정리해요</div><h2 id="organizeTitle"></h2><p class="lead" id="organizeLead"></p><div id="organizeArea"></div><p class="feedback" id="organizeFeedback" role="status"></p><div class="actions"><button class="quiet" id="organizeReset" type="button">다시 정리하기</button><button class="primary" id="organizeCheck" type="button" data-track="answer" data-item-id="organize-check" data-correct="false">확인하기</button><button class="primary" id="organizeContinue" type="button" hidden data-track="activity-complete" data-activity-id="organize">내 말로 설명하기</button></div></div>
+      </section>
+      <section class="screen" id="retellScreen" data-screen="retell" hidden>
+        <div class="retell"><section class="card" data-activity-id="retell" data-measure-id="case.retell" data-trend-group-id="trend.writing"><div class="marker"><span>7</span> 내 말로 다시 설명해요</div><h2 id="retellTitle"></h2><p id="retellPrompt"></p><textarea id="retellInput" maxlength="420"></textarea><div class="actions"><button class="quiet" id="retellHint" type="button" data-track="hint" data-help-level="A2" data-help-type="sentence-frame">도움 문장</button><span id="retellCount">0 / 420</span></div><p class="feedback" id="retellFeedback"></p><button class="primary" id="finishButton" type="button" data-track="lesson-complete" disabled>사건 보고 완료</button><button hidden id="retellDoneMarker" type="button" tabindex="-1" aria-hidden="true" data-track="activity-complete" data-activity-id="retell"></button></section><aside class="evidence"><small>MY WORK</small><div id="retellEvidence"></div></aside></div>
+      </section>
+      <section class="screen" id="solvedScreen" data-screen="solved" hidden>
+        <div class="card solved"><img src="assets/jelly-detective-cheer.png" alt="사건 해결을 축하하는 젤리 탐정"><p class="eyebrow" id="solvedEyebrow"></p><h2 id="solvedTitle"></h2><p class="lead" id="solvedText"></p><div class="actions" style="justify-content:center"><button class="quiet" id="restartButton" type="button">처음부터 다시 보기</button></div></div>
+      </section>
+    </main>
+    <footer class="strategy"><div><small>NOW</small><strong id="currentGoal"></strong></div><ol id="strategySteps"></ol></footer>
+    <div class="copyright">© Oncuvate · 자체 제작 수업 콘텐츠 · 연계 도서의 원문과 삽화를 사용하지 않았습니다.</div>
+  </div>
+  <aside class="coach-panel" id="coachPanel" hidden><header><div><small>COACH VIEW</small><strong id="coachTitle"></strong></div><button class="quiet" id="coachClose" type="button">×</button></header><section><small>접속한 학생 · <span id="coachLiveStatus">확인 중</span></small><ul id="coachParticipants" class="coach-participants"><li>수업방이 없어 혼자 보기입니다.</li></ul></section><section><small>현재 목표</small><p id="coachGoal"></p></section><section><small>학생 활동</small><div id="coachState"></div></section><section><small>관찰 포인트</small><p id="coachWatch"></p></section><section><small>정답 기준</small><p id="coachAnswer"></p></section><section><small>화면 바로가기</small><div class="coach-nav" id="coachNav"></div></section></aside>
+  <dialog class="modal" id="infoDialog"><div class="modal-shell"><header><small id="modalKicker"></small><strong id="modalTitle"></strong></header><div class="modal-body" id="modalBody"></div><button class="primary" id="modalAction" type="button">확인했어요</button></div></dialog>
+  <dialog class="modal" id="wordDialog"><div class="modal-shell"><header><small>MY CASE WORDS</small><strong>사건 파일에서 눌러 본 단어</strong></header><div class="modal-body" id="wordList"></div><button class="primary" id="wordClose" type="button">닫기</button></div></dialog>
+  <script src="studio-frame.js?v=1"></script>
+  <script src="focus-guide.js?v=1"></script>
+  <script src="case-vocab.js?v=3"></script>
+  <script src="case-signals.js?v=1"></script>
+  <script src="live-mirror.js?v=2"></script>
+  <script src="session04.js?v=5"></script>
+  <script src="space-series.js?v=9"></script>
+  <script src="pilot-config.js"></script>
+  <script src="pilot-log-relay.js"></script>
+</body>
+</html>

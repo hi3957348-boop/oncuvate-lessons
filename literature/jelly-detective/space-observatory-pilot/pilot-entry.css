@@ -1,0 +1,36 @@
+/* generated: tokens from shared.css */
+:root {
+  --oc-violet-950: #24144f;
+  --oc-violet-900: #35206f;
+  --oc-violet-800: #4b24a5;
+  --oc-violet-700: #5932b6;
+  --oc-violet-500: #8d70d7;
+  --oc-violet-200: #d9cff5;
+  --oc-violet-100: #eee9fb;
+  --oc-violet-050: #f8f6fd;
+  --oc-cyan: #4bc9dc;
+  --oc-blue: #2785c7;
+  --oc-gold: #e1b72c;
+  --oc-ink: #29243a;
+  --oc-muted: #777187;
+  --oc-paper: #fffefb;
+  --oc-line: #e8e3f3;
+  --oc-success: #35a978;
+  --oc-success-bg: #f0fbf6;
+  --oc-danger: #e56f71;
+  --oc-danger-bg: #fff5f5;
+  --shadow: 0 18px 48px rgba(37, 20, 78, .16);
+  --font: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", Arial, sans-serif;
+  --oc-font: var(--font);
+}
+:root{color-scheme:light;font-family:var(--oc-font);background:var(--oc-violet-950)}
+*{box-sizing:border-box}body{min-width:320px;margin:0;color:var(--oc-ink);background:radial-gradient(circle at 12% 5%,rgba(75,201,220,.18),transparent 27%),radial-gradient(circle at 90% 85%,rgba(141,112,215,.26),transparent 31%),var(--oc-violet-950)}button,input{font:inherit}.entry-shell{display:grid;min-height:100vh;padding:24px;place-items:center}.entry-card{display:grid;width:min(960px,100%);min-height:400px;overflow:hidden;border:1px solid rgba(217,207,245,.4);border-radius:28px;background:var(--oc-paper);box-shadow:0 28px 80px rgba(8,4,28,.42);grid-template-columns:minmax(320px,.9fr) minmax(420px,1.1fr)}
+.entry-visual{position:relative;display:flex;overflow:hidden;padding:26px 28px;flex-direction:column;color:#fff;background:radial-gradient(circle at 50% 38%,rgba(75,201,220,.25),transparent 31%),linear-gradient(155deg,var(--oc-violet-900),var(--oc-violet-950))}.entry-visual::after{position:absolute;inset:0;content:"";background-image:radial-gradient(circle,rgba(255,255,255,.5) 0 1px,transparent 1.5px);background-size:64px 58px;opacity:.12}.brand-logo{position:relative;z-index:2;width:168px;height:46px;object-fit:contain;object-position:left center}.jelly-character{position:relative;z-index:2;width:62%;max-width:230px;max-height:210px;margin:auto;object-fit:contain;filter:drop-shadow(0 22px 25px rgba(0,0,0,.25))}.museum-glow{position:absolute;left:50%;top:45%;width:230px;height:230px;border:1px solid rgba(75,201,220,.35);border-radius:50%;transform:translate(-50%,-50%);box-shadow:0 0 0 32px rgba(75,201,220,.05),0 0 0 64px rgba(75,201,220,.03)}.visual-copy{position:relative;z-index:2}.visual-copy small{display:block;color:var(--oc-cyan);font-size:11px;font-weight:900;letter-spacing:.15em}.visual-copy strong{display:block;margin-top:4px;font-size:26px;letter-spacing:-.04em}.visual-copy span{display:block;margin-top:5px;color:rgba(255,255,255,.7);font-size:15px}
+.entry-content{display:flex;padding:22px 36px 18px;flex-direction:column}.entry-heading small{color:var(--oc-violet-700);font-size:11px;font-weight:900;letter-spacing:.14em}.entry-heading h1{margin:5px 0 4px;font-size:26px;line-height:1.12;letter-spacing:-.045em}.entry-heading p{margin:0;color:var(--oc-muted);font-size:13px;line-height:1.5}.role-tabs{display:grid;margin-top:12px;padding:4px;border:1px solid var(--oc-violet-200);border-radius:14px;background:var(--oc-violet-050);grid-template-columns:1fr 1fr;gap:5px}.role-tabs button{min-height:38px;border:0;border-radius:10px;color:var(--oc-violet-800);background:transparent;font-weight:850;cursor:pointer}.role-tabs button[aria-selected="true"]{color:#fff;background:linear-gradient(135deg,var(--oc-violet-800),var(--oc-violet-700));box-shadow:0 8px 18px rgba(75,36,165,.22)}.role-tabs button:focus-visible,.primary-entry:focus-visible,.secondary-entry:focus-visible,.room-input:focus-visible{outline:3px solid rgba(75,201,220,.55);outline-offset:3px}
+.role-panel{margin-top:10px}.field-label{display:block;margin-bottom:6px;font-size:13px;font-weight:850}.room-input{width:100%;height:50px;border:2px solid var(--oc-violet-200);border-radius:16px;color:var(--oc-violet-950);background:#fff;text-align:center;font-size:26px;font-weight:900;letter-spacing:.23em;outline:none}.room-input:focus{border-color:var(--oc-cyan)}.field-help{margin:5px 0 9px;color:var(--oc-muted);font-size:12px;line-height:1.55}.primary-entry,.secondary-entry{width:100%;min-height:42px;border-radius:13px;font-weight:900;cursor:pointer}.primary-entry{border:0;color:#fff;background:linear-gradient(135deg,var(--oc-violet-800),var(--oc-violet-500));box-shadow:0 11px 24px rgba(75,36,165,.25)}.secondary-entry{margin:6px 0 5px;border:1px solid var(--oc-violet-200);color:var(--oc-violet-800);background:var(--oc-violet-050)}.room-ticket{padding:9px 12px;border:1px solid var(--oc-violet-200);border-radius:18px;text-align:center;background:linear-gradient(145deg,#fff,var(--oc-violet-050))}.room-ticket small,.room-ticket span{display:block}.room-ticket small{color:var(--oc-violet-700);font-size:11px;font-weight:900;letter-spacing:.1em}.room-ticket strong{display:block;margin:2px 0;color:var(--oc-violet-950);font-size:28px;letter-spacing:.18em}.room-ticket span{color:var(--oc-muted);font-size:12px}.entry-status{min-height:30px;margin-top:10px;padding:6px 11px;border:1px solid var(--oc-violet-200);border-radius:12px;color:var(--oc-muted);background:var(--oc-violet-050);font-size:12px;font-weight:750}.entry-status.ready{color:#247354;border-color:#bfe5d5;background:var(--oc-success-bg)}.entry-status.error{color:#b44246;border-color:#f0c5c6;background:var(--oc-danger-bg)}.pilot-note{margin:6px 0 0;color:var(--oc-muted);font-size:10px;line-height:1.5}
+@media(max-width:780px){.entry-shell{padding:10px}.entry-card{min-height:calc(100vh - 20px);grid-template-columns:1fr}.entry-visual{min-height:220px;padding:24px}.brand-logo{width:140px;height:38px}.jelly-character{position:absolute;right:17px;bottom:10px;width:160px;height:160px}.museum-glow{left:78%;top:60%;width:180px;height:180px}.visual-copy{margin-top:auto}.visual-copy strong{font-size:28px}.entry-content{padding:30px 24px}.entry-heading h1{font-size:31px}.room-input{height:68px;font-size:30px}.entry-status{margin-top:25px}}
+@media(prefers-reduced-motion:reduce){*{scroll-behavior:auto!important;transition:none!important}}
+
+.session-select{width:100%;min-height:40px;margin:0 0 8px;padding:0 12px;border:2px solid var(--oc-violet-200);border-radius:13px;color:var(--oc-violet-950);background:#fff;font-weight:800}
+
+#coachPanel{display:grid;grid-template-columns:1fr 1.35fr;gap:6px 10px;align-items:end}#coachPanel[hidden]{display:none}#coachPanel .field-label,#coachPanel .session-select,#coachPanel .room-ticket{grid-column:1/-1}#coachPanel .secondary-entry,#coachPanel .primary-entry{margin:4px 0 0}

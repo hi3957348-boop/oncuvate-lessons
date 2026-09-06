@@ -1,0 +1,141 @@
+{
+  "oncuvate": 2,
+  "id": "titanic-voyage-pilot",
+  "version": "0.1.0",
+  "updatedAt": "2026-09-06",
+  "engine": "jelly-detective case studio v1 (session01 bespoke · case-series.js for 02-04) + case-signals.js v1 + live-mirror.js v2",
+  "files": {
+    "pilot-entry.html": { "use": "부속" },
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "Jelly Sea Detectives 1 · The Mystery of the Unsinkable Claim",
+      "order": 1,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "타이타닉",
+        "작업기억",
+        "소리닮은말",
+        "마인드맵"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    },
+    "session02.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "Jelly Sea Detectives 2 · The Mystery of the Missing Ticket",
+      "order": 2,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "타이타닉",
+        "비교",
+        "정보정리"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    },
+    "session03.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "Jelly Sea Detectives 3 · The Mystery of the Silent Warnings",
+      "order": 3,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "타이타닉",
+        "계획",
+        "사건순서",
+        "정보정리"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    },
+    "session04.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "Jelly Sea Detectives 4 · The Mystery of the Empty Seats",
+      "order": 4,
+      "minDurationMin": 40,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "독해",
+        "정보글",
+        "젤리탐정",
+        "타이타닉",
+        "설계",
+        "안전규칙",
+        "정보정리"
+      ],
+      "level": "L7",
+      "axes": [
+        "basicComprehension",
+        "vocabulary",
+        "contentGeneration"
+      ],
+      "copyright": {
+        "kind": "inHouse"
+      },
+      "realtime": {
+        "nav": false,
+        "prog": true
+      }
+    }
+  }
+}

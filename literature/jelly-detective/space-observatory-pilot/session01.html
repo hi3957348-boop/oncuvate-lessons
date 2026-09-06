@@ -1,0 +1,337 @@
+<!doctype html>
+<html lang="ko"
+      data-lesson-id="space-observatory"
+      data-lesson-title="Jelly Space Detectives 1 · The Mystery of the Mixed-Up Sky"
+      data-lesson-version="0.4.0">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light">
+  <title>Jelly Space Detectives 1 · The Mystery of the Mixed-Up Sky</title>
+  <link rel="stylesheet" href="shared.css?v=14">
+  <link rel="stylesheet" href="focus-guide.css?v=2">
+  <link rel="stylesheet" href="case-vocab.css?v=2">
+  <link rel="stylesheet" href="search.css?v=4">
+  <link rel="stylesheet" href="word-hunt.css?v=1">
+  <link rel="stylesheet" href="self-check.css?v=1">
+  <link rel="stylesheet" href="live-mirror.css?v=2">
+</head>
+<body>
+  <script src="pilot-bootstrap.js"></script>
+  <div class="child-watermark" id="childWatermark" aria-hidden="true"></div>
+
+  <div class="app-shell">
+    <aside class="studio-sidebar">
+    <header class="studio-header">
+      <div class="brand-lockup">
+        <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate">
+        <div><small>JELLY SPACE DETECTIVE</small><strong>Observation Lab 01</strong></div>
+      </div>
+      <div class="header-progress" aria-label="수업 진행">
+        <span id="progressLabel">준비</span>
+        <div class="progress-dots" id="progressDots" aria-hidden="true"></div>
+      </div>
+    </header>
+
+    <nav class="lesson-menu" id="lessonMenu" aria-label="수업 단계 이동" hidden>
+      <button class="lesson-back lesson-home" id="homeButton" type="button" aria-label="이 회차의 메인 화면으로 이동">
+        <svg aria-hidden="true" viewBox="0 0 24 24" focusable="false"><path d="M3.5 11.2 12 4l8.5 7.2v8.3a.5.5 0 0 1-.5.5h-5.2v-5.7H9.2V20H4a.5.5 0 0 1-.5-.5z"/></svg>
+        <b>메인 화면</b>
+      </button>
+      <div class="lesson-menu-steps">
+        <button type="button" data-menu-screen="case"><i>1</i><span>사건 파일</span></button>
+        <button type="button" data-menu-screen="goal"><i>2</i><span>목표</span></button>
+        <button type="button" data-menu-screen="search"><i>3</i><span>단서 수색</span></button>
+        <button type="button" data-menu-screen="deduction"><i>4</i><span>기록 판별</span></button>
+        <button type="button" data-menu-screen="reading"><i>5</i><span>정보글</span></button>
+        <button type="button" data-menu-screen="wordhunt"><i>6</i><span>소리 닮은 말</span></button>
+        <button type="button" data-menu-screen="mindmap"><i>7</i><span>마인드맵</span></button>
+        <button type="button" data-menu-screen="retell"><i>8</i><span>다시 말하기</span></button>
+      </div>
+      <button class="focus-guide-replay" id="focusGuideReplay" type="button" hidden data-track="hint" data-help-level="A1" data-help-type="guide-replay">? GUIDE</button>
+      <button class="lesson-menu-toggle" id="menuToggle" type="button" aria-expanded="true" aria-label="메뉴 접기"><i aria-hidden="true">‹</i><span>메뉴 접기</span></button>
+    </nav>
+    </aside>
+
+    <main class="lesson-stage" id="lessonStage">
+      <div class="stage-tools">
+        <button class="quiet-button word-bank-button stage-word-button stage-help-button" id="helpButton" type="button" data-track="hint" data-help-type="child-request" data-tap="tool" aria-label="코치에게 도움 요청"><span aria-hidden="true">🙋</span> 도와주세요</button>
+        <button class="quiet-button word-bank-button stage-word-button" id="wordBankButton" type="button" aria-haspopup="dialog" aria-label="내가 눌러 본 단어 카드 열기">
+          <span class="book-icon" aria-hidden="true"></span>
+          MY WORDS <b id="wordCount">0</b>/<span id="wordTotal">9</span>
+        </button>
+      </div>
+      <section class="screen start-screen is-active" id="startScreen" data-screen="start">
+        <div class="start-copy">
+          <p class="eyebrow">JELLY SPACE DETECTIVES · CASE 01</p>
+          <h1>The Mystery of<br><em>the Mixed-Up Sky</em></h1>
+          <p class="lead">관측실에 숨은 단서 세 개를 찾아, 믿을 수 없는 기록을 밝혀내세요.</p>
+          <button class="primary-action" id="startButton" type="button" data-track="activity-complete" data-activity-id="case-start">
+            사건 파일 열기 <span aria-hidden="true">→</span>
+          </button>
+        </div>
+        <div class="start-visual" aria-hidden="true">
+          <div class="orbit-ring orbit-ring-one"></div><div class="orbit-ring orbit-ring-two"></div>
+          <div class="observatory-dome"><div class="telescope-body"></div><div class="telescope-lens"></div></div>
+          <img src="assets/jelly-detective-magnifier.png" alt="" class="jelly-start">
+          <span class="star star-a"></span><span class="star star-b"></span><span class="star star-c"></span>
+        </div>
+      </section>
+
+      <section class="screen case-screen" id="caseScreen" data-screen="case" hidden>
+        <div class="focus-card case-focus-card">
+          <div class="section-marker"><span>1</span> 관측실 사건 기록</div>
+          <div class="case-pulse" aria-live="polite">
+            <small id="casePulseLabel">OBSERVATORY LOG</small><p id="casePulseText"></p>
+          </div>
+          <div class="single-action-row"><button class="primary-action" id="caseNextButton" type="button">다음 기록 보기</button></div>
+        </div>
+      </section>
+
+      <section class="screen goal-screen" id="goalScreen" data-screen="goal" hidden>
+        <div class="focus-card compact-focus-card" data-activity-id="goal" data-measure-id="case.goal" data-trend-group-id="trend.comprehension">
+          <div class="goal-topline">
+            <div class="section-marker"><span>2</span><b id="goalMarkerText" data-en="What are we looking for?" data-ko="무엇을 찾아야 할까요?">What are we looking for?</b></div>
+            <button class="hold-translate" id="goalTranslateButton" type="button" aria-pressed="false" data-track="hint" data-help-level="A1" data-help-type="korean-hold" aria-label="누르고 있는 동안 한국어로 보기"><span>KO</span><b>Hold for Korean</b></button>
+          </div>
+          <h2 id="goalTitle" data-en="Choose the goal for this case." data-ko="오늘 사건의 목표를 골라요.">Choose the goal for this case.</h2>
+          <div class="goal-choices" id="goalChoices">
+            <button type="button" data-goal="count" data-item-id="goal" data-track="answer" data-correct="false" data-en="Count every object in the observatory." data-ko="관측실의 물건을 모두 센다">Count every object in the observatory.</button>
+            <button type="button" data-goal="conflict" data-item-id="goal" data-track="answer" data-correct="true" data-en="Find the record that does not match the observation evidence." data-ko="관측 증거와 맞지 않는 기록을 찾는다">Find the record that does not match the observation evidence.</button>
+            <button type="button" data-goal="bright" data-item-id="goal" data-track="answer" data-correct="false" data-en="Find the brightest star." data-ko="가장 밝은 별을 찾는다">Find the brightest star.</button>
+          </div>
+          <p class="feedback-line" id="goalFeedback" role="status" data-en="Choose the one problem we need to solve." data-ko="지금 해결해야 할 문제 하나에 집중해 보세요.">Choose the one problem we need to solve.</p>
+          <button class="primary-action" id="goalContinueButton" type="button" disabled data-track="activity-complete" data-activity-id="goal" data-en="Search the observatory" data-ko="관측실 수색하기">Search the observatory</button>
+        </div>
+      </section>
+
+      <section class="screen search-screen" id="searchScreen" data-screen="search" hidden>
+        <div class="search-map-phase" id="searchMapPhase" data-activity-id="clue-search" data-measure-id="case.clue-search">
+          <div class="search-heading">
+            <div><small>SEARCH THE OBSERVATORY</small><h2>수상한 물체 세 개를 찾아요.</h2></div>
+            <strong id="searchCounter">0 / 3 단서</strong>
+          </div>
+          <div class="hidden-object-map" id="hiddenObjectMap">
+            <img src="assets/space-observatory-search.webp" alt="별 지도와 관측 장비가 놓인 우주 관측실">
+            <button class="space-clue clue-jupiter" type="button" data-clue-id="jupiter" data-tap="answer" data-track="activity-complete" data-activity-id="clue-jupiter" aria-label="망원경 주변의 수상한 물체">
+              <i aria-hidden="true"></i>
+            </button>
+            <button class="space-clue clue-venus" type="button" data-clue-id="venus" data-tap="answer" data-track="activity-complete" data-activity-id="clue-venus" aria-label="조작대 주변의 수상한 물체">
+              <i aria-hidden="true"></i>
+            </button>
+            <button class="space-clue clue-orbit" type="button" data-clue-id="orbit" data-tap="answer" data-track="activity-complete" data-activity-id="clue-orbit" aria-label="별 지도 주변의 수상한 물체">
+              <i aria-hidden="true"></i>
+            </button>
+            <div class="map-status" id="mapStatus" role="status">그림 속에 보호색 단서 세 개가 숨어 있어요.</div>
+          </div>
+        </div>
+
+        <div class="clue-sheet-phase" id="clueSheetPhase" hidden data-activity-id="clue-notes" data-measure-id="case.clue-note" data-trend-group-id="trend.working-memory" data-working-memory-load="primary">
+          <section class="memory-sheet" aria-labelledby="memorySheetTitle">
+            <header>
+              <div><small>DEDUCTION SHEET</small><h2 id="memorySheetTitle">방금 읽은 중요한 정보를 체크해요.</h2></div>
+              <strong id="sheetCounter">1 / 3</strong>
+            </header>
+            <div class="memory-progress" id="memoryProgress" aria-label="단서 기록 진행"></div>
+            <div class="memory-rows" id="memoryRows"></div>
+            <p class="sheet-feedback" id="sheetFeedback" role="status">단서 문장을 떠올리며 핵심 정보 하나를 고르세요.</p>
+            <div class="sheet-actions">
+              <button class="quiet-button" id="reviewActiveClueButton" type="button" data-track="hint" data-help-level="A3" data-help-type="clue-review">단서 다시 보기</button>
+              <button class="primary-action" id="sheetNextButton" type="button" hidden>다음 단서 찾기</button>
+            </div>
+          </section>
+        </div>
+      </section>
+
+      <section class="screen deduction-screen" id="deductionScreen" data-screen="deduction" hidden>
+        <div class="focus-card deduction-card" data-activity-id="deduction" data-measure-id="case.deduction" data-trend-group-id="trend.comprehension">
+          <div class="section-marker"><span>4</span> MATCH THE THREE CLUES</div>
+          <h2>Which record should be removed from the model?</h2>
+          <p class="support-copy">Choose the one record that does not match all three facts you marked.</p>
+          <div class="mini-evidence-board" id="miniEvidenceBoard"></div>
+          <div class="record-choices" id="recordChoices">
+            <button type="button" data-record="old" data-item-id="record" data-track="answer" data-correct="true"><span>ARCHIVE A</span><strong>Every object in space travels around Earth.</strong></button>
+            <button type="button" data-record="sun" data-item-id="record" data-track="answer" data-correct="false"><span>ARCHIVE B</span><strong>Earth and the other planets travel around the Sun.</strong></button>
+            <button type="button" data-record="moon" data-item-id="record" data-track="answer" data-correct="false"><span>ARCHIVE C</span><strong>Moons can travel around planets.</strong></button>
+          </div>
+          <p class="feedback-line" id="deductionFeedback" role="status">Choose a record, then compare it with the three facts.</p>
+          <button class="primary-action" id="deductionContinueButton" type="button" disabled data-track="activity-complete" data-activity-id="deduction">Read the corrected record</button>
+        </div>
+      </section>
+
+      <section class="screen reading-screen" id="readingScreen" data-screen="reading" hidden>
+        <div class="focus-card reading-focus-card" data-activity-id="information-reading" data-measure-id="case.reading">
+          <div class="reading-head">
+            <div><div class="section-marker"><span>5</span> 완성된 정보글을 읽어요</div><h2>How Evidence Changed the Sky Model</h2></div>
+            <button class="quiet-button" id="readingLevelButton" type="button">TRY CHALLENGE</button>
+          </div>
+          <div class="sentence-reader" id="sentenceReader" aria-live="polite"><small id="sentenceCounter">SENTENCE 1 OF 5</small><p id="sentenceText"></p></div>
+          <button class="primary-action" id="sentenceNextButton" type="button">다음 문장</button>
+          <div class="full-paragraph" id="fullParagraph" hidden>
+            <small>NOW READ THE WHOLE PARAGRAPH</small><p id="paragraphText"></p>
+            <div class="self-check" id="readingSelfCheck"><small>CHECK YOURSELF · 문단을 읽고 나서</small><div class="self-check-row"><button class="quiet-button" type="button" data-self-check="understood">이해했어요</button><button class="quiet-button" type="button" data-self-check="reread" data-track="hint" data-help-level="A1" data-help-type="reread">다시 볼래요</button><button class="quiet-button" type="button" data-self-check="unsure" data-track="hint" data-help-level="A1" data-help-type="self-check-unsure">잘 모르겠어요</button></div><p class="feedback-line" id="readingSelfCheckFeedback" role="status">읽은 느낌을 하나 골라요. 어느 것을 골라도 괜찮아요.</p></div>
+            <button class="primary-action" id="readingContinueButton" type="button" data-track="activity-complete" data-activity-id="information-reading">Find the sound-alike mistakes</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen wordhunt-screen" id="wordhuntScreen" data-screen="wordhunt" hidden>
+        <div class="focus-card wordhunt-card" data-activity-id="sound-alike-words" data-measure-id="case.sound-alike-word" data-trend-group-id="trend.vocabulary">
+          <div class="wordhunt-head">
+            <div><div class="section-marker"><span>6</span> FIND THE SOUND-ALIKE MISTAKE</div><h2 id="wordhuntTitle">One word sounds right but is wrong.</h2></div>
+            <strong id="wordhuntCounter">1 / 6</strong>
+          </div>
+          <p class="support-copy" id="wordhuntLead">문장에서 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.</p>
+          <div class="wordhunt-sentence" id="wordhuntSentence" aria-live="polite"></div>
+          <p class="wordhunt-meaning" id="wordhuntMeaning" hidden></p>
+          <div class="goal-choices wordhunt-fix" id="wordhuntChoices" hidden></div>
+          <p class="feedback-line" id="wordhuntFeedback" role="status">소리가 닮은 말에 속지 않게 천천히 읽어요.</p>
+          <div class="wordhunt-actions">
+            <div class="wordhunt-tools"><button class="quiet-button" id="wordhuntRereadButton" type="button" data-track="hint" data-help-level="A1" data-help-type="reread-pace">문장 다시 읽기</button><button class="quiet-button" id="wordhuntHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices">두 낱말로 좁히기</button></div>
+            <button class="primary-action" id="wordhuntNextButton" type="button" hidden>다음 문장</button>
+            <button class="primary-action" id="wordhuntContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="sound-alike-words">Build the mind map</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen mindmap-screen" id="mindmapScreen" data-screen="mindmap" hidden>
+        <div class="mindmap-shell" data-activity-id="information-mindmap" data-measure-id="case.organize">
+          <header class="mindmap-head">
+            <div><div class="section-marker"><span>7</span> ORGANIZE THE INFORMATION</div><h2>Complete and connect the cards.</h2><p>Type one missing word. Then choose the card and place it on the matching branch.</p></div>
+            <strong id="mindmapCounter">0 / 4 words · 0 / 4 placed</strong>
+          </header>
+          <div class="mindmap-workspace">
+            <section class="mindmap-board" id="mindmapBoard" aria-label="증거 마인드맵">
+              <svg class="mindmap-lines" viewBox="0 0 720 560" preserveAspectRatio="none" aria-hidden="true"><path d="M360 280 L360 90 M360 280 L135 280 M360 280 L585 280 M360 280 L360 475"></path></svg>
+              <div class="mindmap-center"><small>BIG QUESTION</small><strong>How did evidence change the sky model?</strong></div>
+              <article class="mindmap-slot slot-old" data-map-slot="old" data-tap="answer"><small>OLD IDEA</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
+              <article class="mindmap-slot slot-jupiter" data-map-slot="jupiter" data-tap="answer"><small>JUPITER EVIDENCE</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
+              <article class="mindmap-slot slot-venus" data-map-slot="venus" data-tap="answer"><small>VENUS EVIDENCE</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
+              <article class="mindmap-slot slot-new" data-map-slot="new" data-tap="answer"><small>NEW MODEL</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
+            </section>
+            <aside class="mindmap-bank">
+              <small>INFORMATION CARDS</small>
+              <h3>Finish each card.</h3>
+              <button class="quiet-button mindmap-hint-button" id="mindmapHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="word-hint" aria-haspopup="dialog">Show a word hint</button>
+              <p><b>1</b> Type the missing word. <b>2</b> Choose the card. <b>3</b> Tap its branch.</p>
+              <div id="mindmapCards"></div>
+              <button class="quiet-button" id="mindmapResetButton" type="button">Reset words and cards</button>
+            </aside>
+          </div>
+          <p class="mindmap-feedback" id="mindmapFeedback" role="status">Complete the four cards and connect them to the map.</p>
+          <div class="mindmap-actions"><button class="primary-action" id="mindmapCheckButton" type="button" disabled data-track="answer" data-item-id="map-check" data-correct="false">Check my map</button><button class="primary-action" id="mindmapContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="information-mindmap">Explain the case in my own words</button></div>
+        </div>
+      </section>
+
+      <section class="screen retell-screen" id="retellScreen" data-screen="retell" hidden>
+        <div class="retell-layout">
+          <section class="focus-card retell-card" data-activity-id="retell" data-measure-id="case.retell" data-trend-group-id="trend.writing">
+            <div class="section-marker"><span>8</span> 내 말로 다시 설명해요</div>
+            <h2>What changed the old sky model?</h2>
+            <p class="support-copy">세 증거 메모를 보면서 영어로 1~3문장을 써 보세요.</p>
+            <textarea id="retellInput" maxlength="360" placeholder="Scientists once thought..." aria-describedby="retellSupport"></textarea>
+            <div class="retell-actions"><button class="quiet-button" id="retellHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="sentence-frame">도움 문장 보기</button><span id="retellCount">0 / 360</span></div>
+            <div class="sentence-frame" id="retellSupport" hidden>Scientists once thought ____. New evidence showed ____.</div>
+            <p class="feedback-line" id="retellFeedback" role="status">완벽한 문장보다, 증거가 들어간 설명이 중요해요.</p>
+            <button class="primary-action" id="finishButton" type="button" disabled data-track="lesson-complete">사건 보고 완료</button>
+            <button hidden id="retellDoneMarker" type="button" tabindex="-1" aria-hidden="true" data-track="activity-complete" data-activity-id="retell"></button>
+          </section>
+          <aside class="retell-evidence"><small>YOUR NOTES</small><div id="retellEvidence"></div></aside>
+        </div>
+      </section>
+
+      <section class="screen solved-screen" id="solvedScreen" data-screen="solved" hidden>
+        <div class="solved-card">
+          <img src="assets/jelly-detective-cheer.png" alt="사건 해결을 축하하는 젤리 탐정">
+          <p class="eyebrow">CASE 01 · SOLVED</p><h2>관측 증거로<br>별 모델을 복구했어요!</h2>
+          <p>단서를 읽고 중요한 정보만 남기면, 기억에만 의지하지 않고 더 정확하게 판단할 수 있어요.</p>
+          <div class="solved-strategy"><span>찾기</span><i>→</i><span>남기기</span><i>→</i><span>맞춰 보기</span></div>
+          <div class="single-action-row" style="justify-content:center;margin-top:18px"><button class="quiet-button" id="restartButton" type="button">처음부터 다시 보기</button></div>
+        </div>
+      </section>
+    </main>
+
+    <footer class="strategy-dock" id="strategyDock">
+      <div class="strategy-goal"><small>NOW</small><strong id="currentGoal">사건 파일을 열어요</strong></div>
+      <ol aria-label="탐정 해결 순서"><li data-strategy-step="find"><span>1</span>찾기</li><li data-strategy-step="note"><span>2</span>남기기</li><li data-strategy-step="match"><span>3</span>맞춰 보기</li></ol>
+    </footer>
+    <div class="copyright-note">© Oncuvate · 자체 제작 수업 콘텐츠 · 연계 도서의 원문과 삽화를 사용하지 않았습니다.</div>
+  </div>
+
+  <aside class="coach-panel" id="coachPanel" hidden>
+    <div class="coach-panel-head"><div><small>COACH VIEW</small><strong>우주 관찰실 1</strong></div><button type="button" id="coachPanelToggle" aria-expanded="true" aria-label="코치 패널 접기">×</button></div>
+    <section><small>접속한 학생 · <span id="coachLiveStatus">확인 중</span></small><ul id="coachParticipants" class="coach-participants"><li>수업방이 없어 혼자 보기입니다.</li></ul></section>
+    <section><small>현재 화면</small><strong id="coachCurrentScreen">시작</strong><p id="coachCurrentGoal">사건 파일을 열어요</p></section>
+    <section><small>학생 기록</small><ul id="coachEvidenceList"><li>아직 체크한 정보가 없습니다.</li></ul></section>
+    <section><small>이해 점검 · 발견 / 수정 / 단서</small><ul id="coachMonitoringList"><li>아직 시작하지 않았습니다.</li></ul></section>
+    <section><small>관찰 포인트</small><p>단서를 읽은 뒤 문장을 계속 보지 않고 핵심 정보를 골라 남기는지 관찰합니다. 다시 보기는 요청할 때만 사용합니다.</p></section>
+    <section class="coach-answer-key"><small>정답 기준</small><p>제거할 기록: <b>ARCHIVE A</b></p></section>
+    <section><small>화면 바로가기</small><div class="coach-nav" id="coachNav"></div></section>
+  </aside>
+
+  <dialog class="clue-dialog search-brief-dialog" id="searchBriefDialog" aria-labelledby="searchBriefTitle">
+    <div class="clue-dialog-shell">
+      <header><small>SEARCH MISSION · FIRST STEP</small><strong id="searchBriefTitle">단서를 찾아 핵심을 기록해요</strong></header>
+      <div class="clue-dialog-body search-brief-body">
+        <img src="assets/jelly-detective-magnifier.png" alt="돋보기를 든 젤리 디텍티브">
+        <div>
+          <p>Find each clue, remember it, and mark the key fact on your sheet.</p>
+          <ol>
+            <li>숨은 단서 하나를 찾아요.</li>
+            <li>큰 문장을 읽고 잠시 기억해요.</li>
+            <li>시트에서 중요한 정보만 체크해요.</li>
+          </ol>
+        </div>
+      </div>
+      <button class="primary-action" id="startSearchButton" type="button">수색 시작하기</button>
+    </div>
+  </dialog>
+
+  <dialog class="clue-dialog" id="clueDialog" aria-labelledby="clueDialogTitle">
+    <div class="clue-dialog-shell">
+      <header><small id="clueDialogKicker">CLUE FOUND · 1 OF 3</small><strong id="clueDialogTitle">관측 단서</strong></header>
+      <div class="clue-dialog-body">
+        <div class="clue-symbol" id="clueDialogSymbol" aria-hidden="true"></div>
+        <p id="clueDialogText"></p>
+        <span>잠시 기억한 뒤 중요한 정보만 시트에 체크해요.</span>
+      </div>
+      <button class="primary-action" id="clueDialogAction" type="button">기억하고 시트 작성하기</button>
+    </div>
+  </dialog>
+
+  <dialog class="word-bank-dialog" id="wordBankDialog">
+    <form method="dialog">
+      <header><div><small>MY CASE WORDS</small><strong>사건 파일에서 눌러 본 단어</strong></div><button type="submit" aria-label="단어장 닫기">×</button></header>
+      <div class="word-list" id="wordList"></div>
+    </form>
+  </dialog>
+
+  <dialog class="case-vocab-dialog" id="mindmapHintDialog" aria-labelledby="mindmapHintTitle">
+    <div class="case-vocab-shell">
+      <header><small>WORD HINT</small><strong id="mindmapHintTitle">Try these four words.</strong></header>
+      <p class="case-vocab-meaning">Use each word once.</p>
+      <div class="case-vocab-example"><small>WORD CHOICES</small><p>Earth · around · changes · Sun</p></div>
+      <button class="case-vocab-close" id="mindmapHintClose" type="button">BACK TO THE MAP</button>
+    </div>
+  </dialog>
+
+  <script src="studio-frame.js?v=1"></script>
+  <script src="focus-guide.js?v=1"></script>
+  <script src="case-vocab.js?v=3"></script>
+  <script src="case-signals.js?v=1"></script>
+  <script src="live-mirror.js?v=2"></script>
+  <script src="session01.js?v=22"></script>
+  <script src="pilot-config.js"></script>
+  <script src="pilot-log-relay.js"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
