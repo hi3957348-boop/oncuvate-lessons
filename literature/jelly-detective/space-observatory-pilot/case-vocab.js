@@ -12,7 +12,8 @@
   }
   function create(options){
     options=options||{};
-    var words=(options.words||[]).map(normalize),onOpen=typeof options.onOpen==='function'?options.onOpen:function(){};
+    var words=(options.words||[]).map(normalize),onOpen=typeof options.onOpen==='function'?options.onOpen:function(){},onClose=typeof options.onClose==='function'?options.onClose:function(){};
+    var openedAt=0,openItem=null,views={};
     var lookup=new Map();
     words.forEach(function(item){item.forms.forEach(function(form){lookup.set(String(form).toLowerCase(),item)})});
     var forms=Array.from(lookup.keys()).sort(function(a,b){return b.length-a.length});
@@ -21,9 +22,12 @@
     dialog.innerHTML='<div class="case-vocab-shell"><header><small>MY CASE WORD</small><strong></strong></header><p class="case-vocab-read"><small>READ IT · 이렇게 읽어요</small><span></span></p><p class="case-vocab-meaning"></p><div class="case-vocab-example"><small>ENGLISH EXAMPLE</small><p></p></div><button class="case-vocab-close" type="button">BACK TO THE CASE</button></div>';
     document.body.appendChild(dialog);
     var title=dialog.querySelector('strong'),meaning=dialog.querySelector('.case-vocab-meaning'),example=dialog.querySelector('.case-vocab-example p'),readLine=dialog.querySelector('.case-vocab-read'),readText=readLine.querySelector('span');
-    function open(item){title.textContent=item.word;readText.textContent=item.read;readLine.hidden=!item.read;meaning.textContent=item.meaningKo;example.textContent=item.example;onOpen(item.word);dialog.showModal()}
-    dialog.querySelector('.case-vocab-close').addEventListener('click',function(){dialog.close()});
-    dialog.addEventListener('cancel',function(e){e.preventDefault();dialog.close()});
+    function open(item){title.textContent=item.word;readText.textContent=item.read;readLine.hidden=!item.read;meaning.textContent=item.meaningKo;example.textContent=item.example;onOpen(item.word);openItem=item;openedAt=Date.now();views[item.word]=(views[item.word]||0)+1;dialog.showModal()}
+    /* 카드를 얼마나 오래 보았나 — 뜻·예문·읽기 줄 글자 수 기준 최소 시간과 견준다(120ms/글자 + 300ms) */
+    function report(){if(!openItem||!openedAt)return;var item=openItem,openMs=Date.now()-openedAt;var textLen=(item.meaningKo+item.example+item.read).replace(/\s+/g,'').length,minMs=300+120*textLen;openItem=null;openedAt=0;try{onClose(item.word,{openMs:openMs,visibleTextLen:textLen,expectedMinMs:minMs,tooFast:openMs<minMs,viewNo:views[item.word]||1,hasExample:Boolean(item.example)})}catch(_){}}
+    dialog.querySelector('.case-vocab-close').addEventListener('click',function(){dialog.close();report()});
+    dialog.addEventListener('cancel',function(e){e.preventDefault();dialog.close();report()});
+    dialog.addEventListener('close',report);
     function render(element,text){
       element.replaceChildren();
       var source=String(text||'');

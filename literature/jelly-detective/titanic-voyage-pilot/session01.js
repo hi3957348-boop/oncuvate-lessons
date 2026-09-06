@@ -158,6 +158,9 @@
       if (!state.openedWords.includes(word)) state.openedWords.push(word);
       signals.log('word-open', { activityId: screenActivity[state.screen] || state.screen, word });
       updateWordBank(); saveState();
+    },
+    onClose(word, info) {
+      signals.log('word-card', Object.assign({ activityId: screenActivity[state.screen] || state.screen, screenName: state.screen, word }, info));
     }
   });
   const focusGuide = window.OncuvateFocusGuide?.create({
