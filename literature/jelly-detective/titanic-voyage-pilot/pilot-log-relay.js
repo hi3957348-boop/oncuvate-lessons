@@ -82,7 +82,9 @@
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')save()});
   const minutes=Math.max(2,Number(CONFIG.recoverySubmitMinutes)||10);
   setInterval(()=>{if(dirty)enqueue('autosave',false)},minutes*60*1000);
-  window.ONCUVATE_PILOT_LOG={record:()=>record,counts,flush};
+  function download(){try{const blob=new Blob([JSON.stringify(Object.assign({},record,{summary:counts()}),null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pilot-log_'+(record.child||'child')+'_s'+String(record.sessionNo||0).padStart(2,'0')+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}catch(_){}}
+  document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&(e.key==='E'||e.key==='e')){e.preventDefault();download()}});
+  window.ONCUVATE_PILOT_LOG={record:()=>record,counts,flush,download};
   record.events.push({at:Date.now(),type:'pilot-session-ready',standalone:!R.room,child:R.child||''});
   save();flush();
 })();
