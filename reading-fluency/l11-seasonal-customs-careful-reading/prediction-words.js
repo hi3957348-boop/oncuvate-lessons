@@ -79,6 +79,7 @@
   let correctCount = 0;
   let locked = false;
   let shownAt = performance.now();
+  let autoAdvanceTimer = null;
 
   function emitAnswer(item, choice, correct, responseMs) {
     window.dispatchEvent(new CustomEvent("oncuvate:log", {
@@ -121,7 +122,7 @@
 
   function renderFeedback(item, correct) {
     feedback.replaceChildren();
-    feedback.className = "rapid-word-feedback sr-only expanded " + (correct ? "success" : "attention");
+    feedback.className = "rapid-word-feedback expanded " + (correct ? "success" : "attention");
     feedback.setAttribute("role", "presentation");
     feedback.removeAttribute("aria-live");
 
@@ -165,6 +166,8 @@
   }
 
   function renderWord() {
+    window.clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = null;
     const item = words[index];
     locked = false;
     counter.textContent = (index + 1) + " / " + words.length;
@@ -199,6 +202,8 @@
   }
 
   function advance() {
+    window.clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = null;
     if (!locked) return;
     if (index < words.length - 1) {
       index += 1;
@@ -225,6 +230,9 @@
     if (!correct) selectedButton.classList.add("wrong");
     renderFeedback(item, correct);
     emitAnswer(item, expected ? "yes" : "no", correct, responseMs);
+    if (correct) {
+      autoAdvanceTimer = window.setTimeout(advance, 1200);
+    }
   }
 
   yesButton.addEventListener("click", () => choose(true));
@@ -233,6 +241,8 @@
     if (event.target.closest("#rapidWordNext")) advance();
   });
   restartButton.addEventListener("click", () => {
+    window.clearTimeout(autoAdvanceTimer);
+    autoAdvanceTimer = null;
     index = 0;
     correctCount = 0;
     summary.classList.add("hidden");

@@ -1,13 +1,13 @@
 {
   "oncuvate": 2,
   "id": "l10-forecast-careful-reading",
-  "version": "1.21.0",
+  "version": "1.21.1",
   "updatedAt": "2026-09-07",
   "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
   "files": {
     "session01.html": {
       "use": "콘텐츠",
-      "version": "1.21.0",
+      "version": "1.21.1",
       "title": "일기예보는 어떻게 만들어질까요? — 꼼꼼 읽기",
       "order": 1,
       "minDurationMin": 35,
