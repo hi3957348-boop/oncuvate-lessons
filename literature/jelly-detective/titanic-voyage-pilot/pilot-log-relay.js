@@ -30,7 +30,8 @@
   /* 파일럿 Firebase 방에도 기록 사본을 둔다(logs/<아이>) — 메일이 안 와도 REST 로 걷을 수 있게 */
   let cloudTimer=0;
   function cloudSave(){if(!R.room||window._firebaseReady!==true||typeof window.pth!=='function'||typeof window._set!=='function')return;try{const snap=Object.assign({},record,{summary:counts(),events:record.events.slice(-MAX_EVENTS),tracks:record.tracks.slice(-400),savedAt:Date.now()});Promise.resolve(window._set(window.pth('logs/'+(record.child||'child')),snap)).catch(()=>{})}catch(_){}}
-  function cloudSaveSoon(delay){clearTimeout(cloudTimer);cloudTimer=setTimeout(cloudSave,delay||1500)}
+  let cloudDue=0;
+  function cloudSaveSoon(delay){const due=Date.now()+(delay||1500);if(cloudTimer&&cloudDue&&cloudDue<=due)return;clearTimeout(cloudTimer);cloudDue=due;cloudTimer=setTimeout(()=>{cloudTimer=0;cloudDue=0;cloudSave()},delay||1500)}
   function outbox(){try{const v=JSON.parse(localStorage.getItem(OUTBOX)||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}}
   function setOutbox(items){try{localStorage.setItem(OUTBOX,JSON.stringify(items.slice(-6)))}catch(_){}}
   function counts(){
