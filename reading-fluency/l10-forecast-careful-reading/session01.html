@@ -1,0 +1,438 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="l10-forecast-careful-reading" data-lesson-version="1.21.0">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, noarchive">
+  <meta name="theme-color" content="#f4f5fb">
+  <title>일기예보는 어떻게 만들어질까요? — 꼼꼼 읽기</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="annotation.css">
+  <link rel="stylesheet" href="prediction-words.css">
+  <link rel="stylesheet" href="prediction-feedback.css">
+  <link rel="stylesheet" href="prediction-popup.css">
+  <link rel="stylesheet" href="layout-improvements.css">
+  <link rel="stylesheet" href="information-thief.css?v=1.20.0">
+  <link rel="stylesheet" href="aba-intervention.css?v=1.20.0">
+  <link rel="stylesheet" href="reading-fluency-unified.css">
+  <link rel="stylesheet" href="reading-fluency-fixes.css">
+  <link rel="stylesheet" href="l2-shell-layout.css">
+  <link rel="stylesheet" href="l2-activity-palette.css?v=1.20.0">
+  <link rel="stylesheet" href="forecast-pipeline.css?v=1.20.0">
+  <link rel="stylesheet" href="transfer-practice.css?v=1.20.0">
+  <link rel="stylesheet" href="coach-chat-unified.css?v=1.20.0">
+  <link rel="stylesheet" href="coach-sync.css?v=1.21.0">
+</head>
+<body>
+  <main class="studio" id="studio">
+    <aside class="sidebar" id="sidebar" aria-label="꼼꼼 읽기 7단계">
+      <div class="brand-wrap">
+        <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate" class="brand-logo">
+        <p>일기예보 만들기</p>
+      </div>
+      <nav class="step-nav" id="stepNav">
+        <button class="step-link active" type="button" data-go="0" aria-current="step"><span class="step-no">1</span><span><b>예측하기</b><small>주제 낱말 살피기</small></span></button>
+        <button class="step-link" type="button" data-go="1"><span class="step-no">2</span><span><b>1차 읽기</b><small>답·조건·확정</small></span></button>
+        <button class="step-link" type="button" data-go="2"><span class="step-no">3</span><span><b>정보 도둑 잡기</b><small>사라지거나 바뀐 정보 찾기</small></span></button>
+        <button class="step-link" type="button" data-go="3"><span class="step-no">4</span><span><b>예보 라인 복구</b><small>과정 카드를 제자리로</small></span></button>
+        <button class="step-link" type="button" data-go="4"><span class="step-no">5</span><span><b>검산하기</b><small>조건을 하나씩 확인</small></span></button>
+        <button class="step-link" type="button" data-go="5"><span class="step-no">6</span><span><b>새 글 전이</b><small>세 글에 전략 적용</small></span></button>
+        <button class="step-link" type="button" data-go="6"><span class="step-no">7</span><span><b>확인 기록</b><small>오늘의 확인 행동 남기기</small></span></button>
+      </nav>
+      <div class="sidebar-note"><span class="mini-signal"></span><span>빠르게보다 정확하게.<br>답은 글에서 다시 확인해요.</span></div>
+    </aside>
+
+    <button class="sidebar-edge-toggle" id="menuButton" type="button" aria-expanded="true" aria-controls="sidebar" aria-label="학습 순서 접기">◀</button>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="top-title">
+          <div><span>초4 교과 연계 · 과학 설명문</span><strong>일기예보는 어떻게 만들어질까요?</strong></div>
+        </div>
+        <div class="strategy-badge"><i></i><span>오늘의 전략</span><b>조건까지 확인하기</b></div>
+      </header>
+
+      <div class="progress-rail" aria-label="학습 진행"><span id="progressBar"></span></div>
+
+      <section class="stage" id="stage">
+        <section class="page active" data-page="0" data-activity-id="predict-weather-text" data-measure-id="metacognitivePreview">
+          <div class="page-head">
+            <div><p class="eyebrow">1 · 예측하기</p><h1>제목과 그림을 보고 글의 내용을 예상해요</h1></div>
+            <span class="step-purpose">읽기 전 생각 열기</span>
+          </div>
+          <div class="prediction-layout">
+            <div class="weather-visual" role="img" aria-label="위성, 레이더, 관측소와 컴퓨터가 날씨 자료를 주고받는 그림">
+              <img class="weather-visual-image" src="assets/weather-observation-network-rough-square-v2.png" alt="" aria-hidden="true">
+            </div>
+            <article class="activity-card prediction-card rapid-word-card" id="rapidWordActivity">
+              <div class="rapid-word-head">
+                <span class="prompt-label">주제 낱말 탐색</span>
+                <span class="rapid-word-counter" id="rapidWordCounter">1 / 10</span>
+              </div>
+              <h2>이 글에 나올 것 같은 낱말일까요?</h2>
+              <p class="support-copy">그림을 보고 빠르게 골라요.</p>
+              <div class="rapid-word-progress" aria-label="낱말 판정 진행"><span id="rapidWordProgress"></span></div>
+              <div id="rapidWordPlay">
+                <div class="rapid-word-stage"><strong id="rapidWord">기상 위성</strong></div>
+                <div class="rapid-choice-list" role="group" aria-label="이 글에 나올 것 같은지 판정">
+                  <button class="rapid-choice yes" id="rapidWordYes" type="button" data-track="answer"><span class="rapid-choice-symbol">O</span><span>나올 것 같아요</span></button>
+                  <button class="rapid-choice no" id="rapidWordNo" type="button" data-track="answer"><span class="rapid-choice-symbol">X</span><span>아닐 것 같아요</span></button>
+                </div>
+                <div class="rapid-word-feedback sr-only" id="rapidWordFeedback" role="status" aria-live="polite">낱말을 살펴보고 주제와 관련 있는지 판단해 보세요.</div>
+              </div>
+              <div class="rapid-word-summary hidden" id="rapidWordSummary">
+                <div>
+                  <span class="summary-check" aria-hidden="true">✓</span>
+                  <h3>주제 낱말 탐색 완료</h3>
+                  <p>10개 중 <strong id="rapidWordScore">0 / 10</strong>개를 주제에 맞게 가려냈어요. 이제 글에서 실제 낱말을 확인해 보세요.</p>
+                  <button class="primary" id="rapidWordRestart" type="button">다시 해보기</button>
+                </div>
+              </div>
+              <div class="inline-feedback sr-only" id="predictionFeedback" role="status">낱말 예측 활동을 시작했어요.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page first-read-page" data-page="1" data-activity-id="first-read-and-answer" data-measure-id="basicComprehension">
+          <div class="page-head">
+            <div><p class="eyebrow">2 · 1차 읽기</p><h1>먼저 자연스럽게 읽고, 기억한 내용으로 풀어요</h1></div>
+            <span class="counter" id="firstReadCounter">읽기</span>
+          </div>
+          <div class="annotation-toolbar" id="annotationToolbar" aria-label="1차 읽기 판서 도구">
+            <div class="annotation-status"><i></i><strong>판서</strong><small id="annotationState">꺼짐</small></div>
+            <button class="annotation-toggle" id="annotationToggle" type="button" aria-pressed="false">판서 켜기</button>
+            <div class="annotation-tools" role="group" aria-label="판서 도구 선택">
+              <button class="annotation-tool" type="button" data-annotation-tool="pen" aria-pressed="true" disabled><span class="annotation-tool-mark pen"></span>펜</button>
+              <button class="annotation-tool" type="button" data-annotation-tool="highlighter" aria-pressed="false" disabled><span class="annotation-tool-mark highlighter"></span>형광펜</button>
+              <button class="annotation-tool" type="button" data-annotation-tool="eraser" aria-pressed="false" disabled><span class="annotation-tool-mark eraser"></span>지우개</button>
+            </div>
+            <button class="annotation-command" id="annotationUndo" type="button" disabled>되돌리기</button>
+            <button class="annotation-command" id="annotationClear" type="button" disabled>전체 지우기</button>
+            <span class="annotation-hint">판서를 끄면 지문과 버튼을 누를 수 있어요.</span>
+          </div>
+          <canvas class="annotation-canvas" id="annotationCanvas" aria-label="1차 읽기 활동영역 전체 판서판"></canvas>
+          <div class="reading-layout">
+            <article class="passage-card" id="firstPassage">
+              <div class="passage-top">
+                <span>교과 연계 지문</span>
+                <strong>일기예보는 어떻게 만들어질까요?</strong>
+                <button class="passage-visibility-toggle hidden" id="toggleFirstPassage" type="button" data-track="hint" aria-controls="firstPassageText" aria-expanded="false">본문 다시 보기</button>
+              </div>
+              <div class="passage-body-shell">
+                <div class="passage-text" id="firstPassageText">
+                  <p>내일 비가 올지, 바람이 얼마나 불지는 어떻게 알 수 있을까요? 일기예보는 여러 곳에서 날씨를 관측하는 일부터 시작합니다.</p>
+                  <p>기상 위성은 우주에서 구름의 위치와 움직임을 살펴봅니다. 지상 관측소는 기온, 습도, 기압과 바람을 측정합니다. 기상 레이더는 비구름이 있는 곳과 비가 내리는 정도를 관측합니다. 바다의 관측 장비와 하늘로 띄운 기상 관측 기구도 필요한 자료를 모읍니다.</p>
+                  <p>이렇게 모은 자료는 대형 컴퓨터로 전달됩니다. 컴퓨터는 지구의 대기를 작은 구역으로 나누고, 각 구역의 공기가 앞으로 어떻게 움직일지 계산합니다. 그 결과를 이용하여 미래의 기온, 바람과 비의 모습을 나타낸 예상 자료를 만듭니다.</p>
+                  <p>그러나 컴퓨터의 계산만으로 예보가 완성되지는 않습니다. 예보관은 관측 자료와 여러 예상 결과를 비교합니다. 산과 바다처럼 지역의 날씨에 영향을 주는 조건도 살펴봅니다. 그런 다음 비가 올 가능성이나 기온의 변화를 판단하여 일기예보를 작성합니다.</p>
+                  <p>완성된 예보는 방송과 인터넷, 휴대 전화 앱을 통해 사람들에게 전달됩니다. 우리는 일기예보를 보고 옷차림을 정하거나 야외 활동을 계획하고, 위험한 날씨에 미리 대비할 수 있습니다.</p>
+                </div>
+                <div class="passage-cover" id="firstPassageCover" aria-live="polite">
+                  <span class="passage-cover-computer" aria-hidden="true">
+                    <img src="assets/weather-observation-network-rough-square-v2.png" alt="">
+                  </span>
+                  <strong>본문을 가렸어요.</strong>
+                  <button class="passage-cover-reveal" id="revealFirstPassage" type="button" data-track="hint">본문 다시 보기</button>
+                </div>
+              </div>
+            </article>
+            <article class="activity-card quiz-card careful-quiz first-read-coach-quiz hidden" id="firstQuiz">
+              <div class="question-meta first-question-progress"><b id="firstQuestionNumber">1 / 3</b></div>
+              <h2 id="firstQuestionText"></h2>
+              <div class="option-list" id="firstAnswerList"></div>
+              <section class="cue-check-panel hidden" id="firstCueCheck">
+                <p><strong>답을 확정하기 전</strong> 질문에서 답의 범위를 결정하는 말을 고르세요.</p>
+                <div class="cue-choice-list" id="firstCueOptions"></div>
+              </section>
+              <div class="confirm-actions">
+                <button class="primary hidden" id="confirmFirstAnswer" type="button" disabled>확인하고 답 확정</button>
+                <button class="secondary-next hidden" id="firstQuestionNext" type="button">다음 문제</button>
+              </div>
+              <div class="inline-feedback" id="firstQuizFeedback" role="status" aria-live="polite"></div>
+            </article>
+            <aside class="reading-reminder first-read-coach" id="firstReadCoach">
+              <header class="coach-chat-head">
+                <img src="assets/jelly-coach-square.png" alt="" aria-hidden="true">
+                <strong>젤리코치</strong>
+              </header>
+              <div class="coach-chat-scroll">
+                <div class="coach-current-message">
+                  <p><b>먼저 본문을 읽어 봐!</b><br>다 읽으면 아래 버튼을 눌러 줘.</p>
+                </div>
+              </div>
+              <button class="primary wide" id="finishFirstRead" type="button" data-track="activity-complete">다 읽었어요</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page information-thief-page" data-page="2" data-activity-id="information-thief" data-measure-id="detailComparison">
+          <div class="page-head">
+            <div><p class="eyebrow">3 · 정보 도둑 잡기</p><h1>정보 도둑을 잡아라! <span>조금 전 읽은 내용과 다른 문장은 어떤 것인가요?</span></h1></div>
+            <span class="counter" id="thiefCounter">사건 1 / 6</span>
+          </div>
+
+          <div class="thief-phase-guide" aria-label="활동 순서">
+            <div class="thief-phase active" id="thiefPhaseOne"><span>1</span><strong>도둑 먼저 잡기</strong><small>틀린 요약문 찾기</small></div>
+            <i aria-hidden="true"></i>
+            <div class="thief-phase" id="thiefPhaseTwo"><span>2</span><strong>훔친 정보 찾기</strong><small>무엇이 틀렸는지 밝히기</small></div>
+          </div>
+
+          <div class="thief-layout" id="thiefActivity">
+            <article class="activity-card thief-case-card">
+              <div class="thief-case-head">
+                <span class="case-file-label" id="thiefCaseLabel">사건 기록 01</span>
+                <span class="case-status" id="thiefCaseStatus">도둑 수색 중</span>
+              </div>
+              <section class="thief-step" id="thiefSummaryStep" aria-labelledby="thiefSummaryQuestion">
+                <h2 id="thiefSummaryQuestion">정보 도둑을 잡아라!<br><span>조금 전 읽은 내용과 다른 문장은 어떤 것인가요?</span></h2>
+                <p class="support-copy">표현이 달라도 뜻이 같을 수 있어요. 달라진 정보가 있는 문장은 하나예요.</p>
+                <div class="thief-summary-options" id="thiefSummaryOptions"></div>
+              </section>
+
+              <section class="thief-step thief-error-step hidden" id="thiefErrorStep" aria-labelledby="thiefErrorQuestion">
+                <div class="caught-banner"><span aria-hidden="true">✓</span><p><strong>도둑을 잡았어요.</strong><small>이제 무엇을 훔치거나 바꿨는지 밝혀요.</small></p></div>
+                <h2 id="thiefErrorQuestion">이 요약문은 무엇이 틀렸을까요?</h2>
+                <div class="thief-error-options" id="thiefErrorOptions"></div>
+              </section>
+
+              <button class="primary thief-next hidden" id="thiefNext" type="button">다음 사건</button>
+            </article>
+
+            <aside class="jelly-coach-card thief-coach-chat" aria-label="젤리코치와의 대화">
+              <header>
+                <img src="assets/jelly-coach-square.png" alt="" aria-hidden="true">
+                <strong>젤리코치</strong>
+              </header>
+              <div class="thief-coach-scroll" tabindex="0">
+                <p class="thief-coach-message" id="thiefCoachMessage" role="status" aria-live="polite">세 문장을 끝까지 읽고, 다른 문장을 골라 봐.</p>
+                <button id="thiefHintButton" type="button" data-track="hint">확인 힌트</button>
+                <span class="visually-hidden" id="thiefPromptLevel">A0 · 스스로 확인</span>
+                <div class="thief-source-reveal" id="thiefSourceReveal" aria-live="polite">
+                  <span>원문 단서</span>
+                  <p class="source-evidence-text" id="thiefSource"></p>
+                </div>
+              </div>
+              <div class="visually-hidden" id="thiefFeedback" hidden aria-hidden="true"></div>
+            </aside>
+          </div>
+
+          <section class="thief-complete hidden" id="thiefComplete" aria-live="polite">
+            <span class="complete-stamp" aria-hidden="true">✓</span>
+            <div><p>사건 해결 완료</p><h2>정보 도둑 6명을 모두 잡았어요</h2><span>요약문에서도 수량·대상·과정·부정 표현을 원문과 끝까지 대조해요.</span></div>
+            <button class="primary" id="thiefRestart" type="button">다시 도전하기</button>
+          </section>
+        </section>
+
+        <section class="page forecast-pipeline-page" data-page="3" data-activity-id="restore-forecast-pipeline" data-measure-id="processClassification">
+          <div class="page-head">
+            <div><p class="eyebrow">4 · 예보 라인 복구</p><h1>고장 난 예보 제작 라인을 다시 연결해요</h1></div>
+            <span class="counter" id="pipelinePageCounter">1 / 8</span>
+          </div>
+          <div class="pipeline-layout" id="forecastPipeline">
+            <article class="activity-card pipeline-board" id="pipelineBoard">
+              <header class="pipeline-board-head">
+                <div><span class="prompt-label">예보 제작 라인</span><h2>카드를 알맞은 칸으로 옮겨요</h2></div>
+                <b id="pipelineCounter">1 / 8</b>
+              </header>
+              <div class="pipeline-track" role="group" aria-label="예보 제작 단계">
+                <button class="pipeline-station" type="button" data-pipeline-stage="observe">
+                  <span class="pipeline-station-no">1</span><span class="pipeline-mini-illustration observe" aria-hidden="true"><img src="assets/forecast-pipeline-icons-rough-v1.png" alt=""></span>
+                  <strong>자료 관측</strong><small>위성·관측소·레이더</small><b data-pipeline-count="observe">0 / 3</b>
+                </button>
+                <i class="pipeline-connector" aria-hidden="true"></i>
+                <button class="pipeline-station" type="button" data-pipeline-stage="calculate">
+                  <span class="pipeline-station-no">2</span><span class="pipeline-mini-illustration calculate" aria-hidden="true"><img src="assets/forecast-pipeline-icons-rough-v1.png" alt=""></span>
+                  <strong>컴퓨터 계산</strong><small>공기 움직임·예상 자료</small><b data-pipeline-count="calculate">0 / 2</b>
+                </button>
+                <i class="pipeline-connector" aria-hidden="true"></i>
+                <button class="pipeline-station" type="button" data-pipeline-stage="judge">
+                  <span class="pipeline-station-no">3</span><span class="pipeline-mini-illustration judge" aria-hidden="true"><img src="assets/forecast-pipeline-icons-rough-v1.png" alt=""></span>
+                  <strong>예보관 판단</strong><small>자료 비교·지역 조건</small><b data-pipeline-count="judge">0 / 2</b>
+                </button>
+                <i class="pipeline-connector" aria-hidden="true"></i>
+                <button class="pipeline-station" type="button" data-pipeline-stage="deliver">
+                  <span class="pipeline-station-no">4</span><span class="pipeline-mini-illustration deliver" aria-hidden="true"><img src="assets/forecast-pipeline-icons-rough-v1.png" alt=""></span>
+                  <strong>예보 전달</strong><small>방송·인터넷·앱</small><b data-pipeline-count="deliver">0 / 1</b>
+                </button>
+              </div>
+              <div class="pipeline-status-line" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            </article>
+            <aside class="pipeline-card-panel" id="pipelineCardPanel">
+              <div class="pipeline-mission" id="pipelineMission">
+                <span>현재 카드</span>
+                <div class="pipeline-card" id="pipelineCard" draggable="true" tabindex="0" aria-describedby="pipelineInstruction">
+                  <i aria-hidden="true"></i>
+                  <p id="pipelineCardText"></p>
+                </div>
+                <p id="pipelineInstruction">카드를 끌거나 알맞은 칸을 눌러요.</p>
+                <div class="pipeline-feedback" id="pipelineFeedback" role="status" aria-live="polite">문장 끝의 행동을 확인해 보세요.</div>
+                <button class="primary hidden" id="pipelineNext" type="button">다음 카드</button>
+              </div>
+              <div class="pipeline-complete hidden" id="pipelineComplete" aria-live="polite">
+                <span aria-hidden="true">✓</span>
+                <h2>예보 제작 라인 복구 완료!</h2>
+                <p id="pipelineResult"></p>
+                <button class="primary" id="pipelineRestart" type="button">다시 복구하기</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" data-page="4" data-activity-id="verify-all-conditions" data-measure-id="conditionVerification" data-condition="T2">
+          <div class="page-head">
+            <div><p class="eyebrow">5 · 검산하기</p><h1>질문의 조건을 내 답과 하나씩 대조해요</h1></div>
+            <span class="step-purpose">선택보다 확인을 강화</span>
+          </div>
+          <div class="verify-layout">
+            <article class="activity-card verify-question-card">
+              <h2><mark data-condition-highlight="subject">예보관이</mark> <mark data-condition-highlight="time">일기예보를 작성하기 전에</mark> <mark data-condition-highlight="evidence">하는 일을</mark> <mark data-condition-highlight="range">모두</mark> 고르세요.</h2>
+              <div class="check-answer-list" id="verifyAnswers">
+                <label><input type="checkbox" value="compare"><span><i></i>관측 자료와 여러 예상 결과를 비교한다.</span></label>
+                <label><input type="checkbox" value="region"><span><i></i>지역의 날씨에 영향을 주는 조건을 살핀다.</span></label>
+                <label><input type="checkbox" value="satellite"><span><i></i>우주에서 구름의 움직임을 관측한다.</span></label>
+                <label><input type="checkbox" value="computer"><span><i></i>지구의 대기를 작은 구역으로 나눈다.</span></label>
+              </div>
+              <button class="primary" id="makeAnswerButton" type="button" data-track="answer">내 답 검산하기</button>
+            </article>
+
+            <article class="verification-board condition-chat is-waiting" id="verificationBoard">
+              <div class="condition-chat-head">
+                <img src="assets/jelly-coach-square.png" alt="" aria-hidden="true">
+                <div><strong>젤리코치</strong></div>
+                <b id="verificationProgress">준비</b>
+              </div>
+              <div class="condition-chat-scroll" id="conditionChatScroll" tabindex="0" aria-label="젤리코치와 조건을 확인한 대화 기록">
+                <div class="condition-chat-message coach" id="conditionChatIntro">
+                  <p>왼쪽에서 답을 모두 고른 뒤<br><b>내 답 검산하기</b>를 눌러 줘.</p>
+                </div>
+                <div class="condition-match-list" id="verificationConditions">
+                <section class="condition-match-row chat-pending" data-condition-row="subject">
+                  <strong><span>대상</span>누가 하는 일인가요?</strong>
+                  <div><button type="button" data-value="forecaster">예보관</button><button type="button" data-value="computer">컴퓨터</button></div>
+                </section>
+                <section class="condition-match-row chat-pending" data-condition-row="time">
+                  <strong><span>시점</span>언제 하는 일인가요?</strong>
+                  <div><button type="button" data-value="before">작성하기 전</button><button type="button" data-value="after">완성한 뒤</button></div>
+                </section>
+                <section class="condition-match-row chat-pending" data-condition-row="range">
+                  <strong><span>범위</span>몇 개를 골라야 하나요?</strong>
+                  <div><button type="button" data-value="all">해당하는 것 모두</button><button type="button" data-value="one">한 가지만</button></div>
+                </section>
+                <section class="condition-match-row chat-pending" data-condition-row="evidence">
+                  <strong><span>근거</span>글에서 확인되는 일은 몇 가지인가요?</strong>
+                  <div><button type="button" data-value="two">두 가지</button><button type="button" data-value="one">한 가지</button></div>
+                </section>
+                </div>
+                <div class="condition-chat-finish hidden" id="conditionChatFinish">
+                  <p>네 가지를 모두 확인했어. 이제 답과 대조해 보자.</p>
+                </div>
+                <div class="inline-feedback hidden" id="verifyFeedback" role="status" aria-live="polite"></div>
+              </div>
+              <button class="primary wide hidden" id="verifyButton" type="button" data-track="activity-complete" disabled>조건과 답 대조하기</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="page transfer-page" data-page="5" data-activity-id="transfer-practice" data-measure-id="strategyGeneralization" data-condition="T3">
+          <div class="page-head">
+            <div><p class="eyebrow">6 · 새 글 전이</p><h1>새 글에서도 답을 바꾸는 조건을 찾아요</h1></div>
+            <span class="step-purpose">부정 · 수량 · 순서</span>
+          </div>
+
+          <article class="activity-card transfer-card" id="transferCard">
+            <div class="transfer-head"><span id="transferLabel">부정 조건</span><b id="transferCounter">1 / 3</b></div>
+            <div class="transfer-grid" id="transferPlay">
+              <div class="transfer-passage">
+                <small>새로운 글</small>
+                <p id="transferPassageText"></p>
+              </div>
+              <div class="transfer-question">
+                <b class="transfer-status" id="transferStatus">답 선택</b>
+                <h2 id="transferQuestionText"></h2>
+                <div class="transfer-answer-options" id="transferAnswerOptions"></div>
+                <section class="transfer-cue-check hidden" id="transferCueCheck">
+                  <p id="transferCuePrompt">왼쪽 본문에서 답을 결정한 표현을 눌러 보세요.</p>
+                  <div id="transferCueOptions" hidden aria-hidden="true"></div>
+                </section>
+                <button class="primary hidden" id="confirmTransfer" type="button" disabled>확인하고 답 확정</button>
+                <div class="inline-feedback" id="transferFeedback" role="status" aria-live="polite">답을 먼저 고른 뒤, 결정적 표현을 확인해요.</div>
+                <button class="primary hidden" id="transferNext" type="button">다음 글</button>
+              </div>
+            </div>
+            <section class="transfer-complete hidden" id="transferComplete" aria-live="polite">
+              <span aria-hidden="true">✓</span>
+              <h2>세 글에서 조건을 모두 확인했어요</h2>
+              <p id="transferResult"></p>
+              <button class="primary" id="goToReflection" type="button">확인 기록 남기기</button>
+            </section>
+          </article>
+        </section>
+
+        <section class="page reflection-page" data-page="6" data-activity-id="reflection-record" data-measure-id="metacognitiveReflection">
+          <div class="page-head">
+            <div><p class="eyebrow">7 · 확인 기록</p><h1>오늘 실제로 사용한 확인 행동을 남겨요</h1></div>
+            <span class="step-purpose">나의 전략 기록</span>
+          </div>
+          <div class="reflection-layout aba-reflection-layout">
+            <article class="activity-card reflection-card">
+              <div class="quote-mark">“</div>
+              <p class="reflection-kicker">나의 확인 기록</p>
+              <h2>오늘 가장 도움이 된 확인은 무엇이었나요?</h2>
+              <p>한 가지를 고르고, 필요하면 한 줄을 덧붙여요.</p>
+              <div class="reflection-choice-grid" id="reflectionCategories">
+                <button type="button" data-category="수량">수량을 다시 봤어요</button>
+                <button type="button" data-category="부정">부정 표현을 확인했어요</button>
+                <button type="button" data-category="순서">일의 순서를 확인했어요</button>
+                <button type="button" data-category="대상">누가 한 일인지 확인했어요</button>
+                <button type="button" data-category="끝부분">문장 끝까지 읽었어요</button>
+                <button type="button" data-category="자기확인">스스로 다시 확인했어요</button>
+              </div>
+              <label class="optional-note-label" for="mistakeInput">한 줄로 덧붙이고 싶다면</label>
+              <textarea id="mistakeInput" maxlength="120" rows="3" placeholder="예: ‘주지 않았습니다’의 끝부분을 다시 확인했다."></textarea>
+              <div class="writing-meta"><span id="charCount">0 / 120</span><span>쓰지 않아도 괜찮아요.</span></div>
+              <button class="primary wide" id="saveMistakeButton" type="button" data-track="activity-complete">오늘 기록 저장하기</button>
+              <div class="inline-feedback" id="mistakeFeedback" role="status" aria-live="polite"></div>
+            </article>
+
+            <aside class="finish-panel">
+              <span class="finish-symbol"><i></i></span>
+              <h2>오늘의 확인 행동</h2>
+              <div class="behavior-summary" id="behaviorSummary">
+                <div><strong id="firstAccuracyMetric">- / 6</strong><span>첫 반응 정확</span></div>
+                <div><strong id="independentCheckMetric">- / 6</strong><span>도움 없이 확인</span></div>
+                <div><strong id="selfCorrectionMetric">0회</strong><span>답을 바꿔 고침</span></div>
+              </div>
+              <ol>
+                <li><span>1</span>답을 먼저 고른다.</li>
+                <li><span>2</span>조건과 근거를 실제로 찾는다.</li>
+                <li><span>3</span>확인한 뒤 답을 확정한다.</li>
+              </ol>
+              <div class="completion-message hidden" id="completionMessage">
+                <strong>오늘의 꼼꼼 읽기 완료!</strong>
+                <p>다음 글에서도 답 → 조건 → 근거 → 확정 순서를 떠올려요.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+
+      <footer class="actionbar">
+        <button class="help-button" id="helpButton" type="button" data-track="hint" data-help-type="child-request"><span>?</span>도와주세요</button>
+        <div class="step-dots" id="stepDots" aria-label="현재 단계"></div>
+        <div class="nav-actions"><button class="back-button" id="backButton" type="button">이전</button><button class="next-button" id="nextButton" type="button" data-track="activity-complete">다음</button></div>
+      </footer>
+    </section>
+  </main>
+
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="watermark" id="watermark" aria-hidden="true"></div>
+  <div class="completion-signal" id="completionSignal" data-track="lesson-complete" hidden></div>
+  <footer class="rights">자체 제작 텍스트 · 꼼꼼 읽기 활동 설계 © Oncuvate. All rights reserved.</footer>
+  <script src="aba-intervention.js?v=1.20.0"></script>
+  <script src="app.js?v=1.20.0"></script>
+  <script src="annotation.js"></script>
+  <script src="prediction-words.js"></script>
+  <script src="information-thief.js?v=1.20.0"></script>
+  <script src="layout-controller.js"></script>
+  <script src="coach-sync.js?v=1.21.0"></script>
+</body>
+</html>

@@ -1,0 +1,29 @@
+{
+  "oncuvate": 2,
+  "id": "l11-seasonal-customs-careful-reading",
+  "version": "1.1.0",
+  "updatedAt": "2026-09-08",
+  "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "1.1.0",
+      "title": "계절마다 이어 온 세시 풍속 — 꼼꼼 읽기",
+      "order": 1,
+      "minDurationMin": 35,
+      "level": "L11",
+      "axes": [
+        "basicComprehension",
+        "conditionVerification",
+        "strategyGeneralization"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse"
+      }
+    }
+  }
+}

@@ -1,0 +1,209 @@
+.transfer-page.active,
+.reflection-page.active {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+@media (min-width: 861px) {
+  .stage:has(.first-read-page.active),
+  .stage:has(.information-thief-page.active),
+  .stage:has([data-page="4"].active),
+  .stage:has(.transfer-page.active),
+  .stage:has(.reflection-page.active) {
+    overflow: hidden;
+  }
+}
+
+.transfer-page .transfer-card {
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  min-height: 0;
+  margin: 0;
+  overflow: hidden;
+}
+
+.transfer-page .transfer-grid {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  overflow: hidden;
+}
+
+.transfer-page .transfer-passage,
+.transfer-page .transfer-question {
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--oc-violet-200) transparent;
+  scrollbar-width: thin;
+}
+
+.transfer-page .transfer-question {
+  height: 100%;
+  padding: 2px 8px 2px 2px;
+}
+
+.transfer-passage-cue {
+  display: inline;
+  margin: 0;
+  padding: 4px 3px;
+  border: 0;
+  border-radius: 7px;
+  color: inherit;
+  background: transparent;
+  font: inherit;
+  line-height: inherit;
+  text-align: left;
+  box-decoration-break: clone;
+  -webkit-box-decoration-break: clone;
+}
+
+.transfer-passage-cue:disabled {
+  cursor: default;
+  opacity: 1 !important;
+}
+
+.transfer-passage p.is-cue-mode .transfer-passage-cue:not(:disabled) {
+  cursor: pointer;
+  background: var(--oc-violet-050);
+  box-shadow: inset 0 -2px 0 var(--oc-violet-200);
+}
+
+.transfer-passage p.is-cue-mode .transfer-passage-cue:not(:disabled):hover,
+.transfer-passage p.is-cue-mode .transfer-passage-cue:not(:disabled):focus-visible {
+  outline: 3px solid rgba(75, 201, 220, .34);
+  outline-offset: 1px;
+  background: #f1fbfc;
+  box-shadow: inset 0 -3px 0 var(--oc-cyan);
+}
+
+.transfer-passage-cue.wrong,
+.transfer-passage p.is-cue-mode .transfer-passage-cue.wrong:disabled {
+  color: #9d4a4d;
+  background: var(--oc-danger-bg);
+  box-shadow: inset 0 -3px 0 #e7aeb1;
+}
+
+.transfer-passage-cue.correct,
+.transfer-passage p.is-cue-mode .transfer-passage-cue.correct:disabled {
+  color: #246b53;
+  background: var(--oc-success-bg);
+  box-shadow: inset 0 -3px 0 var(--oc-success);
+}
+
+.transfer-status {
+  display: inline-block;
+  margin-bottom: 9px;
+  padding: 5px 8px;
+  border-radius: 8px;
+  color: var(--oc-violet-800);
+  background: var(--oc-violet-050);
+  font-size: 10px;
+}
+
+.transfer-page .transfer-answer-options button,
+.transfer-page .cue-choice-list button {
+  background: #fff;
+}
+
+.transfer-page #transferCueOptions {
+  display: none !important;
+}
+
+.transfer-page #transferNext {
+  width: 100%;
+  margin-top: 10px;
+}
+
+.transfer-complete {
+  display: grid;
+  place-items: center;
+  flex: 1 1 auto;
+  align-content: center;
+  min-height: 320px;
+  padding: 28px;
+  text-align: center;
+}
+
+.transfer-complete > span {
+  display: grid;
+  place-items: center;
+  width: 58px;
+  height: 58px;
+  border-radius: 18px;
+  color: #fff;
+  background: var(--oc-success);
+  font-size: 30px;
+  font-weight: 900;
+}
+
+.transfer-complete h2 {
+  margin: 18px 0 7px;
+  color: var(--oc-ink);
+  font-size: 25px;
+}
+
+.transfer-complete p {
+  margin: 0 0 18px;
+  color: var(--oc-muted);
+  font-size: 13px;
+  font-weight: 750;
+}
+
+.reflection-page .aba-reflection-layout {
+  flex: 1 1 auto;
+  height: 100%;
+  min-height: 0;
+  align-items: stretch;
+  overflow: hidden;
+}
+
+.reflection-page .reflection-card,
+.reflection-page .finish-panel {
+  height: 100%;
+  min-height: 0;
+  overflow-x: hidden;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-color: var(--oc-violet-200) transparent;
+  scrollbar-width: thin;
+}
+
+.transfer-page .transfer-passage::-webkit-scrollbar,
+.transfer-page .transfer-question::-webkit-scrollbar,
+.reflection-page .reflection-card::-webkit-scrollbar,
+.reflection-page .finish-panel::-webkit-scrollbar {
+  width: 7px;
+}
+
+.transfer-page .transfer-passage::-webkit-scrollbar-thumb,
+.transfer-page .transfer-question::-webkit-scrollbar-thumb,
+.reflection-page .reflection-card::-webkit-scrollbar-thumb,
+.reflection-page .finish-panel::-webkit-scrollbar-thumb {
+  border: 2px solid transparent;
+  border-radius: 999px;
+  background: var(--oc-violet-200);
+  background-clip: padding-box;
+}
+
+@media (max-width: 860px) {
+  .transfer-page.active,
+  .reflection-page.active { height: auto; overflow: visible; }
+  .transfer-page .transfer-card,
+  .reflection-page .aba-reflection-layout { overflow: visible; }
+  .transfer-page .transfer-passage,
+  .transfer-page .transfer-question,
+  .reflection-page .reflection-card,
+  .reflection-page .finish-panel { height: auto; overflow: visible; }
+}
+
+@media print {
+  .transfer-page.active,
+  .reflection-page.active,
+  .reflection-page .aba-reflection-layout { height: auto; overflow: visible; }
+}
