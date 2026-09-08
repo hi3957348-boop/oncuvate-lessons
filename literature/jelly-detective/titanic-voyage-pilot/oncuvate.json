@@ -8,7 +8,7 @@
     "pilot-entry.html": { "use": "부속" },
     "session01.html": {
       "use": "콘텐츠",
-      "version": "0.1.0",
+      "version": "0.1.1",
       "title": "Jelly Sea Detectives 1 · The Mystery of the Unsinkable Claim",
       "order": 1,
       "minDurationMin": 40,

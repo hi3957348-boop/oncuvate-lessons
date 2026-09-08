@@ -661,7 +661,7 @@
     if (fixing) {
       byId('wordhuntLead').textContent = '이 자리에 맞는 낱말을 골라요.';
       rereadButton.hidden = false;
-      if (wh.meaningShown[item.id]) { meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`; }
+      meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
       choices.hidden = false;
       const label = document.createElement('p');
       label.className = 'wordhunt-fix-label';
@@ -679,7 +679,8 @@
       if (!byId('wordhuntFeedback').textContent) wordHuntFeedback('세 낱말은 소리가 비슷해요. 문장의 뜻에 맞는 것을 골라요.');
       return;
     }
-    byId('wordhuntLead').textContent = '문장에서 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.';
+    byId('wordhuntLead').textContent = '문장의 뜻을 보고, 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.';
+    meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
     hintButton.hidden = false;
     rereadButton.hidden = false;
     hintButton.disabled = hinted;
@@ -802,9 +803,8 @@
       wordHuntFeedback('소리는 닮았지만 뜻이 달라요. 문장 전체의 뜻을 떠올리며 다시 골라요.', 'attention');
       signals.decorateLater(byId('wordhuntChoices').querySelectorAll('[data-word]'), wordHuntActivity, item.id + '-fix', b => b.dataset.word === item.answer);
     } else if (attempt === 2) {
-      wh.meaningShown[item.id] = true;
-      signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A2', helpType: 'meaning-ko', cueStage: 4, trigger: 'second-miss' });
-      wordHuntFeedback('문장의 뜻을 한국어로 보여 줄게요. 그 뜻에 맞는 낱말을 골라요.', 'attention');
+      signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A1', helpType: 'reread-meaning', cueStage: 1, trigger: 'second-miss' });
+      wordHuntFeedback('위의 뜻을 한 번 더 읽고, 그 뜻에 맞는 낱말을 골라요.', 'attention');
       setTimeout(renderWordHunt, 0);
     } else {
       signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A4', helpType: 'reveal-answer', cueStage: 5, trigger: 'third-miss' });

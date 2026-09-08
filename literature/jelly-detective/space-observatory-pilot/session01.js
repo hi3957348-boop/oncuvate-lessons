@@ -39,7 +39,7 @@
     },
     {
       label: "UNRESOLVED QUESTION",
-      text: "An old archive card makes this claim: Every object in space travels around Earth. Is the archive correct, or did the model restore a mistaken idea?",
+      text: "An old archive card makes this claim: Every object in space travels around Earth. Is the archive correct, or does it contain a mistaken idea?",
       next: "해결 목표 정하기"
     }
   ];
@@ -54,13 +54,13 @@
     {
       id: 'venus', title: 'Venus Record', symbol: 'venus',
       sentence: 'Venus appears as a crescent, then half lit, and later nearly full.',
-      correct: 'Venus changes its lit shape.',
-      options: ['Venus never changes.', 'Venus changes its lit shape.', 'Venus is one of Earth’s moons.'],
-      reviewPrompt: 'How did the lit part of Venus change?', wordUnlock: 3
+      correct: 'Venus changes its visible shape.',
+      options: ['Venus never changes.', 'Venus changes its visible shape.', 'Venus is one of Earth’s moons.'],
+      reviewPrompt: 'How did the visible shape of Venus change?', wordUnlock: 3
     },
     {
       id: 'orbit', title: 'Orbit Model', symbol: 'orbit',
-      sentence: 'The model shows Earth moving around the Sun while the Moon moves around Earth.',
+      sentence: 'The model shows the Earth moving around the Sun while the Moon moves around the Earth.',
       correct: 'Earth circles the Sun.',
       options: ['The Sun circles Earth.', 'Earth circles the Sun.', 'The Moon circles the Sun alone.'],
       reviewPrompt: 'What does Earth move around?', wordUnlock: 4
@@ -78,7 +78,7 @@
     challenge: [
       'Long ago, many people believed Earth stood at the center of everything in the sky.',
       'Later, astronomers used telescopes and careful observations to test that model.',
-      'They saw moons orbiting Jupiter and watched the lit shape of Venus change over time.',
+      'They saw moons orbiting Jupiter and watched the visible shape of Venus change over time.',
       'Those observations showed that not every object in space travels around Earth.',
       'Today we know that Earth and the other planets orbit the Sun, while the Moon orbits Earth.'
     ]
@@ -91,7 +91,6 @@
     { word: "evidence", meaning: "a fact that helps us decide · 근거 : 어떤 판단이 맞는지 확인하는 데 도움이 되는 사실", example: "The changing shape of Venus was important evidence.", forms: ["evidence"], read: "ev·i·dence" },
     { word: "archive", meaning: "a place or collection that keeps old records · 기록 보관소 : 오래된 기록을 모아 보관하는 곳", example: "The team found an old sky record in the archive.", forms: ["archive", "archives"], read: "ar·chive" },
     { word: "claim", meaning: "a statement said to be true · 주장 : 사실이라고 내세우는 말", example: "The archive card makes a claim about how objects move.", forms: ["claim", "claims", "claimed"], read: "claim" },
-    { word: "restore", meaning: "to return something to an earlier state · 복원하다 : 이전의 상태로 되돌리다", example: "The program restored the old sky model.", forms: ["restore", "restores", "restored", "restoring"], read: "re·store" },
     { word: "mistaken", meaning: "based on a wrong idea · 잘못된 : 사실과 다르게 알고 있거나 판단한", example: "The old card contained a mistaken idea.", forms: ["mistaken"], read: "mis·tak·en" },
     { word: "astronomer", meaning: "a person who studies stars and planets · 천문학자 : 별과 행성을 연구하는 사람", example: "The astronomer looked at Jupiter every night.", forms: ["astronomer", "astronomers"], read: "as·tron·o·mer" },
     { word: "telescope", meaning: "a tool that makes far things look close · 망원경 : 멀리 있는 것을 가깝게 보이게 하는 도구", example: "They looked at the Moon through a telescope.", forms: ["telescope", "telescopes"], read: "tel·e·scope" },
@@ -101,11 +100,11 @@
     { word: "position", meaning: "the place where something is · 위치 : 어떤 것이 있는 자리", example: "The moons change their positions every night.", forms: ["position", "positions"], read: "po·si·tion" },
     { word: "appear", meaning: "to be seen · 보이다 : 눈에 보이게 되다", example: "Venus appears as a crescent.", forms: ["appear", "appears", "appeared"], read: "ap·pear" },
     { word: "believe", meaning: "to think something is true · 믿다", example: "People believed Earth stood at the center.", forms: ["believe", "believed"], read: "be·lieve" },
-    { word: "lit", meaning: "with light on it · 빛을 받은 : light(빛을 비추다)의 과거형", example: "Only the lit side of Venus can be seen.", forms: ["lit"], read: "lit" }
+    { word: "visible", meaning: "able to be seen · 보이는 : 눈에 보이는", example: "Venus changes its visible shape.", forms: ["visible"], read: "vis·i·ble" }
   ];
   const wordHuntItems = [
     { id: 'wh1', words: ['Four', 'of', 'Jupiter’s', 'moons', 'travel', 'around', 'the', 'plant.'], wrong: 7, decoy: 3, answer: 'planet', choices: ['planet', 'plant', 'plane'], ko: '목성의 위성 네 개는 그 행성 주위를 돌아요.' },
-    { id: 'wh2', words: ['Venus', 'changes', 'its', 'lid', 'shape.'], wrong: 3, decoy: 1, answer: 'lit', choices: ['lit', 'lid', 'lip'], ko: '금성은 빛을 받는 모양이 달라져요.' },
+    { id: 'wh2', words: ['Venus', 'changes', 'its', 'visible', 'shake.'], wrong: 4, decoy: 1, answer: 'shape', choices: ['shape', 'shake', 'shade'], ko: '금성은 보이는 모양이 달라져요.' },
     { id: 'wh3', words: ['Earth', 'and', 'the', 'other', 'planets', 'move', 'around', 'the', 'Sum.'], wrong: 8, decoy: 4, answer: 'Sun', choices: ['Sun', 'Sum', 'Son'], ko: '지구와 다른 행성들은 태양 주위를 돌아요.' },
     { id: 'wh4', words: ['Astronomers', 'absorb', 'the', 'sky', 'through', 'a', 'telescope.'], wrong: 1, decoy: 6, answer: 'observe', choices: ['observe', 'absorb', 'reserve'], ko: '천문학자들은 망원경으로 하늘을 관찰해요.' },
     { id: 'wh5', words: ['New', 'evidence', 'changed', 'the', 'old', 'sky', 'medal.'], wrong: 6, decoy: 1, answer: 'model', choices: ['model', 'medal', 'metal'], ko: '새 증거가 옛 하늘 모형을 바꾸었어요.' },
@@ -115,7 +114,7 @@
   const wordHuntActivity = 'sound-alike-words';
   const wordHuntMeasure = 'case.sound-alike-word';
   const mindMapCards = [
-    { id: 'venus', target: 'venus', before: 'Venus ', answer: 'changes', after: ' its lit shape.' },
+    { id: 'venus', target: 'venus', before: 'Venus ', answer: 'changes', after: ' its visible shape.' },
     { id: 'new', target: 'new', before: 'Earth and the other planets move around the ', answer: 'Sun', after: '.' },
     { id: 'old', target: 'old', before: 'People once thought everything moved around ', answer: 'Earth', after: '.' },
     { id: 'jupiter', target: 'jupiter', before: 'Jupiter’s moons move ', answer: 'around', after: ' Jupiter.' }
@@ -659,7 +658,7 @@
     if (fixing) {
       byId('wordhuntLead').textContent = '이 자리에 맞는 낱말을 골라요.';
       rereadButton.hidden = false;
-      if (wh.meaningShown[item.id]) { meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`; }
+      meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
       choices.hidden = false;
       const label = document.createElement('p');
       label.className = 'wordhunt-fix-label';
@@ -677,7 +676,8 @@
       if (!byId('wordhuntFeedback').textContent) wordHuntFeedback('세 낱말은 소리가 비슷해요. 문장의 뜻에 맞는 것을 골라요.');
       return;
     }
-    byId('wordhuntLead').textContent = '문장에서 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.';
+    byId('wordhuntLead').textContent = '문장의 뜻을 보고, 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.';
+    meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
     hintButton.hidden = false;
     rereadButton.hidden = false;
     hintButton.disabled = hinted;
@@ -800,9 +800,8 @@
       wordHuntFeedback('소리는 닮았지만 뜻이 달라요. 문장 전체의 뜻을 떠올리며 다시 골라요.', 'attention');
       signals.decorateLater(byId('wordhuntChoices').querySelectorAll('[data-word]'), wordHuntActivity, item.id + '-fix', b => b.dataset.word === item.answer);
     } else if (attempt === 2) {
-      wh.meaningShown[item.id] = true;
-      signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A2', helpType: 'meaning-ko', cueStage: 4, trigger: 'second-miss' });
-      wordHuntFeedback('문장의 뜻을 한국어로 보여 줄게요. 그 뜻에 맞는 낱말을 골라요.', 'attention');
+      signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A1', helpType: 'reread-meaning', cueStage: 1, trigger: 'second-miss' });
+      wordHuntFeedback('위의 뜻을 한 번 더 읽고, 그 뜻에 맞는 낱말을 골라요.', 'attention');
       setTimeout(renderWordHunt, 0);
     } else {
       signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A4', helpType: 'reveal-answer', cueStage: 5, trigger: 'third-miss' });

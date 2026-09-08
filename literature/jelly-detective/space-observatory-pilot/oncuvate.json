@@ -8,7 +8,7 @@
     "pilot-entry.html": { "use": "부속" },
     "session01.html": {
       "use": "콘텐츠",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "title": "Jelly Space Detectives 1 · The Mystery of the Mixed-Up Sky",
       "order": 1,
       "minDurationMin": 40,
