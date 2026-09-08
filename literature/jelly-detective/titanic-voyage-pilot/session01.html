@@ -2,7 +2,7 @@
 <html lang="ko"
       data-lesson-id="titanic-voyage"
       data-lesson-title="Jelly Sea Detectives 1 · The Mystery of the Unsinkable Claim"
-      data-lesson-version="0.1.1">
+      data-lesson-version="0.1.2">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -45,8 +45,9 @@
         <button type="button" data-menu-screen="deduction"><i>4</i><span>기록 판별</span></button>
         <button type="button" data-menu-screen="reading"><i>5</i><span>정보글</span></button>
         <button type="button" data-menu-screen="wordhunt"><i>6</i><span>소리 닮은 말</span></button>
-        <button type="button" data-menu-screen="mindmap"><i>7</i><span>마인드맵</span></button>
-        <button type="button" data-menu-screen="retell"><i>8</i><span>다시 말하기</span></button>
+        <button type="button" data-menu-screen="spelling"><i>7</i><span>진짜 낱말 찾기</span></button>
+        <button type="button" data-menu-screen="mindmap"><i>8</i><span>마인드맵</span></button>
+        <button type="button" data-menu-screen="retell"><i>9</i><span>다시 말하기</span></button>
       </div>
       <button class="focus-guide-replay" id="focusGuideReplay" type="button" hidden data-track="hint" data-help-level="A1" data-help-type="guide-replay">? GUIDE</button>
       <button class="lesson-menu-toggle" id="menuToggle" type="button" aria-expanded="true" aria-label="메뉴 접기"><i aria-hidden="true">‹</i><span>메뉴 접기</span></button>
@@ -189,7 +190,25 @@
           <div class="wordhunt-actions">
             <div class="wordhunt-tools"><button class="quiet-button" id="wordhuntRereadButton" type="button" data-track="hint" data-help-level="A1" data-help-type="reread-pace">문장 다시 읽기</button><button class="quiet-button" id="wordhuntHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices">두 낱말로 좁히기</button></div>
             <button class="primary-action" id="wordhuntNextButton" type="button" hidden>다음 문장</button>
-            <button class="primary-action" id="wordhuntContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="sound-alike-words">Build the mind map</button>
+            <button class="primary-action" id="wordhuntContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="sound-alike-words">Spot the real word</button>
+          </div>
+        </div>
+      </section>
+
+      <section class="screen spelling-screen" id="spellingScreen" data-screen="spelling" hidden>
+        <div class="focus-card wordhunt-card" data-activity-id="spot-the-word" data-measure-id="case.spelling" data-trend-group-id="trend.vocabulary">
+          <div class="wordhunt-head">
+            <div><div class="section-marker"><span>7</span> SPOT THE REAL WORD</div><h2 id="spellingTitle">Which one is the real word?</h2></div>
+            <strong id="spellingCounter">1 / 6</strong>
+          </div>
+          <p class="support-copy" id="spellingLead">뜻을 읽고, 바르게 쓴 낱말 하나를 골라요. 글자를 하나씩 꼼꼼히 봐요.</p>
+          <div class="wordhunt-sentence is-note" id="spellingMeaning" aria-live="polite"></div>
+          <div class="goal-choices wordhunt-fix" id="spellingChoices"></div>
+          <p class="feedback-line" id="spellingFeedback" role="status">소리는 비슷해도 글자가 다른 장난꾸러기 낱말이 섞여 있어요.</p>
+          <div class="wordhunt-actions">
+            <div class="wordhunt-tools"><button class="quiet-button" id="spellingHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices">두 개로 좁히기</button></div>
+            <button class="primary-action" id="spellingNextButton" type="button" hidden>다음 낱말</button>
+            <button class="primary-action" id="spellingContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="spot-the-word">Build the mind map</button>
           </div>
         </div>
       </section>
@@ -197,7 +216,7 @@
       <section class="screen mindmap-screen" id="mindmapScreen" data-screen="mindmap" hidden>
         <div class="mindmap-shell" data-activity-id="information-mindmap" data-measure-id="case.organize">
           <header class="mindmap-head">
-            <div><div class="section-marker"><span>7</span> ORGANIZE THE INFORMATION</div><h2>Complete and connect the cards.</h2><p>Type one missing word. Then choose the card and place it on the matching branch.</p></div>
+            <div><div class="section-marker"><span>8</span> ORGANIZE THE INFORMATION</div><h2>Complete and connect the cards.</h2><p>Type one missing word. Then choose the card and place it on the matching branch.</p></div>
             <strong id="mindmapCounter">0 / 4 words · 0 / 4 placed</strong>
           </header>
           <div class="mindmap-workspace">
@@ -226,7 +245,7 @@
       <section class="screen retell-screen" id="retellScreen" data-screen="retell" hidden>
         <div class="retell-layout">
           <section class="focus-card retell-card" data-activity-id="retell" data-measure-id="case.retell" data-trend-group-id="trend.writing">
-            <div class="section-marker"><span>8</span> 내 말로 다시 설명해요</div>
+            <div class="section-marker"><span>9</span> 내 말로 다시 설명해요</div>
             <h2>What did the evidence show about the unsinkable claim?</h2>
             <p class="support-copy">세 증거 메모를 보면서 영어로 1~3문장을 써 보세요.</p>
             <textarea id="retellInput" maxlength="360" placeholder="People once believed..." aria-describedby="retellSupport"></textarea>
@@ -320,7 +339,7 @@
   <script src="case-vocab.js?v=7"></script>
   <script src="case-signals.js?v=1"></script>
   <script src="live-mirror.js?v=2"></script>
-  <script src="session01.js?v=26"></script>
+  <script src="session01.js?v=27"></script>
   <script src="pilot-config.js"></script>
   <script src="pilot-log-relay.js"></script>
 </body>

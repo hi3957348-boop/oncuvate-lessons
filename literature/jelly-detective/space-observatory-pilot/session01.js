@@ -8,11 +8,11 @@
   const signals = window.OncuvateCaseSignals?.create({ sessionNo: 1, lessonId: 'space-observatory' })
     || { log() {}, enterScreen() {}, startLesson() {}, ready() { return {}; }, respond() { return { attemptNo: 1 }; }, hint() {}, close() {}, activityComplete() {}, lessonComplete() {}, decorate() {}, decorateLater() {}, fire(el) { el?.click(); }, textLength() { return 0; }, item() { return { attempts: 0 }; }, sinceReadyMs() { return undefined; } };
   const storageKey = 'space-observatory:s01:state:v3';
-  const screenOrder = ['start', 'case', 'goal', 'search', 'deduction', 'reading', 'wordhunt', 'mindmap', 'retell', 'solved'];
-  const screenActivity = { goal: 'goal', search: 'clue-notes', deduction: 'deduction', reading: 'information-reading', wordhunt: 'sound-alike-words', mindmap: 'information-mindmap', retell: 'retell' };
+  const screenOrder = ['start', 'case', 'goal', 'search', 'deduction', 'reading', 'wordhunt', 'spelling', 'mindmap', 'retell', 'solved'];
+  const screenActivity = { goal: 'goal', search: 'clue-notes', deduction: 'deduction', reading: 'information-reading', wordhunt: 'sound-alike-words', spelling: 'spot-the-word', mindmap: 'information-mindmap', retell: 'retell' };
   const screenLabels = {
     start: '준비', case: '사건파일', goal: '목표 찾기', search: '단서 수색',
-    deduction: '기록 판별', reading: '정보글 읽기', wordhunt: '소리 닮은 말', mindmap: '마인드맵', retell: '다시 설명하기', solved: '사건 해결'
+    deduction: '기록 판별', reading: '정보글 읽기', wordhunt: '소리 닮은 말', spelling: '진짜 낱말 찾기', mindmap: '마인드맵', retell: '다시 설명하기', solved: '사건 해결'
   };
   const screenGoals = {
     start: '사건 파일을 열어요',
@@ -22,6 +22,7 @@
     deduction: '세 정보와 기록을 다시 맞춰 봐요',
     reading: '증거가 생각을 바꾼 과정을 읽어요',
     wordhunt: '소리가 비슷한 틀린 낱말을 찾아 고쳐요',
+    spelling: '뜻을 보고 바르게 쓴 낱말을 골라요',
     mindmap: '정보의 관계를 마인드맵으로 연결해요',
     retell: '증거를 사용해 내 말로 설명해요',
     solved: '오늘 사용한 방법을 기억해요'
@@ -110,6 +111,7 @@
     { id: 'wh5', words: ['New', 'evidence', 'changed', 'the', 'old', 'sky', 'medal.'], wrong: 6, decoy: 1, answer: 'model', choices: ['model', 'medal', 'metal'], ko: '새 증거가 옛 하늘 모형을 바꾸었어요.' },
     { id: 'wh6', words: ['The', 'astronomer', 'wrote', 'each', 'observation', 'in', 'the', 'rocket.'], wrong: 7, decoy: 4, answer: 'record', choices: ['record', 'rocket', 'racket'], ko: '천문학자는 관찰한 것을 기록에 적었어요.' }
   ];
+  const spellingItems = [{"id": "sp1", "word": "observatory", "choices": [{"w": "observatory", "ok": true}, {"w": "observatoad", "joke": "두꺼비(toad)가 하늘을 본다고요? 🐸 끝을 다시 봐요."}, {"w": "obsevatory", "joke": "글자 하나가 사라졌어요. r을 찾아 봐요."}]}, {"id": "sp2", "word": "telescope", "choices": [{"w": "telescope", "ok": true}, {"w": "telescoop", "joke": "scoop은 아이스크림 뜰 때 쓰는 말이에요 🍨"}, {"w": "telescape", "joke": "escape(탈출)가 숨었어요. 망원경은 도망가지 않아요."}]}, {"id": "sp3", "word": "astronomer", "choices": [{"w": "astronomer", "ok": true}, {"w": "astronomom", "joke": "엄마(mom)가 별을 보나요? 👩 끝을 다시 봐요."}, {"w": "astronomeer", "joke": "e가 하나 더 붙었어요."}]}, {"id": "sp4", "word": "crescent", "choices": [{"w": "crescent", "ok": true}, {"w": "croissant", "joke": "croissant은 빵이에요 🥐 모양은 초승달이지만요."}, {"w": "cresent", "joke": "c가 하나 빠졌어요. cres·cent"}]}, {"id": "sp5", "word": "evidence", "choices": [{"w": "evidence", "ok": true}, {"w": "evidance", "joke": "dance(춤)가 들어갔어요 💃"}, {"w": "evidense", "joke": "끝은 -ence예요. s가 아니라 c."}]}, {"id": "sp6", "word": "orbit", "choices": [{"w": "orbit", "ok": true}, {"w": "orbite", "joke": "끝에 e가 붙어 소리가 달라졌어요."}, {"w": "orbeat", "joke": "beat(박자)가 들어갔어요 🥁"}]}];
   const WORD_HUNT_BLOCK = 3;
   const wordHuntActivity = 'sound-alike-words';
   const wordHuntMeasure = 'case.sound-alike-word';
@@ -126,8 +128,9 @@
     selectedRecord: '', deductionAttempts: 0, readingLevel: 'easy', sentenceIndex: 0,
     mindMapPlacements: {}, mindMapAnswers: {}, selectedMindMapCard: '', mindMapSolved: false, mindMapAttempts: 0,
     retell: '', retellHint: false, unlockedWords: 1, openedWords: [], startedAt: 0,
-    goalAttempts: 0, wordHunt: null, readingRereads: 0, readingSupport: false, readingSelfCheck: '', helpRequestedAt: 0, helpRequests: 0
+    goalAttempts: 0, wordHunt: null, readingRereads: 0, readingSupport: false, readingSelfCheck: '', helpRequestedAt: 0, helpRequests: 0, spelling: null
   };
+  const spellingDefault = () => ({ index: 0, attempts: {}, hinted: {}, narrowed: {}, revealed: {}, done: {}, order: {}, complete: false });
   const wordHuntDefault = () => ({ index: 0, phase: 'find', attempts: {}, fixAttempts: {}, hinted: {}, meaningShown: {}, revealed: {}, done: {}, rereads: {}, detectMs: {}, findAccuracy: {}, fixAccuracy: {}, complete: false, breakSeen: false });
 
   const byId = id => document.getElementById(id);
@@ -142,6 +145,8 @@
   state.openedWords = Array.isArray(saved?.openedWords) ? saved.openedWords : [];
   state.wordHunt = Object.assign(wordHuntDefault(), saved?.wordHunt && typeof saved.wordHunt === 'object' ? saved.wordHunt : {});
   ['attempts', 'fixAttempts', 'hinted', 'meaningShown', 'revealed', 'done', 'rereads', 'detectMs', 'findAccuracy', 'fixAccuracy'].forEach(key => { if (!state.wordHunt[key] || typeof state.wordHunt[key] !== 'object') state.wordHunt[key] = {}; });
+  state.spelling = Object.assign(spellingDefault(), saved?.spelling && typeof saved.spelling === 'object' ? saved.spelling : {});
+  ['attempts', 'hinted', 'narrowed', 'revealed', 'done', 'order'].forEach(key => { if (!state.spelling[key] || typeof state.spelling[key] !== 'object') state.spelling[key] = {}; });
   if (!saved?.mindMapAnswers) {
     state.mindMapPlacements = {};
     state.selectedMindMapCard = '';
@@ -176,6 +181,10 @@
         { en: 'Read the whole sentence first.', ko: '문장을 끝까지 먼저 읽어요.' },
         { en: 'Tap the one word that sounds right but is wrong.', ko: '소리는 맞는 것 같지만 뜻이 틀린 낱말 하나를 눌러요.' }
       ],
+      spelling: [
+        { en: 'Read the meaning, then look at every letter.', ko: '뜻을 읽고, 글자를 하나씩 봐요.' },
+        { en: 'Only one word is spelled correctly.', ko: '바르게 쓴 낱말은 하나뿐이에요.' }
+      ],
       mindmap: [
         { en: 'Complete one card, then place it on the matching branch.', ko: '카드 하나의 빈칸을 채운 뒤 알맞은 가지에 놓아요.' },
         { en: 'Work with one card at a time.', ko: '한 번에는 카드 하나만 다뤄요.' }
@@ -206,6 +215,8 @@
     if (state.selectedRecord === 'old') parts.push('판별 ✓'); else if (state.deductionAttempts) parts.push(`판별 시도 ${state.deductionAttempts}`);
     if (state.sentenceIndex) parts.push(`정보글 ${Math.min(state.sentenceIndex, sentences.length)}/${sentences.length}${state.readingRereads ? ` · 다시 읽기 ${state.readingRereads}` : ''}${state.readingSelfCheck ? ` · ${({ understood: '이해했어요', reread: '다시 볼래요', unsure: '잘 모르겠어요' })[state.readingSelfCheck] || ''}` : ''}`);
     const whDone = wordHuntDoneCount();
+    const spDone = state.spelling ? Object.keys(state.spelling.done).length : 0;
+    if (spDone) parts.push(`진짜 낱말 ${spDone}/${spellingItems.length}`);
     if (whDone || Object.keys(wh.attempts).length) parts.push(`소리 닮은 말 ${whDone}/6 · 단서 없이 ${counts.spontaneousDetections} · 답 제시 ${Object.keys(wh.revealed).length}`);
     if (state.mindMapSolved) parts.push('마인드맵 ✓'); else if (state.mindMapAttempts) parts.push(`마인드맵 시도 ${state.mindMapAttempts}`);
     return { screen: state.screen, screenLabel: screenLabels[state.screen] || state.screen, summary: parts.join(' · '), notes: orderedNotes().join(' | '), retell: state.retell.slice(0, 240), done: state.screen === 'solved', sessionNo: 1, helpRequestedAt: state.helpRequestedAt || 0, helpRequests: state.helpRequests || 0 };
@@ -238,6 +249,7 @@
     if (name === 'deduction') renderDeduction();
     if (name === 'reading') renderReading();
     if (name === 'wordhunt') renderWordHunt();
+    if (name === 'spelling') renderSpelling();
     if (name === 'mindmap') renderMindMap();
     if (name === 'retell') renderRetell();
     updateCoachPanel();
@@ -277,11 +289,11 @@
     byId('currentGoal').textContent = screenGoals[state.screen];
     let active = '';
     if (state.screen === 'search') active = state.searchPhase === 'sheet' ? 'note' : 'find';
-    if (state.screen === 'deduction' || ['reading', 'wordhunt', 'mindmap', 'retell', 'solved'].includes(state.screen)) active = 'match';
+    if (state.screen === 'deduction' || ['reading', 'wordhunt', 'spelling', 'mindmap', 'retell', 'solved'].includes(state.screen)) active = 'match';
     document.querySelectorAll('[data-strategy-step]').forEach(item => {
       const key = item.dataset.strategyStep;
       item.classList.toggle('active', key === active);
-      item.classList.toggle('done', (key === 'find' && state.found.length === 3) || (key === 'note' && Object.keys(state.notes).length === 3) || (key === 'match' && ['reading', 'wordhunt', 'mindmap', 'retell', 'solved'].includes(state.screen)));
+      item.classList.toggle('done', (key === 'find' && state.found.length === 3) || (key === 'note' && Object.keys(state.notes).length === 3) || (key === 'match' && ['reading', 'wordhunt', 'spelling', 'mindmap', 'retell', 'solved'].includes(state.screen)));
     });
   }
 
@@ -846,6 +858,141 @@
     byId('wordhuntFeedback').textContent = '';
     saveState(); renderWordHunt();
   }
+
+  const spellingActivity = 'spot-the-word';
+  const spellingMeasure = 'case.spelling';
+  function spellingItem() { return spellingItems[Math.min(state.spelling.index, spellingItems.length - 1)]; }
+  function spellingDoneCount() { return spellingItems.filter(item => state.spelling.done[item.id]).length; }
+  function spellingOrder(item) {
+    const sp = state.spelling;
+    if (!Array.isArray(sp.order[item.id]) || sp.order[item.id].length !== item.choices.length) {
+      const idx = item.choices.map((_, i) => i);
+      for (let i = idx.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [idx[i], idx[j]] = [idx[j], idx[i]]; }
+      sp.order[item.id] = idx;
+    }
+    return sp.order[item.id].map(i => item.choices[i]);
+  }
+  function spellingFeedback(text, tone) {
+    byId('spellingFeedback').textContent = text;
+    byId('spellingFeedback').className = `feedback-line${tone ? ' ' + tone : ''}`;
+  }
+  function renderSpelling() {
+    const sp = state.spelling;
+    const meaning = byId('spellingMeaning');
+    const choices = byId('spellingChoices');
+    const hintButton = byId('spellingHintButton');
+    const nextButton = byId('spellingNextButton');
+    const continueButton = byId('spellingContinueButton');
+    choices.replaceChildren();
+    hintButton.hidden = true; nextButton.hidden = true; continueButton.hidden = true;
+    byId('spellingCounter').textContent = `${Math.min(sp.index + 1, spellingItems.length)} / ${spellingItems.length}`;
+    if (sp.complete) {
+      meaning.innerHTML = '<span>여섯 낱말을 모두 찾았어요!</span><small>장난꾸러기 낱말은 글자 하나로 뜻이 달라져요.</small>';
+      byId('spellingLead').textContent = '이제 정리한 정보로 마인드맵을 만들어요.';
+      spellingFeedback('글자를 하나씩 보는 눈이 진짜 낱말을 찾아요.', 'success');
+      continueButton.hidden = false;
+      return;
+    }
+    const item = spellingItem();
+    const entry = words.find(w => w.word === item.word) || { meaning: item.word, read: '' };
+    const parts = String(entry.meaning || '').split('·');
+    const en = parts.length > 1 ? parts.slice(0, -1).join('·').trim() : '';
+    const ko = (parts[parts.length - 1] || '').trim();
+    meaning.innerHTML = `<span>${escapeHtml(ko)}</span>${en ? `<small>${escapeHtml(en)}</small>` : ''}`;
+    const done = Boolean(sp.done[item.id]);
+    const hidden = sp.narrowed[item.id];
+    spellingOrder(item).forEach(choice => {
+      if (!done && hidden && choice.w === hidden) return;
+      const button = document.createElement('button');
+      button.type = 'button';
+      button.dataset.word = choice.w;
+      button.textContent = choice.w;
+      if (done && choice.ok) button.classList.add('correct');
+      if (done && !choice.ok) button.disabled = true;
+      choices.append(button);
+    });
+    if (done) {
+      byId('spellingLead').textContent = '바르게 쓴 낱말을 찾았어요.';
+      spellingFeedback(`맞아요! ${item.word}${entry.read ? ' · ' + entry.read : ''}`, 'success');
+      nextButton.hidden = false;
+      nextButton.textContent = sp.index + 1 >= spellingItems.length ? '모두 찾았어요' : '다음 낱말';
+      return;
+    }
+    byId('spellingLead').textContent = '뜻을 읽고, 바르게 쓴 낱말 하나를 골라요. 글자를 하나씩 꼼꼼히 봐요.';
+    hintButton.hidden = false;
+    hintButton.disabled = Boolean(sp.hinted[item.id]);
+    hintButton.textContent = sp.hinted[item.id] ? '두 개로 좁혔어요' : '두 개로 좁히기';
+    signals.decorate(choices.querySelectorAll('[data-word]'), spellingActivity, item.id, button => button.dataset.word === item.word);
+    signals.ready(spellingActivity, item.id, { textNode: byId('spellingScreen'), attempts: sp.attempts[item.id] || 0, measureId: spellingMeasure, step: 'spell' });
+    updateCoachPanel();
+  }
+  function spellingNarrow(item, helpType, trigger) {
+    const sp = state.spelling;
+    if (sp.hinted[item.id]) return;
+    const wrong = item.choices.filter(c => !c.ok);
+    sp.hinted[item.id] = trigger === 'child-request' ? 'manual' : 'auto';
+    sp.narrowed[item.id] = wrong[Math.floor(Math.random() * wrong.length)].w;
+    signals.hint(spellingActivity, item.id, { helpLevel: 'A2', helpType, cueStage: 2, trigger });
+  }
+  function handleSpellingChoice(event) {
+    const button = event.target.closest('[data-word]');
+    if (!button || button.disabled) return;
+    const sp = state.spelling;
+    if (sp.complete) return;
+    const item = spellingItem();
+    if (sp.done[item.id]) return;
+    const choice = item.choices.find(c => c.w === button.dataset.word);
+    const correct = Boolean(choice && choice.ok);
+    sp.attempts[item.id] = (sp.attempts[item.id] || 0) + 1;
+    const attempt = sp.attempts[item.id];
+    signals.respond(spellingActivity, item.id, { correct, value: button.dataset.word, expected: item.word, step: 'spell', measureId: spellingMeasure, distractorKind: choice && !choice.ok ? 'funny' : undefined });
+    byId('spellingChoices').querySelectorAll('[data-word]').forEach(other => other.classList.remove('selected', 'correct', 'incorrect'));
+    button.classList.add('selected');
+    if (correct) {
+      sp.done[item.id] = true;
+      saveState(); renderSpelling();
+      return;
+    }
+    button.classList.add('incorrect');
+    if (attempt === 1) {
+      spellingFeedback(`${choice ? choice.joke : '뜻과 맞지 않아요.'} 글자를 하나씩 다시 봐요.`, 'attention');
+      signals.decorateLater(byId('spellingChoices').querySelectorAll('[data-word]'), spellingActivity, item.id, b => b.dataset.word === item.word);
+      saveState();
+    } else if (attempt === 2) {
+      spellingNarrow(item, 'auto-narrow', 'second-miss');
+      spellingFeedback(`${choice ? choice.joke : ''} 두 개만 남겼어요. 어느 쪽이 진짜 낱말일까요?`, 'attention');
+      saveState(); setTimeout(renderSpelling, 0);
+    } else {
+      sp.revealed[item.id] = true;
+      signals.hint(spellingActivity, item.id, { helpLevel: 'A4', helpType: 'reveal-answer', cueStage: 5, trigger: 'third-miss' });
+      signals.close(spellingActivity, item.id, { resolution: 'revealed', measureId: spellingMeasure });
+      sp.done[item.id] = true;
+      saveState(); renderSpelling();
+      spellingFeedback(`함께 볼게요. 진짜 낱말: ${item.word}`, 'attention');
+    }
+  }
+  function spellingHint() {
+    const sp = state.spelling;
+    if (sp.complete) return;
+    const item = spellingItem();
+    if (sp.done[item.id] || sp.hinted[item.id]) return;
+    spellingNarrow(item, 'narrow-choices', 'child-request');
+    spellingFeedback('두 개로 좁혔어요. 글자를 하나씩 견주어 봐요.');
+    saveState(); renderSpelling();
+  }
+  function spellingNext() {
+    const sp = state.spelling;
+    if (sp.complete) return;
+    if (!sp.done[spellingItem().id]) return;
+    if (sp.index + 1 >= spellingItems.length) {
+      sp.complete = true;
+      signals.activityComplete(spellingActivity, { itemsRevealed: Object.keys(sp.revealed).length, hintsUsed: Object.keys(sp.hinted).length });
+    } else {
+      sp.index += 1;
+    }
+    byId('spellingFeedback').textContent = '';
+    saveState(); renderSpelling();
+  }
   function normalizeMindMapWord(value) {
     return String(value || '').trim().toLowerCase().replace(/[.,!?]+$/g, '');
   }
@@ -1184,7 +1331,11 @@
   byId('wordhuntChoices').addEventListener('click', handleWordHuntChoice);
   byId('wordhuntHintButton').addEventListener('click', wordHuntHint);
   byId('wordhuntNextButton').addEventListener('click', wordHuntNext);
-  byId('wordhuntContinueButton').addEventListener('click', () => showScreen('mindmap'));
+  byId('wordhuntContinueButton').addEventListener('click', () => showScreen('spelling'));
+  byId('spellingChoices').addEventListener('click', handleSpellingChoice);
+  byId('spellingHintButton').addEventListener('click', spellingHint);
+  byId('spellingNextButton').addEventListener('click', spellingNext);
+  byId('spellingContinueButton').addEventListener('click', () => showScreen('mindmap'));
   byId('mindmapCards').addEventListener('input', handleMindMapInput);
   byId('mindmapCards').addEventListener('click', handleMindMapCard);
   byId('mindmapBoard').addEventListener('input', handleMindMapInput);

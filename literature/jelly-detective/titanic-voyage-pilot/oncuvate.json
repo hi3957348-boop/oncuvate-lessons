@@ -8,7 +8,7 @@
     "pilot-entry.html": { "use": "부속" },
     "session01.html": {
       "use": "콘텐츠",
-      "version": "0.1.1",
+      "version": "0.1.2",
       "title": "Jelly Sea Detectives 1 · The Mystery of the Unsinkable Claim",
       "order": 1,
       "minDurationMin": 40,
@@ -23,7 +23,8 @@
         "타이타닉",
         "작업기억",
         "소리닮은말",
-        "마인드맵"
+        "마인드맵",
+        "진짜낱말찾기"
       ],
       "level": "L7",
       "axes": [
