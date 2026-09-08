@@ -25,8 +25,12 @@
   let dirty=false,timer=0,busy=false;
 
   function fresh(){return{schema:'oncuvate.pilot-log.v1',lessonId:'space-observatory',sourceFile,sessionNo:Number(R.session)||0,child:String(R.child||''),room:String(R.room||''),classroomCode:String(CONFIG.classroomCode||'SPACE-PILOT'),sessionId:'sp-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),startedAt:new Date().toISOString(),events:[],tracks:[],completed:false,completedAt:null,lastSubmittedAt:null}}
-  function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');return v&&v.schema==='oncuvate.pilot-log.v1'&&!v.completed?v:null}catch(_){return null}}
-  function save(){try{localStorage.setItem(KEY,JSON.stringify(record))}catch(_){}}
+  function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.schema==='oncuvate.pilot-log.v1'&&v.completed){try{localStorage.setItem(KEY+'.done',JSON.stringify(v))}catch(_){}return null}return v&&v.schema==='oncuvate.pilot-log.v1'?v:null}catch(_){return null}}
+  function save(){try{localStorage.setItem(KEY,JSON.stringify(record));if(record.completed)localStorage.setItem(KEY+'.done',JSON.stringify(record))}catch(_){}}
+  /* 파일럿 Firebase 방에도 기록 사본을 둔다(logs/<아이>) — 메일이 안 와도 REST 로 걷을 수 있게 */
+  let cloudTimer=0;
+  function cloudSave(){if(!R.room||window._firebaseReady!==true||typeof window.pth!=='function'||typeof window._set!=='function')return;try{const snap=Object.assign({},record,{summary:counts(),events:record.events.slice(-MAX_EVENTS),tracks:record.tracks.slice(-400),savedAt:Date.now()});Promise.resolve(window._set(window.pth('logs/'+(record.child||'child')),snap)).catch(()=>{})}catch(_){}}
+  function cloudSaveSoon(delay){clearTimeout(cloudTimer);cloudTimer=setTimeout(cloudSave,delay||1500)}
   function outbox(){try{const v=JSON.parse(localStorage.getItem(OUTBOX)||'[]');return Array.isArray(v)?v:[]}catch(_){return[]}}
   function setOutbox(items){try{localStorage.setItem(OUTBOX,JSON.stringify(items.slice(-6)))}catch(_){}}
   function counts(){
@@ -67,8 +71,9 @@
     record.events.push(Object.assign({at:Date.now()},detail));
     if(record.events.length>MAX_EVENTS)record.events=record.events.slice(-MAX_EVENTS);
     dirty=true;save();
-    if(detail.type==='activity-summary')schedule('activity-'+(detail.activityId||''),1200);
-    if(detail.type==='lesson-summary'){record.completed=true;record.completedAt=new Date().toISOString();enqueue('lesson-complete',true)}
+    if(detail.type==='activity-summary'){schedule('activity-'+(detail.activityId||''),1200);cloudSaveSoon(500)}
+    if(detail.type==='lesson-summary'){record.completed=true;record.completedAt=new Date().toISOString();enqueue('lesson-complete',true);cloudSave()}
+    else cloudSaveSoon(20000)
   });
   document.addEventListener('click',event=>{
     const t=event.target.closest('[data-track]');if(!t)return;
@@ -78,11 +83,12 @@
     dirty=true;save();
   });
   window.addEventListener('online',flush);
-  window.addEventListener('pagehide',()=>enqueue(record.completed?'pagehide-completed':'pagehide',true));
+  window.addEventListener('pagehide',()=>{enqueue(record.completed?'pagehide-completed':'pagehide',true);cloudSave()});
+  window.addEventListener('oncuvate:pilot-realtime-ready',()=>cloudSaveSoon(3000));
   document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')save()});
   const minutes=Math.max(2,Number(CONFIG.recoverySubmitMinutes)||10);
   setInterval(()=>{if(dirty)enqueue('autosave',false)},minutes*60*1000);
-  function download(){try{const blob=new Blob([JSON.stringify(Object.assign({},record,{summary:counts()}),null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pilot-log_'+(record.child||'child')+'_s'+String(record.sessionNo||0).padStart(2,'0')+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}catch(_){}}
+  function download(){try{let rec=record;if(record.events.length<3){try{const d=JSON.parse(localStorage.getItem(KEY+'.done')||'null');if(d&&d.events&&d.events.length>record.events.length)rec=d}catch(_){}}const blob=new Blob([JSON.stringify(Object.assign({},rec,{summary:counts()}),null,1)],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='pilot-log_'+(rec.child||'child')+'_s'+String(rec.sessionNo||0).padStart(2,'0')+'.json';document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},500)}catch(_){}}
   document.addEventListener('keydown',e=>{if(e.ctrlKey&&e.shiftKey&&(e.key==='E'||e.key==='e')){e.preventDefault();download()}});
   window.ONCUVATE_PILOT_LOG={record:()=>record,counts,flush,download};
   record.events.push({at:Date.now(),type:'pilot-session-ready',standalone:!R.room,child:R.child||''});
