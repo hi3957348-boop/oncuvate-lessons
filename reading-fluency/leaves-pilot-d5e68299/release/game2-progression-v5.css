@@ -1,0 +1,29 @@
+.progression-game2, .progression-game2 *, .progression-game2 *::before, .progression-game2 *::after { box-sizing:border-box; }
+.activity-view:has(.progression-game2), .progression-game2, .progression-game2 .g2p-layout, .progression-game2 .g2p-board-panel, .progression-game2 .g2p-side { min-width:0; width:100%; overflow-x:hidden; }
+.progression-game2 { min-height:0!important; height:auto!important; padding-bottom:8px; }
+.progression-game2 .g2p-layout { grid-template-columns:minmax(0,1.65fr) minmax(272px,.78fr); gap:12px; align-items:start; }
+.progression-game2 .g2p-side { padding:10px; gap:8px; }
+.progression-game2 .g2p-board { gap:clamp(5px,.55vw,8px); }
+.progression-game2 .g2p-cell { position:relative; border:0!important; color:#17253f; background:color-mix(in srgb,var(--region) 54%,white); }
+.progression-game2 .g2p-cell.covered::after { display:none!important; }
+.progression-game2 .g2p-cell .g2p-word { display:block; font-weight:800; line-height:1.05; font-size:clamp(11px,1.3vw,18px); overflow-wrap:anywhere; }
+.progression-game2 .g2p-cell.fixed-clue { box-shadow:inset 0 0 0 4px rgba(255,255,255,.76),0 7px 18px rgba(33,49,78,.12); }
+.progression-game2 .g2p-cell.fixed-clue::before { content:"단서"; position:absolute; top:4px; left:5px; padding:2px 5px; border-radius:999px; background:rgba(255,255,255,.9); color:#3e5368; font-size:9px; font-weight:800; }
+.progression-game2 .g2p-cell.fixed-clue.hint::before { content:"힌트"; }
+.progression-game2 .g2p-cell.user-hypothesis.safe, .progression-game2 .g2p-cell.user-hypothesis.monster { outline:3px dashed rgba(31,63,91,.36); outline-offset:-5px; }
+.progression-game2 .g2p-state-icon img { width:clamp(32px,3.2vw,46px); height:clamp(32px,3.2vw,46px); object-fit:contain; }
+.progression-game2 .g2p-decisions { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:8px; }
+.progression-game2 .g2p-decisions button { min-width:0; min-height:54px; white-space:nowrap; }
+.progression-game2 .g2p-decisions img { width:44px; height:44px; object-fit:contain; }
+.progression-game2 .g2p-tools { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:7px; width:100%; }
+.progression-game2 .g2p-tools button { min-width:0; min-height:44px; padding:8px 5px; white-space:nowrap; font-size:12px; }
+.progression-game2 [data-g2p-action="hint"] { font-size:0; }
+.progression-game2 [data-g2p-action="hint"]::after { content:"♥ ♥ ♥"; font-size:17px; letter-spacing:1px; color:#e36f78; }
+.progression-game2 [data-g2p-action="hint"][data-hints-left="2"]::after { content:"♥ ♥ ♡"; }
+.progression-game2 [data-g2p-action="hint"][data-hints-left="1"]::after { content:"♥ ♡ ♡"; }
+.progression-game2 [data-g2p-action="hint"][data-hints-left="0"]::after { content:"♡ ♡ ♡"; color:#aab3be; }
+.progression-game2 .g2p-rule { white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
+.main-shell:has(.progression-game2) { grid-template-rows:auto auto!important; align-content:start!important; min-height:0!important; }
+.main-shell:has(.progression-game2) .bottom-nav { position:relative!important; inset:auto!important; width:100%!important; margin-top:14px!important; padding:0 max(8px,env(safe-area-inset-right)) max(12px,env(safe-area-inset-bottom)) max(8px,env(safe-area-inset-left))!important; background:transparent!important; border:0!important; box-shadow:none!important; }
+@media(max-width:900px){ .progression-game2 .g2p-layout{grid-template-columns:minmax(0,1fr)} .progression-game2 .g2p-side{overflow:visible} }
+@media(max-width:560px){ .progression-game2 .g2p-board{gap:5px} .progression-game2 .g2p-tools{gap:6px} .progression-game2 .g2p-tools button{font-size:10px;padding-inline:2px} }

@@ -1,0 +1,94 @@
+/* 젤리캡쳐 낱말 팝업 — 누른 칸 바로 옆에 크게.
+   판 위쪽 띠는 시선이 안 가서, 읽을 것을 손이 있는 자리로 가져온다. */
+.onq-g2-word {
+  position: fixed;
+  z-index: 2147482500;          /* 판 위 · 코치 도크(…3100) 아래 */
+  max-width: min(320px, 86vw);
+  padding: 12px 20px;
+  border: 2px solid #4a3a8f;
+  border-radius: 14px;
+  background: #fff;
+  color: #2f3648;
+  font-size: clamp(24px, 3.4vw, 40px);
+  font-weight: 800;
+  line-height: 1.25;
+  text-align: center;
+  word-break: keep-all;
+  box-shadow: 0 14px 34px rgba(37, 20, 78, .22);
+  cursor: pointer;
+  animation: onq-g2-pop .16s ease-out;
+}
+@keyframes onq-g2-pop {
+  from { transform: scale(.9); opacity: 0; }
+  to   { transform: scale(1);  opacity: 1; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .onq-g2-word { animation: none; }
+}
+.onq-g2-word[hidden] { display: none !important; }
+
+/* 이지모드 — 왜 안 되는지 짚어 주는 말풍선. 낱말은 위, 까닭은 아래에 둔다. */
+.onq-g2-why {
+  position: fixed;
+  z-index: 2147482600;
+  max-width: min(300px, 86vw);
+  padding: 10px 14px;
+  border: 2px solid #c46a4e;
+  border-radius: 12px;
+  background: #fff7f1;
+  color: #8a4a2f;
+  font-size: 15px;
+  font-weight: 700;
+  line-height: 1.5;
+  text-align: center;
+  word-break: keep-all;
+  box-shadow: 0 12px 28px rgba(120, 60, 30, .18);
+  cursor: pointer;
+}
+.onq-g2-why[hidden] { display: none !important; }
+
+/* 판 도구 줄의 이지모드 스위치 */
+.onq-g2-easy {
+  border: 1px solid #ddd9e8 !important;
+  background: #fff !important;
+  color: #6b7280 !important;
+}
+.onq-g2-easy[aria-pressed="true"] {
+  border-color: #4a3a8f !important;
+  background: #4a3a8f !important;
+  color: #fff !important;
+}
+
+/* 다 찾은 색 — 「여기는 끝났다」를 눈으로 알 수 있게.
+   ⚠️ 아이가 놓은 것을 되비칠 뿐이다. 정답을 알려 주지 않는다. */
+
+/* 끝난 색의 나머지 칸은 조용해진다 — 눈이 남은 색으로 간다 */
+.g2p-cell.onq-region-done:not(.onq-region-anchor) {
+  filter: saturate(.35) brightness(1.06);
+  opacity: .72;
+}
+
+/* 그 색의 젤리는 오히려 또렷하게 — 「여기로 정했다」 */
+.g2p-cell.onq-region-anchor {
+  position: relative;
+  box-shadow: inset 0 0 0 3px rgba(74, 58, 143, .9), 0 3px 10px rgba(74, 58, 143, .22);
+}
+.g2p-cell.onq-region-anchor::after {
+  content: "";
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  width: 15px;
+  height: 15px;
+  border-radius: 50%;
+  background: #4a3a8f;
+  /* 가운데 체크 — 글자를 얹지 않고 배경만으로 그린다(글꼴에 안 기대려고) */
+  background-image:
+    linear-gradient(45deg, transparent 45%, #fff 45%, #fff 58%, transparent 58%),
+    linear-gradient(-45deg, transparent 62%, #fff 62%, #fff 75%, transparent 75%);
+  background-size: 100% 100%;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .g2p-cell.onq-region-done:not(.onq-region-anchor) { filter: saturate(.4); }
+}
