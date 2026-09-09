@@ -1,0 +1,35 @@
+{
+  "oncuvate": 2,
+  "id": "l10-forecast-how-fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-09-04",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "일기예보는 어떻게 만들어질까요? 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L10",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "일기예보는 어떻게 만들어질까요?",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    }
+  }
+}

@@ -1,0 +1,311 @@
+/* 온큐베이트 코치모드 v2 — 좌 수업화면 · 우 강사 콘솔
+   색은 shared.css의 토큰을 그대로 쓴다(따로 팔레트를 만들지 않는다). */
+
+/* ── 컨트롤 규칙 하나로 통일 ──────────────────────────────────────────
+   버튼·입력칸이 제각각이면 코치가 「이건 누르는 것인가 보는 것인가」를 매번 다시 판단한다.
+   모서리·글자·테두리·눌림 표현을 한 벌로 묶고 예외를 두지 않는다.
+     · 누르는 것  = --onq-r 모서리 · 12.5px/800 · 1px 테두리 · 눌리면 보라 채움
+     · 쓰는 것    = 같은 모서리·테두리, 흰 배경, 초점에 보라 테두리
+     · 이름표(칩) = 알약 모양 — 누르는 것과 모양 자체를 다르게 */
+:root {
+  --onq-dock-w: 360px;
+  --onq-r: 11px;
+  --onq-r-sm: 8px;
+  --onq-line: var(--line, #e7e3ef);
+  --onq-accent: var(--violet-700, #5932b6);
+  --onq-accent-soft: var(--violet-100, #eee9fb);
+  --onq-ink: var(--ink, #27344e);
+  --onq-muted: var(--muted, #6f7789);
+  --onq-font: var(--font, Pretendard, "Noto Sans KR", sans-serif);
+}
+
+/* 누르는 것 · 쓰는 것 — 공통 바탕 */
+.onq-lock-btn, .onq-follow, .onq-memo-btn, .onq-select, .onq-memo {
+  border: 1px solid var(--onq-line);
+  border-radius: var(--onq-r);
+  background: #fff;
+  color: var(--onq-ink);
+  font-family: var(--onq-font);
+  font-size: 12.5px;
+  font-weight: 800;
+  line-height: 1.2;
+  transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.onq-lock-btn, .onq-follow, .onq-memo-btn { cursor: pointer; padding: 11px 12px; }
+.onq-lock-btn:hover, .onq-follow:hover, .onq-memo-btn:hover, .onq-select:hover {
+  border-color: var(--violet-200, #d9cff5); color: var(--onq-accent);
+}
+.onq-lock-btn:focus-visible, .onq-follow:focus-visible, .onq-memo-btn:focus-visible,
+.onq-select:focus-visible, .onq-memo:focus-visible, .onq-dock-close:focus-visible, .onq-learner:focus-visible {
+  outline: 3px solid rgba(75, 201, 220, .55); outline-offset: 2px;
+}
+.onq-lock-btn[aria-pressed="true"], .onq-memo-btn.primary {
+  background: var(--onq-accent); border-color: var(--onq-accent); color: #fff;
+}
+.onq-lock-btn[aria-pressed="true"]:hover, .onq-memo-btn.primary:hover {
+  background: var(--violet-800, #4b24a5); border-color: var(--violet-800, #4b24a5); color: #fff;
+}
+
+/* 메모 — 고른 학생 바로 아래. 자리가 곧 「누구에 대한 메모인가」다 */
+.onq-memo-block { margin-top: 11px; padding-top: 11px; border-top: 1px dashed var(--onq-line); }
+.onq-memo-label {
+  display: flex; align-items: center; gap: 7px; margin-bottom: 6px;
+  font-size: 11.5px; font-weight: 800; color: var(--onq-muted);
+}
+.onq-memo-state { margin-left: auto; font-size: 10.5px; font-weight: 700; color: var(--onq-muted); }
+.onq-memo {
+  display: block; width: 100%; resize: vertical; min-height: 66px; padding: 10px 12px;
+  font-weight: 500; line-height: 1.55;
+}
+.onq-memo:focus { outline: none; border-color: var(--violet-500, #8d70d7); }
+.onq-memo::placeholder { color: #b7b2c9; font-weight: 500; }
+.onq-memo-row { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 7px; }
+.onq-memo-btn { padding: 8px 12px; font-size: 12px; color: var(--onq-muted); }
+
+/* 아이 화면의 자체 잠금 버튼은 코치가 잠금을 쥐면 뜻이 둘이 된다 — 숨긴다. */
+html[data-oncuvate-role="child"] [data-action="toggle-lock"] { display: none !important; }
+
+/* 수업 중에는 읽기 평가 스위치를 코치가 쥔다 — 아이 화면에서 내린다.
+   자율학습(room 없음)에는 끌 사람이 아이뿐이라 그대로 둔다. */
+html[data-oncuvate-role="child"][data-oncuvate-mode="coaching"] .mode-switch { display: none !important; }
+/* 낱말 찾기 건너뛰기도 수업 중에는 코치가 쥔다 — 아이 화면에서는 감춘다 */
+html[data-oncuvate-role="child"][data-oncuvate-mode="coaching"] .skip-wordfind { display: none !important; }
+
+/* ── 잠금 안내 ─────────────────────────────────────────────── */
+.onq-coach-lock-note.follow { border-color: var(--cyan, #4bc9dc); color: #10707d; }
+.onq-coach-lock-note {
+  position: fixed; left: 50%; bottom: 28px; z-index: 2147483000;
+  transform: translateX(-50%);
+  padding: 11px 16px; border: 1px solid var(--violet-200, #d9cff5); border-radius: 12px;
+  color: var(--violet-900, #35206f); background: var(--paper, #fffdf7);
+  box-shadow: 0 12px 30px rgba(37, 20, 78, .16);
+  font: 800 14px/1.35 var(--font, Pretendard, "Noto Sans KR", sans-serif);
+}
+html[data-coach-activity-locked="true"] .activity-shell { cursor: not-allowed; }
+
+/* ── 아동 식별코드 워터마크 (규격 6장) ──────────────────────
+   읽으려면 읽히되 눈에 걸리지 않는 정도. 클릭을 가로채지 않는다. */
+.onq-child-watermark {
+  position: fixed; right: 10px; bottom: 8px; z-index: 2147482000;
+  pointer-events: none; user-select: none;
+  font: 700 11px/1 var(--font, Pretendard, sans-serif);
+  letter-spacing: .18em; color: var(--ink, #27344e); opacity: .22;
+}
+@media print { .onq-child-watermark { opacity: .45; } }
+
+/* ══ 좌: 수업화면 · 우: 콘솔 ═══════════════════════════════════
+   콘솔이 수업 화면을 덮지 않는다 — 코치도 아이와 같은 내용을 봐야 하기 때문이다.
+   무대(.studio)가 고정 크기라, 콘솔이 차지한 만큼 폭을 덜고 왼쪽으로 붙인다. */
+/* 도크 전체 폭 = 콘솔 폭 + 손잡이 14px + 오른쪽 여백 8px */
+html[data-oncuvate-role="coach"][data-coach-dock="open"] #app.app-shell {
+  padding-right: calc(var(--onq-dock-w) + 30px) !important;
+  padding-left: 10px !important;
+  place-items: center start !important;
+}
+html[data-oncuvate-role="coach"][data-coach-dock="open"] #app .studio {
+  width: min(1200px, calc(100vw - var(--onq-dock-w) - 30px)) !important;
+  margin: 0 !important;
+}
+
+/* ── 콘솔 도크 ─────────────────────────────────────────────── */
+.onq-coach-dock {
+  position: fixed; right: 0; top: 0; bottom: 0; z-index: 2147483100;
+  width: calc(var(--onq-dock-w) + 22px);
+  display: flex; align-items: stretch;
+  padding: 8px 8px 8px 0;
+  font-family: var(--font, Pretendard, "Noto Sans KR", sans-serif);
+  pointer-events: none;
+}
+.onq-coach-dock > * { pointer-events: auto; }
+
+/* 접었을 때 — 얇은 탭만 남고 수업 화면이 전체 폭을 되찾는다 */
+html[data-coach-dock="closed"] .onq-coach-dock { width: auto; }
+.onq-dock-tab {
+  align-self: flex-start; margin-top: 14px;
+  display: grid; place-items: center;
+  width: 44px; height: 44px; padding: 0;
+  border: 1px solid var(--violet-200, #d9cff5);
+  border-radius: 50%;
+  background: #fff; color: var(--violet-700, #5932b6); cursor: pointer;
+  box-shadow: 0 8px 22px rgba(37, 20, 78, .16);
+}
+.onq-dock-tab svg { width: 21px; height: 21px; }
+.onq-dock-tab:hover { border-color: var(--violet-500, #8d70d7); background: var(--violet-050, #f8f6fd); }
+
+/* 너비 조절 손잡이 */
+.onq-dock-grip {
+  flex: none; width: 14px; align-self: center; height: 92px;
+  display: grid; place-items: center; cursor: col-resize;
+  background: none; border: 0; padding: 0;
+}
+.onq-dock-grip::before {
+  content: ""; width: 5px; height: 76px; border-radius: 999px;
+  background:
+    radial-gradient(circle, rgba(107, 96, 140, .55) 1px, transparent 1.2px) 0 0 / 5px 7px repeat-y,
+    #eceaf3;
+}
+.onq-dock-grip:hover::before, .onq-dock-grip:focus-visible::before { background-color: var(--violet-200, #d9cff5); }
+
+/* 콘솔 카드 */
+.onq-dock-panel {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column;
+  border-radius: 20px; overflow: hidden;
+  background:
+    linear-gradient(rgba(124, 106, 190, .05) 1px, transparent 1px) 0 0 / 100% 24px,
+    linear-gradient(90deg, rgba(124, 106, 190, .05) 1px, transparent 1px) 0 0 / 24px 100%,
+    #fff;
+  border: 1px solid var(--line, #e7e3ef);
+  box-shadow: 0 16px 44px rgba(37, 45, 81, .12);
+  color: var(--ink, #27344e);
+}
+
+/* 머리 */
+.onq-dock-head {
+  flex: none; display: flex; align-items: center; gap: 11px;
+  padding: 14px 14px 13px; border-bottom: 1px solid var(--line, #e7e3ef);
+  background: rgba(255, 255, 255, .82);
+}
+.onq-dock-mark {
+  flex: none; width: 44px; height: 44px; border-radius: 13px;
+  display: grid; place-items: center;
+  background: linear-gradient(150deg, var(--violet-700, #5932b6), var(--violet-500, #8d70d7));
+  color: #fff;
+}
+.onq-dock-mark svg { width: 22px; height: 22px; }
+.onq-dock-title { flex: 1 1 auto; min-width: 0; }
+.onq-dock-title strong { display: block; font-size: 15px; font-weight: 800; color: var(--violet-900, #35206f); }
+.onq-dock-title span { display: block; margin-top: 2px; font-size: 11.5px; color: var(--muted, #6f7789); }
+.onq-dock-close {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--line, #e7e3ef); background: #fff; color: var(--muted, #6f7789);
+  font-size: 14px; line-height: 1; display: grid; place-items: center;
+}
+.onq-dock-close:hover { border-color: var(--violet-200, #d9cff5); color: var(--violet-700, #5932b6); }
+
+/* 몸통 */
+.onq-dock-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 14px; }
+
+.onq-dock-mode {
+  margin: 0 0 12px; padding: 6px 10px; border-radius: var(--onq-r-sm);
+  background: var(--violet-100, #eee9fb); color: var(--violet-800, #4b24a5);
+  font-size: 11.5px; font-weight: 700;
+}
+.onq-dock-mode.live { background: var(--cyan-soft, #e9f8fa); color: #10707d; }
+
+/* 잠금 버튼 두 개 */
+.onq-lock-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.onq-lock-btn.wide { width: 100%; margin-top: 8px; }
+.onq-lock-btn {
+  display: flex; align-items: center; justify-content: center; gap: 6px;
+}
+
+/* 접속한 학생 */
+.onq-dock-section { margin-top: 18px; }
+.onq-dock-section > h3 {
+  margin: 0 0 9px; font-size: 12.5px; font-weight: 800; letter-spacing: .01em;
+  color: var(--violet-900, #35206f); display: flex; align-items: center; gap: 7px;
+}
+.onq-count { color: var(--violet-500, #8d70d7); font-variant-numeric: tabular-nums; }
+.onq-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--line, #e7e3ef); }
+.onq-dot.on { background: var(--cyan, #4bc9dc); box-shadow: 0 0 0 3px rgba(75, 201, 220, .22); }
+
+.onq-stale { margin-left: auto; font-size: 10.5px; font-weight: 700; color: #b7862f; background: #fdf3e0;
+  padding: 2px 7px; border-radius: 999px; }
+.onq-dock-empty { margin: 0; font-size: 12px; line-height: 1.5; color: #b7b2c9; }
+.onq-dock-note { margin: 10px 0 0; font-size: 11px; line-height: 1.5; color: var(--muted, #6f7789); }
+
+.onq-dock-learners { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 10px; }
+.onq-learner {
+  padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--onq-line); background: #fff;
+  font: 800 12px/1 var(--onq-font); letter-spacing: .06em; color: var(--onq-muted);
+  transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.onq-learner.online { border-color: var(--cyan, #4bc9dc); color: var(--ink, #27344e); }
+.onq-learner.active { background: var(--violet-800, #4b24a5); border-color: var(--violet-800, #4b24a5); color: #fff; }
+
+/* 화면 맞추기 */
+.onq-follow {
+  display: block; width: 100%; margin-top: 9px; text-align: center; color: var(--violet-800, #4b24a5);
+}
+
+/* 진행 */
+.onq-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.onq-progress-head strong { font-size: 14px; color: var(--violet-900, #35206f); }
+.onq-progress-head span { font-size: 11.5px; font-weight: 700; color: var(--muted, #6f7789); }
+.onq-progress-track { height: 7px; margin: 8px 0 12px; border-radius: 999px; background: var(--violet-100, #eee9fb); overflow: hidden; }
+.onq-progress-track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, var(--cyan, #4bc9dc), var(--violet-500, #8d70d7)); transition: width .3s ease; }
+
+/* 지금 붙들고 있는 것 — 진행바 바로 아래에 한 줄 */
+.onq-now {
+  margin: -4px 0 11px; padding: 9px 12px; border-radius: var(--onq-r);
+  background: var(--blue-soft, #edf5fb); color: var(--onq-ink);
+  font-size: 12.5px; line-height: 1.45;
+}
+
+.onq-facts { margin: 0; display: grid; gap: 6px; }
+.onq-facts > div { display: grid; grid-template-columns: 82px minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.onq-facts dt { margin: 0; font-size: 11.5px; font-weight: 800; color: var(--muted, #6f7789); }
+.onq-facts dd { margin: 0; font-size: 13px; line-height: 1.45; color: var(--ink, #27344e); word-break: break-word; }
+.onq-facts dd b { font-weight: 800; color: var(--violet-800, #4b24a5); }
+.onq-facts dd small { display: inline-block; margin-top: 2px; padding: 1px 7px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 700; color: var(--violet-700, #5932b6); background: var(--violet-100, #eee9fb); }
+.onq-facts dd small.ok { color: var(--success, #27866a); background: var(--success-bg, #eef9f5); }
+.onq-facts dd small.warn { color: var(--danger, #c2575d); background: var(--danger-bg, #fff3f3); }
+
+/* 두 줄로 나눈다 — 한 줄에 밀어 넣으면 긴 이름이 시각을 덮어 읽을 수 없게 된다 */
+.onq-events { margin-top: 12px; max-height: 190px; overflow-y: auto; display: grid; gap: 4px; }
+.onq-events > div.warn { background: var(--danger-bg, #fff3f3); }
+.onq-events > div.warn b { color: var(--danger, #c2575d); }
+.onq-events > div {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: baseline;
+  padding: 7px 10px; border-radius: 9px; background: var(--violet-050, #f8f6fd); font-size: 11.5px;
+}
+.onq-events b { font-weight: 800; color: var(--violet-700, #5932b6); min-width: 0;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.onq-events time { color: var(--muted, #6f7789); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.onq-events small { grid-column: 1 / -1; margin-top: 2px; color: var(--muted, #6f7789);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* 읽기 피드백 */
+.onq-select {
+  display: block; width: 100%; padding: 10px 12px; margin-bottom: 10px; font-weight: 700; cursor: pointer;
+}
+.onq-read-block { margin-bottom: 9px; padding: 9px 11px; border-radius: var(--onq-r); background: var(--violet-050, #f8f6fd); }
+.onq-read-block.transcript { background: var(--blue-soft, #edf5fb); }
+.onq-read-block small { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: var(--muted, #6f7789); margin-bottom: 4px; }
+.onq-read-block p { margin: 0; font-size: 13.5px; line-height: 1.55; color: var(--ink, #27344e); }
+
+.onq-scores { display: grid; grid-template-columns: repeat(3, 1fr); gap: 6px; margin: 10px 0; }
+.onq-score { padding: 9px 8px; border-radius: var(--onq-r); background: #fff; border: 1px solid var(--line, #e7e3ef); text-align: center; }
+.onq-score small { display: block; font-size: 10.5px; font-weight: 800; color: var(--muted, #6f7789); }
+.onq-score strong { display: block; margin: 3px 0 4px; font-size: 15px; color: var(--violet-800, #4b24a5); font-variant-numeric: tabular-nums; }
+.onq-score span { display: block; font-size: 10.5px; line-height: 1.4; color: var(--muted, #6f7789); }
+
+.onq-read-list { margin-bottom: 9px; }
+.onq-read-list small { display: block; font-size: 10.5px; font-weight: 800; letter-spacing: .06em; color: var(--muted, #6f7789); margin-bottom: 5px; }
+.onq-read-list ul { margin: 0; padding: 0; list-style: none; display: grid; gap: 5px; }
+.onq-read-list li { padding: 7px 10px; border-radius: var(--onq-r-sm); background: var(--danger-bg, #fff3f3); font-size: 12px; line-height: 1.45; }
+.onq-read-list li.ok { background: var(--success-bg, #eef9f5); }
+.onq-read-list li.warn { background: var(--danger-bg, #fff3f3); }
+.onq-read-list li b { color: var(--violet-900, #35206f); }
+.onq-read-list li span { display: block; margin-top: 2px; color: var(--muted, #6f7789); }
+
+.onq-chips { display: flex; flex-wrap: wrap; gap: 5px; }
+.onq-chips span { padding: 5px 9px; border-radius: 999px; background: var(--violet-100, #eee9fb); font-size: 11px; color: var(--violet-800, #4b24a5); }
+.onq-chips b { font-variant-numeric: tabular-nums; }
+
+/* 좁은 화면 — 위 수업, 아래 콘솔 */
+@media (max-width: 900px) {
+  html[data-oncuvate-role="coach"][data-coach-dock="open"] #app.app-shell {
+    padding-right: 0 !important; padding-bottom: 58vh !important; place-items: center !important;
+  }
+  html[data-oncuvate-role="coach"][data-coach-dock="open"] #app .studio { width: min(1200px, 100vw) !important; }
+  .onq-coach-dock { left: 0; top: auto; bottom: 0; height: 58vh; padding: 0 8px 8px; }
+  .onq-dock-grip { display: none; }
+  .onq-dock-panel { border-radius: 18px 18px 0 0; }
+  .onq-dock-tab { margin: 0 0 10px 12px; }
+}
+
+@media print { .onq-coach-dock { display: none !important; } }
