@@ -1,0 +1,186 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#35206f">
+  <title>어린이대공원에 간 날 · 첨삭 노트</title>
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <header class="topbar">
+    <a class="brand" href="#top" aria-label="온큐베이트 첨삭 노트 처음으로">
+      <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate">
+      <span><b>학생 맞춤 첨삭 노트</b><small>일기 쓰기</small></span>
+    </a>
+    <div class="toolbar" aria-label="보기 도구">
+      <button class="toolbar-button" id="toggleMarks" type="button" aria-pressed="false">
+        <span class="button-mark" aria-hidden="true"></span> 첨삭 표시 숨기기
+      </button>
+      <button class="toolbar-button" id="printPage" type="button">
+        <span class="button-print" aria-hidden="true"></span> 인쇄 · PDF
+      </button>
+    </div>
+  </header>
+
+  <main class="page-shell" id="top">
+    <section class="title-strip" aria-labelledby="pageTitle">
+      <div>
+        <p class="eyebrow">MY Diary</p>
+        <h1 id="pageTitle">어린이대공원에 간 날</h1>
+        <p class="title-help">색칠되거나 밑줄 친 문장을 누르면 첨삭 설명이 열려요.</p>
+      </div>
+      <div class="date-card" aria-label="글을 쓴 날">
+        <b>9월 5일</b>
+        <span>토요일 · 맑음</span>
+      </div>
+    </section>
+
+    <div class="workbench">
+      <section class="notebook-wrap" aria-label="아동 원문 첨삭">
+        <div class="spiral" aria-hidden="true"></div>
+        <div class="paper-tabs" aria-hidden="true">
+          <span></span><span></span><span></span>
+        </div>
+        <article class="notebook">
+          <header class="notebook-head">
+            <div>
+              <span class="subject-chip">나의 경험을 쓴 일기</span>
+              <h2>어린이대공원에 간 날</h2>
+            </div>
+            <div class="mark-legend" aria-label="첨삭 표시 종류">
+              <span><i class="legend-dot praise-dot"></i>잘한 표현</span>
+              <span><i class="legend-dot fix-dot"></i>고칠 곳</span>
+              <span><i class="legend-dot grow-dot"></i>더 써 볼 곳</span>
+            </div>
+          </header>
+
+          <div class="student-copy" id="studentCopy">
+            <p>
+              <button class="mark fix-mark" type="button" data-note="repeat">나는 오늘 아침에 일어나서 나는</button>
+              엄마한테 <button class="mark fix-mark" type="button" data-note="park-particle">놀이공원 가자고</button> 해서
+              <button class="mark fix-mark" type="button" data-note="particle">어린이대공원을 갔다.</button>
+            </p>
+            <p>
+              먼저, 우리는
+              <button class="mark fix-mark" type="button" data-note="animal-spelling">꼬끼리,곰,시라손니,얼룩말,물개,물범,수달,팽궨,고슴도치,원숭이,두더지,뱀,거북이,미여캣,토끼,알파카,라미를</button>
+              보았지만 내가 가장 보고 싶었던
+              <button class="mark fix-mark" type="button" data-note="comma">사자,호랑이,를 못봐서</button>
+              <button class="mark praise-mark" type="button" data-note="feeling">아쉬웠다.</button>
+            </p>
+            <p>
+              <button class="mark fix-mark" type="button" data-note="elephant">아빠는 코끼리가 활발하게 움직이는 걸 보고 신기했다.</button>
+            </p>
+            <p>
+              그러고 나서 놀이공원에 와서
+              <button class="mark fix-mark" type="button" data-note="ride-names">후름라이더,범퍼카,슈퍼점핑,회전 컵, 바이킹을</button> 탔지만
+              <button class="mark fix-mark" type="button" data-note="family">페밀리코스터를 못타서</button> 아쉬웠다.
+            </p>
+            <p>
+              <button class="mark fix-mark" type="button" data-note="flume">흐름라이더는</button> 줄이 길었지만
+              <button class="mark praise-mark" type="button" data-note="scene">탈때 내려가는 부분이 재밌었다.</button>
+            </p>
+            <p>
+              범퍼카는 부딪힐 때 기분이 아찔하고 <button class="mark fix-mark" type="button" data-note="super-jump">슈퍼 점퍼에서는</button>
+              <button class="mark fix-mark" type="button" data-note="like-spacing">도레미파솔라시도 처럼</button>
+              <button class="mark grow-mark" type="button" data-note="sequence">1번 자동차부터 뜨는게 신기하고</button>
+              회전컵은 어지러웠지만 신났다.
+            </p>
+            <p>
+              마지막으로는 바이킹을 탔는데
+              <button class="mark grow-mark" type="button" data-note="viking">내가 뒤에 탔지만 느낌 활기찼다.</button>
+            </p>
+            <p>
+              <button class="mark fix-mark ending-mark" type="button" data-note="ending">다음에는 꼭 페밀리코스터를 타고싶다</button>
+            </p>
+          </div>
+
+          <footer class="notebook-foot">
+            <span>PHOTO → TEXT</span>
+          </footer>
+        </article>
+      </section>
+
+      <aside class="feedback-panel" id="feedbackPanel" aria-live="polite">
+        <div class="feedback-pin" aria-hidden="true"></div>
+        <div class="feedback-empty" id="feedbackEmpty">
+          <span class="tiny-label">첨삭 쪽지</span>
+          <div class="pointer-sketch" aria-hidden="true"><i></i><i></i><i></i></div>
+          <h2>표시를 하나 눌러 봐!</h2>
+          <p>왜 고치면 좋은지, 어떤 문장으로 바꿀 수 있는지 여기에서 확인할 수 있어요.</p>
+          <div class="mini-key">
+            <span class="key-praise">잘한 표현</span>
+            <span class="key-fix">고칠 곳</span>
+            <span class="key-grow">더 써 볼 곳</span>
+          </div>
+        </div>
+        <div class="feedback-detail" id="feedbackDetail" hidden>
+          <div class="feedback-topline">
+            <div class="feedback-badge">
+              <span class="feedback-icon" id="feedbackIcon" aria-hidden="true"></span>
+              <span class="feedback-type" id="feedbackType"></span>
+              <strong class="feedback-callout" id="feedbackCallout"></strong>
+            </div>
+            <button class="close-note" id="closeNote" type="button" aria-label="첨삭 설명 닫기">×</button>
+          </div>
+          <h2 id="feedbackTitle"></h2>
+          <p class="feedback-reason" id="feedbackReason"></p>
+          <div class="change-card" id="changeCard">
+            <span id="changeLabel">고쳐 쓴 문장</span>
+            <p id="feedbackExample"></p>
+          </div>
+          <p class="feedback-cheer" id="feedbackCheer"></p>
+        </div>
+      </aside>
+    </div>
+
+    <section class="revision-zone" aria-labelledby="revisionTitle">
+      <div class="revision-title">
+        <span class="chapter-number">02</span>
+        <div>
+          <p class="eyebrow">TRY IT YOURSELF</p>
+          <h2 id="revisionTitle">이번에는 내가 고쳐 쓰기</h2>
+        </div>
+      </div>
+      <div class="revision-grid">
+        <label class="revision-card">
+          <span><b>첫 문장</b> 겹치는 말을 줄여 써요.</span>
+          <textarea data-save="opening" placeholder="나는 오늘…"></textarea>
+          <small>입력한 내용은 이 기기에 자동 저장돼요.</small>
+        </label>
+        <label class="revision-card">
+          <span><b>가장 기억나는 장면</b> 동물이나 놀이기구 한 가지를 자세히 써요.</span>
+          <textarea data-save="scene" placeholder="가장 기억나는 것은…"></textarea>
+          <small>본 것 + 그때 든 느낌을 함께 적어 보세요.</small>
+        </label>
+        <label class="revision-card wide">
+          <span><b>고쳐 쓴 전체 글</b> 문단의 순서를 살펴보며 다시 써요.</span>
+          <textarea data-save="final" placeholder="처음 → 동물원 → 놀이기구 → 마지막 느낌 순서로 써 보세요."></textarea>
+          <small>목록을 조금 줄이고, 가장 재미있었던 장면은 더 자세히!</small>
+        </label>
+      </div>
+    </section>
+
+    <section class="coach-note" aria-label="오늘의 고쳐 쓰기 목표">
+      <div class="coach-stamp">CHECK</div>
+      <div>
+        <h2>오늘은 이 세 가지만 기억해요.</h2>
+        <ol>
+          <li>한 문장에 같은 표현을 여러 번 쓰지 않기</li>
+          <li>소리와 문자를 매칭해서 정확하게 쓰기</li>
+          <li>쉼표 뒤 띄어쓰기</li>
+        </ol>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <p>윤초록우산어린이 만세 서체 적용 · 초록우산 어린이재단 × (주)윤디자인그룹</p>
+    <a href="https://noonnu.cc/font_page/1431" target="_blank" rel="noopener">서체 라이선스 보기</a>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
+
+
