@@ -31,14 +31,14 @@ window.CASE_SESSION={
   check:{title:'What should a designer do when a safety test fails?',lead:'Use the test result to decide what to change.',correct:'revise',choices:[
     ['all','Take every rule, even if the budget is broken.'],['guess','Keep the first design even when a need is missing.'],['revise','Use the test result to replace one rule and test again.']
   ],success:'Correct. Testing showed exactly which need the design was missing.'},
-  reading:{title:'Lessons from the Titanic',easy:[
+  reading:{title:'Lessons from the Titanic',context:'Your safety rules passed the tests. Now read which rules were really changed after the Titanic, so you can explain why each rule was needed.',easy:[
     'The Titanic had lifeboats for only about half of the people on board.','At first, some passengers hesitated because they did not understand how serious the danger was.','Some of the first lifeboats left the ship less than half full.','After the disaster, new laws required enough lifeboats for everyone on board.','Ships now hold lifeboat drills to practice what to do in an accident.'
   ],challenge:[
     'Safety rules in 1912 were written for smaller ships, so 20 lifeboats were considered enough under the old rules.','Without enough practice, loading the lifeboats was confusing and some boats left with empty seats.','The Carpathia hurried through icy water and rescued more than 700 survivors.','New rules later required lifeboats for everyone, lifeboat drills, and a wireless watch that never stops.','The International Ice Patrol still warns ships today, and a U.S.–French team located the wreck in 1985.'
   ]},
   organize:{type:'needs-map',title:'Connect each need to its rule.',lead:'Choose a rule card, place it beside the matching need, and complete the design rule.',bank:'RULE CARDS',cards:[
     ['seats','A SEAT FOR EVERYONE','LIFEBOATS FOR ALL'],['signal','HEAR EVERY DISTRESS CALL','24-HOUR WIRELESS WATCH'],['ice','KNOW WHERE THE ICE IS','ICE PATROL'],['practice','KNOW WHAT TO DO','LIFEBOAT DRILLS'],['watch','SPOT DANGER EARLY','MORE LOOKOUTS · BINOCULARS']
-  ],blank:['Build,','and revise.'],answer:'test'},
+  ],blank:['Build,','and revise.'],answer:'test',hint:'Look at strategy step 2: 설계 시험. The rule is Build, ____, and revise. The word starts with t and means 시험하다.'},
   retell:{title:'Why will your safety rules work?',prompt:'Write 2–4 English sentences. Name at least three needs and explain one rule you chose.',placeholder:'My rules give every person a seat... I chose... because...',frame:'Every ship needs ____. I chose ____ because ____. After the test, I changed ____.'},
   solved:{eyebrow:'CASE 04 · RULES APPROVED',title:'시험하고 고쳐서<br>모두를 위한 안전 규칙을 만들었어요!',text:'첫 설계가 완벽하지 않아도 괜찮습니다. 시험 결과에서 빠진 필요 하나를 찾고, 그 규칙만 바꾸면 더 안전한 배가 됩니다.'},
   coach:{watch:'무작정 모든 규칙을 고르기보다 필요 목록과 예산을 대조하고, 실패 후 한 항목만 바꾸어 재시험하는지 관찰합니다.',answer:'11크레딧 통과 조합: boats+radio+patrol+drill+lookout (DECK ORCHESTRA 제외). 정리 빈칸: test.'}

@@ -12,7 +12,7 @@
   const order=['start','case','goal','game','check','reading','organize','retell','solved'];
   const labels={start:'준비',case:'사건 파일',goal:'목표',game:'직접 조작',check:'증거 확인',reading:'정보글',organize:'정보 정리',retell:'다시 말하기',solved:'해결'};
   const menuOrder=['case','goal','game','check','reading','organize','retell'];
-  const defaults={screen:'start',caseLine:0,goalSolved:false,gameComplete:false,checkSolved:false,readingLevel:'easy',sentenceIndex:0,organizeSolved:false,retell:'',hint:false,visited:[],notes:{},activeItem:'',plan:[],repaired:{},selectedModules:[],testsRun:0,placements:{},selectedCard:'',organizeAnswer:'',vocabOpened:[],goalAttempts:0,checkAttempts:0,organizeAttempts:0,itemAttempts:{},readingRereads:0,readingSupport:false,readingSelfCheck:'',helpRequestedAt:0,helpRequests:0};
+  const defaults={screen:'start',caseLine:0,goalSolved:false,gameComplete:false,checkSolved:false,readingLevel:'easy',sentenceIndex:0,organizeSolved:false,retell:'',hint:false,visited:[],notes:{},activeItem:'',plan:[],repaired:{},selectedModules:[],testsRun:0,placements:{},selectedCard:'',organizeAnswer:'',vocabOpened:[],goalAttempts:0,checkAttempts:0,organizeAttempts:0,itemAttempts:{},readingRereads:0,readingSupport:false,readingSelfCheck:'',helpRequestedAt:0,helpRequests:0,organizeHintShown:false};
   let stored=null;
   try{stored=JSON.parse(sessionStorage.getItem(C.storage)||'null')}catch(_){}
   const S=Object.assign({},defaults,stored||{});
@@ -133,7 +133,7 @@
   }
 
   function renderGame(){
-    $('gameEyebrow').textContent=C.game.eyebrow;$('gameTitle').textContent=C.game.title;
+    $('gameEyebrow').textContent=C.game.eyebrow;$('gameTitle').textContent=C.game.title;if($('gameIntro'))$('gameIntro').textContent=C.game.intro||'';
     if(C.game.type==='planets')renderPlanetGame();
     if(C.game.type==='systems')renderSystemGame();
     if(C.game.type==='base')renderBaseGame();
@@ -152,7 +152,7 @@
     const repaired=Object.keys(S.repaired).length,planned=S.plan.length===C.game.items.length;
     $('gameCounter').textContent=repaired+' / 3 stations';
     const remaining=C.game.items.filter(x=>!S.plan.includes(x.id));
-    const planHtml='<section class="side-panel"><h3>MY 3-STEP WATCH PLAN</h3><p>Choose the order before touching the controls.</p><div class="mission-order">'+[0,1,2].map((_,i)=>'<div>STEP '+(i+1)+' · '+(S.plan[i]?esc(C.game.items.find(x=>x.id===S.plan[i]).name):'Choose a station')+'</div>').join('')+'</div>'+(remaining.length?'<div class="control-row">'+remaining.map(x=>'<button data-plan="'+x.id+'" type="button">'+x.name+'</button>').join('')+'</div>':'<p class="feedback success">Plan ready. Check one station at a time.</p>')+(S.plan.length?'<button class="quiet" id="clearPlan" type="button">계획 다시 세우기</button>':'')+'</section>';
+    const planHtml='<section class="side-panel"><h3>MY 3-STEP WATCH PLAN</h3><p>Choose the order before touching the controls.</p><div class="mission-order">'+[0,1,2].map((_,i)=>'<div>STEP '+(i+1)+' · '+(S.plan[i]?esc(C.game.items.find(x=>x.id===S.plan[i]).name):'Choose a station')+'</div>').join('')+'</div>'+(remaining.length?'<div class="control-row">'+remaining.map(x=>'<button data-plan="'+x.id+'" type="button">'+x.name+'</button>').join('')+'</div>':'<p class="feedback success">Plan ready. Check one station at a time.</p>')+(S.plan.length>repaired?'<button class="quiet" id="clearPlan" type="button">'+(repaired?'남은 순서 다시 세우기':'계획 다시 세우기')+'</button>':'')+'</section>';
     const currentId=planned?S.plan.find(id=>!S.repaired[id]):'',current=C.game.items.find(x=>x.id===currentId);
     let workHtml='<div class="system-grid">'+C.game.items.map(x=>'<article class="system-card '+(S.repaired[x.id]?'online':'')+'"><header><h3>'+x.name+'</h3><span class="status-chip">'+(S.repaired[x.id]?'SAFE':planned&&x.id===currentId?'CHECK NOW':'WAIT')+'</span></header></article>').join('')+'</div>';
     if(current)workHtml+='<article class="system-card" style="margin-top:14px"><header><div><small>ONE STATION NOW</small><h3>'+current.name+'</h3><p>'+esc(current.problem)+'</p></div><span class="status-chip">ALERT</span></header><div class="control-row">'+current.options.map(o=>'<button type="button" data-system="'+current.id+'" data-control="'+esc(o)+'" data-item-id="system-'+current.id+'" data-track="answer" data-correct="'+(o===current.correct)+'">'+esc(o)+'</button>').join('')+'</div></article>';
@@ -160,7 +160,7 @@
     if(caseVocab)$('gameArea').querySelectorAll('.system-card header p').forEach(p=>caseVocab.render(p,p.textContent));
     if(current){signals.decorate($('gameArea').querySelectorAll('[data-system]'),'game','system-'+current.id,b=>b.dataset.control===current.correct);signals.ready('game','system-'+current.id,{textNode:$('gameArea'),attempts:S.itemAttempts['system-'+current.id]||0,measureId:'case.game'})}
     $('gameArea').querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{S.plan.push(b.dataset.plan);signals.log('plan-step',{activityId:'game',itemId:'plan',stepNo:S.plan.length,value:b.dataset.plan});save();renderGame()}));
-    $('clearPlan')?.addEventListener('click',()=>{if(repaired)return;signals.log('reset',{activityId:'game',itemId:'plan',stepsCleared:S.plan.length});S.plan=[];save();renderGame()});
+    $('clearPlan')?.addEventListener('click',()=>{const kept=S.plan.filter(id=>S.repaired[id]);signals.log('reset',{activityId:'game',itemId:'plan',stepsCleared:S.plan.length-kept.length,keptRepaired:kept.length});S.plan=kept;save();renderGame();$('gameFeedback').textContent=kept.length?'Checked stations stay done. Choose the order for the rest.':'Make a three-step plan before using the controls.';$('gameFeedback').className='feedback'});
     $('gameArea').querySelectorAll('[data-system]').forEach(b=>b.addEventListener('click',()=>{const item=C.game.items.find(x=>x.id===b.dataset.system);bumpAttempt('system-'+item.id);signals.respond('game','system-'+item.id,{correct:b.dataset.control===item.correct,value:b.dataset.control,expected:item.correct,measureId:'case.game'});if(b.dataset.control!==item.correct){signals.decorateLater($('gameArea').querySelectorAll('[data-system]'),'game','system-'+item.id,x=>x.dataset.control===item.correct);b.classList.add('wrong');save();$('gameFeedback').textContent='The warning still did not reach the bridge. Read only this station report again.';$('gameFeedback').className='feedback attention';return}S.repaired[item.id]=item.correct;S.gameComplete=Object.keys(S.repaired).length===C.game.items.length;save();renderGame();updateChrome();updateCoach()}));
     $('gameFeedback').textContent=S.gameComplete?'All three stations are safe. Check the complete watch report.':planned?'Work on the one station marked CHECK NOW.':'Make a three-step plan before using the controls.';
   }
@@ -202,7 +202,7 @@
   function renderReading(){
     sentenceShownAt=performance.now();
     const list=C.reading[S.readingLevel],done=S.sentenceIndex>=list.length,index=Math.min(S.sentenceIndex,list.length-1);
-    $('readingTitle').textContent=C.reading.title;$('readingLevel').textContent=S.readingLevel==='easy'?'TRY CHALLENGE':'BACK TO STANDARD';
+    $('readingTitle').textContent=C.reading.title;if($('readingContext'))$('readingContext').textContent=C.reading.context||'';$('readingLevel').textContent=S.readingLevel==='easy'?'TRY CHALLENGE':'BACK TO STANDARD';
     $('readingBox').hidden=done;$('sentenceNext').hidden=done;$('fullReading').hidden=!done;
     if(!done){$('sentenceCounter').textContent='SENTENCE '+(index+1)+' OF '+list.length;if(caseVocab)caseVocab.render($('sentenceText'),list[index]);else $('sentenceText').textContent=list[index];$('sentenceNext').textContent=index===list.length-1?'문단 전체 보기':'다음 문장'}
     if(caseVocab)caseVocab.render($('paragraphText'),list.join(' '));else $('paragraphText').textContent=list.join(' ');
@@ -234,7 +234,8 @@
     if(!S.organizeSolved)signals.ready('organize','organize-check',{textNode:$('organizeScreen'),attempts:S.organizeAttempts,measureId:'case.organize'});
   }
   function inputRow(sentenceBefore,sentenceAfter){
-    return '<div class="type-row">'+sentenceBefore+' <input id="organizeInput" type="text" autocomplete="off" spellcheck="false" value="'+esc(S.organizeAnswer)+'" aria-label="missing word"> '+sentenceAfter+'</div>';
+    const hint=C.organize.hint?(S.organizeHintShown?'<span class="hint-text" id="organizeHintText">'+esc(C.organize.hint)+'</span>':'<button class="quiet hint-button" id="organizeHint" type="button" data-track="hint" data-help-level="A2" data-help-type="word-hint">낱말 힌트</button>'):'';
+    return '<div class="type-row">'+sentenceBefore+' <input id="organizeInput" type="text" autocomplete="off" spellcheck="false" value="'+esc(S.organizeAnswer)+'" aria-label="missing word"> '+sentenceAfter+hint+'</div>';
   }
   function renderPlanetSort(){
     const cards=C.organize.cards,used=new Set(Object.keys(S.placements));
@@ -243,11 +244,38 @@
     $('organizeArea').innerHTML='<div class="organize-grid"><div class="sort-board">'+C.organize.zones.map(z=>'<section class="sort-zone" data-zone="'+z[0]+'"><h3>'+esc(z[1])+'</h3>'+placed(z[0])+'</section>').join('')+'</div><aside class="card-bank"><h3>'+esc(C.organize.bank||'AREA CARDS')+'</h3>'+bank+'</aside></div>'+inputRow(C.organize.blank[0],C.organize.blank[1]);
     bindPlacement();
   }
+  /* 끌어다 놓기 — 카드를 누른 채 움직이면 놓는 칸으로 옮긴다. 탭(카드 누르고 칸 누르기)도 그대로 된다. */
+  function enableDrag(cardSelector,dropSelector,onDrop){
+    document.querySelectorAll(cardSelector).forEach(card=>card.addEventListener('pointerdown',e=>{
+      if(e.pointerType==='mouse'&&e.button!==0)return;
+      const startX=e.clientX,startY=e.clientY;let ghost=null,over=null,moved=false;
+      try{card.setPointerCapture(e.pointerId)}catch(_){}
+      const clearOver=()=>{if(over){over.classList.remove('drop-target');over=null}};
+      const move=ev=>{
+        if(!moved&&Math.hypot(ev.clientX-startX,ev.clientY-startY)<6)return;
+        if(!moved){moved=true;ghost=card.cloneNode(true);ghost.className='drag-ghost';ghost.style.width=card.offsetWidth+'px';document.body.appendChild(ghost);card.classList.add('dragging')}
+        ghost.style.left=(ev.clientX-card.offsetWidth/2)+'px';ghost.style.top=(ev.clientY-22)+'px';
+        const target=document.elementFromPoint(ev.clientX,ev.clientY)?.closest(dropSelector);
+        if(target!==over){clearOver();over=target;if(over)over.classList.add('drop-target')}
+        ev.preventDefault();
+      };
+      const end=ev=>{
+        card.removeEventListener('pointermove',move);card.removeEventListener('pointerup',end);card.removeEventListener('pointercancel',end);
+        if(!moved)return;
+        ghost?.remove();card.classList.remove('dragging');clearOver();card.dataset.dragged='1';
+        const target=ev.type==='pointerup'?document.elementFromPoint(ev.clientX,ev.clientY)?.closest(dropSelector):null;
+        signals.log('drag-drop',{activityId:'organize',itemId:'organize-check',card:card.dataset.pickCard||card.dataset.orderCard||'',dropped:Boolean(target),zone:target?(target.dataset.zone||target.dataset.orderRemove||'zone'):''});
+        if(target)onDrop(card,target);
+      };
+      card.addEventListener('pointermove',move);card.addEventListener('pointerup',end);card.addEventListener('pointercancel',end);
+    }));
+  }
   function renderRepairOrder(){
     const chosen=Array.isArray(S.placements.order)?S.placements.order:[];
     const bank=C.organize.cards.filter(c=>!chosen.includes(c[0])).map(c=>'<button type="button" data-order-card="'+c[0]+'">'+c[1]+'</button>').join('');
     $('organizeArea').innerHTML='<div class="organize-grid"><section class="sort-zone"><h3>MY WATCH SEQUENCE</h3>'+[0,1,2].map((_,i)=>'<button class="order-slot" type="button" data-order-remove="'+i+'">STEP '+(i+1)+' · '+(chosen[i]?esc(C.organize.cards.find(c=>c[0]===chosen[i])[1]):'empty')+'</button>').join('')+'</section><aside class="card-bank"><h3>'+esc(C.organize.bank||'EVENT CARDS')+'</h3>'+bank+'</aside></div>'+inputRow(C.organize.blank[0],C.organize.blank[1]);
-    document.querySelectorAll('[data-order-card]').forEach(b=>b.addEventListener('click',()=>{const a=Array.isArray(S.placements.order)?S.placements.order:[];a.push(b.dataset.orderCard);S.placements.order=a;S.organizeSolved=false;save();renderOrganize()}));
+    document.querySelectorAll('[data-order-card]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.dragged)return;const a=Array.isArray(S.placements.order)?S.placements.order:[];a.push(b.dataset.orderCard);S.placements.order=a;S.organizeSolved=false;save();renderOrganize()}));
+    enableDrag('[data-order-card]','.order-slot,.sort-zone',(card,target)=>{const a=Array.isArray(S.placements.order)?S.placements.order:[];const i=target.classList.contains('order-slot')?Number(target.dataset.orderRemove):a.length;if(i<a.length)a[i]=card.dataset.orderCard;else a.push(card.dataset.orderCard);S.placements.order=a;S.organizeSolved=false;save();renderOrganize()});
     document.querySelectorAll('[data-order-remove]').forEach(b=>b.addEventListener('click',()=>{const a=Array.isArray(S.placements.order)?S.placements.order:[];a.splice(Number(b.dataset.orderRemove),1);S.placements.order=a;S.organizeSolved=false;save();renderOrganize()}));
     bindOrganizeInput();
   }
@@ -259,13 +287,14 @@
     bindPlacement();bindOrganizeInput();
   }
   function bindPlacement(){
-    document.querySelectorAll('[data-pick-card]').forEach(b=>b.addEventListener('click',()=>{S.selectedCard=S.selectedCard===b.dataset.pickCard?'':b.dataset.pickCard;save();renderOrganize()}));
+    document.querySelectorAll('[data-pick-card]').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.dragged)return;S.selectedCard=S.selectedCard===b.dataset.pickCard?'':b.dataset.pickCard;save();renderOrganize()}));
+    enableDrag('[data-pick-card]','[data-zone]',(card,zone)=>{const id=card.dataset.pickCard;if(C.organize.type==='planet-sort')S.placements[id]=zone.dataset.zone;else S.placements[zone.dataset.zone]=id;S.selectedCard='';S.organizeSolved=false;save();renderOrganize()});
     document.querySelectorAll('[data-zone]').forEach(z=>z.addEventListener('click',e=>{if(e.target.closest('[data-return-card],[data-zone-return]'))return;if(!S.selectedCard)return;if(C.organize.type==='planet-sort')S.placements[S.selectedCard]=z.dataset.zone;else S.placements[z.dataset.zone]=S.selectedCard;S.selectedCard='';S.organizeSolved=false;save();renderOrganize()}));
     document.querySelectorAll('[data-return-card]').forEach(b=>b.addEventListener('click',()=>{delete S.placements[b.dataset.returnCard];S.organizeSolved=false;save();renderOrganize()}));
     document.querySelectorAll('[data-zone-return]').forEach(b=>b.addEventListener('click',()=>{delete S.placements[b.dataset.zoneReturn];S.organizeSolved=false;save();renderOrganize()}));
     bindOrganizeInput();
   }
-  function bindOrganizeInput(){$('organizeInput')?.addEventListener('input',e=>{S.organizeAnswer=e.target.value;S.organizeSolved=false;save();signals.decorate([$('organizeCheck')],'organize','organize-check',()=>{const r=evaluateOrganize();return r.placed&&r.correct&&r.word})})}
+  function bindOrganizeInput(){$('organizeHint')?.addEventListener('click',()=>{S.organizeHintShown=true;signals.hint('organize','organize-check',{helpLevel:'A2',helpType:'word-hint',trigger:'child-request'});save();renderOrganize()});$('organizeInput')?.addEventListener('input',e=>{S.organizeAnswer=e.target.value;S.organizeSolved=false;save();signals.decorate([$('organizeCheck')],'organize','organize-check',()=>{const r=evaluateOrganize();return r.placed&&r.correct&&r.word})})}
   function normalize(v){return String(v||'').trim().toLowerCase().replace(/[.,!?]+$/,'')}
   function evaluateOrganize(){
     let placed=false,correct=false;
@@ -285,6 +314,14 @@
   function resetOrganize(){signals.log('reset',{activityId:'organize',itemId:'organize-check',attemptsSoFar:S.organizeAttempts});S.placements={};S.selectedCard='';S.organizeAnswer='';S.organizeSolved=false;save();renderOrganize();$('organizeFeedback').textContent='Start with one card at a time.';$('organizeFeedback').className='feedback'}
 
 
+  function organizeSummary(){
+    if(!S.organizeSolved)return '';
+    const cards=C.organize.cards,blank=C.organize.blank||['',''];const key='<article><b>KEY SENTENCE</b><br>'+esc(blank[0])+' '+esc(S.organizeAnswer)+' '+esc(blank[1])+'</article>';let rows='';
+    if(C.organize.type==='planet-sort'){rows=(C.organize.zones||[]).map(z=>'<article><b>'+esc(z[1])+'</b><br>'+(cards.filter(c=>S.placements[c[0]]===z[0]).map(c=>esc(c[1])).join(', ')||'—')+'</article>').join('')}
+    if(C.organize.type==='repair-order'){const a=S.placements.order||[];rows='<article><b>MY SEQUENCE</b><br>'+a.map((id,i)=>(i+1)+'. '+esc(cards.find(c=>c[0]===id)[1])).join('<br>')+'</article>'}
+    if(C.organize.type==='needs-map'){rows='<article><b>NEED → RULE</b><br>'+cards.map(c=>esc(c[1])+' → '+(S.placements[c[0]]?esc(cards.find(x=>x[0]===S.placements[c[0]])[2]):'—')).join('<br>')+'</article>'}
+    return rows+key;
+  }
   function workEvidence(){
     if(C.game.type==='planets')return C.game.items.map(x=>'<article><b>'+x.name+'</b><br>'+(S.notes[x.id]||'—')+'</article>').join('');
     if(C.game.type==='systems')return C.game.items.map(x=>'<article><b>'+x.name+'</b><br>'+(S.repaired[x.id]||'—')+'</article>').join('');
@@ -294,7 +331,7 @@
     signals.ready('retell','retell',{textNode:$('retellScreen'),measureId:'case.retell'});
     $('retellTitle').textContent=C.retell.title;$('retellPrompt').textContent=C.retell.prompt;$('retellInput').placeholder=C.retell.placeholder;$('retellInput').value=S.retell;
     $('retellCount').textContent=S.retell.length+' / 420';$('finishButton').disabled=S.retell.trim().length<28;
-    $('retellEvidence').innerHTML=workEvidence()+(S.hint?'<article><b>SENTENCE FRAME</b><br>'+esc(C.retell.frame)+'</article>':'');
+    $('retellEvidence').innerHTML=(S.hint?'<article class="frame"><b>SENTENCE FRAME</b><br>'+esc(C.retell.frame)+'</article>':'')+organizeSummary()+'<small class="evidence-sub">MY WORK · 조작 결과</small>'+workEvidence();
     $('retellFeedback').textContent=S.retell.trim().length<28?'Use your organized information to write at least two ideas.':'Good. Check that your explanation names evidence or a reason.';
   }
   function updateRetell(){const wasEmpty=!S.retell.trim();S.retell=$('retellInput').value;if(wasEmpty&&S.retell.trim())signals.log('retell-first-input',{activityId:'retell',itemId:'retell',sinceReadyMs:signals.sinceReadyMs('retell','retell')});$('retellCount').textContent=S.retell.length+' / 420';$('finishButton').disabled=S.retell.trim().length<28;$('retellFeedback').textContent=S.retell.trim().length<28?'Add one more evidence-based idea.':'Good. Check that your explanation names evidence or a reason.';save();updateCoach()}

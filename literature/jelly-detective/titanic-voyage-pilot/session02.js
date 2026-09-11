@@ -26,7 +26,7 @@ window.CASE_SESSION={
   check:{title:'Which area does the lost ticket belong to?',lead:'The owner remembers a dinner with fresh lobster and a room on the upper decks. Use all four deck notes.',correct:'first',choices:[
     ['second','SECOND CLASS · Long tables and fewer choices.'],['first','FIRST CLASS · Upper decks and a menu with lobster.'],['third','THIRD CLASS · Soups, stews, and rooms far below.']
   ],success:'Correct. Only first class matches both notes, so the ticket goes back to the upper decks.'},
-  reading:{title:'Three Classes, One Ship',easy:[
+  reading:{title:'Three Classes, One Ship',context:'You checked four areas of the ship with the same two questions. Now read how the three classes and the crew lived on board, so you can explain where the ticket belongs.',easy:[
     'The rooms on the Titanic were divided into first, second, and third class.','First-class passengers had rooms on the upper decks and ate fancy meals like fresh lobster.','Second-class passengers ate similar food at long tables, but they had fewer choices.','Third-class rooms were simple but comfortable, and meals were soups, stews, and biscuits.','More than 800 crew members cooked, cleaned, and shoveled coal to keep the ship moving.'
   ],challenge:[
     'Passenger rooms, dining areas, and many decks on the Titanic were separated by class.','The first-class dining room could seat more than 550 people, and its menus offered many choices.','Second-class passengers had comfortable rooms and a library, while third-class meals were simpler.','Most passengers traveled in third class, and many were immigrants beginning a new life in America.','Crew members worked in assigned areas, so a passenger ticket would not belong in the boiler room.'
@@ -35,7 +35,7 @@ window.CASE_SESSION={
     ['passenger','PASSENGER TICKET AREA'],['work','CREW WORK AREA · NO PASSENGER TICKET']
   ],cards:[
     ['first','FIRST CLASS','passenger'],['second','SECOND CLASS','passenger'],['third','THIRD CLASS','passenger'],['crew','CREW','work']
-  ],blank:['We compared every area by the same two','.'],answer:'questions'},
+  ],blank:['We compared every area by the same two','.'],answer:'questions',hint:'Look at the unresolved question in the case file: What did they eat? Where were they? Those are the same two ____. The word starts with q.'},
   retell:{title:'Where does the ticket belong?',prompt:'Write 2–3 English sentences. Compare first class with at least one other area.',placeholder:'First-class passengers... Third-class passengers... The ticket...',frame:'First-class passengers ate ____ on the ____ decks. ____ passengers ate ____. The ticket belongs to ____ because ____.'},
   solved:{eyebrow:'CASE 02 · TICKET RETURNED',title:'같은 두 질문으로 비교해<br>잃어버린 표의 주인을 찾았어요!',text:'비교할 대상이 여러 개일 때는 같은 질문을 같은 순서로 물으면 중요한 차이가 한눈에 보입니다.'},
   coach:{watch:'세 승객 구역에는 「무엇을 먹었나 · 어디에 있었나」를 반복해 묻고, 승무원은 승객 표가 없는 작업 구역임을 구분하는지 관찰합니다.',answer:'증거 확인: FIRST CLASS(신선한 바닷가재 + 위 갑판). 정리 묶음: 승객 표 구역 first·second·third / 승무원 작업 구역 crew. 빈칸: questions.'}

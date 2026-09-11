@@ -18,7 +18,7 @@ window.CASE_SESSION={
     {en:'Check only the station marked CHECK NOW.',ko:'CHECK NOW로 표시된 자리 하나만 점검해요.'},
     {en:'See the result before the next station.',ko:'다음 자리로 가기 전에 결과를 확인해요.'}
   ]},
-  game:{type:'systems',title:'Keep every warning moving to the bridge.',eyebrow:'BRIDGE WATCH',intro:'Choose a watch order. Then test one control in each station.',items:[
+  game:{type:'systems',title:'Keep every warning moving to the bridge.',eyebrow:'BRIDGE WATCH',intro:'1 · Choose a watch order for the three stations. 2 · Check the station marked CHECK NOW with one control. 3 · Check the result, then go to the next station.',items:[
     {id:'lookout',name:'LOOKOUT · CROW’S NEST',problem:'A dark, clear night and a very calm sea. The lookouts have no binoculars and must spot ice early.',correct:'Keep a careful watch and phone the bridge the moment a shape appears.',options:['Keep a careful watch and phone the bridge the moment a shape appears.','Wait until the shape is very close, then ring the bell.','Watch the passengers on the deck instead of the sea.']},
     {id:'wireless',name:'WIRELESS ROOM',problem:'Ice warnings arrive between a big stack of passenger telegrams. One warning is written down and set aside.',correct:'Carry every ice warning to the bridge before sending more passenger telegrams.',options:['Answer “I am busy” and keep sending passenger telegrams.','Carry every ice warning to the bridge before sending more passenger telegrams.','Send the ice warning back to the ship that sent it.']},
     {id:'bridge',name:'BRIDGE · STEERING',problem:'The ship runs at high speed, about 25 miles per hour. Its course leads into an area where ice was reported.',correct:'Reduce speed and change course away from the reported ice.',options:['Keep top speed so the ship reaches New York early.','Turn off the engines and stop in the dark.','Reduce speed and change course away from the reported ice.']}
@@ -26,14 +26,14 @@ window.CASE_SESSION={
   check:{title:'Which watch report matches the night?',lead:'Look at the three safe stations and choose the complete report.',correct:'complete',choices:[
     ['lookout','Only the lookouts needed a change.'],['complete','The lookout, the wireless room, and the bridge each needed a matching action.'],['random','Pressing controls in any order made the warnings arrive.']
   ],success:'Watch complete. A short plan kept one warning from being forgotten.'},
-  reading:{title:'Why Some Warnings Were Missed',easy:[
+  reading:{title:'Why Some Warnings Were Missed',context:'You kept three warnings moving to the bridge. Now read what really happened on the night of April 14, so your watch report can explain each station.',easy:[
     'On Sunday, April 14, the Titanic sailed into waters where other ships had reported ice.','Several ice warnings reached the ship during the day.','Some warnings reached the bridge, but another was set aside in the busy wireless room.','The sea was very calm, so there were few waves around the dark iceberg.','A lookout saw the iceberg just before 11:40 P.M., too late for the ship to turn away.'
   ],challenge:[
     'Throughout Sunday, other ships sent the Titanic several reports of ice ahead.','Some messages reached the bridge, but another was set aside in the busy wireless room.','The ship continued at high speed through a clear night and an unusually calm sea.','When the lookout saw the iceberg at 11:40 P.M., an officer slowed the engines and turned the wheel.','The ship was already too close to avoid the collision.'
   ]},
   organize:{type:'repair-order',title:'Turn the night into a clear sequence.',lead:'Place the three event cards in the order they happened. Then type the final checking word.',bank:'EVENT CARDS',cards:[
     ['warn','Ice warnings arrive in the wireless room.'],['spot','The lookout sees a dark shape and phones the bridge.'],['turn','The officer slows the engines and turns the wheel.']
-  ],blank:['After every warning,','that the bridge received it.'],answer:'check'},
+  ],blank:['After every warning,','that the bridge received it.'],answer:'check',hint:'Look at strategy step 3: 결과 확인. The word means 확인하다 and starts with c.'},
   retell:{title:"Why didn't every warning reach the bridge?",prompt:'Write a short watch report in English. Use order words and name at least two stations.',placeholder:'First, the wireless room... Next... Finally...',frame:'First, the ____ received ____. Next, the ____ did not ____. Finally, the bridge ____.'},
   solved:{eyebrow:'CASE 03 · WARNINGS DELIVERED',title:'계획하고 하나씩 확인해<br>놓칠 수 있던 경고를 함교까지 전했어요!',text:'해야 할 일이 여러 개일 때는 짧은 순서를 만들고, 한 단계가 끝날 때마다 결과를 확인하면 빠뜨리는 경고가 줄어듭니다.'},
   coach:{watch:'정답 버튼을 찾는 속도보다, 시작 전에 세 자리(망루·무선실·함교)의 순서를 스스로 정하고 완료 표시를 따라가는지 관찰합니다.',answer:'LOOKOUT: careful watch + phone the bridge at once. WIRELESS: carry every ice warning to the bridge first. BRIDGE: reduce speed + change course away from the reported ice. 순서 카드 3장(경고 도착→발견·전화→감속·조타)을 모두 놓으면 통과. 빈칸: check.'}

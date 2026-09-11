@@ -111,3 +111,16 @@ body.coach-role .stage-help-button{display:none}
 .titanic-decks-image{background-image:url("assets/titanic-decks-search.webp")}
 .titanic-warnings-image{background-image:url("assets/titanic-warnings-search.webp")}
 .titanic-safety-image{background-image:url("assets/titanic-safety-search.webp")}
+
+/* 2026-09-11 검토 반영 이식: 지시문·맥락·힌트·끌어다 놓기·요약 */
+.game-intro{margin:4px 0 0;color:var(--muted);font-size:13px;line-height:1.35}
+.reading-head #readingContext{margin:4px 0 0;color:var(--muted);font-size:14px;line-height:1.45}
+.type-row .hint-button{display:inline-block;margin-left:10px;min-height:36px;padding:6px 12px;font-size:13px;vertical-align:middle}
+.type-row .hint-text{display:block;margin-top:6px;padding:8px 10px;border-radius:10px;background:#fff7e0;color:#6b4a00;font-size:14px;font-weight:600;line-height:1.4}
+.card-bank button,[data-order-card]{touch-action:none;user-select:none;-webkit-user-select:none;cursor:grab}
+.card-bank button.dragging{opacity:.35}
+.drag-ghost{position:fixed;z-index:60;pointer-events:none;min-height:44px;padding:7px;border:2px solid var(--cyan);border-radius:12px;background:var(--cyan-soft,#e2f7fb);font-weight:800;font-size:12px;box-shadow:0 8px 24px rgba(0,0,0,.25)}
+.sort-zone.drop-target,.order-slot.drop-target{border-color:var(--cyan);background:var(--cyan-soft,#e2f7fb)}
+.evidence .evidence-sub{display:block;margin-top:10px;opacity:.75}
+.evidence article.frame{background:#fff7e0}
+@media(min-width:901px){.retell{grid-template-columns:minmax(0,1.3fr) 270px}}
