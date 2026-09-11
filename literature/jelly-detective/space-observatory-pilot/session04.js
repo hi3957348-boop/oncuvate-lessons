@@ -29,14 +29,14 @@ window.SPACE_SESSION={
   check:{title:'Which design rule solved the cargo problem?',lead:'Think about what happened when a test failed.',correct:'revise',choices:[
     ['all','Take every module, even if the cargo limit is broken.'],['guess','Keep the first design even when a need is missing.'],['revise','Use the test result to replace one module and test again.']
   ],success:'Correct. Testing showed exactly what the design needed next.'},
-  reading:{title:'What a Moon Habitat Must Provide',easy:[
+  reading:{title:'What a Moon Habitat Must Provide',context:'Your habitat passed the survival tests. Now read what a real Moon habitat must provide, so you can explain why each module was needed.',easy:[
     'People cannot live on the Moon without a protected habitat.','A habitat must hold breathable air and help manage dangerous temperature changes.','Water is heavy to carry, so recycling systems clean and reuse it.','Solar panels can provide power, and an airlock can help keep Moon dust outside.','Engineers test a design and change it when an important need is missing.'
   ],challenge:[
     'A lunar habitat replaces several protections that Earth provides naturally.','Its sealed and insulated structure must hold breathable air and reduce harmful temperature changes.','Because every cargo item has a cost, recycling water and air can reduce the amount that must be delivered from Earth.','Power systems run the equipment, while a dust airlock limits the amount of abrasive lunar dust entering the living area.','Engineers use test results to revise a design until essential needs are met within the available resources.'
   ]},
   organize:{type:'needs-map',title:'Connect each need to its module.',lead:'Choose a module card, place it beside the matching need, and complete the design rule.',cards:[
     ['power','POWER','SOLAR ARRAY'],['air','AIR','OXYGEN RECYCLER'],['water','WATER','WATER RECYCLER'],['temperature','TEMPERATURE','INSULATED SHELTER'],['dust','DUST','DUST AIRLOCK']
-  ],answer:'test'},
+  ],answer:'test',hint:'Look at strategy step 2: 설계 시험. The rule is Build, ____, and revise. The word starts with t and means 시험하다.'},
   retell:{title:'Why will your Moon base work?',prompt:'Write 2–4 English sentences. Name at least three needs and explain one design choice.',placeholder:'My Moon base has... It keeps the crew safe because...',frame:'The crew needs ____. I chose ____ because ____. After the test, I changed ____.'},
   solved:{eyebrow:'CASE 04 · HABITAT APPROVED',title:'시험하고 고쳐서<br>안전한 달 기지를 만들었어요!',text:'첫 설계가 완벽하지 않아도 괜찮습니다. 시험 결과에서 빠진 필요 하나를 찾고, 그 부분만 수정하면 더 좋은 해결책이 됩니다.'},
   coach:{watch:'무작정 모든 모듈을 고르기보다 필요 목록과 예산을 대조하고, 실패 후 한 항목만 바꾸어 재시험하는지 관찰합니다.',answer:'11크레딧 통과 조합: solar+oxygen+water+shelter+airlock. 정리 빈칸: test.'}

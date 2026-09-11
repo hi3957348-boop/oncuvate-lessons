@@ -17,3 +17,17 @@
 .coach-note button { min-height: 30px; padding: 0 10px; border: 1px solid rgba(127,127,127,.35); border-radius: 8px; color: inherit; background: rgba(255,255,255,.12); font-size: 11px; font-weight: 800; cursor: pointer; }
 .coach-note button:disabled { opacity: .5; }
 .coach-note i { font-size: 10px; font-style: normal; opacity: .8; }
+
+/* Room-wide coach controls: always the first console section. */
+.coach-panel .coach-lock-controls { margin: 0; padding: 12px 14px; border-top: 1px solid rgba(127,127,127,.22); border-radius: 0; background: rgba(75,36,165,.16); }
+.coach-lock-controls > small { display: block; margin-bottom: 8px; }
+.coach-lock-grid { display: grid; grid-template-columns: repeat(2,minmax(0,1fr)); gap: 7px; }
+.coach-lock-grid button { min-width: 0; min-height: 46px; padding: 7px 8px; display: flex; align-items: center; justify-content: space-between; gap: 5px; border: 1px solid rgba(127,127,127,.35); border-radius: 10px; color: inherit; background: rgba(255,255,255,.1); font-size: 11px; font-weight: 850; line-height: 1.2; }
+.coach-lock-grid button b { min-width: 30px; padding: 3px 5px; border-radius: 999px; color: #5f5872; background: rgba(255,255,255,.82); font-size: 9px; text-align: center; }
+.coach-lock-grid button.is-locked { color: #fff; border-color: #e1b72c; background: #ac4149; }
+.coach-lock-grid button.is-locked b { color: #3b2a00; background: #ffe9a6; }
+.coach-lock-controls [data-class-control-status] { margin: 7px 0 0; font-size: 10px; line-height: 1.4; opacity: .82; }
+.classroom-lock-banner { position: absolute; z-index: 59; top: 12px; left: 16px; max-width: calc(100% - 330px); min-height: 42px; padding: 10px 14px; border: 1px solid #e1b72c; border-radius: 12px; color: #3b2a00; background: #fff4c8; box-shadow: 0 8px 22px rgba(36,20,79,.14); font-size: 13px; font-weight: 850; line-height: 1.35; }
+body.student-page-locked .menu-steps button:not(.active),body.student-page-locked .nav-home { opacity: .38; }
+body.student-activity-locked .screen:not([hidden]) { filter: saturate(.75); }
+@media(max-width:620px){.classroom-lock-banner{top:8px;left:8px;max-width:calc(100% - 190px);padding:8px 10px;font-size:11px}.coach-lock-grid{grid-template-columns:1fr}}

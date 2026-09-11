@@ -61,6 +61,7 @@
   }
   function show(name,skipSave){
     if(!screens[name])return;
+    if(!isCoach&&!skipSave&&window.OncuvateClassroomControl?.pageLocked&&name!==S.screen)return;
     Object.entries(screens).forEach(([key,el])=>{const on=key===name;el.hidden=!on;el.classList.toggle('active',on)});
     S.screen=name;
     if(name==='case')renderCase();
@@ -369,6 +370,5 @@
     event.currentTarget.setAttribute('aria-label',collapsed?'코치 패널 펼치기':'코치 패널 접기');
   });
   setWatermark();buildChrome();buildCoach();renderSolved();restore();
-  liveMirror=window.OncuvateLiveMirror?window.OncuvateLiveMirror.create({snapshot:buildProgressSnapshot,onParticipants:map=>window.OncuvateLiveMirror.renderList($('coachParticipants'),map,Number(C.id)||0),onStatus:text=>{const el=$('coachLiveStatus');if(el)el.textContent=text}}):null;
+  liveMirror=window.OncuvateLiveMirror?window.OncuvateLiveMirror.create({sessionNo:Number(C.id)||0,snapshot:buildProgressSnapshot,onParticipants:map=>window.OncuvateLiveMirror.renderList($('coachParticipants'),map,Number(C.id)||0),onStatus:text=>{const el=$('coachLiveStatus');if(el)el.textContent=text}}):null;
 }());
-

@@ -1,6 +1,6 @@
 /* 파일럿 전용 — 정식 납품 폴더에 넣지 않는다. 온큐베이트 정식 서비스는 서버가 window.ONCUVATE 와 pth/_set/_onValue 를 주입한다. */
 import { initializeApp, getApps } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-app.js";
-import { getDatabase, get, onDisconnect, onValue, ref, remove, runTransaction, set } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
+import { getDatabase, get, onDisconnect, onValue, ref, remove, runTransaction, set, update } from "https://www.gstatic.com/firebasejs/12.2.1/firebase-database.js";
 
 const firebaseConfig={apiKey:"AIzaSyAHib_-XPXfuvhsZcPlMSnqi4O46kAR0mM",authDomain:"non-1-4a6f5.firebaseapp.com",databaseURL:"https://non-1-4a6f5-default-rtdb.asia-southeast1.firebasedatabase.app",projectId:"non-1-4a6f5",storageBucket:"non-1-4a6f5.firebasestorage.app",messagingSenderId:"871721592960",appId:"1:871721592960:web:b342eab286024473845e65"};
 const ROOT="titanic-voyage-pilot/rooms";
@@ -18,6 +18,10 @@ export async function createRoom(value,sessionFile){
   const result=await runTransaction(metaRef(room),current=>{if(current&&Number(current.expiresAt||0)>now)return;return{lessonId:"titanic-voyage-pilot",sessionFile:file,status:"open",createdAt:now,expiresAt:now+ROOM_LIFETIME_MS,updatedAt:now}},{applyLocally:false});
   if(!result.committed)throw new Error("room-exists");
   return{ok:true,room,sessionFile:file,expiresAt:now+ROOM_LIFETIME_MS}
+}
+export async function setRoomSession(value,sessionFile){
+  const room=validRoom(value);if(!room)throw new Error("invalid-room");
+  const file=validSession(sessionFile);await update(metaRef(room),{sessionFile:file,updatedAt:Date.now()});return{ok:true,room,sessionFile:file}
 }
 export async function roomExists(value){
   const room=validRoom(value);if(!room)return{ok:false};

@@ -67,7 +67,7 @@
     function claimedRoom(){try{return localStorage.getItem(CLAIM_KEY)||''}catch(_){return ''}}
     function claimRoom(room){try{localStorage.setItem(CLAIM_KEY,room)}catch(_){}}
     /* 이 기기에서 연 방이 아직 열려 있으면 그 번호를 보여 준다(이어서 코치로 열기). 코치 권한은 링크가 아니라 방을 연 기기에 붙는다. */
-    async function resumeClaim(){const room=claimedRoom();if(!/^\d{5}$/.test(room))return;try{const api=await roomApi();const r=await api.roomExists(room);if(r.ok){coachRoom.textContent=room;coachSession.value=r.sessionFile||coachSession.value;status.className='entry-status ready';status.textContent='이 기기에서 연 방 '+room+'이 아직 열려 있어요. 그대로 「코치 화면 열기」를 누르면 이어서 열립니다. 새 수업이면 「새 방 번호」.'}}catch(_){}}
+    async function resumeClaim(){const room=claimedRoom();if(!/^\d{5}$/.test(room))return;try{const api=await roomApi();const r=await api.roomExists(room);if(r.ok){coachRoom.textContent=room;coachSession.value=r.sessionFile||coachSession.value;status.className='entry-status ready';status.textContent='이 기기에서 연 방 '+room+'이 아직 열려 있어요. 회차를 고른 뒤 「코치 화면 열기」를 누르면 그 회차로 이어집니다(학생도 같은 회차로 옮겨져요). 새 수업이면 「새 방 번호」.'}}catch(_){}}
     function childCode(){
       const key='oncuvate.pilot.space-observatory.child-code';
       let value=localStorage.getItem(key)||'';
@@ -94,7 +94,7 @@
       const room=coachRoom.textContent.trim();const sessionFile=coachSession.value;status.textContent='수업방을 여는 중…';
       try{const api=await roomApi();await api.createRoom(room,sessionFile);claimRoom(room);location.href=sessionFile+'?pilotRole=coach&room='+room}
       catch(error){
-        if(error&&error.message==='room-exists'&&claimedRoom()===room){try{const api=await roomApi();const r=await api.roomExists(room);if(r.ok){location.href=(r.sessionFile||sessionFile)+'?pilotRole=coach&room='+room;return}}catch(_){}}
+        if(error&&error.message==='room-exists'&&claimedRoom()===room){try{const api=await roomApi();const r=await api.roomExists(room);if(r.ok){if(r.sessionFile!==sessionFile)await api.setRoomSession(room,sessionFile);location.href=sessionFile+'?pilotRole=coach&room='+room;return}}catch(_){}}
         status.className='entry-status error';status.textContent=error&&error.message==='room-exists'?'이미 열린 번호예요. 새 번호를 만들어 주세요.':'수업방을 열지 못했어요. 잠시 후 다시 시도해 주세요.'}
     });
     document.getElementById('joinStudent').addEventListener('click',async()=>{

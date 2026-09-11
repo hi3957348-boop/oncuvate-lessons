@@ -232,6 +232,7 @@
 
   function showScreen(name, options = {}) {
     if (!screens[name]) return;
+    if (!isCoach && !options.ignorePageLock && window.OncuvateClassroomControl?.pageLocked && name !== state.screen) return;
     Object.entries(screens).forEach(([key, element]) => {
       const active = key === name;
       element.hidden = !active;
@@ -1359,6 +1360,7 @@
 
   setWatermark();
   const liveMirror = window.OncuvateLiveMirror?.create({
+    sessionNo: 1,
     snapshot: buildProgressSnapshot,
     onParticipants: renderCoachParticipants,
     onStatus(text) { const el = byId('coachLiveStatus'); if (el) el.textContent = text; }
@@ -1373,7 +1375,6 @@
   applyGoalLanguage(false);
   showScreen(state.screen || 'start', { skipSave: true });
 }());
-
 
 
 

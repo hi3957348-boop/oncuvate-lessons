@@ -7,6 +7,66 @@
   function esc(v){return String(v==null?'':v).replace(/[&<>'"]/g,function(ch){return({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])})}
   var NOTE_PREFIX=(document.documentElement.getAttribute('data-lesson-id')||'lesson')+':coach-note:';
   var drafts={},statusText={};
+  var controlState={pageLocked:false,activityLocked:false,updatedAt:0};
+  var controlUi=null,controlBanner=null;
+  window.OncuvateClassroomControl=controlState;
+  function normalizeControl(value){
+    value=value&&typeof value==='object'?value:{};
+    return{pageLocked:value.pageLocked===true,activityLocked:value.activityLocked===true,updatedAt:Number(value.updatedAt)||0};
+  }
+  function controlSummary(){
+    if(controlState.pageLocked&&controlState.activityLocked)return '페이지 이동과 현재 활동이 잠겨 있습니다.';
+    if(controlState.pageLocked)return '현재 페이지에 머물러 주세요.';
+    if(controlState.activityLocked)return '코치가 현재 활동을 잠시 멈췄습니다.';
+    return '페이지와 활동이 모두 열려 있습니다.';
+  }
+  function renderControlUi(){
+    if(controlUi){
+      controlUi.querySelectorAll('[data-class-control]').forEach(function(button){
+        var key=button.dataset.classControl,on=controlState[key]===true;
+        button.classList.toggle('is-locked',on);button.setAttribute('aria-pressed',String(on));
+        var badge=button.querySelector('b');if(badge)badge.textContent=on?'ON':'OFF';
+      });
+      var status=controlUi.querySelector('[data-class-control-status]');if(status)status.textContent=controlSummary();
+    }
+    if(controlBanner){
+      var locked=controlState.pageLocked||controlState.activityLocked;
+      controlBanner.hidden=!locked;controlBanner.textContent=locked?controlSummary():'';
+    }
+  }
+  function applyControl(value,isCoach){
+    var next=normalizeControl(value);
+    controlState.pageLocked=next.pageLocked;controlState.activityLocked=next.activityLocked;controlState.updatedAt=next.updatedAt;
+    document.body.classList.toggle('student-page-locked',!isCoach&&controlState.pageLocked);
+    document.body.classList.toggle('student-activity-locked',!isCoach&&controlState.activityLocked);
+    if(!isCoach&&controlState.activityLocked&&document.activeElement&&document.activeElement.closest&&document.activeElement.closest('.screen'))document.activeElement.blur();
+    renderControlUi();
+    try{window.dispatchEvent(new CustomEvent('oncuvate:class-control',{detail:normalizeControl(controlState)}))}catch(_){}
+  }
+  function ensureBanner(isCoach){
+    if(isCoach||controlBanner)return;
+    var stage=document.querySelector('.stage');if(!stage)return;
+    controlBanner=document.createElement('div');controlBanner.className='classroom-lock-banner';controlBanner.hidden=true;controlBanner.setAttribute('role','status');stage.appendChild(controlBanner);
+  }
+  function ensureCoachControls(setControl){
+    if(controlUi)return;
+    var panel=document.getElementById('coachPanel');if(!panel)return;
+    controlUi=document.createElement('section');controlUi.className='coach-lock-controls';
+    controlUi.innerHTML='<small>학생 화면 제어</small><div class="coach-lock-grid"><button type="button" data-class-control="pageLocked" aria-pressed="false"><span>페이지 잠금</span><b>OFF</b></button><button type="button" data-class-control="activityLocked" aria-pressed="false"><span>활동 잠금</span><b>OFF</b></button></div><p data-class-control-status>페이지와 활동이 모두 열려 있습니다.</p>';
+    var head=panel.querySelector('header,.coach-panel-head');if(head)head.insertAdjacentElement('afterend',controlUi);else panel.prepend(controlUi);
+    controlUi.addEventListener('click',function(event){var button=event.target.closest('[data-class-control]');if(button)setControl(button.dataset.classControl,controlState[button.dataset.classControl]!==true)});
+    renderControlUi();
+  }
+  document.addEventListener('click',function(event){
+    var runtime=window.ONCUVATE||{};
+    if(runtime.role==='coach'||!controlState.activityLocked||!event.target.closest('.screen:not([hidden])')||event.target.closest('.stage-tools'))return;
+    event.preventDefault();event.stopImmediatePropagation();renderControlUi();
+  },true);
+  ['input','change','submit'].forEach(function(name){document.addEventListener(name,function(event){
+    var runtime=window.ONCUVATE||{};
+    if(runtime.role==='coach'||!controlState.activityLocked||!event.target.closest('.screen:not([hidden])'))return;
+    event.preventDefault();event.stopImmediatePropagation();
+  },true)});
   function noteKey(sessionNo,child){return NOTE_PREFIX+sessionNo+':'+child}
   function loadNote(sessionNo,child){try{return localStorage.getItem(noteKey(sessionNo,child))||''}catch(_){return ''}}
   function storeNote(sessionNo,child,text){try{localStorage.setItem(noteKey(sessionNo,child),text)}catch(_){}}
@@ -41,13 +101,32 @@
   function create(options){
     options=options||{};
     var runtime=window.ONCUVATE||{};
+    var query=new URLSearchParams(window.location.search);
+    if(!runtime.role&&query.get('pilotRole')==='coach')runtime.role='coach';
+    if(!runtime.room&&query.get('room'))runtime.room=query.get('room');
     var isCoach=runtime.role==='coach';
     var room=String(runtime.room||'');
     var child=String(runtime.child||'').replace(/[^a-zA-Z0-9_-]/g,'')||'child';
+    var lessonId=String(document.documentElement.getAttribute('data-lesson-id')||'lesson').replace(/[^a-zA-Z0-9_-]/g,'-');
+    var sessionNo=Number(options.sessionNo||runtime.session)||1;
+    var controlPath='control/'+lessonId+'/session'+String(sessionNo).padStart(2,'0');
+    var controlKey=lessonId+':'+String(room||'preview')+':session'+sessionNo+':class-control';
     var snapshot=typeof options.snapshot==='function'?options.snapshot:function(){return{}};
     var onParticipants=typeof options.onParticipants==='function'?options.onParticipants:function(){};
     var onStatus=typeof options.onStatus==='function'?options.onStatus:function(){};
-    var started=false,timer=0,lastJson='';
+    var started=false,timer=0,lastJson='',controlTouched=false,channel=null;
+    function storeControl(value){try{localStorage.setItem(controlKey,JSON.stringify(value))}catch(_){}}
+    function sendControl(value){
+      if(!isCoach)return;
+      var next=normalizeControl(value);next.updatedAt=Date.now();controlTouched=true;applyControl(next,true);storeControl(next);
+      try{if(channel)channel.postMessage(next)}catch(_){}
+      if(room&&ready())try{Promise.resolve(window._set(window.pth(controlPath),next)).catch(function(){})}catch(_){}
+    }
+    function setControl(key,on){var next=normalizeControl(controlState);next[key]=on===true;sendControl(next)}
+    try{var savedControl=JSON.parse(localStorage.getItem(controlKey)||'null');if(savedControl)applyControl(savedControl,isCoach)}catch(_){}
+    try{channel=new BroadcastChannel(controlKey);channel.onmessage=function(event){if(!isCoach)applyControl(event.data,false)}}catch(_){}
+    window.addEventListener('storage',function(event){if(event.key===controlKey&&!isCoach)try{applyControl(JSON.parse(event.newValue||'{}'),false)}catch(_){}});
+    ensureBanner(isCoach);if(isCoach)ensureCoachControls(setControl);
     function status(text){try{onStatus(text)}catch(_){}}
     function publish(){
       if(isCoach||!room||!started||!ready())return;
@@ -76,6 +155,11 @@
         try{var d=window._onDisconnect&&window._onDisconnect(window.pth('prog/'+child));if(d&&d.remove)d.remove()}catch(_){}
         publish();
       }
+      window._onValue(window.pth(controlPath),function(s){
+        var value=s&&typeof s.val==='function'?s.val():s;
+        if(value&&typeof value==='object')applyControl(value,isCoach);
+      });
+      if(isCoach&&controlTouched)sendControl(controlState);
       return true;
     }
     if(!room){
@@ -92,7 +176,7 @@
         window.addEventListener('pagehide',function(){publish()});
       }
     }
-    return{publish:publish,publishSoon:publishSoon,isCoach:isCoach,room:room,child:child,connected:function(){return started}};
+    return{publish:publish,publishSoon:publishSoon,setControl:setControl,control:controlState,isCoach:isCoach,room:room,child:child,connected:function(){return started}};
   }
   /* 코치 패널용 참가자 목록 — 두 엔진(session01·space-series)이 같은 모양의 스냅샷을 보내므로 그리는 코드는 하나 */
   function renderList(element,map,sessionNo){
