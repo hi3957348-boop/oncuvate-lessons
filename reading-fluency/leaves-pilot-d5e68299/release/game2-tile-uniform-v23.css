@@ -1,0 +1,105 @@
+/* Final Game2 tile contract: region colour stays fixed; only the centre icon changes. */
+.progression-game2 .g2p-board {
+  align-items: stretch !important;
+}
+
+.progression-game2 .g2p-cell,
+.progression-game2[data-complexity="complex"] .g2p-cell,
+.progression-game2[data-complexity="complex"] .g2p-cell:nth-child(n),
+.progression-game2 .g2p-cell.fixed-clue,
+.progression-game2 .g2p-cell.user-hypothesis,
+.progression-game2 .g2p-cell.safe,
+.progression-game2 .g2p-cell.monster {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  aspect-ratio: 1.72 / 1 !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 16px !important;
+  outline: 0 !important;
+  background: var(--region) !important;
+  filter: none !important;
+  transform: none !important;
+  box-shadow: 0 5px 12px rgb(37 20 78 / .07), inset 0 1px 0 rgb(255 255 255 / .78) !important;
+}
+
+.progression-game2 .g2p-cell::before,
+.progression-game2 .g2p-cell::after {
+  display: none !important;
+  content: none !important;
+}
+
+.progression-game2 .g2p-cell:focus-visible {
+  outline: 3px solid #7a6bd2 !important;
+  outline-offset: 2px !important;
+}
+
+.progression-game2 .g2p-state-icon {
+  position: absolute !important;
+  inset: 50% auto auto 50% !important;
+  display: grid !important;
+  place-items: center !important;
+  width: min(52px, 58%) !important;
+  height: min(52px, 68%) !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  transform: translate(-50%, -50%) !important;
+  opacity: 1 !important;
+  pointer-events: none !important;
+}
+
+.progression-game2 .g2p-state-icon img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+}
+
+@media (max-width: 760px) {
+  .progression-game2 .g2p-cell,
+  .progression-game2[data-complexity="complex"] .g2p-cell:nth-child(n) {
+    min-height: 54px !important;
+    border-radius: 14px !important;
+  }
+}
+
+/* One hint indicator only: the older pseudo hearts caused duplicates and ellipsis. */
+.progression-game2 [data-g2p-action="hint"] {
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 7px !important;
+  overflow: visible !important;
+  text-overflow: clip !important;
+  white-space: nowrap !important;
+}
+.progression-game2 [data-g2p-action="hint"]::after {
+  display: none !important;
+  content: none !important;
+}
+.progression-game2 .g2p-hearts {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 3px !important;
+  letter-spacing: 0 !important;
+}
+.progression-game2 .g2p-heart {
+  display: inline-block !important;
+  color: #df6e78 !important;
+  line-height: 1 !important;
+}
+.progression-game2 .g2p-heart.used { color: #d8d5d4 !important; }
+body[data-game2-audio-busy] .progression-game2 button,
+body[data-game2-audio-busy] .progression-game2 input,
+body[data-game2-audio-busy] .progression-game2 select {
+  pointer-events: none !important;
+  cursor: wait !important;
+}
+
+body[data-game2-audio-busy] .progression-game2 .g2p-cell:focus-visible {
+  outline-color: var(--oc-cyan, #4bc9dc);
+}

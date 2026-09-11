@@ -1,0 +1,62 @@
+{
+  "oncuvate": 2,
+  "id": "l4-fallen-leaves-fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-09-09",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "낙엽 1회차 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L4",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "낙엽",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    },
+    "session02.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "낙엽 2회차 읽기유창성",
+      "order": 2,
+      "minDurationMin": 40,
+      "level": "L4",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "낙엽",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    }
+  }
+}

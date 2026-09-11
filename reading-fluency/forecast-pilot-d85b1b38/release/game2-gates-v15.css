@@ -1,0 +1,63 @@
+.progression-game2 .g2p-cell {
+  touch-action:manipulation !important;
+  -webkit-user-select:none;
+  user-select:none;
+}
+
+.progression-game2 .g2p-gate-fallback {
+  display:grid !important;
+  grid-template-columns:minmax(0,1fr) !important;
+}
+
+.progression-game2 .g2p-gate-fallback button,
+.progression-game2 .g2p-gate-fallback span {
+  display:flex;
+  min-height:48px;
+  align-items:center;
+  justify-content:center;
+  border:0;
+  border-radius:14px;
+  background:#e8f1f5;
+  color:#25475b;
+  font-weight:850;
+}
+
+.progression-game2 .g2p-decisions[hidden] {
+  display:none !important;
+}
+
+.g2p-transition {
+  display:grid;
+  place-items:center;
+  align-content:center;
+  gap:12px;
+  min-height:260px;
+  padding:24px;
+  border-radius:24px;
+  background:#f4f8f7;
+  color:#20384b;
+  text-align:center;
+}
+
+.g2p-transition img {
+  width:clamp(96px,10vw,140px);
+  height:clamp(96px,10vw,140px);
+  object-fit:contain;
+  animation:g2p-transition-bounce .7s ease-out 1 both;
+}
+
+.g2p-transition strong {
+  font-size:clamp(22px,2.3vw,34px);
+  line-height:1.35;
+  word-break:keep-all;
+}
+
+@keyframes g2p-transition-bounce {
+  0% { opacity:0; transform:translateY(10px) scale(.9); filter:brightness(1); }
+  58% { opacity:1; transform:translateY(-4px) scale(1.04); filter:brightness(1.08); }
+  100% { opacity:1; transform:translateY(0) scale(1); filter:brightness(1); }
+}
+
+@media (prefers-reduced-motion:reduce) {
+  .g2p-transition img { animation:none !important; }
+}

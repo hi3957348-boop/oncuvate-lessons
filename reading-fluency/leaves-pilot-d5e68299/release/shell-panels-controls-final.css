@@ -1,0 +1,108 @@
+/* Shared final shell rules: only genuine two-panel activities receive a 1:1 split. */
+#app .activity-view > :is(.word-scene-layout, .sentence-layout, .paragraph-grid) {
+  box-sizing: border-box;
+  width: 100% !important;
+  height: clamp(360px, calc(100vh - 100px), 720px) !important;
+  min-height: 0 !important;
+  max-height: clamp(360px, calc(100vh - 100px), 720px) !important;
+  margin: 0 !important;
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  align-items: stretch !important;
+  gap: clamp(12px, 1.5vw, 18px) !important;
+  overflow: hidden !important;
+}
+
+#app .activity-view > .word-scene-layout > :is(.scene-card, .word-pool-card),
+#app .activity-view > .sentence-layout > :is(.sentence-art, .sentence-panel),
+#app .activity-view > .paragraph-grid > :is(.text-board, .question-panel) {
+  box-sizing: border-box;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  max-width: 100% !important;
+  max-height: 100% !important;
+  margin: 0 !important;
+  align-self: stretch !important;
+}
+
+#app .activity-view > .word-scene-layout > .scene-card,
+#app .activity-view > .sentence-layout > .sentence-art,
+#app .activity-view > .paragraph-grid > .text-board,
+#app .activity-view > .paragraph-grid > .question-panel {
+  overflow: hidden !important;
+}
+
+#app .activity-view > .word-scene-layout > .word-pool-card,
+#app .activity-view > .sentence-layout > .sentence-panel {
+  overflow-x: hidden !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+}
+
+#app .activity-view > .word-scene-layout .scene-card img,
+#app .activity-view > .sentence-layout .sentence-art img {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  max-height: 100% !important;
+}
+
+/* Footer buttons share one baseline; only the controls themselves receive pointer events. */
+#app .studio > .bottombar,
+#app .studio.menu-hidden > .bottombar {
+  z-index: 70 !important;
+  pointer-events: none;
+}
+
+#app .studio > .bottombar > *,
+#app .studio > .bottombar button {
+  pointer-events: auto;
+}
+
+#app .activity-shell > .annotation-launcher {
+  right: 104px !important;
+  bottom: 10px !important;
+  z-index: 72 !important;
+  min-width: 72px;
+  min-height: 44px !important;
+  opacity: 1 !important;
+  color: #fff !important;
+  background: linear-gradient(135deg, var(--violet-800), var(--violet-500)) !important;
+  box-shadow: 0 9px 20px rgba(75, 36, 165, .22) !important;
+  pointer-events: auto !important;
+  cursor: pointer !important;
+}
+
+#app .activity-shell > .annotation-launcher:disabled {
+  opacity: .42 !important;
+  box-shadow: none !important;
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+}
+
+#app .bottombar .bottom-actions,
+#app .bottombar .bottom-actions .primary-btn {
+  min-width: 72px;
+}
+
+@media (max-width: 899px) {
+  #app .activity-view > :is(.word-scene-layout, .sentence-layout, .paragraph-grid) {
+    height: clamp(360px, calc(100vh - 96px), 720px) !important;
+    max-height: clamp(360px, calc(100vh - 96px), 720px) !important;
+    grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  #app .activity-shell > .annotation-launcher {
+    right: 86px !important;
+    bottom: 9px !important;
+    min-width: 64px;
+    min-height: 42px !important;
+    padding-inline: 12px;
+  }
+}
