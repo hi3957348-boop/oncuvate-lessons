@@ -1,8 +1,8 @@
 {
   "oncuvate": 2,
   "id": "space-observatory-pilot",
-  "version": "0.5.0",
-  "updatedAt": "2026-09-11",
+  "version": "0.5.1",
+  "updatedAt": "2026-09-14",
   "engine": "jelly-detective case studio v1 (session01 bespoke · space-series.js v6 for 02-04) + case-signals.js v1 + live-mirror.js v1",
   "files": {
     "pilot-entry.html": { "use": "부속" },
@@ -74,7 +74,7 @@
     },
     "session03.html": {
       "use": "콘텐츠",
-      "version": "0.4.0",
+      "version": "0.4.1",
       "title": "Jelly Space Detectives 3 · The Mystery of the Silent Moon Lander",
       "order": 3,
       "minDurationMin": 40,

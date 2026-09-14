@@ -18,7 +18,7 @@ window.SPACE_SESSION={
     {en:'Repair only the system marked REPAIR NOW.',ko:'REPAIR NOW로 표시된 시스템 하나만 수리해요.'},
     {en:'Check the result before the next repair.',ko:'다음 수리 전에 결과를 확인해요.'}
   ]},
-  game:{type:'systems',title:'Restore the silent lander.',eyebrow:'MISSION CONTROL',intro:'1 · Choose a repair order for the three systems. 2 · Repair the system marked REPAIR NOW with one control. 3 · Check the result, then go to the next system.',items:[
+  game:{type:'systems',title:'Restore the silent lander.',eyebrow:'MISSION CONTROL',image:'assets/lunar-lander.webp',imageAlt:'달 표면에 선 로봇 착륙선. 태양 전지판, 단열 덮개가 있는 기구 상자, 지구를 향한 접시 안테나가 보이고 표시등 세 개가 빨갛게 켜져 있다.',intro:'1 · Choose a repair order for the three systems. 2 · Repair the system marked REPAIR NOW with one control. 3 · Check the result, then go to the next system.',items:[
     {id:'power',name:'POWER',problem:'Battery level: 8%. Sunlight has reached the landing site.',correct:'Turn the solar panel toward the Sun.',options:['Turn the solar panel toward the Sun.','Cover the solar panel.','Point the antenna at the ground.']},
     {id:'heat',name:'TEMPERATURE',problem:'The instrument box is below its safe temperature.',correct:'Close the insulated cover around the box.',options:['Open the box to space.','Close the insulated cover around the box.','Turn the antenna in a circle.']},
     {id:'signal',name:'COMMUNICATION',problem:'The radio works, but Earth receives no signal.',correct:'Point the antenna toward Earth.',options:['Point the antenna toward Earth.','Point the antenna at the Moon.','Switch off the radio.']}

@@ -118,3 +118,4 @@ body.coach-role .stage-help-button{display:none}
 .evidence .evidence-sub{display:block;margin-top:10px;opacity:.75}
 .evidence article.frame{background:#fff7e0}
 @media(min-width:901px){.retell{grid-template-columns:minmax(0,1.3fr) 270px}}
+.game-art{display:block;width:100%;max-height:118px;object-fit:cover;object-position:center 40%;border-radius:12px;margin:0 0 8px}
