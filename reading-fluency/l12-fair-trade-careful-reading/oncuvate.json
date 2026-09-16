@@ -1,13 +1,13 @@
 {
   "oncuvate": 2,
   "id": "l12-fair-trade-careful-reading",
-  "version": "1.1.4",
+  "version": "1.1.5",
   "updatedAt": "2026-09-16",
   "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
   "files": {
     "session01.html": {
       "use": "콘텐츠",
-      "version": "1.1.4",
+      "version": "1.1.5",
       "title": "공정한 거래가 만드는 변화 — 꼼꼼 읽기",
       "order": 1,
       "minDurationMin": 35,
