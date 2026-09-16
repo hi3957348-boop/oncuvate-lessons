@@ -1,0 +1,7 @@
+@import url("game2-progression-polish-v2.css");
+.progression-game2 .g2p-cell[style*="#FCE7DA"]{--region:#f2c14e!important}
+.progression-game2 .g2p-cell[style*="#F7DDD8"]{--region:#f28c72!important}
+.progression-game2 .g2p-cell[style*="#F9EFCB"]{--region:#7fb6e8!important}
+.progression-game2 .g2p-cell[style*="#F7E1E7"]{--region:#83c5a8!important}
+.progression-game2 .g2p-cell[style*="#E7E8F7"]{--region:#a89be8!important}
+.progression-game2 .g2p-cell[style*="#E2EDF5"]{--region:#e89bb6!important}

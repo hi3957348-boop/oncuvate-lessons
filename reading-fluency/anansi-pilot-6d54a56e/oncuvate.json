@@ -1,0 +1,62 @@
+{
+  "oncuvate": 2,
+  "id": "l9-anansi-fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-08-26",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "L9 · 게으른 거미 아난시 · 1회차 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L9",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "게으른 거미 아난시",
+        "author": "원작 글 가나 민담 · 원작 그림 비한 드 야허 · 글 김은파",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    },
+    "session02.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "L9 · 게으른 거미 아난시 · 2회차 읽기유창성",
+      "order": 2,
+      "minDurationMin": 40,
+      "level": "L9",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "thirdParty",
+        "title": "게으른 거미 아난시",
+        "author": "원작 글 가나 민담 · 원작 그림 비한 드 야허 · 글 김은파",
+        "source": "두루책방",
+        "license": "CC BY 4.0",
+        "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+        "modified": true
+      }
+    }
+  }
+}

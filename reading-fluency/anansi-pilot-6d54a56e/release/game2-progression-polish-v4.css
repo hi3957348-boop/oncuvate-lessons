@@ -1,0 +1,4 @@
+@import url("game2-progression-polish-v3.css");
+.progression-game2 .g2p-cell.rule-conflict{z-index:3;box-shadow:0 0 0 4px #c84f55,0 0 22px rgba(200,79,85,.38)}
+.progression-game2 .g2p-tools .g2p-check{border-color:#4f7f98;background:#4f7f98;color:#fff}
+.progression-game2 .g2p-tools .g2p-check:disabled{border-color:#d8dfe3;background:#d8dfe3;color:#727a7f}

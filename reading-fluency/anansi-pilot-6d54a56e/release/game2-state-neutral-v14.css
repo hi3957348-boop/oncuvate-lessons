@@ -1,0 +1,43 @@
+/* Game2 final state treatment: the region color is the only tile surface. */
+.progression-game2 .g2p-cell,
+.progression-game2 .g2p-cell:hover,
+.progression-game2 .g2p-cell:focus,
+.progression-game2 .g2p-cell:focus-visible,
+.progression-game2 .g2p-cell.pending,
+.progression-game2 .g2p-cell.fixed-clue,
+.progression-game2 .g2p-cell.user-hypothesis,
+.progression-game2 .g2p-cell.safe,
+.progression-game2 .g2p-cell.monster,
+.progression-game2 .g2p-cell.rule-conflict {
+  z-index:auto !important;
+  border:0 !important;
+  outline:0 !important;
+  outline-offset:0 !important;
+  background:var(--region) !important;
+  opacity:1 !important;
+  filter:none !important;
+  transform:none !important;
+  animation:none !important;
+  box-shadow:0 6px 14px rgb(37 20 78 / .065), inset 0 1px 0 rgb(255 255 255 / .82) !important;
+}
+
+.progression-game2 .g2p-cell::before,
+.progression-game2 .g2p-cell::after {
+  display:none !important;
+  content:none !important;
+}
+
+.progression-game2 .g2p-state-icon,
+.progression-game2 .fixed-clue .g2p-state-icon,
+.progression-game2 .user-hypothesis .g2p-state-icon {
+  opacity:1 !important;
+  border:0 !important;
+  outline:0 !important;
+  background:transparent !important;
+  box-shadow:none !important;
+  animation:none !important;
+}
+
+.progression-game2 .g2p-word {
+  visibility:hidden !important;
+}

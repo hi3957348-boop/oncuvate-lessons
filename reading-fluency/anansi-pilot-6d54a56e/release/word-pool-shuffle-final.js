@@ -1,0 +1,20 @@
+(() => {
+  "use strict";
+  const pack=window.ONQ_CONTENT_PACK,sessionKey=document.body.dataset.session,lesson=pack?.sessions?.[sessionKey];
+  if(!lesson?.wordPool?.length)return;
+  let active=false,seed=0,order=null,columns=4,scheduled=false,applying=false,entry=0;
+  function currentStep(){return Number(document.querySelector(".step-btn.active")?.dataset.step||-1)}
+  function makeRng(value){let x=value||1;return()=>{x^=x<<13;x^=x>>>17;x^=x<<5;return(x>>>0)/4294967296}}
+  function shuffle(values,random){const output=[...values];for(let index=output.length-1;index;index--){const next=Math.floor(random()*(index+1));[output[index],output[next]]=[output[next],output[index]]}return output}
+  function maxRun(values){let best=0,run=0,last=null;for(const value of values){if(value===last)run++;else{last=value;run=1}best=Math.max(best,run)}return best}
+  function mixed(values){return values.some(Boolean)&&values.some(value=>!value)}
+  function rowMixPossible(items,count){for(let start=0;start<items.length;start+=count){const row=items.slice(start,start+count);if(row.length>1&&!mixed(row.map(item=>item.related)))return false}return true}
+  function valid(items,count){const values=items.map(item=>item.related),edge=Math.min(count,items.length);return maxRun(values)<=2&&mixed(values.slice(0,edge))&&mixed(values.slice(-edge))&&rowMixPossible(items,count)}
+  function buildOrder(count){const items=lesson.wordPool.map((item,index)=>({index,related:Boolean(item.related)})),random=makeRng(seed);for(let attempt=0;attempt<5000;attempt++){const candidate=shuffle(items,random);if(valid(candidate,count))return candidate.map(item=>item.index)}for(let attempt=0;attempt<2000;attempt++){const candidate=shuffle(items,random),values=candidate.map(item=>item.related),edge=Math.min(count,items.length);if(maxRun(values)<=2&&mixed(values.slice(0,edge))&&mixed(values.slice(-edge)))return candidate.map(item=>item.index)}return shuffle(items,random).map(item=>item.index)}
+  function detectColumns(pool){const template=getComputedStyle(pool).gridTemplateColumns;if(template&&template!=="none"){const count=template.split(" ").filter(Boolean).length;if(count>1)return count}const buttons=[...pool.querySelectorAll("[data-word-index]")];if(buttons.length<2)return 1;const firstTop=buttons[0].getBoundingClientRect().top;return Math.max(1,buttons.findIndex((button,index)=>index>0&&Math.abs(button.getBoundingClientRect().top-firstTop)>3))||buttons.length}
+  function newEntry(pool){entry++;crypto.getRandomValues?.(new Uint32Array(1));const values=new Uint32Array(1);if(crypto.getRandomValues)crypto.getRandomValues(values);seed=(values[0]||((Date.now()^Math.floor(performance.now()*1000)^entry)>>>0))>>>0;columns=detectColumns(pool);order=buildOrder(columns);active=true}
+  function apply(){scheduled=false;if(applying)return;const pool=document.querySelector(".word-scene-layout .word-pool");if(currentStep()!==3){active=false;order=null;return}if(!pool)return;if(!active||!order)newEntry(pool);const buttons=new Map([...pool.querySelectorAll("[data-word-index]")].map(button=>[Number(button.dataset.wordIndex),button]));if(buttons.size!==lesson.wordPool.length)return;const current=[...pool.querySelectorAll("[data-word-index]")].map(button=>Number(button.dataset.wordIndex));if(current.every((value,index)=>value===order[index]))return;applying=true;const fragment=document.createDocumentFragment();order.forEach(index=>fragment.append(buttons.get(index)));pool.append(fragment);applying=false;window.ONQ_WORD_POOL_SHUFFLE_QA={session:sessionKey,entry,seed,columns,order:[...order],maxCorrectRun:maxRun(order.map(index=>Boolean(lesson.wordPool[index].related))),firstMixed:mixed(order.slice(0,columns).map(index=>Boolean(lesson.wordPool[index].related))),lastMixed:mixed(order.slice(-columns).map(index=>Boolean(lesson.wordPool[index].related))),rowsMixed:rowMixPossible(order.map(index=>lesson.wordPool[index]),columns)} }
+  function schedule(){if(scheduled)return;scheduled=true;requestAnimationFrame(apply)}
+  new MutationObserver(schedule).observe(document.getElementById("app"),{childList:true,subtree:true});
+  schedule();
+})();

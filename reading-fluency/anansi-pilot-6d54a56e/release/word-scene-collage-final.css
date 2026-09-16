@@ -1,0 +1,71 @@
+/* Four text-free book scenes for the pre-sentence word-finding activity. */
+#app .word-scene-layout {
+  grid-template-columns: minmax(360px, .96fr) minmax(420px, 1.04fr);
+  align-items: stretch;
+}
+
+#app .word-scene-layout .scene-card.word-scene-collage {
+  box-sizing: border-box;
+  width: 100%;
+  height: clamp(300px, 54vh, 360px);
+  min-height: 300px;
+  padding: 10px;
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  grid-template-rows: repeat(2, minmax(0, 1fr));
+  gap: 10px;
+  overflow: hidden;
+  border: 1px solid #dfe4db;
+  border-radius: 22px;
+  background: #f7f8f2;
+}
+
+#app .word-scene-collage__item {
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 1px solid rgba(129, 145, 128, .22);
+  border-radius: 15px;
+  background: #fff;
+}
+
+#app .word-scene-layout .scene-card.word-scene-collage .word-scene-collage__item img {
+  width: 100%;
+  height: 100%;
+  min-height: 0;
+  display: block;
+  object-fit: contain;
+  object-position: center;
+}
+
+@media (max-width: 1179px) {
+  #app .word-scene-layout {
+    grid-template-columns: minmax(300px, .9fr) minmax(360px, 1.1fr);
+  }
+  #app .word-scene-layout .scene-card.word-scene-collage {
+    height: clamp(300px, 42vh, 390px);
+  }
+}
+
+@media (max-width: 899px) {
+  #app .word-scene-layout {
+    grid-template-columns: 1fr;
+  }
+  #app .word-scene-layout .scene-card.word-scene-collage {
+    width: min(620px, 100%);
+    height: clamp(320px, 42vh, 430px);
+    margin-inline: auto;
+  }
+}
+
+@media (max-width: 620px) {
+  #app .word-scene-layout .scene-card.word-scene-collage {
+    height: clamp(280px, 42vh, 360px);
+    min-height: 280px;
+    padding: 8px;
+    gap: 8px;
+  }
+}
+

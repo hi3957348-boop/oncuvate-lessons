@@ -1,0 +1,405 @@
+/* Last-loaded common spacing, role colors, and Step5 compact settings. */
+:root {
+  --oc-role-primary: #623fd0;
+  --oc-role-primary-hover: #5232b7;
+  --oc-role-secondary-bg: #ffffff;
+  --oc-role-secondary-line: #846bea;
+  --oc-role-secondary-text: #4c2cac;
+}
+
+html,
+body,
+#app.app-shell {
+  height: 100%;
+  overflow: hidden !important;
+}
+
+#app .activity-shell > .activity-view {
+  box-sizing: border-box !important;
+  padding-top: 26px !important;
+  overflow-x: hidden !important;
+}
+
+/* Progression is filled purple; guide and drawing remain quieter white actions. */
+#app .bottom-actions > :is(.activity-guide-action, .annotation-launcher),
+#app .activity-shell > .annotation-launcher {
+  color: var(--oc-role-secondary-text) !important;
+  background: var(--oc-role-secondary-bg) !important;
+  background-image: none !important;
+  border: 2px solid var(--oc-role-secondary-line) !important;
+  box-shadow: 0 7px 16px rgba(72, 44, 172, .10) !important;
+}
+
+#app .bottom-actions > :is(.activity-guide-action, .annotation-launcher):is(:hover, :focus-visible),
+#app .activity-shell > .annotation-launcher:is(:hover, :focus-visible) {
+  color: #3e218f !important;
+  background: #f8f6ff !important;
+  border-color: #6747d5 !important;
+}
+
+#app .bottom-actions > [data-action="next"],
+#app [data-action="next"].primary-btn {
+  color: #fff !important;
+  background: var(--oc-role-primary) !important;
+  background-image: none !important;
+  border-color: var(--oc-role-primary) !important;
+  box-shadow: 0 9px 20px rgba(72, 44, 172, .22) !important;
+}
+
+#app .bottom-actions > [data-action="next"]:is(:hover, :focus-visible),
+#app [data-action="next"].primary-btn:is(:hover, :focus-visible) {
+  background: var(--oc-role-primary-hover) !important;
+  border-color: var(--oc-role-primary-hover) !important;
+}
+
+/* Step5: remove the left settings rail and use the whole activity width. */
+#app .activity-view:has(.ws-step5) {
+  position: relative !important;
+  overflow: hidden !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] {
+  position: relative !important;
+  display: grid !important;
+  grid-template-columns: minmax(0, 1fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: 0 !important;
+  width: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding: 0 8px 4px !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-toolbar {
+  position: absolute !important;
+  inset: 8px 12px auto auto !important;
+  z-index: 24 !important;
+  display: block !important;
+  width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  border: 0 !important;
+  border-radius: 14px !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] :is(.ws-pack-tabs, .ws-sound-switch, .ws-print-button, .ws-stage-tabs) {
+  display: none !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-toolbar-actions {
+  display: block !important;
+  width: 44px !important;
+  height: 44px !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-settings-button {
+  display: grid !important;
+  width: 44px !important;
+  min-width: 44px !important;
+  height: 44px !important;
+  min-height: 44px !important;
+  padding: 0 !important;
+  place-items: center !important;
+  border: 2px solid var(--oc-role-secondary-line) !important;
+  border-radius: 14px !important;
+  color: var(--oc-role-secondary-text) !important;
+  background: #fff !important;
+  box-shadow: 0 8px 18px rgba(72, 44, 172, .11) !important;
+  font-size: 21px !important;
+  line-height: 1 !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-settings-icon {
+  display: inline-grid !important;
+  width: auto !important;
+  height: auto !important;
+  place-items: center;
+  color: currentColor !important;
+  font-size: 21px !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-work-area {
+  grid-column: 1 !important;
+  grid-row: 1 !important;
+  grid-template-columns: minmax(180px, 214px) minmax(0, 1fr) !important;
+  gap: 16px !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  padding-top: 4px !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-guide-card {
+  padding: 20px 16px !important;
+  border-color: #ded5f5 !important;
+  background: #fbfaff !important;
+  background-image: none !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-list {
+  padding: 12px !important;
+  border-color: #ded5f5 !important;
+  background: #fff !important;
+  scrollbar-gutter: stable;
+}
+
+#app .activity-view:has(.ws-step5) .ws-item {
+  gap: 12px !important;
+  padding: 16px 18px !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-item + .ws-item {
+  margin-top: 4px;
+}
+
+#app .activity-view:has(.ws-step5) .ws-sentence {
+  gap: 7px 9px !important;
+  line-height: 1.65 !important;
+}
+
+/* Sentence listen is an icon control, not a text pill. */
+#app .activity-view:has(.ws-step5) .ws-sentence > .ws-audio {
+  display: inline-grid !important;
+  flex: 0 0 40px !important;
+  width: 40px !important;
+  min-width: 40px !important;
+  height: 40px !important;
+  min-height: 40px !important;
+  margin-left: 5px !important;
+  padding: 0 !important;
+  place-items: center !important;
+  border: 2px solid var(--oc-role-secondary-line) !important;
+  border-radius: 50% !important;
+  color: var(--oc-role-secondary-text) !important;
+  background: #fff !important;
+  box-shadow: none !important;
+  font-size: 0 !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-sentence > .ws-audio > span {
+  display: block !important;
+  width: auto !important;
+  height: auto !important;
+  margin: 0 0 0 2px !important;
+  color: currentColor !important;
+  background: transparent !important;
+  font-size: 14px !important;
+  line-height: 1 !important;
+}
+
+#app .activity-view:has(.ws-step5) .ws-sentence > .ws-audio.is-playing {
+  background: #f3efff !important;
+  box-shadow: 0 0 0 4px rgba(98, 63, 208, .16) !important;
+}
+
+/* Remove sage role colors from Step5 settings and common toggles. */
+.ws-settings-panel {
+  width: min(350px, calc(100vw - 24px)) !important;
+  max-height: min(520px, calc(100vh - 24px)) !important;
+  padding: 16px !important;
+  border-color: #ded5f5 !important;
+  color: #2d2444 !important;
+  background: #fff !important;
+  box-shadow: 0 18px 44px rgba(49, 31, 101, .18) !important;
+}
+
+.ws-settings-content {
+  border-color: #e4def4 !important;
+  background: #faf8ff !important;
+}
+
+.ws-settings-row > span,
+.ws-settings-panel header span,
+.ws-settings-panel small {
+  color: #6b6280 !important;
+}
+
+.ws-settings-row button,
+.ws-settings-print,
+.ws-setting-options button,
+.ws-setting-stages button,
+.ws-settings-close {
+  color: var(--oc-role-secondary-text) !important;
+  border-color: #d9cff5 !important;
+  background: #fff !important;
+}
+
+.ws-settings-row button.active,
+.ws-setting-options button.active,
+.ws-setting-stages button.active {
+  color: var(--oc-role-secondary-text) !important;
+  border-color: var(--oc-role-secondary-line) !important;
+  background: #f1edff !important;
+  box-shadow: inset 0 0 0 1px #b8a8ef !important;
+}
+
+.ws-settings-done {
+  color: #fff !important;
+  border-color: var(--oc-role-primary) !important;
+  background: var(--oc-role-primary) !important;
+}
+
+.ws-setting-stages button span {
+  color: var(--oc-role-secondary-text) !important;
+  background: #f1edff !important;
+}
+
+#app :is(.mode-btn, .ws-sound-switch button)[aria-pressed="true"],
+#app :is(.mode-btn, .ws-sound-switch button).active,
+#app .annotation-toolbar .tool-btn.active {
+  color: #fff !important;
+  border-color: var(--oc-role-primary) !important;
+  background: var(--oc-role-primary) !important;
+  background-image: none !important;
+}
+
+@media (max-width: 899px) {
+  #app .activity-shell > .activity-view {
+    padding-top: 20px !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    padding-inline: 6px !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-toolbar {
+    inset: 6px 10px auto auto !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-work-area {
+    grid-template-columns: minmax(145px, 180px) minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) !important;
+    gap: 12px !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-list {
+    padding: 10px !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-item {
+    padding: 14px 15px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  #app .activity-shell > .activity-view {
+    padding-top: 18px !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-step5[data-ws-compact-settings="true"] .ws-work-area {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: auto minmax(0, 1fr) !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-guide-card {
+    min-height: 78px !important;
+    padding: 10px 62px 10px 12px !important;
+  }
+}
+
+@media print {
+  #app .activity-shell > .activity-view {
+    padding-top: 0 !important;
+  }
+}
+
+/* ONQ_NEUTRAL_CONTROL_COLORS_20260822 */
+@media screen {
+  #app .activity-view:has(.ws-step5) .ws-settings-button,
+  #app .activity-view:has(.ws-step5) .ws-sentence > .ws-audio {
+    color: #555b66 !important;
+    border-color: #c9cbd1 !important;
+    background: #fff !important;
+    background-image: none !important;
+    box-shadow: 0 7px 16px rgba(55, 62, 75, .09) !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-settings-icon {
+    width: 22px !important;
+    height: 22px !important;
+    color: currentColor !important;
+    stroke: currentColor !important;
+    stroke-width: 1.7 !important;
+    stroke-linecap: round !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-sentence > .ws-audio.is-playing {
+    color: #313742 !important;
+    border-color: #9da3ad !important;
+    background: #f3f4f6 !important;
+    box-shadow: 0 0 0 4px rgba(75, 82, 94, .12) !important;
+  }
+
+  .ws-settings-row button,
+  .ws-settings-print,
+  .ws-setting-options button,
+  .ws-setting-stages button,
+  .ws-settings-close,
+  .ws-settings-done,
+  #app :is(.mode-btn, .ws-sound-switch button)[aria-pressed="true"],
+  #app :is(.mode-btn, .ws-sound-switch button).active,
+  #app .annotation-toolbar .tool-btn.active {
+    color: #3f4651 !important;
+    border-color: #b7bbc3 !important;
+    background: #eceef1 !important;
+    background-image: none !important;
+    box-shadow: none !important;
+  }
+
+  .ws-settings-row button.active,
+  .ws-setting-options button.active,
+  .ws-setting-stages button.active {
+    color: #2f3540 !important;
+    border-color: #969da8 !important;
+    background: #e3e5e9 !important;
+    box-shadow: inset 0 0 0 1px #c1c5cc !important;
+  }
+
+  .ws-setting-stages button span {
+    color: #4f5661 !important;
+    background: #eceef1 !important;
+  }
+
+  #app .bottom-actions > :is(.activity-guide-action, .annotation-launcher),
+  #app .activity-shell > .annotation-launcher {
+    color: var(--oc-role-secondary-text) !important;
+    border: 2px solid var(--oc-role-secondary-line) !important;
+    background: #fff !important;
+    background-image: none !important;
+  }
+}
+
+
+/* ── 설정 버튼을 상자 밖으로 (2026-08-24) ─────────────────────────────
+   ⚠️ 모양(테두리 없음·배경 없음·아이콘만)은 step5-settings-outside-v24.css가
+   이미 한다. 여기서는 **자리만** 옮긴다 — 같은 속성을 두 파일이 다투면
+   나중에 어느 쪽이 이기는지 아무도 모르게 된다. */
+#app .activity-view:has(.ws-step5) .ws-step5 { position: relative; }
+
+#app .activity-view:has(.ws-step5) .ws-step5 .ws-toolbar-actions {
+  position: absolute !important;
+  top: -52px !important;
+  right: -6px !important;
+  width: auto !important;
+  height: auto !important;
+  z-index: 4;
+}
+
+/* 「설정」 글자는 지우고 톱니바퀴만 남긴다 */
+#app .activity-view:has(.ws-step5) .ws-step5 .ws-settings-button > span:not(.ws-settings-icon) { display: none !important; }
+
+/* 다른 규칙이 남기던 옅은 회색 원을 지운다 — 「선은 빼고 톱니바퀴만」 */
+#app .activity-view:has(.ws-step5) .ws-step5 .ws-toolbar-actions .ws-settings-button {
+  background: none !important;
+  background-color: transparent !important;
+  border-radius: 50% !important;
+}
+#app .activity-view:has(.ws-step5) .ws-step5 .ws-toolbar-actions .ws-settings-button:hover {
+  background-color: rgba(120, 100, 200, .12) !important;
+}

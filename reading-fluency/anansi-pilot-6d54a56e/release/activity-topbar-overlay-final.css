@@ -1,0 +1,91 @@
+/* Final activity header treatment: controls remain accessible without consuming a row. */
+#app .activity-view,
+#app .activity-view > :is(.override-game, .override-game2, .progression-game2, .conveyor-v3, .conveyor-v5, .word-scene-layout, .sentence-layout, .paragraph-grid, .worksheet-grid) {
+  position: relative;
+  min-width: 0;
+}
+
+#app .activity-view .compact-activity-bar {
+  position: absolute !important;
+  inset-block-start: 10px !important;
+  inset-inline-end: 10px !important;
+  inset-inline-start: auto !important;
+  z-index: 72;
+  width: auto !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  height: auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 7px;
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  backdrop-filter: none !important;
+  pointer-events: none;
+}
+
+#app .activity-view .compact-activity-bar > * {
+  pointer-events: auto;
+}
+
+#app .activity-view .compact-info,
+#app .activity-view .compact-progress,
+#app .activity-view .compact-activity-bar [data-cv3-action="settings"] {
+  min-height: 36px;
+  white-space: nowrap;
+  background: rgba(255, 255, 255, .94);
+  box-shadow: 0 6px 18px rgba(38, 51, 79, .08);
+}
+
+/* The original heading is superseded by the overlay control and must never reserve space. */
+#app .activity-view > .page-head {
+  display: none !important;
+  height: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+
+/* Activity content starts at the frame edge; scrolling stays inside the established panels. */
+#app .activity-view {
+  align-content: start !important;
+  overflow-x: hidden !important;
+}
+
+@media (max-width: 899px) {
+  #app .activity-view .compact-activity-bar {
+    inset-block-start: 8px !important;
+    inset-inline-end: 8px !important;
+    gap: 5px;
+  }
+
+  #app .activity-view .compact-info,
+  #app .activity-view .compact-progress,
+  #app .activity-view .compact-activity-bar [data-cv3-action="settings"] {
+    min-height: 34px;
+    padding-inline: 9px;
+    font-size: 11px;
+  }
+}
+
+@media (max-width: 620px) {
+  #app .activity-view .compact-info {
+    width: 36px;
+    padding: 0;
+    overflow: hidden;
+    color: transparent;
+    font-size: 0;
+  }
+
+  #app .activity-view .compact-info::after {
+    content: "i";
+    display: grid;
+    place-items: center;
+    color: #385168;
+    font: 850 14px/1 Pretendard, "Noto Sans KR", sans-serif;
+  }
+}

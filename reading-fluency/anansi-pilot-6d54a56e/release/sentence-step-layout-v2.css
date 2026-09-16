@@ -1,0 +1,50 @@
+/* Step 3: stable two-panel shell with compact, uncropped illustration content. */
+#app .activity-view:has(> :is(.word-scene-layout, .sentence-layout)) { min-height: 0; overflow: hidden !important; }
+#app .activity-view > :is(.word-scene-layout, .sentence-layout) {
+  box-sizing: border-box; display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  align-content: stretch !important; align-items: stretch !important;
+  gap: clamp(12px, 1.6vw, 18px) !important;
+  width: 100% !important; height: 100% !important; min-height: 0 !important; overflow: hidden !important;
+}
+#app .activity-view > .word-scene-layout > :is(.scene-card, .word-pool-card),
+#app .activity-view > .sentence-layout > :is(.sentence-art, .sentence-panel) {
+  box-sizing: border-box; width: 100% !important; height: 100% !important;
+  min-width: 0 !important; min-height: 0 !important; align-self: stretch !important;
+  flex: none !important; overflow: hidden !important; border-radius: clamp(16px, 1.8vw, 24px) !important;
+}
+#app .activity-view > .word-scene-layout > .word-pool-card,
+#app .activity-view > .sentence-layout > .sentence-panel {
+  overflow-y: auto !important; overflow-x: hidden !important;
+  overscroll-behavior: contain; scrollbar-gutter: stable;
+}
+#app .activity-view > .sentence-layout > .sentence-art {
+  display: grid !important; place-items: center !important; isolation: isolate; background: #fff !important;
+}
+#app .activity-view > .sentence-layout > .sentence-art > img,
+#app .activity-view > .sentence-layout > .sentence-art > picture,
+#app .activity-view > .sentence-layout > .sentence-art > picture > img {
+  display: block; width: 100% !important; height: clamp(170px, 34vh, 220px) !important;
+  max-height: calc(100% - 24px) !important; object-fit: contain !important;
+  object-position: center !important; box-shadow: none !important;
+}
+#app :is(.cover-visual, .cover-thumb, .cover-book-thumb, .word-scene-collage__item, .scene-card:has(> img)) {
+  overflow: hidden !important; isolation: isolate; background: #fff !important;
+}
+#app :is(.cover-visual, .cover-thumb, .cover-book-thumb, .word-scene-collage__item, .scene-card:has(> img)) img { box-shadow: none !important; }
+#app .activity-view:has(> :is(.worksheet-grid, .worksheet-stage, .worksheet-panel)) { align-content: start; overflow: hidden; }
+#app :is(.worksheet-grid, .worksheet-stage, .worksheet-panel) { min-height: 0; align-content: start; }
+@media (max-width: 899px) {
+  #app .activity-view > .sentence-layout > .sentence-art > img,
+  #app .activity-view > .sentence-layout > .sentence-art > picture,
+  #app .activity-view > .sentence-layout > .sentence-art > picture > img { height: clamp(150px, 24vh, 205px) !important; }
+}
+@media (max-width: 620px) {
+  #app .activity-view > :is(.word-scene-layout, .sentence-layout) {
+    grid-template-columns: minmax(0, 1fr) !important; grid-template-rows: repeat(2, minmax(0, 1fr)) !important;
+  }
+  #app .activity-view > .sentence-layout > .sentence-art > img,
+  #app .activity-view > .sentence-layout > .sentence-art > picture,
+  #app .activity-view > .sentence-layout > .sentence-art > picture > img { height: clamp(140px, 22vh, 185px) !important; }
+}
