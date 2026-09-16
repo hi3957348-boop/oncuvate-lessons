@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-lesson-id="l12-fair-trade-careful-reading" data-lesson-version="1.1.3">
+<html lang="ko" data-lesson-id="l12-fair-trade-careful-reading" data-lesson-version="1.1.4">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -12,7 +12,7 @@
   <link rel="stylesheet" href="prediction-feedback.css">
   <link rel="stylesheet" href="prediction-popup.css">
   <link rel="stylesheet" href="layout-improvements.css">
-  <link rel="stylesheet" href="information-thief.css?v=1.0.0">
+  <link rel="stylesheet" href="information-thief.css?v=1.1.4">
   <link rel="stylesheet" href="aba-intervention.css?v=1.0.0">
   <link rel="stylesheet" href="reading-fluency-unified.css">
   <link rel="stylesheet" href="reading-fluency-fixes.css">
@@ -34,7 +34,7 @@
       <nav class="step-nav" id="stepNav">
         <button class="step-link active" type="button" data-go="0" aria-current="step"><span class="step-no">1</span><span><b>예측하기</b><small>주제 낱말 살피기</small></span></button>
         <button class="step-link" type="button" data-go="1"><span class="step-no">2</span><span><b>꼼꼼하게 읽기</b><small>낱말·답·근거 확인</small></span></button>
-        <button class="step-link" type="button" data-go="2"><span class="step-no">3</span><span><b>정보 도둑 잡기</b><small>사라지거나 바뀐 정보 찾기</small></span></button>
+        <button class="step-link" type="button" data-go="2"><span class="step-no">3</span><span><b>단어 스파이</b><small>틀린 단어를 찾아 바르게 고치기</small></span></button>
         <button class="step-link" type="button" data-go="3"><span class="step-no">4</span><span><b>공정 거래 연결</b><small>약속 카드를 제자리로</small></span></button>
         <button class="step-link" type="button" data-go="4"><span class="step-no">5</span><span><b>검산하기</b><small>조건을 하나씩 확인</small></span></button>
         <button class="step-link" type="button" data-go="5"><span class="step-no">6</span><span><b>새 글 전이</b><small>어휘·전략·생활에 적용</small></span></button>
@@ -164,64 +164,53 @@
           </div>
         </section>
 
-        <section class="page information-thief-page" data-page="2" data-activity-id="information-thief" data-measure-id="detailComparison">
+        <section class="page information-thief-page word-spy-page" data-page="2" data-activity-id="word-spy" data-measure-id="detailComparison">
           <div class="page-head">
-            <div><p class="eyebrow">3 · 정보 도둑 잡기</p><h1>정보 도둑을 잡아라! <span>조금 전 읽은 내용과 다른 문장은 어떤 것인가요?</span></h1></div>
-            <span class="counter" id="thiefCounter">사건 1 / 6</span>
+            <div><p class="eyebrow">3 · 단어 스파이</p><h1>문장에 숨은 틀린 단어를 찾아라! <span>틀린 단어를 누르고 바른 단어로 고쳐 적어요.</span></h1></div>
+            <span class="counter" id="thiefCounter">문장 1 / 4</span>
           </div>
-
           <div class="thief-phase-guide" aria-label="활동 순서">
-            <div class="thief-phase active" id="thiefPhaseOne"><span>1</span><strong>도둑 먼저 잡기</strong><small>틀린 요약문 찾기</small></div>
+            <div class="thief-phase active" id="thiefPhaseOne"><span>1</span><strong>틀린 단어 찾기</strong><small>뜻이 어색한 단어 누르기</small></div>
             <i aria-hidden="true"></i>
-            <div class="thief-phase" id="thiefPhaseTwo"><span>2</span><strong>훔친 정보 찾기</strong><small>무엇이 틀렸는지 밝히기</small></div>
+            <div class="thief-phase" id="thiefPhaseTwo"><span>2</span><strong>바르게 고치기</strong><small>알맞은 단어 직접 쓰기</small></div>
           </div>
-
           <div class="thief-layout" id="thiefActivity">
             <article class="activity-card thief-case-card">
               <div class="thief-case-head">
-                <span class="case-file-label" id="thiefCaseLabel">사건 기록 01</span>
-                <span class="case-status" id="thiefCaseStatus">도둑 수색 중</span>
+                <span class="case-file-label" id="thiefCaseLabel">문장 기록 01</span>
+                <span class="case-status" id="thiefCaseStatus">단어 수색 중</span>
               </div>
-              <section class="thief-step" id="thiefSummaryStep" aria-labelledby="thiefSummaryQuestion">
-                <h2 id="thiefSummaryQuestion">정보 도둑을 잡아라!<br><span>조금 전 읽은 내용과 다른 문장은 어떤 것인가요?</span></h2>
-
-                <div class="thief-summary-options" id="thiefSummaryOptions"></div>
+              <section class="thief-step word-spy-find" aria-labelledby="thiefSummaryQuestion">
+                <h2 id="thiefSummaryQuestion">이 문장에서 잘못 적은 단어를 눌러 보세요.</h2>
+                <div class="word-spy-sentence" id="thiefSummaryOptions" role="group" aria-label="단어를 선택할 문장"></div>
               </section>
-
               <section class="thief-step thief-error-step hidden" id="thiefErrorStep" aria-labelledby="thiefErrorQuestion">
-                <div class="caught-banner"><span aria-hidden="true">✓</span><p><strong>도둑을 잡았어요.</strong><small>이제 무엇을 훔치거나 바꿨는지 밝혀요.</small></p></div>
-                <h2 id="thiefErrorQuestion">이 요약문은 무엇이 틀렸을까요?</h2>
-                <div class="thief-error-options" id="thiefErrorOptions"></div>
+                <div class="caught-banner"><span aria-hidden="true">✓</span><p><strong>틀린 단어를 찾았어요.</strong><small>문장 뜻에 맞는 단어로 바꾸어 적어요.</small></p></div>
+                <h2 id="thiefErrorQuestion"><span id="selectedWrongWord">이 단어</span> 대신 쓸 바른 단어는 무엇인가요?</h2>
+                <form class="word-spy-correction" id="wordSpyCorrectionForm">
+                  <label for="wordSpyCorrection">바른 단어</label>
+                  <div><input id="wordSpyCorrection" type="text" autocomplete="off" spellcheck="false" maxlength="12" placeholder="바른 단어를 적어요"><button class="primary" type="submit" data-track="answer">확인</button></div>
+                </form>
+                <p class="word-spy-result hidden" id="wordSpyResult" aria-live="polite"></p>
               </section>
-
-              <button class="primary thief-next hidden" id="thiefNext" type="button">다음 사건</button>
+              <button class="primary thief-next hidden" id="thiefNext" type="button">다음 문장</button>
             </article>
-
             <aside class="jelly-coach-card thief-coach-chat" aria-label="젤리코치와의 대화">
-              <header>
-                <img src="assets/jelly-coach-square.png" alt="" aria-hidden="true">
-                <strong>젤리코치</strong>
-              </header>
+              <header><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header>
               <div class="thief-coach-scroll" tabindex="0">
-                <p class="thief-coach-message" id="thiefCoachMessage" role="status" aria-live="polite">세 문장을 끝까지 읽고, 다른 문장을 골라 봐.</p>
+                <p class="thief-coach-message" id="thiefCoachMessage" role="status" aria-live="polite">문장을 끝까지 읽고, 뜻에 어울리지 않는 단어 하나를 눌러 봐.</p>
                 <button id="thiefHintButton" type="button" data-track="hint">확인 힌트</button>
                 <span class="visually-hidden" id="thiefPromptLevel">A0 · 스스로 확인</span>
-                <div class="thief-source-reveal" id="thiefSourceReveal" aria-live="polite">
-                  <span>원문 단서</span>
-                  <p class="source-evidence-text" id="thiefSource"></p>
-                </div>
               </div>
               <div class="visually-hidden" id="thiefFeedback" hidden aria-hidden="true"></div>
             </aside>
           </div>
-
           <section class="thief-complete hidden" id="thiefComplete" aria-live="polite">
             <span class="complete-stamp" aria-hidden="true">✓</span>
-            <div><p>사건 해결 완료</p><h2>정보 도둑 6명을 모두 잡았어요</h2><span>요약문에서도 대상·대가·조건·과정을 원문과 끝까지 대조해요.</span></div>
+            <div><p>단어 수사 완료</p><h2>단어 스파이 4개를 모두 찾았어요</h2><span>단어 하나가 바뀌면 문장의 뜻도 달라질 수 있어요. 끝까지 꼼꼼히 확인했어요.</span></div>
             <button class="primary" id="thiefRestart" type="button">다시 도전하기</button>
           </section>
         </section>
-
         <section class="page forecast-pipeline-page" data-page="3" data-activity-id="restore-fair-trade-chain" data-measure-id="relationshipClassification">
           <div class="page-head">
             <div><p class="eyebrow">4 · 공정 거래 연결</p><h1>공정 무역의 약속 카드를 알맞은 칸에 놓아요</h1></div>
@@ -314,12 +303,12 @@
                   <div><button type="button" data-value="trade">거래가 이루어질 때</button><button type="button" data-value="after-use">사용이 끝난 뒤</button></div>
                 </section>
                 <section class="condition-match-row chat-pending" data-condition-row="range">
-                  <strong><span>범위</span>몇 개를 골라야 하나요?</strong>
-                  <div><button type="button" data-value="all">해당하는 것 모두</button><button type="button" data-value="one">한 가지만</button></div>
+                  <strong><span>범위</span>해당하는 답을 어떻게 골라야 하나요?</strong>
+                  <div><button type="button" data-value="all">빠짐없이 모두</button><button type="button" data-value="one">한 가지만</button></div>
                 </section>
                 <section class="condition-match-row chat-pending" data-condition-row="evidence">
-                  <strong><span>선택</span>몇 가지를 골라야 하나요?</strong>
-                  <div><button type="button" data-value="all">모두</button><button type="button" data-value="one">한 가지만</button></div>
+                  <strong><span>근거 수</span>본문에서 서로 다른 도움을 몇 가지 확인해야 하나요?</strong>
+                  <div><button type="button" data-value="two">두 가지</button><button type="button" data-value="one">한 가지</button></div>
                 </section>
                 </div>
                 <div class="condition-chat-finish hidden" id="conditionChatFinish">
@@ -484,16 +473,18 @@
   <div class="watermark" id="watermark" aria-hidden="true"></div>
   <div class="completion-signal" id="completionSignal" data-track="lesson-complete" hidden></div>
   <footer class="rights">자체 제작 텍스트 · 꼼꼼 읽기 활동 설계 © Oncuvate. All rights reserved.</footer>
-  <script src="aba-intervention.js?v=1.1.3"></script>
+  <script src="aba-intervention.js?v=1.1.4"></script>
   <script src="vocabulary-notebook.js?v=1.1.3"></script>
-  <script src="app.js?v=1.1.3"></script>
+  <script src="app.js?v=1.1.4"></script>
   <script src="annotation.js"></script>
   <script src="prediction-words.js?v=1.0.0"></script>
-  <script src="information-thief.js?v=1.0.0"></script>
+  <script src="information-thief.js?v=1.1.4"></script>
   <script src="layout-controller.js"></script>
   <script src="coach-sync.js?v=1.0.0"></script>
 </body>
 </html>
+
+
 
 
 

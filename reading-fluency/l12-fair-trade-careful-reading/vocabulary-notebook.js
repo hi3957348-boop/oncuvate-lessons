@@ -6,7 +6,7 @@
     distribution: { word: "유통", hanja: "流通 · 흐를 유, 통할 통", meaning: "물건이 생산자에게서 소비자에게 전달되는 과정이에요.", example: "초콜릿은 여러 유통 단계를 거쳐 가게에 도착해요." },
     unstable: { word: "불안정", hanja: "不安定 · 아닐 불, 편안할 안, 정할 정", meaning: "상태가 일정하지 않고 자주 달라지는 것을 말해요.", example: "수입이 불안정하면 생활 계획을 세우기 어려워요." },
     "fair-trade": { word: "공정 무역", hanja: "公正貿易 · 공평할 공, 바를 정, 무역할 무, 바꿀 역", meaning: "생산자에게 정당한 대가와 안전한 생산 조건을 보장하려는 거래 방식이에요.", example: "우리는 공정 무역 표시가 있는 초콜릿을 살펴보았어요." },
-    "fair-pay": { word: "정당한 대가", hanja: "正當한 代價 · 바를 정, 마땅할 당, 대신할 대, 값 가", meaning: "한 일과 들인 노력에 알맞게 지불하는 값이에요.", example: "구매자는 농부에게 수확한 카카오의 정당한 대가를 지불했어요." },
+    "fair-pay": { word: "정당한 대가", hanja: "正當한 代價 · 바를 정, 마땅할 당, 대신할 대, 값 가", meaning: "한 일과 들인 노력을 제대로 인정해 마땅하고 올바르게 지불하는 값이에요.", example: "구매자는 농부에게 수확한 카카오의 정당한 대가를 지불했어요." },
     soil: { word: "토양", hanja: "土壤 · 흙 토, 흙 양", meaning: "식물이 자라는 바탕이 되는 땅의 흙을 말해요.", example: "농부는 토양을 건강하게 지키며 카카오나무를 길러요." },
     certification: { word: "인증 표시", hanja: "認證表示 · 알 인, 증거 증, 겉 표, 보일 시", meaning: "정해진 기준을 지켰는지 확인했다는 것을 알려 주는 표시에요.", example: "소비자는 포장의 인증 표시를 보고 생산 기준을 확인했어요." },
     "direct-trade": { word: "직거래", hanja: "直去來 · 곧을 직, 갈 거, 올 래", meaning: "중간 상인을 거치지 않고 생산자와 구매자가 직접 하는 거래예요.", example: "농부와 가게가 직거래하여 유통 단계를 줄였어요." },
@@ -203,5 +203,6 @@
   document.addEventListener("keydown", event => { if (event.key === "Escape" && !dialog.hidden) closeDialog(); });
   updateNotebook();
 })();
+
 
 

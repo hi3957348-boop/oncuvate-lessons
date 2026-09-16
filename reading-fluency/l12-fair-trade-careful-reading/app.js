@@ -87,7 +87,7 @@
   const helpMessages = [
     "제목과 그림을 충분히 살핀 뒤 주제와 관련 있는 낱말인지 판단해 보세요.",
     "어려운 낱말은 눌러 뜻을 확인하고, 문제에서는 답을 하나 골라요.",
-    "먼저 원문과 뜻이 다른 요약문을 찾고, 필요할 때 확인 힌트를 한 단계씩 사용해요.",
+    "한 문장을 끝까지 읽고, 뜻에 어울리지 않는 단어를 찾아 바르게 고쳐 써요.",
     "카드의 핵심 내용을 확인해 공정한 거래 과정의 알맞은 칸에 놓아요.",
     "조건 대조판에서 대상·시점·범위·근거 수를 직접 골라 내 답과 비교하세요.",
     "새 상황에서 어휘, 읽기 전략, 생활 판단을 차례로 적용해 보세요.",
@@ -288,7 +288,7 @@
   toggleFirstPassage.addEventListener("click", toggleFirstPassageView);
   revealFirstPassage.addEventListener("click", toggleFirstPassageView);
 
-  // 3. 정보 도둑 잡기는 information-thief.js에서 독립적으로 운영합니다.
+  // 3. 단어 스파이는 information-thief.js에서 독립적으로 운영합니다.
 
   // 4. 공정 거래 연결 — 약속 카드를 알맞은 과정에 배치
   const pipelineTaskBank = [
@@ -529,8 +529,8 @@
   const verifyFeedback = document.getElementById("verifyFeedback");
   const conditionRows = [...document.querySelectorAll("[data-condition-row]")];
   const conditionRoutes = [...document.querySelectorAll("[data-condition-route]")];
-  const conditionAnswers = { subject: "both", time: "trade", range: "all", evidence: "all" };
-  const conditionLabels = { subject: "대상", time: "시점", range: "범위", evidence: "선택" };
+  const conditionAnswers = { subject: "both", time: "trade", range: "all", evidence: "two" };
+  const conditionLabels = { subject: "대상", time: "시점", range: "범위", evidence: "근거 수" };
   const selectedConditions = new Map();
   const correctVerifyAnswers = ["fair-pay", "trace"];
   let verifyPromptLevel = 0;
@@ -706,6 +706,7 @@
   window.addEventListener("oncuvate:ready", updateWatermark);
   showPage(0);
 })();
+
 
 
 
