@@ -1,8 +1,8 @@
 {
   "oncuvate": 2,
   "id": "l12-fair-trade-careful-reading",
-  "version": "1.1.5",
-  "updatedAt": "2026-09-16",
+  "version": "1.1.6",
+  "updatedAt": "2026-09-17",
   "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
   "files": {
     "session01.html": {
@@ -23,6 +23,15 @@
         "nav": true,
         "prog": true
       },
+      "copyright": {
+        "kind": "inHouse"
+      }
+    },
+    "read-aloud-easy.html": {
+      "use": "부속",
+      "version": "1.0.0",
+      "title": "공정 무역 쉬운 글 - 음성으로 듣기",
+      "order": 2,
       "copyright": {
         "kind": "inHouse"
       }
