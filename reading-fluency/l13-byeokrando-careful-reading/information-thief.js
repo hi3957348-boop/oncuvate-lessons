@@ -3,62 +3,34 @@
 
   const cases = [
     {
-      parts: [
-        { text: "여러" }, { text: "유통" }, { text: "계단", after: "을" }, { text: "거치면" },
-        { text: "생산자에게" }, { text: "돌아가는" }, { text: "수익이" }, { text: "적어질" }, { text: "수" }, { text: "있다", after: "." }
-      ],
-      wrong: "계단",
-      answer: "단계",
-      hint: "물건이 생산자에게서 소비자에게 가는 차례를 나타내는 말인지 살펴봐.",
-      strongerHint: "바른 단어는 ‘단’으로 시작해.",
-      corrected: "여러 유통 단계를 거치면 생산자에게 돌아가는 수익이 적어질 수 있다."
+      parts: [{ text: "벽란도는" }, { text: "예성강" }, { text: "산구에" }, { text: "자리" }, { text: "잡았다", after: "." }],
+      wrong: "산구에", answer: "하구에", accepted: ["하구", "하구에"],
+      hint: "강물이 바다로 흘러 들어가는 어귀를 뜻하는 말을 생각해 봐.", strongerHint: "바른 단어는 ‘하’로 시작해.",
+      corrected: "벽란도는 예성강 하구에 자리 잡았다."
     },
     {
-      parts: [
-        { text: "일부" }, { text: "농장에서는" }, { text: "어린이의" }, { text: "교육과" },
-        { text: "안전이" }, { text: "위험받는" }, { text: "문제가" }, { text: "생긴다", after: "." }
-      ],
-      wrong: "위험받는",
-      answer: "위협받는",
-      hint: "교육과 안전이 해를 입을 가능성이 있다는 뜻에 어울리는 말을 생각해 봐.",
-      strongerHint: "바른 단어는 ‘위협’으로 시작해.",
-      corrected: "일부 농장에서는 어린이의 교육과 안전이 위협받는 문제가 생긴다."
+      parts: [{ text: "예성강은" }, { text: "물이" }, { text: "얕아" }, { text: "큰" }, { text: "배가" }, { text: "드나들기" }, { text: "좋았다", after: "." }],
+      wrong: "얕아", answer: "깊어", accepted: ["깊어", "깊어서"],
+      hint: "큰 배가 다니기 좋은 강물의 깊이를 떠올려 봐.", strongerHint: "바른 단어는 ‘깊’으로 시작해.",
+      corrected: "예성강은 물이 깊어 큰 배가 드나들기 좋았다."
     },
     {
-      parts: [
-        { text: "기준을" }, { text: "지킨" }, { text: "생산물에는" }, { text: "인증" },
-        { text: "표정이" }, { text: "붙기도" }, { text: "한다", after: "." }
-      ],
-      wrong: "표정이",
-      answer: "표시가",
-      accepted: ["표시", "표시가"],
-      hint: "기준을 지킨 물건인지 알아볼 수 있게 붙이는 것을 뜻하는 말이야.",
-      strongerHint: "바른 단어는 ‘표시’로 시작해.",
-      corrected: "기준을 지킨 생산물에는 인증 표시가 붙기도 한다."
+      parts: [{ text: "아라비아" }, { text: "상인은" }, { text: "송에서" }, { text: "고려의" }, { text: "소음을" }, { text: "듣고" }, { text: "찾아왔다", after: "." }],
+      wrong: "소음을", answer: "소문을", accepted: ["소문", "소문을"],
+      hint: "어떤 사실이 사람들 사이에 전해진 것을 뜻하는 말을 생각해 봐.", strongerHint: "바른 단어는 ‘소문’으로 시작해.",
+      corrected: "아라비아 상인은 송에서 고려의 소문을 듣고 찾아왔다."
     },
     {
-      parts: [
-        { text: "필요한" }, { text: "만큼" }, { text: "사고" }, { text: "생산" }, { text: "과장을" },
-        { text: "확인하는" }, { text: "것이" }, { text: "책임" }, { text: "있는" }, { text: "소비의" }, { text: "시작이다", after: "." }
-      ],
-      wrong: "과장을",
-      answer: "과정을",
-      accepted: ["과정", "과정을"],
-      hint: "물건이 만들어지는 순서와 방법을 뜻하는 말을 생각해 봐.",
-      strongerHint: "바른 단어는 ‘과정’으로 시작해.",
-      corrected: "필요한 만큼 사고 생산 과정을 확인하는 것이 책임 있는 소비의 시작이다."
+      parts: [{ text: "고려는" }, { text: "송에" }, { text: "인삼과" }, { text: "종이를" }, { text: "수입했다", after: "." }],
+      wrong: "수입했다", answer: "수출했다", accepted: ["수출", "수출했다"],
+      hint: "자기 나라의 물건을 다른 나라에 내다 파는 일을 뜻하는 말을 생각해 봐.", strongerHint: "바른 단어는 ‘수출’로 시작해.",
+      corrected: "고려는 송에 인삼과 종이를 수출했다."
     },
     {
-      parts: [
-        { text: "작은" }, { text: "선물이" }, { text: "생산자와" }, { text: "소비자를" },
-        { text: "더" }, { text: "공정하게" }, { text: "연결할" }, { text: "수" }, { text: "있습니다", after: "." }
-      ],
-      wrong: "선물이",
-      answer: "선택이",
-      accepted: ["선택", "선택이"],
-      hint: "생산자와 소비자를 공정하게 연결하는 행동을 뜻하는 말을 생각해 봐.",
-      strongerHint: "바른 단어는 ‘선택’으로 시작해.",
-      corrected: "작은 선택이 생산자와 소비자를 더 공정하게 연결할 수 있습니다."
+      parts: [{ text: "고려는" }, { text: "송에서" }, { text: "비단과" }, { text: "서적을" }, { text: "내보냈다", after: "." }],
+      wrong: "내보냈다", answer: "들여왔다", accepted: ["들여왔다", "수입했다", "수입"],
+      hint: "다른 나라의 물건을 고려 안으로 가져온 방향을 생각해 봐.", strongerHint: "바른 표현은 ‘들여’로 시작해.",
+      corrected: "고려는 송에서 비단과 서적을 들여왔다."
     }
   ];
 

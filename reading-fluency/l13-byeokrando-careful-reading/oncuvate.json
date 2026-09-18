@@ -1,13 +1,13 @@
 {
   "oncuvate": 2,
   "id": "l13-byeokrando-careful-reading",
-  "version": "1.1.6",
-  "updatedAt": "2026-09-17",
+  "version": "1.2.0",
+  "updatedAt": "2026-09-18",
   "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
   "files": {
     "session01.html": {
       "use": "콘텐츠",
-      "version": "1.1.5",
+      "version": "1.2.0",
       "title": "벽란도, 세계의 상인이 모인 항구 — 꼼꼼 읽기",
       "order": 1,
       "minDurationMin": 35,
@@ -30,7 +30,7 @@
     "read-aloud-easy.html": {
       "use": "부속",
       "version": "1.0.0",
-      "title": "공정 무역 쉬운 글 - 음성으로 듣기",
+      "title": "벽란도 무역 쉬운 글 - 음성으로 듣기",
       "order": 2,
       "copyright": {
         "kind": "inHouse"

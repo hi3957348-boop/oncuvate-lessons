@@ -57,62 +57,63 @@
     const tasks = [
       {
         label: "어휘 전이",
-        passage: "마을 장터에서 농부가 직접 기른 딸기를 팔았습니다. 지수는 농부가 들인 시간과 노력, 재배 비용이 제대로 인정되어야 한다고 생각해 가격을 깎지 않고 제값을 지불했습니다. 농부는 그 돈으로 다음 농사를 준비했습니다.",
-        question: "이 글에서 ‘정당한 대가’에 해당하는 것은 무엇인가요?",
+        passage: "바다로 이어지는 다온강의 하구에는 작은 항구가 있습니다. 강에서 내려온 배와 바다에서 온 배가 이곳에서 만납니다.",
+        question: "이 글에서 ‘하구’에 해당하는 곳은 어디인가요?",
         answers: [
-          { value: "fair", text: "지수가 농부의 노동과 비용을 인정해 가격을 깎지 않고 제값을 지불한 것" },
-          { value: "material", text: "농부가 다음 농사를 준비한 것" },
-          { value: "place", text: "마을에서 장터를 연 것" }
+          { value: "mouth", text: "강물이 바다로 흘러 들어가는 어귀" },
+          { value: "mountain", text: "강물이 시작되는 높은 산" },
+          { value: "field", text: "농사를 짓는 넓은 들판" }
         ],
-        answer: "fair",
-        cueQuestion: "‘정당한 대가’의 뜻을 보여 주는 표현을 본문에서 누르세요.",
+        answer: "mouth",
+        cueQuestion: "‘하구’의 위치를 알려 주는 표현을 본문에서 누르세요.",
         cues: [
-          { value: "place", text: "마을 장터에서" },
-          { value: "fair", text: "시간과 노력, 재배 비용을 인정해 가격을 깎지 않고 제값을 지불했습니다" },
-          { value: "material", text: "다음 농사를 준비했습니다" }
+          { value: "mouth", text: "바다로 이어지는 다온강의 하구" },
+          { value: "ships", text: "강에서 내려온 배" },
+          { value: "port", text: "작은 항구" }
         ],
-        cue: "fair",
-        retry: "생산자의 노동과 비용을 올바르게 인정한 행동을 찾아보세요.",
-        explanation: "생산자의 노동과 비용을 제대로 인정하여 부당하게 깎지 않고 지불한 제값이 ‘정당한 대가’예요."
-      },      {
-        label: "전략 전이",
-        passage: "민호는 두 공책 중 하나를 고르려 했습니다. A 공책은 가격이 더 쌌지만 생산 정보가 없었습니다. B 공책은 재생 종이를 사용했고 생산 과정을 확인할 수 있는 표시가 있었습니다. 민호는 가격만 보지 않고 B 공책을 골랐습니다.",
-        question: "민호가 B 공책을 고른 결정적인 이유는 무엇인가요?",
-        answers: [
-          { value: "cheap", text: "가격이 가장 쌌기 때문" },
-          { value: "evidence", text: "재생 종이와 확인 가능한 생산 표시가 있었기 때문" },
-          { value: "two", text: "공책이 두 권 있었기 때문" }
-        ],
-        answer: "evidence",
-        cueQuestion: "선택의 조건을 알려 주는 표현을 본문에서 누르세요.",
-        cues: [
-          { value: "cheap", text: "A 공책은 가격이 더 쌌지만" },
-          { value: "evidence", text: "재생 종이를 사용했고 생산 과정을 확인할 수 있는 표시가 있었습니다" },
-          { value: "two", text: "두 공책 중 하나" }
-        ],
-        cue: "evidence",
-        retry: "결과가 아니라 민호가 선택한 이유를 보여 주는 정보를 찾아보세요.",
-        explanation: "가격만 보지 않고 재료와 생산 정보를 확인하는 전략을 새 글에도 적용했어요."
+        cue: "mouth",
+        retry: "강과 바다가 만나는 위치를 찾아보세요.",
+        explanation: "강물이 바다나 큰 강으로 흘러 들어가는 어귀를 하구라고 해요."
       },
       {
-        label: "생활·교과 전이",
-        passage: "마트에서 바나나를 사려고 합니다. 첫 상품은 ‘착한 상품’이라는 광고만 있고 생산 정보가 없습니다. 둘째 상품은 정해진 노동·환경 기준을 확인받았다는 설명과 공정 무역 인증 표시가 있습니다. 필요한 양은 한 묶음입니다.",
-        question: "글의 정보에 따라 책임 있게 고른 행동은 무엇인가요?",
+        label: "전략 전이",
+        passage: "해솔항은 수도와 가까웠습니다. 강물이 깊어 큰 무역선도 안전하게 드나들 수 있었습니다. 이런 위치와 자연조건 덕분에 여러 나라 상인이 모였습니다.",
+        question: "해솔항이 무역의 중심지로 성장한 이유는 무엇인가요?",
         answers: [
-          { value: "ad", text: "광고만 보고 첫 상품을 두 묶음 산다." },
-          { value: "checked", text: "기준과 표시를 확인한 둘째 상품을 한 묶음 산다." },
-          { value: "many", text: "두 상품을 필요한 양보다 많이 산다." }
+          { value: "conditions", text: "수도와 가깝고 강물이 깊었기 때문" },
+          { value: "gold", text: "강에서 금이 많이 났기 때문" },
+          { value: "ban", text: "외국 상인의 출입을 막았기 때문" }
         ],
-        answer: "checked",
-        cueQuestion: "믿을 수 있는 생산 정보를 보여 주는 표현을 본문에서 누르세요.",
+        answer: "conditions",
+        cueQuestion: "항구가 성장한 이유를 보여 주는 표현을 본문에서 누르세요.",
         cues: [
-          { value: "ad", text: "‘착한 상품’이라는 광고만 있고" },
-          { value: "checked", text: "정해진 노동·환경 기준을 확인받았다는 설명과 공정 무역 인증 표시가 있습니다" },
-          { value: "amount", text: "필요한 양은 한 묶음입니다" }
+          { value: "capital", text: "수도와 가까웠습니다" },
+          { value: "conditions", text: "강물이 깊어 큰 무역선도 안전하게 드나들 수 있었습니다" },
+          { value: "result", text: "여러 나라 상인이 모였습니다" }
         ],
-        cue: "checked",
-        retry: "광고 문구가 아니라 실제 기준을 확인할 수 있는 표현을 찾아보세요.",
-        explanation: "생산 기준과 인증 표시를 확인하고 필요한 만큼만 사는 행동이 책임 있는 소비에 가까워요."
+        cue: "conditions",
+        retry: "항구의 위치와 배가 다니기 좋은 조건을 함께 확인해 보세요.",
+        explanation: "장소의 위치와 자연조건을 확인해 중심지가 된 이유를 찾았어요."
+      },
+      {
+        label: "교과 전이",
+        passage: "우리나라는 자동차를 다른 나라에 내다 팔고, 다른 나라에서 원유를 들여옵니다. 자동차는 우리나라의 수출품이고 원유는 수입품입니다.",
+        question: "수출품과 수입품을 바르게 구분한 것은 무엇인가요?",
+        answers: [
+          { value: "correct", text: "자동차는 수출품, 원유는 수입품" },
+          { value: "reverse", text: "자동차는 수입품, 원유는 수출품" },
+          { value: "both-export", text: "자동차와 원유는 모두 수출품" }
+        ],
+        answer: "correct",
+        cueQuestion: "물건이 오가는 방향을 보여 주는 표현을 본문에서 누르세요.",
+        cues: [
+          { value: "correct", text: "자동차를 다른 나라에 내다 팔고, 다른 나라에서 원유를 들여옵니다" },
+          { value: "cars", text: "자동차" },
+          { value: "oil", text: "원유" }
+        ],
+        cue: "correct",
+        retry: "우리나라에서 나가는 물건과 들어오는 물건을 구분해 보세요.",
+        explanation: "나라 밖으로 내다 파는 것은 수출, 나라 안으로 들여오는 것은 수입이에요."
       }
     ];
     const transferCard = document.getElementById("transferCard");
@@ -136,7 +137,7 @@
     const saveButton = document.getElementById("saveMistakeButton");
     const completionMessage = document.getElementById("completionMessage");
     const completionSignal = document.getElementById("completionSignal");
-    const storageKey = "l12-fair-trade-careful-reading:reflection-v1.0";
+    const storageKey = "l13-byeokrando-careful-reading:reflection-v1.0";
     const answerHighlights = [
       { fair: ["fair"], material: ["material"], place: ["place"] },
       { cheap: ["cheap"], evidence: ["evidence"], two: ["two"] },

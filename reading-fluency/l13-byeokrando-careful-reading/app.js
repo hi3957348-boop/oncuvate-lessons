@@ -1,7 +1,7 @@
 (() => {
   "use strict";
 
-  const contentId = "l12-fair-trade-careful-reading";
+  const contentId = "l13-byeokrando-careful-reading";
   const pages = [...document.querySelectorAll(".page")];
   const stepLinks = [...document.querySelectorAll(".step-link")];
   const progressBar = document.getElementById("progressBar");
@@ -88,7 +88,7 @@
     "제목과 그림을 충분히 살핀 뒤 주제와 관련 있는 낱말인지 판단해 보세요.",
     "어려운 낱말은 눌러 뜻을 확인하고, 문제에서는 답을 하나 골라요.",
     "한 문장을 끝까지 읽고, 뜻에 어울리지 않는 단어를 찾아 바르게 고쳐 써요.",
-    "카드의 핵심 내용을 확인해 공정한 거래 과정의 알맞은 칸에 놓아요.",
+    "카드의 핵심 내용을 확인해 장소·상인·수출품·수입품 칸에 놓아요.",
     "조건 대조판에서 대상·시점·범위·근거 수를 직접 골라 내 답과 비교하세요.",
     "새 상황에서 어휘, 읽기 전략, 생활 판단을 차례로 적용해 보세요.",
     "오늘 도움이 된 확인 행동을 한 가지 골라 기록해요."
@@ -104,36 +104,36 @@
       state.prediction = button.dataset.predict;
       predictionFeedback.textContent = "내 예측: " + state.prediction + " · 이제 글을 읽으며 맞는지 확인해 보세요.";
       predictionFeedback.className = "inline-feedback success";
-      button.dataset.correct = button.dataset.predict.startsWith("공정") ? "true" : "false";
-      emit("answer", { activityId: "predict-fair-trade", itemId: "prediction", value: state.prediction });
+      button.dataset.correct = button.dataset.predict.startsWith("벽란도") ? "true" : "false";
+      emit("answer", { activityId: "predict-byeokrando", itemId: "prediction", value: state.prediction });
     });
   });
 
   // 2. 꼼꼼하게 읽기 — 본문 확인 뒤 한 번에 답 선택
   const firstQuestions = [
     {
-      question: "공정 무역은 어떤 거래 방식인가요?",
-      options: ["가장 싼 물건만 고르는 거래", "구매자가 생산자에게 정당한 대가를 지불하는 거래", "중간 상인이 가격을 모두 정하는 거래"],
-      correct: 1,
-      cueOptions: ["공정 무역은", "어떤", "거래 방식인가요"],
-      cueCorrect: 0,
-      explanation: "공정 무역은 구매자가 생산자에게 정당한 대가를 지불하고 안전한 생산 조건을 지키도록 돕는 거래 방식이에요."
-    },
-    {
-      question: "생산자의 수입이 너무 적거나 불안정하면 생길 수 있는 문제는 무엇인가요?",
-      options: ["생활비와 교육비를 마련하기 어려워진다.", "모든 상품의 가격이 같아진다.", "유통 단계가 자동으로 사라진다."],
+      question: "벽란도가 국제 무역항으로 발전한 이유는 무엇인가요?",
+      options: ["강물이 깊고 개경과 가까웠기 때문", "강에서 금이 많이 났기 때문", "외국 상인의 출입을 막았기 때문"],
       correct: 0,
-      cueOptions: ["생산자의 수입이", "너무 적거나 불안정하면", "생길 수 있는 문제"],
+      cueOptions: ["벽란도가", "국제 무역항으로 발전한", "이유"],
       cueCorrect: 0,
-      explanation: "수입이 적거나 불안정하면 생산자 가족이 생활비와 교육비를 마련하기 어려울 수 있어요."
+      explanation: "벽란도는 예성강 하구에 있고 개경과 가까우며, 강물이 깊어 큰 배가 드나들기 좋았어요."
     },
     {
-      question: "책임 있는 소비의 시작으로 글에서 제안한 행동은 무엇인가요?",
-      options: ["비싼 물건을 많이 산다.", "광고 문구만 믿고 바로 산다.", "필요한 만큼 사고 생산 정보를 확인한다."],
-      correct: 2,
-      cueOptions: ["책임 있는 소비의 시작", "글에서", "제안한 행동"],
+      question: "아라비아 상인들은 어떻게 고려까지 오게 되었나요?",
+      options: ["송에서 고려의 소문을 듣고 찾아왔다.", "고려가 아라비아를 정복해서 왔다.", "일본 상인의 초대를 받고 왔다."],
+      correct: 0,
+      cueOptions: ["아라비아 상인들은", "어떻게", "고려까지 오게 되었나요"],
       cueCorrect: 0,
-      explanation: "필요한 만큼 사고 누가 어떤 환경에서 만들었는지 확인하는 것이 책임 있는 소비의 시작이에요."
+      explanation: "송과 거래하던 아라비아 상인들이 고려에 관한 소문을 듣고 벽란도까지 찾아왔어요."
+    },
+    {
+      question: "고려가 송에서 들여온 물품은 무엇인가요?",
+      options: ["인삼과 종이", "비단과 서적", "금과 은"],
+      correct: 1,
+      cueOptions: ["고려가", "송에서", "들여온 물품"],
+      cueCorrect: 1,
+      explanation: "고려는 송에서 비단, 차, 약재, 서적, 악기 등을 수입했어요."
     }
   ];  let firstQuestionIndex = 0;
   let firstConfirmed = false;
@@ -290,24 +290,24 @@
 
   // 3. 단어 스파이는 information-thief.js에서 독립적으로 운영합니다.
 
-  // 4. 공정 거래 연결 — 약속 카드를 알맞은 과정에 배치
+  // 4. 벽란도 무역 분류 — 정보를 알맞은 갈래에 배치
   const pipelineTaskBank = [
-    { id: "grow", stage: "producer", cue: "씨를 심고 열매를 기르며 수확", text: "생산자는 씨를 심고 열매를 기르며 수확합니다." },
-    { id: "fair-pay", stage: "price", cue: "정당한 대가", text: "구매자는 생산자에게 일한 만큼 정당한 대가를 지불해야 합니다." },
-    { id: "no-child-labor", stage: "work", cue: "어린이 노동", text: "강제로 일하게 하거나 어린이 노동을 이용하지 않습니다." },
-    { id: "check-label", stage: "consumer", cue: "인증 표시", text: "소비자는 인증 표시와 생산 과정을 확인해 물건을 고릅니다." },
-    { id: "cooperate", stage: "producer", cue: "생산자 단체", text: "생산자 단체는 함께 모여 구매자와 거래할 수 있습니다." },
-    { id: "stable-sale", stage: "price", cue: "안정적으로 판매", text: "생산자는 비교적 안정적으로 판매할 기회를 얻습니다." },
-    { id: "safe-work", stage: "work", cue: "안전한 환경", text: "생산자가 안전한 환경에서 일하도록 돕습니다." },
-    { id: "responsible-choice", stage: "consumer", cue: "필요한 만큼", text: "소비자는 필요한 만큼 사고 믿을 수 있는 정보를 확인합니다." }
+    { id: "yesong-river", stage: "location", cue: "예성강 하구", text: "벽란도는 예성강 하구에 자리 잡았습니다." },
+    { id: "near-capital", stage: "location", cue: "개경과 가까웠고 강물이 깊어", text: "개경과 가까웠고 강물이 깊어 큰 배가 드나들기 좋았습니다." },
+    { id: "east-asian-traders", stage: "traders", cue: "송, 일본, 동남아시아", text: "송, 일본, 동남아시아 여러 나라의 상인이 찾아왔습니다." },
+    { id: "arab-traders", stage: "traders", cue: "아라비아 상인", text: "아라비아 상인도 고려의 소문을 듣고 벽란도에 왔습니다." },
+    { id: "ginseng-paper", stage: "export", cue: "인삼과 종이", text: "고려는 품질이 뛰어난 인삼과 종이를 송에 내보냈습니다." },
+    { id: "export-crafts", stage: "export", cue: "화문석과 나전 칠기", text: "금, 은, 모시, 화문석과 나전 칠기도 고려의 수출품이었습니다." },
+    { id: "silk-medicine", stage: "import", cue: "비단, 차, 약재", text: "고려는 송에서 비단, 차, 약재를 들여왔습니다." },
+    { id: "books-instruments", stage: "import", cue: "서적과 악기", text: "서적과 악기도 송에서 들여온 물품이었습니다." }
   ];
   const pipelineStageMeta = {
-    producer: { label: "생산자", total: 2 },
-    price: { label: "정당한 대가", total: 2 },
-    work: { label: "생산 조건", total: 2 },
-    consumer: { label: "소비자", total: 2 }
+    location: { label: "장소 조건", total: 2 },
+    traders: { label: "찾아온 상인", total: 2 },
+    export: { label: "고려 수출품", total: 2 },
+    import: { label: "고려 수입품", total: 2 }
   };
-  const pipelineStageOrder = ["producer", "price", "work", "consumer"];
+  const pipelineStageOrder = ["location", "traders", "export", "import"];
   function makePipelineOrder() {
     const items = [...pipelineTaskBank];
     for (let i = items.length - 1; i > 0; i -= 1) {
@@ -338,7 +338,7 @@
   let pipelineFirstCorrect = 0;
   let pipelineSelfCorrections = 0;
   let pipelineAdvanceTimer = 0;
-  const pipelineStageCounts = { producer: 0, price: 0, work: 0, consumer: 0 };
+  const pipelineStageCounts = { location: 0, traders: 0, export: 0, import: 0 };
 
   function renderPipelineCardText(task, showCue = false) {
     pipelineCardText.replaceChildren();
@@ -380,7 +380,7 @@
     pipelineCard.className = "pipeline-card";
     pipelineCard.draggable = true;
     pipelineInstruction.textContent = "카드를 끌거나 알맞은 칸을 눌러요.";
-    pipelineFeedback.textContent = "카드가 누구와 어떤 약속에 관한 내용인지 확인해 보세요.";
+    pipelineFeedback.textContent = "카드가 장소, 상인, 수출품, 수입품 중 어디에 해당하는지 확인해 보세요.";
     pipelineFeedback.className = "pipeline-feedback";
     pipelineNext.classList.add("hidden");
     pipelineStations.forEach(station => {
@@ -399,7 +399,7 @@
     const promptLevel = pipelineAttempts < 2 ? "A0" : pipelineAttempts === 2 ? "A1" : "A2";
 
     emit("answer", {
-      activityId: "restore-fair-trade-chain",
+      activityId: "classify-byeokrando-trade",
       itemId: "pipeline-" + task.id,
       correct,
       value: stage,
@@ -415,7 +415,7 @@
       station?.classList.add("wrong");
       window.setTimeout(() => station?.classList.remove("wrong"), 280);
       if (pipelineAttempts === 1) {
-        pipelineFeedback.textContent = "아직 맞지 않아요. 카드의 대상과 행동을 다시 확인해 봐요.";
+        pipelineFeedback.textContent = "아직 맞지 않아요. 카드가 가리키는 정보의 종류를 다시 확인해 봐요.";
       } else {
         renderPipelineCardText(task, true);
         pipelineFeedback.textContent = "‘" + task.cue + "’가 어느 과정과 연결되는지 확인해 보세요.";
@@ -486,7 +486,7 @@
     pipelineStations.forEach(station => { station.disabled = true; station.classList.add("powered"); });
     pipelineStatusSegments.forEach(segment => segment.classList.add("powered"));
     emit("activity-complete", {
-      activityId: "restore-fair-trade-chain",
+      activityId: "classify-byeokrando-trade",
       score: state.pipelineCorrect,
       firstResponseScore: pipelineFirstCorrect,
       selfCorrections: pipelineSelfCorrections
@@ -529,10 +529,10 @@
   const verifyFeedback = document.getElementById("verifyFeedback");
   const conditionRows = [...document.querySelectorAll("[data-condition-row]")];
   const conditionRoutes = [...document.querySelectorAll("[data-condition-route]")];
-  const conditionAnswers = { subject: "both", time: "trade", range: "all", evidence: "two" };
+  const conditionAnswers = { subject: "byeokrando", time: "goryeo", range: "all", evidence: "two" };
   const conditionLabels = { subject: "대상", time: "시점", range: "범위", evidence: "근거 수" };
   const selectedConditions = new Map();
-  const correctVerifyAnswers = ["fair-pay", "trace"];
+  const correctVerifyAnswers = ["deep-water", "near-capital"];
   let verifyPromptLevel = 0;
 
   function lockVerifyAnswers(locked) {

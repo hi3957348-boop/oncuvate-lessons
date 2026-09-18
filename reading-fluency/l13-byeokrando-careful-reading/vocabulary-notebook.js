@@ -2,18 +2,18 @@
   "use strict";
 
   const words = {
-    producer: { word: "생산자", hanja: "生産者 · 날 생, 낳을 산, 사람 자", meaning: "물건이나 서비스를 만들어 내는 사람이나 단체예요.", example: "카카오를 기르고 수확하는 농부는 생산자예요." },
-    distribution: { word: "유통", hanja: "流通 · 흐를 유, 통할 통", meaning: "물건이 생산자에게서 소비자에게 전달되는 과정이에요.", example: "초콜릿은 여러 유통 단계를 거쳐 가게에 도착해요." },
-    unstable: { word: "불안정", hanja: "不安定 · 아닐 불, 편안할 안, 정할 정", meaning: "상태가 일정하지 않고 자주 달라지는 것을 말해요.", example: "수입이 불안정하면 생활 계획을 세우기 어려워요." },
-    "fair-trade": { word: "공정 무역", hanja: "公正貿易 · 공평할 공, 바를 정, 무역할 무, 바꿀 역", meaning: "생산자에게 정당한 대가와 안전한 생산 조건을 보장하려는 거래 방식이에요.", example: "우리는 공정 무역 표시가 있는 초콜릿을 살펴보았어요." },
-    "fair-pay": { word: "정당한 대가", hanja: "正當한 代價 · 바를 정, 마땅할 당, 대신할 대, 값 가", meaning: "한 일과 들인 노력을 제대로 인정해 마땅하고 올바르게 지불하는 값이에요.", example: "구매자는 농부에게 수확한 카카오의 정당한 대가를 지불했어요." },
-    soil: { word: "토양", hanja: "土壤 · 흙 토, 흙 양", meaning: "식물이 자라는 바탕이 되는 땅의 흙을 말해요.", example: "농부는 토양을 건강하게 지키며 카카오나무를 길러요." },
-    certification: { word: "인증 표시", hanja: "認證表示 · 알 인, 증거 증, 겉 표, 보일 시", meaning: "정해진 기준을 지켰는지 확인했다는 것을 알려 주는 표시에요.", example: "소비자는 포장의 인증 표시를 보고 생산 기준을 확인했어요." },
-    "direct-trade": { word: "직거래", hanja: "直去來 · 곧을 직, 갈 거, 올 래", meaning: "중간 상인을 거치지 않고 생산자와 구매자가 직접 하는 거래예요.", example: "농부와 가게가 직거래하여 유통 단계를 줄였어요." },
-    "responsible-consumption": { word: "책임 있는 소비", hanja: "責任 있는 消費 · 맡을 책, 맡길 임, 사라질 소, 쓸 비", meaning: "필요와 생산 과정을 생각하며 물건을 고르고 사용하는 행동이에요.", example: "필요한 만큼만 사고 생산 정보를 확인하는 것도 책임 있는 소비예요." }
+    "international-port": { word: "국제 무역항", hanja: "國際貿易港 · 나라 국, 즈음 제, 무역할 무, 바꿀 역, 항구 항", meaning: "여러 나라의 배와 상인이 드나들며 무역하는 항구예요.", example: "벽란도는 고려의 대표적인 국제 무역항이었어요." },
+    estuary: { word: "하구", hanja: "河口 · 강 하, 입 구", meaning: "강물이 바다나 큰 강으로 흘러 들어가는 어귀예요.", example: "벽란도는 예성강 하구에 자리 잡았어요." },
+    exchange: { word: "교류", hanja: "交流 · 사귈 교, 흐를 류", meaning: "사람이나 나라가 서로 물건, 생각, 문화를 주고받는 일이에요.", example: "고려는 송, 일본, 동남아시아 여러 나라와 교류했어요." },
+    "arab-merchants": { word: "아라비아 상인", hanja: "商人 · 장사 상, 사람 인", meaning: "아라비아 지역에서 물건을 사고팔러 다니던 사람들이에요.", example: "아라비아 상인은 송에서 고려의 소문을 들었어요." },
+    export: { word: "수출", hanja: "輸出 · 나를 수, 날 출", meaning: "자기 나라의 물건을 다른 나라에 내다 파는 일이에요.", example: "고려는 인삼과 종이를 송에 수출했어요." },
+    import: { word: "수입", hanja: "輸入 · 나를 수, 들 입", meaning: "다른 나라의 물건을 자기 나라로 들여오는 일이에요.", example: "고려는 송에서 비단과 서적을 수입했어요." },
+    hwamunseok: { word: "화문석", hanja: "花紋席 · 꽃 화, 무늬 문, 자리 석", meaning: "여러 색으로 꽃무늬를 놓아 짠 돗자리예요.", example: "화문석은 고려의 아름다운 수출품이었어요." },
+    najeon: { word: "나전 칠기", hanja: "螺鈿漆器 · 소라 나, 비녀 전, 옻 칠, 그릇 기", meaning: "옻칠한 물건에 자개를 붙여 꾸민 공예품이에요.", example: "고려의 나전 칠기는 다른 나라에서도 인기가 있었어요." },
+    medicine: { word: "약재", hanja: "藥材 · 약 약, 재목 재", meaning: "약을 만드는 데 쓰는 여러 가지 재료예요.", example: "고려는 송에서 약재를 들여왔어요." }
   };
 
-  const storageKey = "l12-fair-trade-careful-reading:vocabulary-notebook-v1";
+  const storageKey = "l13-byeokrando-careful-reading:vocabulary-notebook-v1";
   const dialog = document.getElementById("vocabDialog");
   if (!dialog) return;
   const terms = [...document.querySelectorAll(".vocab-term")];

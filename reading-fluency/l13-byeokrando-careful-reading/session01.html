@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-lesson-id="l13-byeokrando-careful-reading" data-lesson-version="1.1.5">
+<html lang="ko" data-lesson-id="l13-byeokrando-careful-reading" data-lesson-version="1.2.0">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -35,7 +35,7 @@
         <button class="step-link active" type="button" data-go="0" aria-current="step"><span class="step-no">1</span><span><b>예측하기</b><small>주제 낱말 살피기</small></span></button>
         <button class="step-link" type="button" data-go="1"><span class="step-no">2</span><span><b>꼼꼼하게 읽기</b><small>낱말·답·근거 확인</small></span></button>
         <button class="step-link" type="button" data-go="2"><span class="step-no">3</span><span><b>단어 스파이</b><small>틀린 단어를 찾아 바르게 고치기</small></span></button>
-        <button class="step-link" type="button" data-go="3"><span class="step-no">4</span><span><b>공정 거래 연결</b><small>약속 카드를 제자리로</small></span></button>
+        <button class="step-link" type="button" data-go="3"><span class="step-no">4</span><span><b>벽란도 무역 분류</b><small>정보 카드를 제자리로</small></span></button>
         <button class="step-link" type="button" data-go="4"><span class="step-no">5</span><span><b>검산하기</b><small>조건을 하나씩 확인</small></span></button>
         <button class="step-link" type="button" data-go="5"><span class="step-no">6</span><span><b>새 글 전이</b><small>어휘·전략·생활에 적용</small></span></button>
         <button class="step-link" type="button" data-go="6"><span class="step-no">7</span><span><b>확인 기록</b><small>오늘의 확인 행동 남기기</small></span></button>
@@ -56,14 +56,14 @@
       <div class="progress-rail" aria-label="학습 진행"><span id="progressBar"></span></div>
 
       <section class="stage" id="stage">
-        <section class="page active" data-page="0" data-activity-id="predict-fair-trade" data-measure-id="metacognitivePreview">
+        <section class="page active" data-page="0" data-activity-id="predict-byeokrando" data-measure-id="metacognitivePreview">
           <div class="page-head">
             <div><p class="eyebrow">1 · 예측하기</p><h1>제목과 그림으로 핵심 낱말을 예상해요</h1></div>
             <span class="step-purpose">읽기 전 생각 열기</span>
           </div>
           <div class="prediction-layout">
-            <div class="weather-visual" role="img" aria-label="생산자와 소비자가 정당한 거래로 연결되는 모습을 나타낸 거친 색연필 그림">
-              <img class="weather-visual-image" src="assets/fair-trade-rough-square-v1.png" alt="" aria-hidden="true">
+            <div class="weather-visual" role="img" aria-label="벽란도의 항구와 고려의 무역 모습을 나타낸 거친 색연필 그림">
+              <img class="weather-visual-image" src="assets/byeokrando-stage-icons-rough-v1.png" alt="" aria-hidden="true">
             </div>
             <article class="activity-card prediction-card rapid-word-card" id="rapidWordActivity">
               <div class="rapid-word-head">
@@ -74,7 +74,7 @@
               <p class="support-copy">그림을 보고 빠르게 골라요.</p>
               <div class="rapid-word-progress" aria-label="낱말 판정 진행"><span id="rapidWordProgress"></span></div>
               <div id="rapidWordPlay">
-                <div class="rapid-word-stage"><strong id="rapidWord">공정 무역</strong></div>
+                <div class="rapid-word-stage"><strong id="rapidWord">벽란도</strong></div>
                 <div class="rapid-choice-list" role="group" aria-label="이 글에 나올 것 같은지 판정">
                   <button class="rapid-choice yes" id="rapidWordYes" type="button" data-track="answer"><span class="rapid-choice-symbol">O</span><span>나올 것 같아요</span></button>
                   <button class="rapid-choice no" id="rapidWordNo" type="button" data-track="answer"><span class="rapid-choice-symbol">X</span><span>아닐 것 같아요</span></button>
@@ -116,7 +116,7 @@
             <article class="passage-card" id="firstPassage">
               <div class="passage-top">
                 <span>사회 교과 연계 지문</span>
-                <strong>초콜릿 한 조각이 건너온 길</strong>
+                <strong>벽란도, 세계의 상인이 모인 항구</strong>
                 <div class="passage-top-actions">
                   <button class="vocab-notebook-open" id="vocabNotebookOpen" type="button" data-track="tool" aria-haspopup="dialog">
                     내 단어장 <b id="vocabNotebookCount">0</b>
@@ -125,14 +125,14 @@
                 </div>
               </div>              <div class="passage-body-shell">
                 <div class="passage-text" id="firstPassageText">
-                  <p>우리가 먹는 초콜릿과 커피는 먼 나라에서 재배한 카카오와 커피 원두로 만듭니다. <button class="vocab-term" type="button" data-vocab-id="producer" data-track="tool">생산자</button>는 씨를 심고 열매를 기르며 수확하지만, 여러 <button class="vocab-term" type="button" data-vocab-id="distribution" data-track="tool">유통</button> 단계를 거치면 판매 가격 중 생산자에게 돌아가는 몫이 적을 수 있습니다.</p>
-                  <p>수입이 너무 적거나 <button class="vocab-term" type="button" data-vocab-id="unstable" data-track="tool">불안정</button>하면 생산자 가족은 생활비와 교육비를 마련하기 어렵습니다. 일부 농장에서는 어린이가 학교에 가지 못하고 위험한 일을 돕는 문제도 생깁니다. 값싼 제품 뒤에 이런 노동 문제가 숨어 있을 수 있습니다.</p>
-                  <p><button class="vocab-term" type="button" data-vocab-id="fair-trade" data-track="tool">공정 무역</button>은 구매자가 생산자에게 일한 만큼 <button class="vocab-term" type="button" data-vocab-id="fair-pay" data-track="tool">정당한 대가</button>를 지불하고, 생산자가 안전한 환경에서 일하도록 돕는 거래 방식이자 운동입니다. 강제로 일하게 하거나 어린이 노동을 이용하지 않고, <button class="vocab-term" type="button" data-vocab-id="soil" data-track="tool">토양</button>과 물을 함부로 해치지 않는 생산 기준도 중요하게 봅니다.</p>
-                  <p>기준을 지킨 생산물에는 <button class="vocab-term" type="button" data-vocab-id="certification" data-track="tool">인증 표시</button>가 붙기도 합니다. 소비자는 표시와 생산 과정을 확인해 물건을 고를 수 있고, 생산자는 비교적 안정적으로 판매할 기회를 얻습니다. 생산자 단체가 구매자와 <button class="vocab-term" type="button" data-vocab-id="direct-trade" data-track="tool">직거래</button>하면 중간 단계를 줄이는 데 도움이 될 수 있습니다.</p>
-                  <p>공정 무역 제품을 고른다고 해서 무조건 비싼 물건을 많이 사야 하는 것은 아닙니다. 필요한 만큼 사고, 누가 어떤 환경에서 만들었는지 살펴보며, 믿을 수 있는 정보를 확인하는 것이 <button class="vocab-term" type="button" data-vocab-id="responsible-consumption" data-track="tool">책임 있는 소비</button>의 시작입니다. 작은 선택이 생산자와 소비자를 더 공정하게 연결할 수 있습니다.</p>
+                  <p>고려 시대의 <button class="vocab-term" type="button" data-vocab-id="international-port" data-track="tool">국제 무역항</button> 벽란도에는 여러 나라의 상인이 모여 물건을 사고팔았습니다. 벽란도는 예성강 <button class="vocab-term" type="button" data-vocab-id="estuary" data-track="tool">하구</button>에 있었고 수도 개경과도 가까웠습니다. 강물이 깊어 큰 배가 드나들기 좋았기 때문에 무역의 중심지로 발전했습니다.</p>
+                  <p>고려는 송, 일본, 동남아시아 여러 나라와 <button class="vocab-term" type="button" data-vocab-id="exchange" data-track="tool">교류</button>했습니다. <button class="vocab-term" type="button" data-vocab-id="arab-merchants" data-track="tool">아라비아 상인</button>들은 송에서 고려에 관한 소문을 듣고 벽란도까지 찾아왔습니다. 고려의 이름도 서쪽에 알려져 오늘날 &lsquo;코리아&rsquo;와 관련된 이름으로 이어졌다고 전해집니다.</p>
+                  <p>고려는 송에 인삼, 금, 은, 삼베, 모시, 종이, <button class="vocab-term" type="button" data-vocab-id="hwamunseok" data-track="tool">화문석</button>, 부채, <button class="vocab-term" type="button" data-vocab-id="najeon" data-track="tool">나전 칠기</button> 등을 <button class="vocab-term" type="button" data-vocab-id="export" data-track="tool">수출</button>했습니다. 특히 고려의 인삼과 종이는 품질이 뛰어난 물건으로 알려졌습니다.</p>
+                  <p>반대로 송에서는 <button class="vocab-term" type="button" data-vocab-id="medicine" data-track="tool">약재</button>, 비단, 차, 서적, 악기 등을 <button class="vocab-term" type="button" data-vocab-id="import" data-track="tool">수입</button>했습니다. 서적과 의학 지식을 받아들이며 학문도 발전시켰습니다. 벽란도는 물건뿐 아니라 사람, 지식, 문화가 함께 오간 국제 교류의 창구였습니다.</p>
+                  
                 </div>                <div class="passage-cover" id="firstPassageCover" aria-live="polite">
                   <span class="passage-cover-computer" aria-hidden="true">
-                    <img src="assets/fair-trade-rough-square-v1.png" alt="">
+                    <img src="assets/byeokrando-stage-icons-rough-v1.png" alt="">
                   </span>
                   <strong>본문을 가렸어요.</strong>
                   <button class="passage-cover-reveal" id="revealFirstPassage" type="button" data-track="hint">본문 다시 보기</button>
@@ -211,36 +211,36 @@
             <button class="primary" id="thiefRestart" type="button">다시 도전하기</button>
           </section>
         </section>
-        <section class="page forecast-pipeline-page" data-page="3" data-activity-id="restore-fair-trade-chain" data-measure-id="relationshipClassification">
+        <section class="page forecast-pipeline-page" data-page="3" data-activity-id="classify-byeokrando-trade" data-measure-id="relationshipClassification">
           <div class="page-head">
-            <div><p class="eyebrow">4 · 공정 거래 연결</p><h1>공정 무역의 약속 카드를 알맞은 칸에 놓아요</h1></div>
+            <div><p class="eyebrow">4 · 벽란도 무역 분류</p><h1>정보 카드를 알맞은 갈래에 놓아요</h1></div>
             <span class="counter" id="pipelinePageCounter">1 / 8</span>
           </div>
           <div class="pipeline-layout" id="forecastPipeline">
             <article class="activity-card pipeline-board" id="pipelineBoard">
               <header class="pipeline-board-head">
-                <div><span class="prompt-label">공정 무역 연결망</span><h2>카드를 알맞은 역할 칸으로 옮겨요</h2></div>
+                <div><span class="prompt-label">벽란도 무역 정보</span><h2>카드를 알맞은 갈래로 옮겨요</h2></div>
                 <b id="pipelineCounter">1 / 8</b>
               </header>
-              <div class="pipeline-track" role="group" aria-label="공정 무역의 네 역할">
-                <button class="pipeline-station" type="button" data-pipeline-stage="producer">
-                  <span class="pipeline-station-no">1</span><span class="pipeline-mini-illustration observe" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
-                  <strong>생산자</strong><small>재배 · 협동</small><b data-pipeline-count="producer">0 / 2</b>
+              <div class="pipeline-track" role="group" aria-label="벽란도 무역의 네 갈래">
+                <button class="pipeline-station" type="button" data-pipeline-stage="location">
+                  <span class="pipeline-station-no">1</span><span class="pipeline-mini-illustration observe" aria-hidden="true"><img src="assets/byeokrando-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>장소 조건</strong><small>하구 · 개경</small><b data-pipeline-count="location">0 / 2</b>
                 </button>
                 <i class="pipeline-connector" aria-hidden="true"></i>
-                <button class="pipeline-station" type="button" data-pipeline-stage="price">
-                  <span class="pipeline-station-no">2</span><span class="pipeline-mini-illustration calculate" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
-                  <strong>정당한 대가</strong><small>가격 · 계약</small><b data-pipeline-count="price">0 / 2</b>
+                <button class="pipeline-station" type="button" data-pipeline-stage="traders">
+                  <span class="pipeline-station-no">2</span><span class="pipeline-mini-illustration calculate" aria-hidden="true"><img src="assets/byeokrando-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>찾아온 상인</strong><small>여러 나라 · 아라비아</small><b data-pipeline-count="traders">0 / 2</b>
                 </button>
                 <i class="pipeline-connector" aria-hidden="true"></i>
-                <button class="pipeline-station" type="button" data-pipeline-stage="work">
-                  <span class="pipeline-station-no">3</span><span class="pipeline-mini-illustration judge" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
-                  <strong>생산 조건</strong><small>안전 · 교육</small><b data-pipeline-count="work">0 / 2</b>
+                <button class="pipeline-station" type="button" data-pipeline-stage="export">
+                  <span class="pipeline-station-no">3</span><span class="pipeline-mini-illustration judge" aria-hidden="true"><img src="assets/byeokrando-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>고려 수출품</strong><small>인삼 · 종이</small><b data-pipeline-count="export">0 / 2</b>
                 </button>
                 <i class="pipeline-connector" aria-hidden="true"></i>
-                <button class="pipeline-station" type="button" data-pipeline-stage="consumer">
-                  <span class="pipeline-station-no">4</span><span class="pipeline-mini-illustration deliver" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
-                  <strong>소비자</strong><small>확인 · 선택</small><b data-pipeline-count="consumer">0 / 2</b>
+                <button class="pipeline-station" type="button" data-pipeline-stage="import">
+                  <span class="pipeline-station-no">4</span><span class="pipeline-mini-illustration deliver" aria-hidden="true"><img src="assets/byeokrando-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>고려 수입품</strong><small>비단 · 서적</small><b data-pipeline-count="import">0 / 2</b>
                 </button>
               </div>
               <div class="pipeline-status-line" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
@@ -253,12 +253,12 @@
                   <p id="pipelineCardText"></p>
                 </div>
                 <p id="pipelineInstruction">카드를 끌거나 알맞은 칸을 눌러요.</p>
-                <div class="pipeline-feedback" id="pipelineFeedback" role="status" aria-live="polite">카드가 누구의 역할과 약속인지 확인해 보세요.</div>
+                <div class="pipeline-feedback" id="pipelineFeedback" role="status" aria-live="polite">카드가 장소, 상인, 수출품, 수입품 중 어디에 해당하는지 확인해 보세요.</div>
                 <button class="primary hidden" id="pipelineNext" type="button">다음 카드</button>
               </div>
               <div class="pipeline-complete hidden" id="pipelineComplete" aria-live="polite">
                 <span aria-hidden="true">✓</span>
-                <h2>공정 무역 연결망 완성!</h2>
+                <h2>벽란도 무역 정보 완성!</h2>
                 <p id="pipelineResult"></p>
                 <button class="primary" id="pipelineRestart" type="button">다시 맞추기</button>
               </div>
@@ -273,12 +273,12 @@
           </div>
           <div class="verify-layout">
             <article class="activity-card verify-question-card">
-              <h2><mark data-condition-highlight="subject">공정 무역이</mark> <mark data-condition-highlight="time">거래 과정에서</mark> <mark data-condition-highlight="evidence">생산자와 소비자에게 주는 도움을</mark> <mark data-condition-highlight="range">모두</mark> 고르세요.</h2>
+              <h2><mark data-condition-highlight="subject">벽란도가</mark> <mark data-condition-highlight="time">고려 시대에</mark> <mark data-condition-highlight="evidence">국제 무역항으로 발전한 이유를</mark> <mark data-condition-highlight="range">모두</mark> 고르세요.</h2>
               <div class="check-answer-list is-locked" id="verifyAnswers" aria-disabled="true">
-                <label><input type="checkbox" value="fair-pay" disabled><span><i></i>구매자가 생산자에게 정당한 대가를 지불한다.</span></label>
-                <label><input type="checkbox" value="trace" disabled><span><i></i>소비자가 생산 과정과 표시를 확인하도록 돕는다.</span></label>
-                <label><input type="checkbox" value="cheapest" disabled><span><i></i>언제나 가장 싼 가격으로만 물건을 살 수 있게 한다.</span></label>
-                <label><input type="checkbox" value="unlimited" disabled><span><i></i>필요와 관계없이 물건을 많이 사도록 한다.</span></label>
+                <label><input type="checkbox" value="deep-water" disabled><span><i></i>강물이 깊어 큰 배가 드나들기 좋았다.</span></label>
+                <label><input type="checkbox" value="near-capital" disabled><span><i></i>고려의 수도 개경과 가까웠다.</span></label>
+                <label><input type="checkbox" value="gold-river" disabled><span><i></i>강에서 금이 많이 났다.</span></label>
+                <label><input type="checkbox" value="foreign-ban" disabled><span><i></i>외국인의 출입을 막았다.</span></label>
               </div>
               <button class="primary" id="makeAnswerButton" type="button" data-track="answer" disabled>먼저 읽기 조건을 확인해요</button>
             </article>
@@ -295,19 +295,19 @@
                 </div>
                 <div class="condition-match-list" id="verificationConditions">
                 <section class="condition-match-row chat-pending" data-condition-row="subject">
-                  <strong><span>대상</span>누구에게 주는 도움인가요?</strong>
-                  <div><button type="button" data-value="both">생산자와 소비자</button><button type="button" data-value="company-only">기업만</button></div>
+                  <strong><span>대상</span>무엇의 발전 이유를 묻고 있나요?</strong>
+                  <div><button type="button" data-value="byeokrando">벽란도</button><button type="button" data-value="song">송나라</button></div>
                 </section>
                 <section class="condition-match-row chat-pending" data-condition-row="time">
-                  <strong><span>시점</span>어느 때 생기는 도움인가요?</strong>
-                  <div><button type="button" data-value="trade">거래가 이루어질 때</button><button type="button" data-value="after-use">사용이 끝난 뒤</button></div>
+                  <strong><span>시점</span>어느 시대의 모습인가요?</strong>
+                  <div><button type="button" data-value="goryeo">고려 시대</button><button type="button" data-value="joseon">조선 시대</button></div>
                 </section>
                 <section class="condition-match-row chat-pending" data-condition-row="range">
                   <strong><span>범위</span>해당하는 답을 어떻게 골라야 하나요?</strong>
                   <div><button type="button" data-value="all">빠짐없이 모두</button><button type="button" data-value="one">한 가지만</button></div>
                 </section>
                 <section class="condition-match-row chat-pending" data-condition-row="evidence">
-                  <strong><span>근거 수</span>본문에서 서로 다른 도움을 몇 가지 확인해야 하나요?</strong>
+                  <strong><span>근거 수</span>본문에서 발전 이유를 몇 가지 확인해야 하나요?</strong>
                   <div><button type="button" data-value="two">두 가지</button><button type="button" data-value="one">한 가지</button></div>
                 </section>
                 </div>
@@ -363,15 +363,15 @@
               <h2>오늘 가장 도움이 된 확인은 무엇이었나요?</h2>
               <p>한 가지를 고르고, 필요하면 한 줄을 덧붙여요.</p>
               <div class="reflection-choice-grid" id="reflectionCategories">
-                <button type="button" data-category="대가">누가 누구에게 대가를 지불하는지 확인했어요</button>
-                <button type="button" data-category="조건">거래 조건을 확인했어요</button>
-                <button type="button" data-category="관계">생산자와 소비자의 관계를 확인했어요</button>
+                <button type="button" data-category="위치">벽란도의 위치를 확인했어요</button>
+                <button type="button" data-category="수출입">수출품과 수입품을 구분했어요</button>
+                <button type="button" data-category="이유">항구가 발전한 이유를 확인했어요</button>
                 <button type="button" data-category="근거">본문에서 근거 표현을 찾았어요</button>
                 <button type="button" data-category="끝부분">문장 끝까지 읽었어요</button>
                 <button type="button" data-category="자기확인">스스로 다시 확인했어요</button>
               </div>
               <label class="optional-note-label" for="mistakeInput">한 줄로 덧붙이고 싶다면</label>
-              <textarea id="mistakeInput" maxlength="120" rows="3" placeholder="예: 생산 기준과 인증 표시를 다시 확인했다."></textarea>
+              <textarea id="mistakeInput" maxlength="120" rows="3" placeholder="예: 벽란도의 위치와 강물의 깊이를 다시 확인했다."></textarea>
               <div class="writing-meta"><span id="charCount">0 / 120</span><span>쓰지 않아도 괜찮아요.</span></div>
               <button class="primary wide" id="saveMistakeButton" type="button" data-track="activity-complete">오늘 기록 저장하기</button>
               <div class="inline-feedback" id="mistakeFeedback" role="status" aria-live="polite"></div>
@@ -421,7 +421,7 @@
 
       <section class="vocab-panel vocab-detail-panel" id="vocabDetailPanel" role="tabpanel" aria-labelledby="vocabDetailTab">
         <p class="vocab-added-state" id="vocabAddedState">누른 낱말을 단어장에 담았어요.</p>
-        <h3 id="vocabWord">생산자</h3>
+        <h3 id="vocabWord">하구</h3>
         <p class="vocab-hanja" id="vocabHanja"></p>
         <dl class="vocab-definition">
           <div><dt>뜻</dt><dd id="vocabMeaning"></dd></div>
