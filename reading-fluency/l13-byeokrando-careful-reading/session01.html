@@ -1,0 +1,499 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="l13-byeokrando-careful-reading" data-lesson-version="1.1.5">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="robots" content="noindex, noarchive">
+  <meta name="theme-color" content="#f4f5fb">
+  <title>벽란도, 세계의 상인이 모인 항구 — 꼼꼼 읽기</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="annotation.css">
+  <link rel="stylesheet" href="prediction-words.css">
+  <link rel="stylesheet" href="prediction-feedback.css">
+  <link rel="stylesheet" href="prediction-popup.css">
+  <link rel="stylesheet" href="layout-improvements.css">
+  <link rel="stylesheet" href="information-thief.css?v=1.1.5">
+  <link rel="stylesheet" href="aba-intervention.css?v=1.0.0">
+  <link rel="stylesheet" href="reading-fluency-unified.css">
+  <link rel="stylesheet" href="reading-fluency-fixes.css">
+  <link rel="stylesheet" href="l2-shell-layout.css">
+  <link rel="stylesheet" href="l2-activity-palette.css?v=1.0.0">
+  <link rel="stylesheet" href="forecast-pipeline.css?v=1.1.1">
+  <link rel="stylesheet" href="transfer-practice.css?v=1.0.0">
+  <link rel="stylesheet" href="coach-chat-unified.css?v=1.0.0">
+  <link rel="stylesheet" href="coach-sync.css?v=1.1.0">
+  <link rel="stylesheet" href="vocabulary-notebook.css?v=1.1.0">
+</head>
+<body>
+  <main class="studio" id="studio">
+    <aside class="sidebar" id="sidebar" aria-label="꼼꼼 읽기 7단계">
+      <div class="brand-wrap">
+        <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate" class="brand-logo">
+        <p>벽란도 무역 읽기</p>
+      </div>
+      <nav class="step-nav" id="stepNav">
+        <button class="step-link active" type="button" data-go="0" aria-current="step"><span class="step-no">1</span><span><b>예측하기</b><small>주제 낱말 살피기</small></span></button>
+        <button class="step-link" type="button" data-go="1"><span class="step-no">2</span><span><b>꼼꼼하게 읽기</b><small>낱말·답·근거 확인</small></span></button>
+        <button class="step-link" type="button" data-go="2"><span class="step-no">3</span><span><b>단어 스파이</b><small>틀린 단어를 찾아 바르게 고치기</small></span></button>
+        <button class="step-link" type="button" data-go="3"><span class="step-no">4</span><span><b>공정 거래 연결</b><small>약속 카드를 제자리로</small></span></button>
+        <button class="step-link" type="button" data-go="4"><span class="step-no">5</span><span><b>검산하기</b><small>조건을 하나씩 확인</small></span></button>
+        <button class="step-link" type="button" data-go="5"><span class="step-no">6</span><span><b>새 글 전이</b><small>어휘·전략·생활에 적용</small></span></button>
+        <button class="step-link" type="button" data-go="6"><span class="step-no">7</span><span><b>확인 기록</b><small>오늘의 확인 행동 남기기</small></span></button>
+      </nav>
+      <div class="sidebar-note"><span class="mini-signal"></span><span>빠르게보다 정확하게.<br>답은 글에서 다시 확인해요.</span></div>
+    </aside>
+
+    <button class="sidebar-edge-toggle" id="menuButton" type="button" aria-expanded="true" aria-controls="sidebar" aria-label="학습 순서 접기">◀</button>
+
+    <section class="workspace">
+      <header class="topbar">
+        <div class="top-title">
+          <div><span>초등 고학년 교과 연계 · 사회 설명문</span><strong>벽란도, 세계의 상인이 모인 항구</strong></div>
+        </div>
+        <div class="strategy-badge"><i></i><span>오늘의 전략</span><b>관계와 조건 확인하기</b></div>
+      </header>
+
+      <div class="progress-rail" aria-label="학습 진행"><span id="progressBar"></span></div>
+
+      <section class="stage" id="stage">
+        <section class="page active" data-page="0" data-activity-id="predict-fair-trade" data-measure-id="metacognitivePreview">
+          <div class="page-head">
+            <div><p class="eyebrow">1 · 예측하기</p><h1>제목과 그림으로 핵심 낱말을 예상해요</h1></div>
+            <span class="step-purpose">읽기 전 생각 열기</span>
+          </div>
+          <div class="prediction-layout">
+            <div class="weather-visual" role="img" aria-label="생산자와 소비자가 정당한 거래로 연결되는 모습을 나타낸 거친 색연필 그림">
+              <img class="weather-visual-image" src="assets/fair-trade-rough-square-v1.png" alt="" aria-hidden="true">
+            </div>
+            <article class="activity-card prediction-card rapid-word-card" id="rapidWordActivity">
+              <div class="rapid-word-head">
+                <span class="prompt-label">주제 낱말 탐색</span>
+                <span class="rapid-word-counter" id="rapidWordCounter">1 / 10</span>
+              </div>
+              <h2>이 글에 나올 것 같은 낱말일까요?</h2>
+              <p class="support-copy">그림을 보고 빠르게 골라요.</p>
+              <div class="rapid-word-progress" aria-label="낱말 판정 진행"><span id="rapidWordProgress"></span></div>
+              <div id="rapidWordPlay">
+                <div class="rapid-word-stage"><strong id="rapidWord">공정 무역</strong></div>
+                <div class="rapid-choice-list" role="group" aria-label="이 글에 나올 것 같은지 판정">
+                  <button class="rapid-choice yes" id="rapidWordYes" type="button" data-track="answer"><span class="rapid-choice-symbol">O</span><span>나올 것 같아요</span></button>
+                  <button class="rapid-choice no" id="rapidWordNo" type="button" data-track="answer"><span class="rapid-choice-symbol">X</span><span>아닐 것 같아요</span></button>
+                </div>
+                <div class="rapid-word-feedback sr-only" id="rapidWordFeedback" role="status" aria-live="polite">낱말을 살펴보고 주제와 관련 있는지 판단해 보세요.</div>
+              </div>
+              <div class="rapid-word-summary hidden" id="rapidWordSummary">
+                <div>
+                  <span class="summary-check" aria-hidden="true">✓</span>
+                  <h3>주제 낱말 탐색 완료</h3>
+                  <p>10개 중 <strong id="rapidWordScore">0 / 10</strong>개를 주제에 맞게 가려냈어요. 이제 글에서 실제 낱말을 확인해 보세요.</p>
+                  <button class="primary" id="rapidWordRestart" type="button">다시 해보기</button>
+                </div>
+              </div>
+              <div class="inline-feedback sr-only" id="predictionFeedback" role="status">낱말 예측 활동을 시작했어요.</div>
+            </article>
+          </div>
+        </section>
+
+        <section class="page first-read-page" data-page="1" data-activity-id="first-read-and-answer" data-measure-id="basicComprehension">
+          <div class="page-head">
+            <div><p class="eyebrow">2 · 꼼꼼하게 읽기</p><h1>어려운 낱말을 확인하며 글을 정확하게 읽어요</h1></div>
+            <span class="counter" id="firstReadCounter">읽기</span>
+          </div>
+          <div class="annotation-toolbar" id="annotationToolbar" aria-label="꼼꼼하게 읽기 판서 도구">
+            <div class="annotation-status"><i></i><strong>판서</strong><small id="annotationState">꺼짐</small></div>
+            <button class="annotation-toggle" id="annotationToggle" type="button" aria-pressed="false">판서 켜기</button>
+            <div class="annotation-tools" role="group" aria-label="판서 도구 선택">
+              <button class="annotation-tool" type="button" data-annotation-tool="pen" aria-pressed="true" disabled><span class="annotation-tool-mark pen"></span>펜</button>
+              <button class="annotation-tool" type="button" data-annotation-tool="highlighter" aria-pressed="false" disabled><span class="annotation-tool-mark highlighter"></span>형광펜</button>
+              <button class="annotation-tool" type="button" data-annotation-tool="eraser" aria-pressed="false" disabled><span class="annotation-tool-mark eraser"></span>지우개</button>
+            </div>
+            <button class="annotation-command" id="annotationUndo" type="button" disabled>되돌리기</button>
+            <button class="annotation-command" id="annotationClear" type="button" disabled>전체 지우기</button>
+            <span class="annotation-hint">판서를 끄면 지문과 버튼을 누를 수 있어요.</span>
+          </div>
+          <canvas class="annotation-canvas" id="annotationCanvas" aria-label="꼼꼼하게 읽기 활동영역 전체 판서판"></canvas>
+          <div class="reading-layout">
+            <article class="passage-card" id="firstPassage">
+              <div class="passage-top">
+                <span>사회 교과 연계 지문</span>
+                <strong>초콜릿 한 조각이 건너온 길</strong>
+                <div class="passage-top-actions">
+                  <button class="vocab-notebook-open" id="vocabNotebookOpen" type="button" data-track="tool" aria-haspopup="dialog">
+                    내 단어장 <b id="vocabNotebookCount">0</b>
+                  </button>
+                  <button class="passage-visibility-toggle hidden" id="toggleFirstPassage" type="button" data-track="hint" aria-controls="firstPassageText" aria-expanded="false">본문 다시 보기</button>
+                </div>
+              </div>              <div class="passage-body-shell">
+                <div class="passage-text" id="firstPassageText">
+                  <p>우리가 먹는 초콜릿과 커피는 먼 나라에서 재배한 카카오와 커피 원두로 만듭니다. <button class="vocab-term" type="button" data-vocab-id="producer" data-track="tool">생산자</button>는 씨를 심고 열매를 기르며 수확하지만, 여러 <button class="vocab-term" type="button" data-vocab-id="distribution" data-track="tool">유통</button> 단계를 거치면 판매 가격 중 생산자에게 돌아가는 몫이 적을 수 있습니다.</p>
+                  <p>수입이 너무 적거나 <button class="vocab-term" type="button" data-vocab-id="unstable" data-track="tool">불안정</button>하면 생산자 가족은 생활비와 교육비를 마련하기 어렵습니다. 일부 농장에서는 어린이가 학교에 가지 못하고 위험한 일을 돕는 문제도 생깁니다. 값싼 제품 뒤에 이런 노동 문제가 숨어 있을 수 있습니다.</p>
+                  <p><button class="vocab-term" type="button" data-vocab-id="fair-trade" data-track="tool">공정 무역</button>은 구매자가 생산자에게 일한 만큼 <button class="vocab-term" type="button" data-vocab-id="fair-pay" data-track="tool">정당한 대가</button>를 지불하고, 생산자가 안전한 환경에서 일하도록 돕는 거래 방식이자 운동입니다. 강제로 일하게 하거나 어린이 노동을 이용하지 않고, <button class="vocab-term" type="button" data-vocab-id="soil" data-track="tool">토양</button>과 물을 함부로 해치지 않는 생산 기준도 중요하게 봅니다.</p>
+                  <p>기준을 지킨 생산물에는 <button class="vocab-term" type="button" data-vocab-id="certification" data-track="tool">인증 표시</button>가 붙기도 합니다. 소비자는 표시와 생산 과정을 확인해 물건을 고를 수 있고, 생산자는 비교적 안정적으로 판매할 기회를 얻습니다. 생산자 단체가 구매자와 <button class="vocab-term" type="button" data-vocab-id="direct-trade" data-track="tool">직거래</button>하면 중간 단계를 줄이는 데 도움이 될 수 있습니다.</p>
+                  <p>공정 무역 제품을 고른다고 해서 무조건 비싼 물건을 많이 사야 하는 것은 아닙니다. 필요한 만큼 사고, 누가 어떤 환경에서 만들었는지 살펴보며, 믿을 수 있는 정보를 확인하는 것이 <button class="vocab-term" type="button" data-vocab-id="responsible-consumption" data-track="tool">책임 있는 소비</button>의 시작입니다. 작은 선택이 생산자와 소비자를 더 공정하게 연결할 수 있습니다.</p>
+                </div>                <div class="passage-cover" id="firstPassageCover" aria-live="polite">
+                  <span class="passage-cover-computer" aria-hidden="true">
+                    <img src="assets/fair-trade-rough-square-v1.png" alt="">
+                  </span>
+                  <strong>본문을 가렸어요.</strong>
+                  <button class="passage-cover-reveal" id="revealFirstPassage" type="button" data-track="hint">본문 다시 보기</button>
+                </div>
+              </div>
+            </article>
+            <article class="activity-card quiz-card careful-quiz first-read-coach-quiz hidden" id="firstQuiz">
+              <div class="question-meta first-question-progress"><b id="firstQuestionNumber">1 / 3</b></div>
+              <h2 id="firstQuestionText"></h2>
+              <div class="option-list" id="firstAnswerList"></div>
+
+              <div class="confirm-actions">
+                <button class="secondary-next hidden" id="firstQuestionNext" type="button">다음 문제</button>
+              </div>
+              <div class="inline-feedback" id="firstQuizFeedback" role="status" aria-live="polite"></div>
+            </article>
+            <aside class="reading-reminder first-read-coach" id="firstReadCoach">
+              <header class="coach-chat-head">
+                <img src="assets/jelly-coach-square.png" alt="" aria-hidden="true">
+                <strong>젤리코치</strong>
+              </header>
+              <div class="coach-chat-scroll">
+                <div class="coach-current-message">
+                  <p><b>어려운 낱말은 눌러 확인해 봐.</b><br>다 읽으면 아래 버튼을 눌러 줘.</p>
+                </div>
+              </div>
+              <button class="primary wide" id="finishFirstRead" type="button" data-track="activity-complete">다 읽었어요</button>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page information-thief-page word-spy-page" data-page="2" data-activity-id="word-spy" data-measure-id="detailComparison">
+          <div class="page-head">
+            <div><p class="eyebrow">3 · 단어 스파이</p><h1>문장에 숨은 틀린 단어를 찾아라! <span>틀린 단어를 누르고 바른 단어로 고쳐 적어요.</span></h1></div>
+            <span class="counter" id="thiefCounter">문장 1 / 5</span>
+          </div>
+          <div class="thief-phase-guide" aria-label="활동 순서">
+            <div class="thief-phase active" id="thiefPhaseOne"><span>1</span><strong>틀린 단어 찾기</strong><small>뜻이 어색한 단어 누르기</small></div>
+            <i aria-hidden="true"></i>
+            <div class="thief-phase" id="thiefPhaseTwo"><span>2</span><strong>바르게 고치기</strong><small>알맞은 단어 직접 쓰기</small></div>
+          </div>
+          <div class="thief-layout" id="thiefActivity">
+            <article class="activity-card thief-case-card">
+              <div class="thief-case-head">
+                <span class="case-file-label" id="thiefCaseLabel">문장 기록 01</span>
+                <span class="case-status" id="thiefCaseStatus">단어 수색 중</span>
+              </div>
+              <section class="thief-step word-spy-find" aria-labelledby="thiefSummaryQuestion">
+                <h2 id="thiefSummaryQuestion">이 문장에서 잘못 적은 단어를 눌러 보세요.</h2>
+                <div class="word-spy-sentence" id="thiefSummaryOptions" role="group" aria-label="단어를 선택할 문장"></div>
+              </section>
+              <section class="thief-step thief-error-step hidden" id="thiefErrorStep" aria-labelledby="thiefErrorQuestion">
+                <div class="caught-banner"><span aria-hidden="true">✓</span><p><strong>틀린 단어를 찾았어요.</strong><small>문장 뜻에 맞는 단어로 바꾸어 적어요.</small></p></div>
+                <h2 id="thiefErrorQuestion"><span id="selectedWrongWord">이 단어</span> 대신 쓸 바른 단어는 무엇인가요?</h2>
+                <form class="word-spy-correction" id="wordSpyCorrectionForm">
+                  <label for="wordSpyCorrection">바른 단어</label>
+                  <div><input id="wordSpyCorrection" type="text" autocomplete="off" spellcheck="false" maxlength="12" placeholder="바른 단어를 적어요"><button class="primary" type="submit" data-track="answer">확인</button></div>
+                </form>
+                <p class="word-spy-result hidden" id="wordSpyResult" aria-live="polite"></p>
+              </section>
+              <button class="primary thief-next hidden" id="thiefNext" type="button">다음 문장</button>
+            </article>
+            <aside class="jelly-coach-card thief-coach-chat" aria-label="젤리코치와의 대화">
+              <header><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header>
+              <div class="thief-coach-scroll" tabindex="0">
+                <p class="thief-coach-message" id="thiefCoachMessage" role="status" aria-live="polite">문장을 끝까지 읽고, 뜻에 어울리지 않는 단어 하나를 눌러 봐.</p>
+                <button id="thiefHintButton" type="button" data-track="hint">확인 힌트</button>
+                <span class="visually-hidden" id="thiefPromptLevel">A0 · 스스로 확인</span>
+              </div>
+              <div class="visually-hidden" id="thiefFeedback" hidden aria-hidden="true"></div>
+            </aside>
+          </div>
+          <section class="thief-complete hidden" id="thiefComplete" aria-live="polite">
+            <span class="complete-stamp" aria-hidden="true">✓</span>
+            <div><p>단어 수사 완료</p><h2>단어 스파이 5개를 모두 찾았어요</h2><span>단어 하나가 바뀌면 문장의 뜻도 달라질 수 있어요. 끝까지 꼼꼼히 확인했어요.</span></div>
+            <button class="primary" id="thiefRestart" type="button">다시 도전하기</button>
+          </section>
+        </section>
+        <section class="page forecast-pipeline-page" data-page="3" data-activity-id="restore-fair-trade-chain" data-measure-id="relationshipClassification">
+          <div class="page-head">
+            <div><p class="eyebrow">4 · 공정 거래 연결</p><h1>공정 무역의 약속 카드를 알맞은 칸에 놓아요</h1></div>
+            <span class="counter" id="pipelinePageCounter">1 / 8</span>
+          </div>
+          <div class="pipeline-layout" id="forecastPipeline">
+            <article class="activity-card pipeline-board" id="pipelineBoard">
+              <header class="pipeline-board-head">
+                <div><span class="prompt-label">공정 무역 연결망</span><h2>카드를 알맞은 역할 칸으로 옮겨요</h2></div>
+                <b id="pipelineCounter">1 / 8</b>
+              </header>
+              <div class="pipeline-track" role="group" aria-label="공정 무역의 네 역할">
+                <button class="pipeline-station" type="button" data-pipeline-stage="producer">
+                  <span class="pipeline-station-no">1</span><span class="pipeline-mini-illustration observe" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>생산자</strong><small>재배 · 협동</small><b data-pipeline-count="producer">0 / 2</b>
+                </button>
+                <i class="pipeline-connector" aria-hidden="true"></i>
+                <button class="pipeline-station" type="button" data-pipeline-stage="price">
+                  <span class="pipeline-station-no">2</span><span class="pipeline-mini-illustration calculate" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>정당한 대가</strong><small>가격 · 계약</small><b data-pipeline-count="price">0 / 2</b>
+                </button>
+                <i class="pipeline-connector" aria-hidden="true"></i>
+                <button class="pipeline-station" type="button" data-pipeline-stage="work">
+                  <span class="pipeline-station-no">3</span><span class="pipeline-mini-illustration judge" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>생산 조건</strong><small>안전 · 교육</small><b data-pipeline-count="work">0 / 2</b>
+                </button>
+                <i class="pipeline-connector" aria-hidden="true"></i>
+                <button class="pipeline-station" type="button" data-pipeline-stage="consumer">
+                  <span class="pipeline-station-no">4</span><span class="pipeline-mini-illustration deliver" aria-hidden="true"><img src="assets/fair-trade-stage-icons-rough-v1.png" alt=""></span>
+                  <strong>소비자</strong><small>확인 · 선택</small><b data-pipeline-count="consumer">0 / 2</b>
+                </button>
+              </div>
+              <div class="pipeline-status-line" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+            </article>
+            <aside class="pipeline-card-panel" id="pipelineCardPanel">
+              <div class="pipeline-mission" id="pipelineMission">
+                <span>현재 카드</span>
+                <div class="pipeline-card" id="pipelineCard" draggable="true" tabindex="0" aria-describedby="pipelineInstruction">
+                  <i aria-hidden="true"></i>
+                  <p id="pipelineCardText"></p>
+                </div>
+                <p id="pipelineInstruction">카드를 끌거나 알맞은 칸을 눌러요.</p>
+                <div class="pipeline-feedback" id="pipelineFeedback" role="status" aria-live="polite">카드가 누구의 역할과 약속인지 확인해 보세요.</div>
+                <button class="primary hidden" id="pipelineNext" type="button">다음 카드</button>
+              </div>
+              <div class="pipeline-complete hidden" id="pipelineComplete" aria-live="polite">
+                <span aria-hidden="true">✓</span>
+                <h2>공정 무역 연결망 완성!</h2>
+                <p id="pipelineResult"></p>
+                <button class="primary" id="pipelineRestart" type="button">다시 맞추기</button>
+              </div>
+            </aside>
+          </div>
+        </section>
+
+        <section class="page" data-page="4" data-activity-id="verify-all-conditions" data-measure-id="conditionVerification" data-condition="T2">
+          <div class="page-head">
+            <div><p class="eyebrow">5 · 검산하기</p><h1>질문의 조건을 내 답과 하나씩 대조해요</h1></div>
+            <span class="step-purpose">선택보다 확인을 강화</span>
+          </div>
+          <div class="verify-layout">
+            <article class="activity-card verify-question-card">
+              <h2><mark data-condition-highlight="subject">공정 무역이</mark> <mark data-condition-highlight="time">거래 과정에서</mark> <mark data-condition-highlight="evidence">생산자와 소비자에게 주는 도움을</mark> <mark data-condition-highlight="range">모두</mark> 고르세요.</h2>
+              <div class="check-answer-list is-locked" id="verifyAnswers" aria-disabled="true">
+                <label><input type="checkbox" value="fair-pay" disabled><span><i></i>구매자가 생산자에게 정당한 대가를 지불한다.</span></label>
+                <label><input type="checkbox" value="trace" disabled><span><i></i>소비자가 생산 과정과 표시를 확인하도록 돕는다.</span></label>
+                <label><input type="checkbox" value="cheapest" disabled><span><i></i>언제나 가장 싼 가격으로만 물건을 살 수 있게 한다.</span></label>
+                <label><input type="checkbox" value="unlimited" disabled><span><i></i>필요와 관계없이 물건을 많이 사도록 한다.</span></label>
+              </div>
+              <button class="primary" id="makeAnswerButton" type="button" data-track="answer" disabled>먼저 읽기 조건을 확인해요</button>
+            </article>
+
+            <article class="verification-board condition-chat is-waiting" id="verificationBoard">
+              <div class="condition-chat-head">
+                <img src="assets/jelly-coach-square.png" alt="" aria-hidden="true">
+                <div><strong>젤리코치</strong></div>
+                <b id="verificationProgress">준비</b>
+              </div>
+              <div class="condition-chat-scroll" id="conditionChatScroll" tabindex="0" aria-label="젤리코치와 조건을 확인한 대화 기록">
+                <div class="condition-chat-message coach" id="conditionChatIntro">
+                  <p>답을 고르기 전에 질문의<br><b>대상·시점·범위·근거 수</b>부터 확인해 봐.</p>
+                </div>
+                <div class="condition-match-list" id="verificationConditions">
+                <section class="condition-match-row chat-pending" data-condition-row="subject">
+                  <strong><span>대상</span>누구에게 주는 도움인가요?</strong>
+                  <div><button type="button" data-value="both">생산자와 소비자</button><button type="button" data-value="company-only">기업만</button></div>
+                </section>
+                <section class="condition-match-row chat-pending" data-condition-row="time">
+                  <strong><span>시점</span>어느 때 생기는 도움인가요?</strong>
+                  <div><button type="button" data-value="trade">거래가 이루어질 때</button><button type="button" data-value="after-use">사용이 끝난 뒤</button></div>
+                </section>
+                <section class="condition-match-row chat-pending" data-condition-row="range">
+                  <strong><span>범위</span>해당하는 답을 어떻게 골라야 하나요?</strong>
+                  <div><button type="button" data-value="all">빠짐없이 모두</button><button type="button" data-value="one">한 가지만</button></div>
+                </section>
+                <section class="condition-match-row chat-pending" data-condition-row="evidence">
+                  <strong><span>근거 수</span>본문에서 서로 다른 도움을 몇 가지 확인해야 하나요?</strong>
+                  <div><button type="button" data-value="two">두 가지</button><button type="button" data-value="one">한 가지</button></div>
+                </section>
+                </div>
+                <div class="condition-chat-finish hidden" id="conditionChatFinish">
+                  <p>네 가지를 확인했어. 이제 왼쪽에서 답을 골라 봐.</p>
+                </div>
+                <div class="inline-feedback hidden" id="verifyFeedback" role="status" aria-live="polite"></div>
+              </div>
+              <button class="primary wide hidden" id="verifyButton" type="button" data-track="activity-complete" disabled>조건과 답 대조하기</button>
+            </article>
+          </div>
+        </section>
+
+        <section class="page transfer-page" data-page="5" data-activity-id="transfer-practice" data-measure-id="strategyGeneralization" data-condition="T3">
+          <div class="page-head">
+            <div><p class="eyebrow">6 · 여러 가지 전이</p><h1>낱말과 확인 전략을 새로운 상황에 옮겨 써요</h1></div>
+            <span class="step-purpose">어휘 · 전략 · 생활</span>
+          </div>
+
+          <article class="activity-card transfer-card" id="transferCard">
+            <div class="transfer-head"><span id="transferLabel">어휘 전이</span><b id="transferCounter">1 / 3</b></div>
+            <div class="transfer-grid" id="transferPlay">
+              <div class="transfer-passage">
+                <small>새로운 글</small>
+                <p id="transferPassageText"></p>
+              </div>
+              <div class="transfer-question">
+                <b class="transfer-status" id="transferStatus">답 선택</b>
+                <h2 id="transferQuestionText"></h2>
+                <div class="transfer-answer-options" id="transferAnswerOptions"></div>
+                <div class="inline-feedback coach-inline-feedback" id="transferFeedback" role="status" aria-live="polite">답을 고르면 본문 근거를 바로 보여 줄게.</div>
+                <button class="primary hidden" id="transferNext" type="button">다음 전이</button>
+              </div>
+            </div>
+            <section class="transfer-complete hidden" id="transferComplete" aria-live="polite">
+              <span aria-hidden="true">✓</span>
+              <h2>세 가지 전이 활동을 모두 확인했어요</h2>
+              <p id="transferResult"></p>
+              <button class="primary" id="goToReflection" type="button">확인 기록 남기기</button>
+            </section>
+          </article>
+        </section>
+
+        <section class="page reflection-page" data-page="6" data-activity-id="reflection-record" data-measure-id="metacognitiveReflection">
+          <div class="page-head">
+            <div><p class="eyebrow">7 · 확인 기록</p><h1>오늘 실제로 사용한 확인 행동을 남겨요</h1></div>
+            <span class="step-purpose">나의 전략 기록</span>
+          </div>
+          <div class="reflection-layout aba-reflection-layout">
+            <article class="activity-card reflection-card">
+              <div class="quote-mark">“</div>
+              <p class="reflection-kicker">나의 확인 기록</p>
+              <h2>오늘 가장 도움이 된 확인은 무엇이었나요?</h2>
+              <p>한 가지를 고르고, 필요하면 한 줄을 덧붙여요.</p>
+              <div class="reflection-choice-grid" id="reflectionCategories">
+                <button type="button" data-category="대가">누가 누구에게 대가를 지불하는지 확인했어요</button>
+                <button type="button" data-category="조건">거래 조건을 확인했어요</button>
+                <button type="button" data-category="관계">생산자와 소비자의 관계를 확인했어요</button>
+                <button type="button" data-category="근거">본문에서 근거 표현을 찾았어요</button>
+                <button type="button" data-category="끝부분">문장 끝까지 읽었어요</button>
+                <button type="button" data-category="자기확인">스스로 다시 확인했어요</button>
+              </div>
+              <label class="optional-note-label" for="mistakeInput">한 줄로 덧붙이고 싶다면</label>
+              <textarea id="mistakeInput" maxlength="120" rows="3" placeholder="예: 생산 기준과 인증 표시를 다시 확인했다."></textarea>
+              <div class="writing-meta"><span id="charCount">0 / 120</span><span>쓰지 않아도 괜찮아요.</span></div>
+              <button class="primary wide" id="saveMistakeButton" type="button" data-track="activity-complete">오늘 기록 저장하기</button>
+              <div class="inline-feedback" id="mistakeFeedback" role="status" aria-live="polite"></div>
+            </article>
+
+            <aside class="finish-panel">
+              <span class="finish-symbol"><i></i></span>
+              <h2>오늘의 확인 행동</h2>
+              <div class="behavior-summary" id="behaviorSummary">
+                <div><strong id="firstAccuracyMetric">- / 6</strong><span>첫 반응 정확</span></div>
+                <div><strong id="independentCheckMetric">- / 6</strong><span>도움 없이 확인</span></div>
+                <div><strong id="selfCorrectionMetric">0회</strong><span>답을 바꿔 고침</span></div>
+              </div>
+              <ol>
+                <li><span>1</span>답을 먼저 고른다.</li>
+                <li><span>2</span>조건과 근거를 실제로 찾는다.</li>
+                <li><span>3</span>확인한 뒤 답을 확정한다.</li>
+              </ol>
+              <div class="completion-message hidden" id="completionMessage">
+                <strong>오늘의 꼼꼼 읽기 완료!</strong>
+                <p>다른 교과 글에서도 답 → 조건 → 근거 → 확정 순서를 떠올려요.</p>
+              </div>
+            </aside>
+          </div>
+        </section>
+      </section>
+
+      <footer class="actionbar">
+        <button class="help-button" id="helpButton" type="button" data-track="hint" data-help-type="child-request"><span>?</span>도와주세요</button>
+        <div class="step-dots" id="stepDots" aria-label="현재 단계"></div>
+        <div class="nav-actions"><button class="back-button" id="backButton" type="button">이전</button><button class="next-button" id="nextButton" type="button" data-track="activity-complete">다음</button></div>
+      </footer>
+    </section>
+  </main>
+
+  <div class="vocab-dialog" id="vocabDialog" hidden>
+    <button class="vocab-dialog-backdrop" type="button" data-vocab-close aria-label="단어장 닫기"></button>
+    <section class="vocab-dialog-card" role="dialog" aria-modal="true" aria-labelledby="vocabDialogTitle">
+      <header class="vocab-dialog-head">
+        <div><small>꼼꼼하게 읽기 도구</small><h2 id="vocabDialogTitle">낱말 알아보기</h2></div>
+        <button class="vocab-dialog-close" id="vocabDialogClose" type="button" aria-label="단어장 닫기">×</button>
+      </header>
+      <div class="vocab-tabs" role="tablist" aria-label="어휘 도구">
+        <button id="vocabDetailTab" type="button" role="tab" aria-selected="true" aria-controls="vocabDetailPanel">낱말 보기</button>
+        <button id="vocabNotebookTab" type="button" role="tab" aria-selected="false" aria-controls="vocabNotebookPanel">내 단어장 <b id="vocabDialogCount">0</b></button>
+      </div>
+
+      <section class="vocab-panel vocab-detail-panel" id="vocabDetailPanel" role="tabpanel" aria-labelledby="vocabDetailTab">
+        <p class="vocab-added-state" id="vocabAddedState">누른 낱말을 단어장에 담았어요.</p>
+        <h3 id="vocabWord">생산자</h3>
+        <p class="vocab-hanja" id="vocabHanja"></p>
+        <dl class="vocab-definition">
+          <div><dt>뜻</dt><dd id="vocabMeaning"></dd></div>
+          <div><dt>예문</dt><dd id="vocabExample"></dd></div>
+        </dl>
+        <button class="vocab-go-notebook" id="vocabGoNotebook" type="button">내 단어장 보기</button>
+      </section>
+
+      <section class="vocab-panel vocab-notebook-panel" id="vocabNotebookPanel" role="tabpanel" aria-labelledby="vocabNotebookTab" hidden>
+        <div class="vocab-notebook-summary">
+          <div><strong>모은 낱말</strong><span id="vocabNotebookSummary">0개</span></div>
+          <p>본문에서 확인한 낱말로 매칭게임을 할 수 있어요.</p>
+        </div>
+        <div class="vocab-notebook-grid">
+          <div class="vocab-saved-list-wrap">
+            <p class="vocab-empty" id="vocabEmpty">본문의 어려운 낱말을 누르면 여기에 모여요.</p>
+            <ul class="vocab-saved-list" id="vocabSavedList"></ul>
+          </div>
+          <section class="vocab-game" aria-labelledby="vocabGameTitle">
+            <div id="vocabGameSetup">
+              <h3 id="vocabGameTitle">매칭 방향 고르기</h3>
+              <div class="vocab-direction" role="radiogroup" aria-label="매칭 방향">
+                <label><input type="radio" name="vocabDirection" value="word-to-meaning" checked><span><b>낱말 → 뜻</b><small>낱말을 보고 뜻 고르기</small></span></label>
+                <label><input type="radio" name="vocabDirection" value="meaning-to-word"><span><b>뜻 → 낱말</b><small>뜻을 보고 낱말 고르기</small></span></label>
+              </div>
+              <p class="vocab-game-requirement" id="vocabGameRequirement">낱말을 2개 이상 모으면 시작할 수 있어요.</p>
+              <button class="primary wide" id="vocabGameStart" type="button" data-track="tool" disabled>매칭게임 시작</button>
+            </div>
+            <div class="vocab-game-play" id="vocabGamePlay" hidden>
+              <div class="vocab-game-progress"><span id="vocabGameMode">낱말 → 뜻</span><b id="vocabGameCounter">1 / 2</b></div>
+              <small id="vocabGamePromptLabel">이 낱말의 뜻은?</small>
+              <h3 id="vocabGamePrompt"></h3>
+              <div class="vocab-game-options" id="vocabGameOptions"></div>
+              <p class="vocab-game-feedback" id="vocabGameFeedback" role="status" aria-live="polite"></p>
+              <button class="vocab-game-next" id="vocabGameNext" type="button" hidden>다음 문제</button>
+            </div>
+            <div class="vocab-game-complete" id="vocabGameComplete" hidden>
+              <span aria-hidden="true">✓</span>
+              <h3>매칭 완료</h3>
+              <p id="vocabGameResult"></p>
+              <button class="vocab-game-restart" id="vocabGameRestart" type="button">방향 다시 고르기</button>
+            </div>
+          </section>
+        </div>
+      </section>
+    </section>
+  </div>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
+  <div class="watermark" id="watermark" aria-hidden="true"></div>
+  <div class="completion-signal" id="completionSignal" data-track="lesson-complete" hidden></div>
+  <footer class="rights">자체 제작 텍스트 · 꼼꼼 읽기 활동 설계 © Oncuvate. All rights reserved.</footer>
+  <script src="aba-intervention.js?v=1.1.5"></script>
+  <script src="vocabulary-notebook.js?v=1.1.3"></script>
+  <script src="app.js?v=1.1.5"></script>
+  <script src="annotation.js"></script>
+  <script src="prediction-words.js?v=1.0.0"></script>
+  <script src="information-thief.js?v=1.1.5"></script>
+  <script src="layout-controller.js"></script>
+  <script src="coach-sync.js?v=1.0.0"></script>
+</body>
+</html>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
