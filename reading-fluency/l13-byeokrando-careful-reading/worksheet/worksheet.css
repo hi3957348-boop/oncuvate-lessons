@@ -71,5 +71,38 @@
 #p4 .self-check{margin-top:15px}#p4 .self-check label{font-size:13px}
 @media(max-width:600px){.ws-clues{grid-template-columns:1fr;gap:12px}.ws-board{width:100%}.ws-cell{font-size:21px}.ws-directions{font-size:13px}}
 @media print{.ws-clues{grid-template-columns:1fr 1fr;gap:13px 25px}.ws-board{width:416px}.ws-controls{display:none!important}.ws-cell{font-size:25px;box-shadow:none!important}.ws-cell.selected{background:transparent}.print-blank .ws-cell.found{background:transparent;color:#292d35}.print-blank .ws-cell.found::after{display:none}.print-blank .ws-clue.found .ws-answer{color:transparent}.ws-cell:hover{background:transparent}}
+
+/* 1쪽 듣기-표시-다시 읽기 흐름과 QR */
+.reading-guide{display:grid;grid-template-columns:minmax(0,1fr) 82px;gap:13px;align-items:center;padding:10px 12px}
+.reading-steps{display:grid;gap:4px}
+.reading-steps p{display:grid;grid-template-columns:22px minmax(0,1fr);gap:7px;align-items:start;margin:0;font-size:12px;line-height:1.45}
+.reading-steps p>b{display:grid;place-items:center;width:21px;height:21px;border-radius:50%;background:#4b24a5;color:#fff;font-size:11px}
+.reading-steps strong{font-weight:800;color:#243f46}
+.reading-steps small{display:block;margin:1px 0 0 29px;color:#66706d;font-size:10px;line-height:1.4}
+.audio-qr{display:grid;justify-items:center;gap:3px;color:#4b24a5;text-decoration:none;font-size:10px;font-weight:850}
+.audio-qr img{display:block;width:72px;height:72px;padding:3px;border:1px solid #d9cff5;background:#fff}
+.audio-qr:focus-visible{outline:3px solid rgba(75,201,220,.5);outline-offset:3px}
+/* 무역품 이름 쓰기 선 아래의 중복 구분선 제거 */
+.trade-item{border-bottom:0!important}
+@media(max-width:600px){.reading-guide{grid-template-columns:1fr 76px}.reading-steps p{font-size:11px}.audio-qr img{width:66px;height:66px}}
+@media print{
+ #p1 .title{margin:8px 0 4px}
+ #p1 .scene{width:120px;height:120px}
+ #p1 .identity{margin-bottom:7px}
+ #p1 .reading-guide{grid-template-columns:minmax(0,1fr) 64px;gap:8px;padding:6px 9px}
+ #p1 .reading-steps{gap:2px}
+ #p1 .reading-steps p{grid-template-columns:18px minmax(0,1fr);gap:5px;font-size:9.4pt;line-height:1.3}
+ #p1 .reading-steps p>b{width:17px;height:17px;font-size:8.5pt}
+ #p1 .reading-steps small{margin-left:23px;font-size:7.7pt}
+ #p1 .audio-qr img{width:56px;height:56px;padding:2px}
+ #p1 .audio-qr span{font-size:7.8pt}
+ #p1 .passage{margin:8px 0}
+ #p1 .passage article{margin:6px 0}
+ #p1 .passage p{font-size:11.7pt;line-height:1.72}
+ #p1 .section-heading{margin:9px 0 6px}
+ #p1 .word-grid{gap:7px}
+ #p1 .word{padding:8px 10px}
+ #p1 .material-line{margin:6px 0}
+}
 .sheet#p3 .answer-short,.sheet#p3 .answer-short textarea{height:56px;min-height:56px}@media print{.sheet#p3 .answer-short .print-value{height:56px;min-height:56px}}
 .answer-area{clear:both}
