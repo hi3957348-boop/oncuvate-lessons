@@ -48,3 +48,11 @@
 .sheet#p3 .open-question textarea{height:84px;min-height:84px;padding:0 5px;border:0;border-radius:0;box-shadow:none;resize:none;background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#bdc5bc 27px,#bdc5bc 28px);line-height:28px;font-size:16px;caret-color:#292d35}
 @media print{.sheet#p3 .open-question .print-value{height:84px;min-height:84px;padding:0 5px;border:0;border-radius:0;box-shadow:none;background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#bdc5bc 27px,#bdc5bc 28px);line-height:28px;font-size:15px}}
 @media print{.sheet#p1 .passage p{line-height:1.8}.sheet#p1 .passage article{margin:8px 0}}
+/* Preserve the square source tile; never stretch the port illustration. */
+.sheet#p1 .scene{width:142px;height:142px;aspect-ratio:1;justify-self:center;background-size:200% 200%}
+/* Real rules, not a colored field or a PDF gradient. */
+.answer-area{position:relative;height:84px;margin-top:9px}
+.answer-rules{position:absolute;inset:0;pointer-events:none}
+.answer-rules span{display:block;height:28px;border-bottom:1px solid #bdc5bc}
+.sheet#p3 .answer-area textarea{position:relative;z-index:1;margin:0;background:none!important}
+@media print{.sheet#p3 .answer-area .print-value{position:relative;margin:0;background:none!important}.answer-rules span{border-bottom:0.5pt solid #aeb7ac}}
