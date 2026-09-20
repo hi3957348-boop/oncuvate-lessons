@@ -40,3 +40,6 @@
 
 .ox-print{display:none}
 @media print{.trade-item .ox{display:none}.ox-print{display:block;text-align:center;font-size:11px;margin:3px 0;height:22px}.ox-print b{display:inline-block;min-width:40px;height:22px;vertical-align:bottom;border-bottom:1px solid #abb1aa;font-size:17px;line-height:22px}.print-blank .ox-print b{color:transparent}#p2 .compact-check{margin-top:11px}}
+
+.ox{gap:20px}.ox label{font-size:14px;line-height:26px}.trade-rule strong{font-size:15px}
+@media print{.ox-print{display:flex;justify-content:center;align-items:center;gap:16px;height:27px;margin:2px 0}.ox-print span{display:inline-block;min-width:43px;font-size:12px;line-height:24px;border:1.5px solid transparent;border-radius:50%;color:#292d35}.ox-print .chosen{border-color:#292d35}.print-blank .ox-print .chosen{border-color:transparent}}

@@ -1,6 +1,6 @@
 # 벽란도 꼼꼼 읽기 · 독립 웹워크지
 
-- 3쪽 A4: 1 본문·한자 어휘와 끊어 읽기 / 2 빈칸과 조사·연결어미·어휘 교정 / 3 그림 이름·수입 ○ 수출 ×와 읽기 이해.
+- 3쪽 A4: 1 본문·한자 어휘와 끊어 읽기 / 2 빈칸과 조사·연결어미·어휘 교정 / 3 그림 이름 쓰기·수입/수출 중 해당하는 말에 동그라미 치기와 읽기 이해.
 - 공개 파일럿/인쇄용 독립 자료입니다. 유료 플랫폼 정식 납품이나 코치 실시간 연동본이 아닙니다.
 - 답과 끊어 읽기 표시만 브라우저에 저장합니다. 이름·날짜는 인쇄 후 손으로 씁니다. 외부 데이터 전송이 없습니다.
 - 인쇄: 빈 활동지 또는 내 답 포함. 고정 PDF 3쪽.
@@ -22,4 +22,3 @@ BOTTOM LEFT: a small heap of varied dried herbal medicine ingredients (sliced ro
 BOTTOM MIDDLE: one small finished dark lacquer rectangular lidded box decorated with simple iridescent white/pale cyan mother-of-pearl inlay floral patterns, a complete najeon lacquer craft, NOT raw seashells.
 BOTTOM RIGHT: three traditional East Asian blue-covered thread-bound books stacked with visible folded pages and stitched binding, NO legible writing.
 Objects should be distinct and large enough for children to identify. No fan, mats, bowl, porcelain jar, tea leaves, musical instrument or extra seventh object. Use loose ROUGH COLORED PENCIL illustration throughout. Simple workbook-sized silhouettes.
-
