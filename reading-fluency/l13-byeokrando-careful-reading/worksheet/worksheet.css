@@ -43,3 +43,7 @@
 
 .ox{gap:20px}.ox label{font-size:14px;line-height:26px}.trade-rule strong{font-size:15px}
 @media print{.ox-print{display:flex;justify-content:center;align-items:center;gap:16px;height:27px;margin:2px 0}.ox-print span{display:inline-block;min-width:43px;font-size:12px;line-height:24px;border:1.5px solid transparent;border-radius:50%;color:#292d35}.ox-print .chosen{border-color:#292d35}.print-blank .ox-print .chosen{border-color:transparent}}
+
+/* A quiet three-line writing area, with no filled answer box. */
+.sheet#p3 .open-question textarea{height:84px;min-height:84px;padding:0 5px;border:0;border-radius:0;box-shadow:none;resize:none;background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#bdc5bc 27px,#bdc5bc 28px);line-height:28px;font-size:16px;caret-color:#292d35}
+@media print{.sheet#p3 .open-question .print-value{height:84px;min-height:84px;padding:0 5px;border:0;border-radius:0;box-shadow:none;background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#bdc5bc 27px,#bdc5bc 28px);line-height:28px;font-size:15px}}
