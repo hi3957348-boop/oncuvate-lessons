@@ -47,3 +47,4 @@
 /* A quiet three-line writing area, with no filled answer box. */
 .sheet#p3 .open-question textarea{height:84px;min-height:84px;padding:0 5px;border:0;border-radius:0;box-shadow:none;resize:none;background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#bdc5bc 27px,#bdc5bc 28px);line-height:28px;font-size:16px;caret-color:#292d35}
 @media print{.sheet#p3 .open-question .print-value{height:84px;min-height:84px;padding:0 5px;border:0;border-radius:0;box-shadow:none;background-color:transparent;background-image:repeating-linear-gradient(to bottom,transparent 0,transparent 27px,#bdc5bc 27px,#bdc5bc 28px);line-height:28px;font-size:15px}}
+@media print{.sheet#p1 .passage p{line-height:1.8}.sheet#p1 .passage article{margin:8px 0}}

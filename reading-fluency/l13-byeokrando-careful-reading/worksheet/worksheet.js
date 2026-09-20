@@ -1,5 +1,5 @@
 'use strict';
-const KEY='oncuvate-byeokrando-workbook-v4';
+const KEY='oncuvate-byeokrando-workbook-v5';
 const status=document.querySelector('#saveStatus');
 let state={fields:{},cuts:[]};
 try{state=JSON.parse(localStorage.getItem(KEY))||state;}catch(e){status.textContent='이 브라우저에서는 저장할 수 없어요. 답을 포함해 인쇄해 주세요.';}
@@ -19,9 +19,9 @@ function save(){const data={fields:{},cuts:[...document.querySelectorAll('.cut[a
 mirrors();
 const val=name=>document.querySelector('[name="'+name+'"]')?.value.trim()||'';
 const radio=name=>document.querySelector('[name="'+name+'"]:checked')?.value;
-const norm=s=>s.replace(/[\\s.,!?。]/g,'');
+const norm=s=>s.replace(/[\s.,!?。]/g,'');
 const checks={
- fill:()=>[['river','예성강'],['capital','개경'],['export','수출'],['import','수입'],['knowledge','학문']].every(([n,a])=>norm(val(n))===a),
+ fill:()=>[['port','무역항'],['capital','개경'],['export','수출'],['import','수입'],['knowledge','학문']].every(([n,a])=>norm(val(n))===a),
  particle:()=>radio('particle')==='0'&&norm(val('particle-fix'))==='송에서',
  ending:()=>radio('ending')==='0'&&['깊어서','깊으므로','깊기때문에'].includes(norm(val('ending-fix'))),
  word:()=>radio('word')==='1'&&norm(val('word-fix'))==='수입',
@@ -44,7 +44,6 @@ function print(blank){mirrors();document.body.classList.toggle('print-blank',bla
 document.querySelector('#printBlank').onclick=()=>print(true);
 document.querySelector('#printAnswers').onclick=()=>print(false);
 window.addEventListener('afterprint',()=>document.body.classList.remove('print-blank'));
-document.querySelector('#reset').onclick=()=>{if(confirm('이 브라우저에 저장한 이름, 답, 끊어 읽기 표시를 모두 지울까요?')){try{localStorage.removeItem(KEY);}catch(e){}location.reload();}};
+document.querySelector('#reset').onclick=()=>{if(confirm('이 브라우저에 저장한 답, 끊어 읽기 표시를 모두 지울까요?')){try{localStorage.removeItem(KEY);}catch(e){}location.reload();}};
 
 checks.trade=()=>{const list=[['인삼','x'],['비단','o'],['종이','x'],['약재','o'],['나전칠기','x'],['책','o']];let ok=true;list.forEach(([a,t],i)=>{const n=i+1,v=norm(val('item-'+n));const nameOK=v===a||(a==='책'&&v==='서적')||(a==='나전칠기'&&v==='나전칠기상자');const typeOK=radio('ox-'+n)===t;const row=document.querySelector('[name="item-'+n+'"]').closest('.trade-item');row.classList.toggle('needs-check',!nameOK||!typeOK);row.querySelector('.item-feedback').textContent=nameOK&&typeOK?'확인했어요.':!nameOK?'이름을 다시 살펴요.':'들어오나요, 나가나요?';if(!nameOK||!typeOK)ok=false;});return ok;};hints.trade='표시된 칸만 다시 살펴보세요. 본문의 ‘수출했습니다’와 ‘수입했습니다’를 기준으로 확인해요.';
-
