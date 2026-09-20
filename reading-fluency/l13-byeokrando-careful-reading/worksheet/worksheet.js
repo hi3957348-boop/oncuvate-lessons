@@ -1,5 +1,5 @@
 'use strict';
-const KEY='oncuvate-byeokrando-workbook-v3';
+const KEY='oncuvate-byeokrando-workbook-v4';
 const status=document.querySelector('#saveStatus');
 let state={fields:{},cuts:[]};
 try{state=JSON.parse(localStorage.getItem(KEY))||state;}catch(e){status.textContent='이 브라우저에서는 저장할 수 없어요. 답을 포함해 인쇄해 주세요.';}
@@ -21,7 +21,7 @@ const val=name=>document.querySelector('[name="'+name+'"]')?.value.trim()||'';
 const radio=name=>document.querySelector('[name="'+name+'"]:checked')?.value;
 const norm=s=>s.replace(/[\\s.,!?。]/g,'');
 const checks={
- fill:()=>[['river','예성강'],['capital','개경'],['export','수출'],['import','수입'],['knowledge','지식']].every(([n,a])=>norm(val(n))===a),
+ fill:()=>[['river','예성강'],['capital','개경'],['export','수출'],['import','수입'],['knowledge','학문']].every(([n,a])=>norm(val(n))===a),
  particle:()=>radio('particle')==='0'&&norm(val('particle-fix'))==='송에서',
  ending:()=>radio('ending')==='0'&&['깊어서','깊으므로','깊기때문에'].includes(norm(val('ending-fix'))),
  word:()=>radio('word')==='1'&&norm(val('word-fix'))==='수입',
@@ -39,7 +39,7 @@ const hints={
  goods:'고려로 들어온 물건을 모두 골랐나요? 나 문단의 ‘수입했습니다’ 앞을 확인해 보세요.'
 };
 document.querySelectorAll('[data-check]').forEach(b=>b.onclick=()=>{const k=b.dataset.check,q=b.closest('[data-q]'),f=q.querySelector('.feedback'),ok=checks[k]();f.textContent=ok?'잘 확인했어요. 본문의 뜻과 맞아요.':hints[k];f.className='feedback '+(ok?'good':'');q.classList.toggle('done',ok);});
-document.querySelector('#exampleToggle').onclick=()=>{const e=document.querySelector('#example'),b=document.querySelector('#exampleToggle');e.hidden=!e.hidden;b.setAttribute('aria-expanded',String(!e.hidden));b.textContent=e.hidden?'쓴 답과 예시 비교하기':'예시 접기';if(!val('understand')&&!e.hidden)e.textContent='먼저 한 문장으로 써 보세요. 쓴 뒤에 이 버튼을 다시 눌러 예시와 비교할 수 있어요.';else e.textContent='예시: 들어온 책을 통해 다른 나라의 지식도 배웠다는 뜻입니다. ‘지식도 배웠다’는 뜻이 담겼는지 내 답과 비교해 보세요.';};
+document.querySelector('#exampleToggle').onclick=()=>{const e=document.querySelector('#example'),b=document.querySelector('#exampleToggle');e.hidden=!e.hidden;b.setAttribute('aria-expanded',String(!e.hidden));b.textContent=e.hidden?'쓴 답과 예시 비교하기':'예시 접기';if(!val('understand')&&!e.hidden)e.textContent='먼저 한 문장으로 써 보세요. 쓴 뒤에 이 버튼을 다시 눌러 예시와 비교할 수 있어요.';else e.textContent='예시: 물건뿐 아니라 여러 나라의 사람, 지식, 문화가 함께 오갔기 때문입니다. 마지막 문장의 뜻이 담겼는지 내 답과 비교해 보세요.';};
 function print(blank){mirrors();document.body.classList.toggle('print-blank',blank);window.print();}
 document.querySelector('#printBlank').onclick=()=>print(true);
 document.querySelector('#printAnswers').onclick=()=>print(false);
