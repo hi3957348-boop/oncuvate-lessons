@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>일기예보 본문 듣기</title>
+<style>
+:root{--v:#4b24a5;--m:#f8f6fd;--l:#e8e3f3;--c:#4bc9dc;--i:#29243a;--u:#777187;--p:#fffefb}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#f4fbfc,#f8f6fd);color:var(--i);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif}
+main{width:min(760px,calc(100% - 28px));margin:22px auto;padding:22px;background:var(--p);border:1px solid var(--l);border-radius:24px;box-shadow:0 18px 48px rgba(37,20,78,.12)}
+header{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--l)}
+.brand{font-weight:900;color:var(--v)}
+.tag{padding:7px 11px;border-radius:999px;background:#ecf8fa;color:#216c78;font-size:13px;font-weight:800}
+h1{margin:24px 0 8px;font-size:clamp(25px,6vw,38px);line-height:1.2;letter-spacing:-.04em}
+.lead,.hint{color:var(--u)}
+.listen-card{margin:20px 0;padding:18px;border:1px solid #cfe8eb;border-radius:18px;background:#f2fbfc}
+audio{display:block;width:100%;accent-color:var(--v)}
+.speed{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:13px}
+.speed span{margin-right:auto;color:#56636c;font-size:13px;font-weight:800}
+.speed button{min-height:38px;padding:0 13px;border:1px solid var(--l);border-radius:10px;background:#fff;color:var(--i);font:inherit;font-weight:800;cursor:pointer}
+.speed button.active{border-color:var(--v);background:var(--v);color:#fff}
+.speed button:focus-visible,a:focus-visible{outline:4px solid rgba(75,201,220,.38);outline-offset:2px}
+.status{margin-top:11px;color:#4b347e;font-size:13px;font-weight:800}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.steps p{margin:0;padding:11px;border-radius:13px;background:var(--m);font-size:13px;line-height:1.45}
+.steps b{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:5px;border-radius:50%;background:var(--v);color:#fff}
+.text{margin-top:18px;padding:22px;border:1px solid var(--l);border-radius:18px;background:#fff;font-size:clamp(18px,4vw,22px);line-height:1.85;word-break:keep-all}
+.text p{margin:0 0 15px;text-indent:1em}
+.text p:last-child{margin:0}
+.text p.active{background:#ecf8fa;box-shadow:0 0 0 5px #ecf8fa;border-radius:6px}
+.hint{font-size:12px;line-height:1.6}
+@media(max-width:560px){main{padding:18px}.steps{grid-template-columns:1fr}.text{padding:17px}.speed span{width:100%}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="brand">ONCUVATE</div><div class="tag">본문 듣기</div></header>
+<h1>일기예보는 어떻게 만들어질까요?</h1>
+<p class="lead">음성을 들으며 활동지 본문에 끊어 읽기 표시를 해 보세요.</p>
+<section class="listen-card" aria-label="본문 음성 재생">
+<audio id="readingAudio" controls preload="metadata" src="audio/forecast-reading.mp3">이 브라우저에서는 음성 재생을 지원하지 않습니다.</audio>
+<div class="speed" aria-label="재생 속도"><span>읽기 속도</span><button type="button" data-rate=".85">0.85배</button><button type="button" data-rate="1" class="active">1배</button><button type="button" data-rate="1.15">1.15배</button></div>
+<div class="status" id="status" role="status" aria-live="polite">재생 버튼을 눌러 주세요.</div>
+</section>
+<div class="steps" aria-label="학습 순서"><p><b>1</b>본문을 들어요.</p><p><b>2</b>뜻이 이어지는 말에 /를 표시해요.</p><p><b>3</b>표시를 보며 혼자 다시 읽어요.</p></div>
+<article class="text" id="readingText">
+<p>내일 비가 올지, 바람이 얼마나 불지는 어떻게 알 수 있을까요? 일기예보는 여러 곳에서 날씨를 관측하는 일부터 시작합니다.</p>
+<p>기상 위성은 우주에서 구름의 위치와 움직임을 살펴봅니다. 지상 관측소는 기온, 습도, 기압과 바람을 측정합니다. 기상 레이더는 비구름이 있는 곳과 비가 내리는 정도를 관측합니다. 바다의 관측 장비와 하늘로 띄운 기상 관측 기구도 필요한 자료를 모읍니다.</p>
+<p>이렇게 모은 자료는 대형 컴퓨터로 전달됩니다. 컴퓨터는 지구의 대기를 작은 구역으로 나누고, 각 구역의 공기가 앞으로 어떻게 움직일지 계산합니다. 그 결과를 이용하여 미래의 기온, 바람과 비의 모습을 나타낸 예상 자료를 만듭니다.</p>
+<p>그러나 컴퓨터의 계산만으로 예보가 완성되지는 않습니다. 예보관은 관측 자료와 여러 예상 결과를 비교합니다. 산과 바다처럼 지역의 날씨에 영향을 주는 조건도 살펴봅니다. 그런 다음 비가 올 가능성이나 기온의 변화를 판단하여 일기예보를 작성합니다.</p>
+<p>완성된 예보는 방송과 인터넷, 휴대 전화 앱을 통해 사람들에게 전달됩니다. 우리는 일기예보를 보고 옷차림을 정하거나 야외 활동을 계획하고, 위험한 날씨에 미리 대비할 수 있습니다.</p>
+</article>
+<p class="hint">이 음성은 학습용 AI 음성으로 제작되었습니다. 소리가 나지 않으면 휴대전화의 음량과 무음 모드를 확인해 주세요.</p>
+</main>
+<script>
+const audio=document.querySelector('#readingAudio');
+const status=document.querySelector('#status');
+const buttons=[...document.querySelectorAll('[data-rate]')];
+audio.addEventListener('play',()=>status.textContent='본문을 읽고 있어요. 활동지에 /를 표시해 보세요.');
+audio.addEventListener('pause',()=>{if(!audio.ended)status.textContent='잠시 멈췄어요. 표시한 곳을 확인해 보세요.'});
+audio.addEventListener('ended',()=>status.textContent='끝까지 잘 들었어요. 이제 표시를 보며 혼자 읽어 보세요.');
+audio.addEventListener('error',()=>status.textContent='음원을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');
+buttons.forEach(button=>button.addEventListener('click',()=>{audio.playbackRate=Number(button.dataset.rate);buttons.forEach(item=>item.classList.toggle('active',item===button));status.textContent=button.textContent+' 속도로 들려줄게요.'}));
+</script>
+</body>
+</html>

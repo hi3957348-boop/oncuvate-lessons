@@ -1,0 +1,28 @@
+.sheet#p1 .scene{background-image:url('hero.png');background-size:contain;background-position:center}
+.sheet#p1 .passage p{font-size:14px;line-height:1.66}
+.sheet#p1 .passage article{margin:6px 0}
+.sheet#p1 .section-heading{margin-top:24px}
+.qr-pending{min-height:64px;border:1px dashed #84a7a1;border-radius:3px;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;color:#527570;text-align:center;text-decoration:none}
+.qr-pending>span{font-size:10px;font-weight:750;line-height:1.2}.qr-pending>small{font-size:9px;margin-top:4px;color:#267c79}
+.hanja-practice{display:grid;grid-template-columns:auto 12px 1fr 12px 1fr;align-items:center;gap:4px;border-top:1px solid #ddddd4;margin-top:6px;padding-top:6px;font-size:10px;color:#58615e;white-space:nowrap}
+.hanja-practice input{width:100%;min-width:0;padding:0 2px!important;background:transparent!important}
+.process-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:13px 0 9px}
+.process-card{border:1px solid #d7ddd7;border-radius:10px;padding:9px;background:#fff;position:relative;text-align:center;min-height:180px}
+.process-card .process-art{display:block;width:108px;height:108px;margin:0 auto 5px;background:url('activity-icons.png') no-repeat;background-size:200% 200%}
+.process-card:nth-child(1) .process-art{background-position:0 0}.process-card:nth-child(2) .process-art{background-position:100% 0}.process-card:nth-child(3) .process-art{background-position:0 100%}.process-card:nth-child(4) .process-art{background-position:100% 100%}
+.process-card strong{display:block;font-size:15px}.process-card p{font-size:11px;line-height:1.45;color:#59635f;margin:4px 0 0}
+.process-card label{position:absolute;right:8px;top:8px;font-size:10px;color:#59635f}.process-card input{width:28px!important;text-align:center;padding:2px!important;background:white!important}
+.process-card>input{width:56px!important;text-align:center}.process-card .print-value{min-width:48px;width:48px;text-align:center}.process-card label .print-value{min-width:24px;width:24px}
+.season-table{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:12px 0}
+.season-column{border-top:3px solid #378f88;background:#f5f7f3;padding:10px;border-radius:4px;min-height:204px}
+.season-column h4{margin:0 0 7px;font-size:18px;color:#315b57}.season-column p{font-size:12px;line-height:1.55;margin:6px 0}.season-column b{color:#5131a8}
+.clue-cards{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;margin-top:8px}.clue-card{font-size:12px;border-bottom:1px solid #d9ded8;padding:5px 0}.clue-card input{width:66px!important;margin-left:5px;text-align:center}
+.sheet#p4 .page-title{margin-bottom:12px}.sheet#p4 .ws-clues{margin:14px 0}.sheet#p4 .ws-board{margin:16px auto 8px;width:390px}.sheet#p4 .ws-cell{font-size:23px}
+@media print{
+ .sheet#p1 .passage p{font-size:10.7pt;line-height:1.58}
+ .sheet#p1 .passage article{margin:5px 0}
+ .hanja-practice{font-size:8.5pt}.hanja-practice .print-value{min-width:38px;min-height:16px}
+ .process-grid{gap:8px}.process-card{min-height:167px;padding:7px}.process-card .process-art{width:98px;height:98px}.process-card p{font-size:9.5px}
+ .sheet#p4 .ws-clues{gap:8px 22px;margin:11px 0}.sheet#p4 .ws-clue{font-size:12px}.sheet#p4 .ws-board{width:365px;margin:11px auto 6px}.sheet#p4 .ws-cell{font-size:21px}
+}
+@media(max-width:600px){.hanja-practice{grid-template-columns:auto 12px 1fr}.hanja-practice span:nth-of-type(2){grid-column:2}.process-grid,.season-table{grid-template-columns:1fr 1fr}.process-card{min-height:165px}}

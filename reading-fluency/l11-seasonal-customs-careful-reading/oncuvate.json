@@ -2,7 +2,7 @@
   "oncuvate": 2,
   "id": "l11-seasonal-customs-careful-reading",
   "version": "1.1.2",
-  "updatedAt": "2026-09-08",
+  "updatedAt": "2026-09-24",
   "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
   "files": {
     "session01.html": {
@@ -21,6 +21,24 @@
         "nav": true,
         "prog": true
       },
+      "copyright": {
+        "kind": "inHouse"
+      }
+    },
+    "worksheet/session01-seasonal-customs-workbook.html": {
+      "use": "부속",
+      "version": "1.0.0",
+      "title": "계절마다 이어 온 세시 풍속 — 꼼꼼 읽기 워크지",
+      "order": 2,
+      "copyright": {
+        "kind": "inHouse"
+      }
+    },
+    "read-aloud-easy.html": {
+      "use": "부속",
+      "version": "1.0.0",
+      "title": "세시 풍속 본문 - 음성으로 듣기",
+      "order": 3,
       "copyright": {
         "kind": "inHouse"
       }

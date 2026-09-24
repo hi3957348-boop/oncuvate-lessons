@@ -1,0 +1,67 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>세시 풍속 본문 듣기</title>
+<style>
+:root{--v:#4b24a5;--m:#f8f6fd;--l:#e8e3f3;--c:#4bc9dc;--i:#29243a;--u:#777187;--p:#fffefb}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#f4fbfc,#f8f6fd);color:var(--i);font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif}
+main{width:min(760px,calc(100% - 28px));margin:22px auto;padding:22px;background:var(--p);border:1px solid var(--l);border-radius:24px;box-shadow:0 18px 48px rgba(37,20,78,.12)}
+header{display:flex;justify-content:space-between;align-items:center;padding-bottom:16px;border-bottom:1px solid var(--l)}
+.brand{font-weight:900;color:var(--v)}
+.tag{padding:7px 11px;border-radius:999px;background:#ecf8fa;color:#216c78;font-size:13px;font-weight:800}
+h1{margin:24px 0 8px;font-size:clamp(25px,6vw,38px);line-height:1.2;letter-spacing:-.04em}
+.lead,.hint{color:var(--u)}
+.listen-card{margin:20px 0;padding:18px;border:1px solid #cfe8eb;border-radius:18px;background:#f2fbfc}
+audio{display:block;width:100%;accent-color:var(--v)}
+.speed{display:flex;flex-wrap:wrap;align-items:center;gap:8px;margin-top:13px}
+.speed span{margin-right:auto;color:#56636c;font-size:13px;font-weight:800}
+.speed button{min-height:38px;padding:0 13px;border:1px solid var(--l);border-radius:10px;background:#fff;color:var(--i);font:inherit;font-weight:800;cursor:pointer}
+.speed button.active{border-color:var(--v);background:var(--v);color:#fff}
+.speed button:focus-visible,a:focus-visible{outline:4px solid rgba(75,201,220,.38);outline-offset:2px}
+.status{margin-top:11px;color:#4b347e;font-size:13px;font-weight:800}
+.steps{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:16px 0}
+.steps p{margin:0;padding:11px;border-radius:13px;background:var(--m);font-size:13px;line-height:1.45}
+.steps b{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:5px;border-radius:50%;background:var(--v);color:#fff}
+.text{margin-top:18px;padding:22px;border:1px solid var(--l);border-radius:18px;background:#fff;font-size:clamp(18px,4vw,22px);line-height:1.85;word-break:keep-all}
+.text p{margin:0 0 15px;text-indent:1em}
+.text p:last-child{margin:0}
+.text p.active{background:#ecf8fa;box-shadow:0 0 0 5px #ecf8fa;border-radius:6px}
+.hint{font-size:12px;line-height:1.6}
+@media(max-width:560px){main{padding:18px}.steps{grid-template-columns:1fr}.text{padding:17px}.speed span{width:100%}}
+</style>
+</head>
+<body>
+<main>
+<header><div class="brand">ONCUVATE</div><div class="tag">본문 듣기</div></header>
+<h1>계절마다 이어 온 세시 풍속</h1>
+<p class="lead">음성을 들으며 활동지 본문에 끊어 읽기 표시를 해 보세요.</p>
+<section class="listen-card" aria-label="본문 음성 재생">
+<audio id="readingAudio" controls preload="metadata" src="audio/seasonal-customs-reading.mp3">이 브라우저에서는 음성 재생을 지원하지 않습니다.</audio>
+<div class="speed" aria-label="재생 속도"><span>읽기 속도</span><button type="button" data-rate=".85">0.85배</button><button type="button" data-rate="1" class="active">1배</button><button type="button" data-rate="1.15">1.15배</button></div>
+<div class="status" id="status" role="status" aria-live="polite">재생 버튼을 눌러 주세요.</div>
+</section>
+<div class="steps" aria-label="학습 순서"><p><b>1</b>본문을 들어요.</p><p><b>2</b>뜻이 이어지는 말에 /를 표시해요.</p><p><b>3</b>표시를 보며 혼자 다시 읽어요.</p></div>
+<article class="text" id="readingText">
+<p>설날이나 추석처럼 해마다 비슷한 때에 되풀이하는 생활 모습이 있습니다. 이를 세시 풍속이라고 합니다. ‘세(歲)’는 한 해, ‘시(時)’는 때를 뜻합니다. 따라서 세시 풍속은 한 해의 절기나 달, 계절에 맞추어 이어 온 생활 습관입니다.</p>
+<p>우리 조상들은 한 해를 스물네 절기로 나누어 계절의 변화를 살폈습니다. 봄이 시작되는 입춘에는 콩을 뿌리거나 대문에 좋은 글귀를 붙였습니다. 경칩에는 보리싹이 자란 모습을 보고 그해 농사가 잘될지 짐작했습니다.</p>
+<p>여름이 가까운 망종에는 보리나 벼의 씨를 뿌렸습니다. 낮이 가장 긴 하지 무렵까지 비가 오지 않으면 비가 내리기를 바라며 기우제를 지내기도 했습니다.</p>
+<p>가을의 처서에는 조상의 묘를 찾아 벌초하고, 여름 동안 눅눅해진 옷과 이불을 햇볕에 말렸습니다. 한로 무렵에는 곡식을 거두느라 바빴습니다. 겨울이 시작되는 입동에는 햇곡식으로 시루떡을 만들어 이웃과 나누고 김장을 준비했습니다. 밤이 가장 긴 동지에는 팥죽을 쑤어 이웃과 나누어 먹었습니다.</p>
+<p>명절에도 세시 풍속이 이어집니다. 설날에는 세배하고 떡국을 먹습니다. 정월 대보름에는 부럼을 깨물고 오곡밥을 먹습니다. 단오에는 창포물에 머리를 감고, 추석에는 송편을 빚으며 보름달을 바라봅니다. 세시 풍속에는 계절에 맞추어 살아온 조상들의 생활 모습과 바람이 담겨 있습니다.</p>
+</article>
+<p class="hint">이 음성은 학습용 AI 음성으로 제작되었습니다. 소리가 나지 않으면 휴대전화의 음량과 무음 모드를 확인해 주세요.</p>
+</main>
+<script>
+const audio=document.querySelector('#readingAudio');
+const status=document.querySelector('#status');
+const buttons=[...document.querySelectorAll('[data-rate]')];
+audio.addEventListener('play',()=>status.textContent='본문을 읽고 있어요. 활동지에 /를 표시해 보세요.');
+audio.addEventListener('pause',()=>{if(!audio.ended)status.textContent='잠시 멈췄어요. 표시한 곳을 확인해 보세요.'});
+audio.addEventListener('ended',()=>status.textContent='끝까지 잘 들었어요. 이제 표시를 보며 혼자 읽어 보세요.');
+audio.addEventListener('error',()=>status.textContent='음원을 불러오지 못했어요. 인터넷 연결을 확인해 주세요.');
+buttons.forEach(button=>button.addEventListener('click',()=>{audio.playbackRate=Number(button.dataset.rate);buttons.forEach(item=>item.classList.toggle('active',item===button));status.textContent=button.textContent+' 속도로 들려줄게요.'}));
+</script>
+</body>
+</html>
