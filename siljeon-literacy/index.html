@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <meta name="description" content="온큐베이트 실전! 문해력 신문 읽기와 역사 읽기 웹 활동지">
+  <title>실전! 문해력 · 전체 활동지</title>
+  <link rel="stylesheet" href="portal.css">
+</head>
+<body>
+  <main class="portal-shell">
+    <header class="hero">
+      <img src="oncuvate-brand-logo.png" alt="Oncuvate">
+      <div><p>인쇄 가능한 웹 활동지</p><h1>실전! 문해력</h1><span>신문과 역사 글을 꼼꼼히 읽고, 답의 근거를 찾어보세요.</span></div>
+    </header>
+
+    <section class="collection" aria-labelledby="news-title">
+      <div class="section-head"><div><span class="section-mark"></span><p>2026년 10월</p><h2 id="news-title">신문 읽기</h2></div><strong>4주 시리즈</strong></div>
+      <div class="card-grid news-grid">
+        <a class="lesson-card" href="https://hi3957348-boop.github.io/oncuvate-lessons/siljeon-oct/w1/">
+          <span class="number">1주차</span><div class="card-copy"><small>신문 읽기</small><h3>2026년은 ‘한글의 해’래요!</h3><p>한글 반포 580년과 한글의 가치를 살펴봐요.</p></div><span class="open-label">활동지 열기</span>
+        </a>
+        <article class="lesson-card coming" aria-label="2주차 신문 읽기 준비 중">
+          <span class="number">2주차</span><div class="card-copy"><small>신문 읽기</small><h3>새 기사를 준비하고 있어요</h3><p>자료가 준비되면 여기에 연결합니다.</p></div><span class="open-label">추후 제공</span>
+        </article>
+        <a class="lesson-card" href="https://hi3957348-boop.github.io/oncuvate-lessons/siljeon-oct/w3/">
+          <span class="number">3주차</span><div class="card-copy"><small>신문 읽기</small><h3>열한 살 선수가 금메달을 따었대요!</h3><p>e스포츠 선수와 아시안게임 기사를 읽어요.</p></div><span class="open-label">활동지 열기</span>
+        </a>
+        <a class="lesson-card" href="https://hi3957348-boop.github.io/oncuvate-lessons/siljeon-oct/w4/">
+          <span class="number">4주차</span><div class="card-copy"><small>신문 읽기</small><h3>스마트폰 없는 학교, 규칙도 함께 정해요</h3><p>학생·교사·학부모가 함께 만드는 원칙을 읽어요.</p></div><span class="open-label">활동지 열기</span>
+        </a>
+      </div>
+    </section>
+
+    <section class="collection" aria-labelledby="history-title">
+      <div class="section-head"><div><span class="section-mark violet"></span><p>조선 전기 왕의 정치</p><h2 id="history-title">역사 읽기</h2></div><strong>04–07회차</strong></div>
+      <div class="card-grid history-grid">
+        <a class="lesson-card history" data-history="taejong" href="workbook.html?lesson=taejong"><span class="number">04</span><div class="card-copy"><small>역사 읽기</small><h3>태종, 힘으로 세운 질서</h3><p>사병 혁파와 강한 왕권의 원인·결과를 살펴봐요.</p></div><span class="open-label">활동지 열기</span></a>
+        <a class="lesson-card history" data-history="sejong" href="workbook.html?lesson=sejong"><span class="number">05</span><div class="card-copy"><small>역사 읽기</small><h3>세종, 백성을 위한 임금</h3><p>훈민정음·과학·국방으로 이어진 정치를 읽어요.</p></div><span class="open-label">활동지 열기</span></a>
+        <a class="lesson-card history" data-history="sejo" href="workbook.html?lesson=sejo"><span class="number">06</span><div class="card-copy"><small>역사 읽기</small><h3>세조, 다시 터진 왕좌 다툼</h3><p>계유정난에서 왕권 강화까지의 흐름을 읽어요.</p></div><span class="open-label">활동지 열기</span></a>
+        <a class="lesson-card history" data-history="seongjong" href="workbook.html?lesson=seongjong"><span class="number">07</span><div class="card-copy"><small>역사 읽기</small><h3>성종, 나라의 제도를 완성하다</h3><p>홍문관·경국대전·사림의 의미를 살펴봐요.</p></div><span class="open-label">활동지 열기</span></a>
+      </div>
+    </section>
+  </main>
+  <footer class="page-footer"><img src="oncuvate-brand-logo.png" alt=""><span>읽고, 확인하고, 생각을 글로 남겨요.</span></footer>
+  <script>
+    const publicPortal=location.pathname.includes('/siljeon-literacy/');
+    document.querySelectorAll('[data-history]').forEach(link=>{
+      const file=publicPortal?'history/workbook.html':'workbook.html';
+      link.href=`${file}?lesson=${link.dataset.history}`;
+    });
+  </script>
+</body>
+</html>
