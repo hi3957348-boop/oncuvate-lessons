@@ -1,0 +1,142 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>실전! 문해력 - 신문 읽기 -</title>
+  <link rel="stylesheet" href="worksheet.css">
+  <link rel="stylesheet" href="worksheet-overrides.css">
+  <link rel="stylesheet" href="listen.css">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <nav class="toolbar" aria-label="활동지 도구">
+    <div class="toolbar__brand"><img src="oncuvate-brand-logo.png" alt="Oncuvate"><strong>실전! 문해력</strong></div>
+    <div class="toolbar__pages">
+      <a href="#page-1">1 기사·어휘</a><a href="#page-2">2 정확히 읽기</a><a href="#page-3">3 기사 이해</a><a href="#page-4">4 핵심 낱말</a>
+    </div>
+    <div class="toolbar__actions">
+      <button type="button" id="printBlank">빈 활동지 인쇄</button>
+      <button type="button" id="printFilled">내 답 포함 인쇄</button>
+      <a class="primary" href="output/pdf/siljeon-literacy-newspaper-reading.pdf">PDF</a>
+      <button type="button" id="resetAll">다시 시작</button>
+    </div>
+  </nav>
+
+  <main class="workbook">
+    <section class="sheet" id="page-1" data-page="1">
+      <header class="sheet-head">
+        <div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">NIE 신문 읽기 01</span></div>
+        <div class="student-line">이름 <input aria-label="이름" data-save="student-name"> 날짜 <input aria-label="날짜" data-save="student-date"></div>
+      </header>
+      <div class="title-block title-block--article">
+        <h2 data-seg="0">2026년은 ‘한글의 해’래요!</h2>
+      </div>
+      <section class="listen-box" aria-label="본문 듣기">
+        <div>
+          <ol class="listen-steps">
+            <li><b><span class="print-only">QR 코드를 찍어 본문을 들어요.</span><span class="screen-only">▶ 본문 듣기를 눌러 본문을 들어요.</span></b></li>
+            <li><span>들으면서 뜻이 이어지는 말 사이에 <b>/</b>를 표시해요.</span></li>
+            <li><span>표시한 곳에서 잠깐 쉬며 <b>스스로 다시 읽어요.</b></span></li>
+          </ol>
+          <p class="listen-eg">예: 올해는<i>/</i>세종대왕이 훈민정음을 반포한 지<i>/</i>580년이 되는 해입니다.</p>
+          <div class="listen-player" role="group" aria-label="본문 음성">
+            <button type="button" id="listenPlay">▶ 본문 듣기</button><button type="button" id="listenRestart">처음부터</button>
+            <div class="listen-track" id="listenTrack"><span id="listenBar"></span></div><span id="listenTime">0:00</span>
+          </div>
+          <audio id="listenAudio" src="audio/article.mp3" preload="metadata"></audio>
+        </div>
+        <figure class="listen-qr"><svg role="img" aria-label="본문 듣기 QR" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><path class="qrline" stroke="#10213b" d="M2 2.5h7m1 0h1m3 0h1m1 0h2m3 0h2m1 0h2m1 0h2m3 0h7m-37 1h1m5 0h1m1 0h1m1 0h1m1 0h2m2 0h2m1 0h1m3 0h3m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h2m4 0h1m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m3 0h1m1 0h1m3 0h2m2 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h3m3 0h1m1 0h2m1 0h2m2 0h1m4 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m6 0h4m3 0h1m1 0h2m1 0h2m3 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-28 1h1m1 0h1m1 0h3m1 0h2m3 0h2m1 0h1m1 0h1m-28 1h1m2 0h6m2 0h4m6 0h2m1 0h1m1 0h4m2 0h1m1 0h3m-37 1h3m2 0h1m1 0h3m2 0h2m2 0h3m5 0h5m2 0h2m1 0h2m-36 1h4m1 0h3m1 0h2m2 0h1m1 0h2m2 0h6m1 0h2m1 0h1m1 0h1m2 0h1m1 0h1m-37 1h1m2 0h1m1 0h1m2 0h4m1 0h2m1 0h5m1 0h3m2 0h1m1 0h2m2 0h4m-37 1h4m1 0h2m3 0h1m1 0h1m1 0h3m3 0h1m2 0h2m1 0h1m3 0h2m4 0h1m-34 1h1m1 0h1m1 0h1m2 0h2m3 0h1m2 0h1m1 0h2m1 0h1m1 0h3m4 0h2m1 0h1m-36 1h2m3 0h3m2 0h1m1 0h2m1 0h1m2 0h3m3 0h1m2 0h1m4 0h5m-37 1h1m2 0h1m3 0h1m2 0h1m1 0h1m6 0h1m1 0h3m3 0h1m1 0h3m1 0h4m-37 1h2m1 0h2m1 0h1m1 0h3m1 0h4m1 0h3m1 0h2m1 0h2m1 0h1m2 0h2m2 0h1m1 0h1m-35 1h1m2 0h1m6 0h1m1 0h1m2 0h1m3 0h7m1 0h1m1 0h1m2 0h1m-34 1h1m3 0h3m3 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h1m1 0h1m1 0h1m6 0h1m-37 1h2m1 0h3m5 0h6m2 0h2m2 0h1m1 0h1m1 0h4m2 0h1m2 0h1m-37 1h1m1 0h1m1 0h4m4 0h2m2 0h2m1 0h1m3 0h2m1 0h1m3 0h4m-34 1h2m1 0h3m3 0h2m4 0h1m1 0h1m1 0h1m3 0h2m1 0h4m2 0h1m1 0h1m-35 1h1m1 0h2m2 0h2m2 0h1m4 0h1m5 0h1m1 0h2m2 0h2m2 0h1m1 0h1m2 0h1m-37 1h4m1 0h1m2 0h4m2 0h1m3 0h1m4 0h2m4 0h8m-37 1h2m2 0h1m1 0h1m2 0h1m1 0h2m2 0h1m1 0h1m2 0h5m1 0h3m1 0h2m-32 1h1m1 0h1m2 0h1m1 0h1m2 0h1m7 0h2m2 0h7m2 0h4m-35 1h5m1 0h1m1 0h1m3 0h2m1 0h1m5 0h1m5 0h1m2 0h1m1 0h1m2 0h2m-37 1h1m1 0h3m2 0h1m4 0h2m2 0h1m2 0h1m4 0h1m1 0h1m2 0h1m2 0h5m-37 1h1m2 0h11m1 0h2m2 0h2m1 0h2m1 0h1m1 0h10m-29 1h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h4m2 0h1m1 0h2m3 0h1m1 0h2m-36 1h7m1 0h1m1 0h1m3 0h2m1 0h4m2 0h1m4 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m1 0h2m1 0h1m2 0h1m6 0h1m1 0h1m1 0h1m2 0h1m3 0h1m2 0h2m-37 1h1m1 0h3m1 0h1m1 0h2m1 0h6m1 0h1m1 0h2m1 0h1m2 0h7m2 0h1m-36 1h1m1 0h3m1 0h1m1 0h1m2 0h4m5 0h1m1 0h4m1 0h2m1 0h1m2 0h1m2 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m1 0h1m2 0h1m8 0h1m1 0h1m1 0h2m3 0h3m1 0h1m-37 1h1m5 0h1m5 0h4m1 0h2m3 0h1m3 0h1m2 0h1m2 0h5m-37 1h7m1 0h1m3 0h1m3 0h1m2 0h2m1 0h3m3 0h2m1 0h1m4 0h1"/></svg>
+<figcaption>본문 듣기</figcaption></figure>
+      </section>
+      <article class="news-article news-article--single">
+        <h3 data-seg="1">모두를 위한 글자, 한글</h3>
+        <p><span data-seg="2">올해는 세종대왕이 훈민정음을 <b>반포</b>한 지 580년이 되는 해입니다.</span> <span data-seg="3">그 시절 <b>백성</b> 대부분은 어려운 한자를 배우기 힘들어, 억울한 일이 있어도 글로 적기 어려웠습니다.</span> <span data-seg="4">세종대왕은 누구나 쉽게 익혀 날마다 편하게 쓰도록 스물여덟 글자를 새로 만들었습니다.</span> <span data-seg="5"><b>자음</b>과 <b>모음</b>을 모아 쓰는 방식 덕분에 적은 글자로 수많은 소리를 적을 수 있게 됐습니다.</span> <span data-seg="6">1926년 11월 4일은 한글날의 시작인 ‘가갸날’과 한글 점자 ‘훈맹정음’이 함께 태어난 날입니다.</span> <span data-seg="7">이날 조선어연구회는 가갸날을 처음 정했고, 가갸날은 2년 뒤 ‘한글날’이 되었습니다.</span> <span data-seg="8">같은 날, 시각장애 학생들을 가르치던 박두성 선생은 몰래 연구해 온 훈맹정음을 발표했습니다.</span> <span data-seg="9">여섯 개의 점을 짜 맞춘 이 <b>점자</b> 덕분에 눈이 보이지 않는 사람도 손끝으로 글을 읽게 됐습니다.</span> <span data-seg="10">문화체육관광부와 국립한글박물관은 훈민정음 580돌, 한글날 <b>제정</b> 100돌, 훈맹정음 100돌이 겹친 올해를 ‘한글의 해’로 정했습니다.</span> <span data-seg="11">10월에는 한글날 100돌을 기념하는 <b>특별전</b>과 광화문광장의 ‘한글한마당’이 열립니다.</span> <span data-seg="12">11월에는 훈맹정음 특별전과 학술대회도 엽니다.</span> <span data-seg="13">박두성 선생은 제자들에게 “눈은 어두워도 마음까지 우울해선 안 된다”며 배움을 격려했습니다.</span></p>
+        <p class="source">출처: 아시아경제(2026. 1. 29., 2026. 5. 9.) 기사를 교육용으로 재구성</p>
+      </article>
+      <section class="vocab-strip">
+        <div class="section-kicker"><span>🔎</span><b>낱말 돋보기</b><em>뜻과 한자를 살펴보세요.</em></div>
+        <div class="vocab-grid">
+          <div class="vocab-card"><h3>반포 <small>頒布</small></h3><p>세상에 널리 펴서 모두에게 알림</p><label>같은 <b>布(펼 포)</b>가 든 말 <input data-save="vocab-po" aria-label="포가 든 말"></label></div>
+          <div class="vocab-card"><h3>점자 <small>點字</small></h3><p>손끝으로 읽는 볼록한 점 글자</p><label>같은 <b>字(글자 자)</b>가 든 말 <input data-save="vocab-ja" aria-label="자가 든 말"></label></div>
+          <div class="vocab-card"><h3>제정 <small>制定</small></h3><p>제도나 기념일을 새로 만들어 정함</p><label>같은 <b>定(정할 정)</b>이 든 말 <input data-save="vocab-jeong" aria-label="정이 든 말"></label></div>
+          <div class="vocab-card"><h3>특별전 <small>特別展</small></h3><p>특별한 주제를 정해 따로 여는 전시</p><label>같은 <b>展(펼 전)</b>이 든 말 <input data-save="vocab-jeon" aria-label="전이 든 말"></label></div>
+        </div>
+      </section>
+      <footer><span>기사에서 중요한 날짜와 숫자에 표시했나요?</span><b>1 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-2" data-page="2">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">정확히 읽기</span></div><div class="student-line">이름 <input data-save="student-name-2" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 1</span><h2>본문에 나온 말로 빈칸을 채우세요.</h2></div>
+      <div class="word-bank"><b>보기</b><span>반포</span><span>백성</span><span>자음</span><span>모음</span><span>훈맹정음</span><span>한글의 해</span></div>
+      <ol class="fill-list">
+        <li>올해는 훈민정음을 <input data-save="fill-1" data-answer="반포" aria-label="첫 번째 빈칸">한 지 580년이 되는 해입니다.</li>
+        <li>어려운 한자를 배우기 힘든 <input data-save="fill-2" data-answer="백성" aria-label="두 번째 빈칸">도 쉽게 글을 쓰게 되었습니다.</li>
+        <li>한글은 <input data-save="fill-3a" data-answer="자음" aria-label="세 번째 빈칸">과 <input data-save="fill-3b" data-answer="모음" aria-label="네 번째 빈칸">을 모아 씁니다.</li>
+        <li>박두성 선생은 여섯 개의 점으로 읽는 <input data-save="fill-4" data-answer="훈맹정음" aria-label="다섯 번째 빈칸">을 발표했습니다.</li>
+        <li>세 기념일이 겹친 2026년을 ‘<input class="wide" data-save="fill-5" data-answer="한글의 해" aria-label="여섯 번째 빈칸">’로 정했습니다.</li>
+      </ol>
+      <button class="check-btn" type="button" data-check-group="fill-list">확인하기</button>
+
+      <div class="page-title second"><span>활동 2</span><h2>본문과 다른 부분을 찾아 바르게 고쳐 쓰세요.</h2></div>
+      <div class="correction-list">
+        <div><p><b>1</b> 훈민정음은 <u>1926년</u>에 세상에 널리 알려졌습니다.</p><label>바르게 고치기 <input data-save="correct-1" data-answer="1446년" aria-label="첫 번째 고쳐 쓰기"></label></div>
+        <div><p><b>2</b> 훈맹정음은 <u>네 개의 점</u>을 짜 맞춰 한글을 나타냅니다.</p><label>바르게 고치기 <input data-save="correct-2" data-answer="여섯 개의 점" aria-label="두 번째 고쳐 쓰기"></label></div>
+        <div><p><b>3</b> 가갸날은 2년 뒤 <u>세종날</u>이 되었습니다.</p><label>바르게 고치기 <input data-save="correct-3" data-answer="한글날" aria-label="세 번째 고쳐 쓰기"></label></div>
+      </div>
+      <button class="check-btn" type="button" data-check-group="correction-list">확인하기</button>
+      <div class="self-check"><b>읽기 점검</b><label><input type="checkbox" data-save="self-1"> 날짜와 숫자를 정확히 읽었어요.</label><label><input type="checkbox" data-save="self-2"> 틀린 부분을 본문과 비교했어요.</label></div>
+      <footer><span>문장을 끝까지 읽고, 바뀐 말이 없는지 확인했나요?</span><b>2 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-3" data-page="3">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">기사 이해</span></div><div class="student-line">이름 <input data-save="student-name-3" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 3</span><h2>기사의 내용을 생각하며 답하세요.</h2></div>
+      <div class="quiz-grid">
+        <fieldset class="quiz"><legend><b>1</b> 세종대왕이 훈민정음을 만든 까닭은?</legend><label><input type="radio" name="q1" data-save="q1" value="a" data-correct="true"> 한자를 배우기 어려운 백성도 쉽게 읽고 쓰게 하려고</label><label><input type="radio" name="q1" data-save="q1" value="b"> 다른 나라 사람에게 우리말을 가르치려고</label><label><input type="radio" name="q1" data-save="q1" value="c"> 학자만 쓰는 어려운 글자를 만들려고</label></fieldset>
+        <fieldset class="quiz"><legend><b>2</b> 훈맹정음은 누구를 위해, 어떻게 만들었나요?</legend><label><input type="radio" name="q2" data-save="q2" value="a" data-correct="true"> 눈이 보이지 않는 사람이 여섯 점을 손끝으로 읽도록</label><label><input type="radio" name="q2" data-save="q2" value="b"> 귀가 들리지 않는 사람이 손 모양으로 말하도록</label><label><input type="radio" name="q2" data-save="q2" value="c"> 어린이가 그림을 보고 글자를 외우도록</label></fieldset>
+        <fieldset class="quiz wide-quiz"><legend><b>3</b> 2026년이 ‘한글의 해’가 된 까닭은?</legend><label><input type="radio" name="q3" data-save="q3" value="a" data-correct="true"> 훈민정음 580돌, 한글날 100돌, 훈맹정음 100돌이 겹쳐서</label><label><input type="radio" name="q3" data-save="q3" value="b"> 올해 처음 한글날이 생겨서</label><label><input type="radio" name="q3" data-save="q3" value="c"> 올해 자음과 모음이 새로 만들어져서</label></fieldset>
+      </div>
+      <button class="check-btn compact" type="button" data-check-group="quiz-grid">확인하기</button>
+
+      <div class="page-title mini"><span>활동 4</span><h2>맞으면 O, 다르면 X에 표시하세요.</h2></div>
+      <div class="ox-grid">
+        <div><p>올해는 훈민정음 반포 580돌입니다.</p><label><input type="radio" name="ox1" data-save="ox1" value="O" data-correct="true">O</label><label><input type="radio" name="ox1" data-save="ox1" value="X">X</label></div>
+        <div><p>훈맹정음은 네 개의 점으로 나타냅니다.</p><label><input type="radio" name="ox2" data-save="ox2" value="O">O</label><label><input type="radio" name="ox2" data-save="ox2" value="X" data-correct="true">X</label></div>
+        <div><p>훈맹정음은 가갸날과 같은 날 발표됐습니다.</p><label><input type="radio" name="ox3" data-save="ox3" value="O" data-correct="true">O</label><label><input type="radio" name="ox3" data-save="ox3" value="X">X</label></div>
+        <div><p>11월에는 훈맹정음 특별전과 학술대회가 열립니다.</p><label><input type="radio" name="ox4" data-save="ox4" value="O" data-correct="true">O</label><label><input type="radio" name="ox4" data-save="ox4" value="X">X</label></div>
+      </div>
+
+      <div class="page-title mini"><span>활동 5</span><h2>설명 번호를 알맞은 칸에 쓰세요.</h2></div>
+      <div class="compare-statements"><span><b>1</b> 1446년에 널리 알림</span><span><b>2</b> 읽고 쓰는 불편을 덜어 줌</span><span><b>3</b> 눈으로 읽음</span><span><b>4</b> 여섯 점을 짜 맞춤</span><span><b>5</b> 우리말 소리를 적음</span><span><b>6</b> 만든 날을 기념함</span></div>
+      <div class="compare-boxes"><label>훈민정음만<input data-save="compare-a" data-answer="1,3" aria-label="훈민정음만"></label><label>둘 다<input data-save="compare-b" data-answer="2,5,6" aria-label="둘 다"></label><label>훈맹정음만<input data-save="compare-c" data-answer="4" aria-label="훈맹정음만"></label></div>
+      <div class="short-answer"><label>두 글자는 모두 누구의 어떤 어려움을 덜어 주려고 만들었나요?<textarea data-save="open-1" rows="2"></textarea></label></div>
+      <footer><span>답의 근거가 나온 문장을 기사에서 다시 찾아보세요.</span><b>3 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-4" data-page="4">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">핵심 낱말</span></div><div class="student-line">이름 <input data-save="student-name-4" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 6</span><h2>기사의 핵심 낱말 10개를 찾아 표시하세요.</h2></div>
+      <p class="wordsearch-help">첫 글자에서 마지막 글자까지 가로, 세로, 대각선으로 드래그하세요. 맞으면 바로 채점됩니다.</p>
+      <div class="wordsearch-layout">
+        <div id="wordGrid" class="word-grid" aria-label="낱말 찾기 글자판"></div>
+        <div class="word-list" aria-label="찾을 낱말">
+          <h3>찾을 낱말</h3>
+          <label><input type="checkbox" data-save="word-1" data-word="반포">반포</label><label><input type="checkbox" data-save="word-2" data-word="백성">백성</label><label><input type="checkbox" data-save="word-3" data-word="자음">자음</label><label><input type="checkbox" data-save="word-4" data-word="모음">모음</label><label><input type="checkbox" data-save="word-5" data-word="기념">기념</label><label><input type="checkbox" data-save="word-6" data-word="제정">제정</label><label><input type="checkbox" data-save="word-7" data-word="점자">점자</label><label><input type="checkbox" data-save="word-8" data-word="특별전">특별전</label><label><input type="checkbox" data-save="word-9" data-word="학술대회">학술대회</label><label><input type="checkbox" data-save="word-10" data-word="격려">격려</label>
+          <p id="wordFeedback" class="word-feedback" role="status" aria-live="polite">낱말을 드래그해 찾아보세요. <b>0 / 10</b></p>
+        </div>
+      </div>
+      <section class="finish-writing">
+        <div><span>1</span><label>찾은 낱말 중 이 기사의 제목과 가장 가까운 말은 무엇인가요?<input data-save="finish-1"></label></div>
+        <div><span>2</span><label>훈민정음과 훈맹정음이 ‘모두를 위한 글자’인 까닭을 한 문장으로 써 보세요.<textarea data-save="finish-2" rows="3"></textarea></label></div>
+      </section>
+      <div class="reflection"><b>신문 읽기 마무리</b><label><input type="checkbox" data-save="reflect-1"> 제목과 소제목을 먼저 읽었어요.</label><label><input type="checkbox" data-save="reflect-2"> 날짜와 숫자를 정확히 확인했어요.</label><label><input type="checkbox" data-save="reflect-3"> 답의 근거를 기사에서 찾았어요.</label></div>
+      <footer><span>기사 한 편을 끝까지 꼼꼼하게 읽었습니다!</span><b>4 / 4</b></footer>
+    </section>
+  </main>
+  <script>window.LISTEN_MARKS=[[0.0, 2.7], [3.3, 5.65], [6.25, 11.3], [11.6, 17.9], [18.2, 24.35], [24.65, 31.1], [31.4, 39.15], [39.45, 46.0], [46.3, 52.95], [53.25, 60.5], [60.8, 70.5], [70.8, 76.6], [76.9, 80.9], [81.2, 87.6]];</script>
+  <script src="worksheet.js"></script>
+  <script src="listen.js"></script>
+</body>
+</html>

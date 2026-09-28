@@ -1,0 +1,140 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>실전! 문해력 - 신문 읽기 - e스포츠</title>
+  <link rel="stylesheet" href="worksheet.css">
+  <link rel="stylesheet" href="worksheet-overrides.css">
+  <link rel="stylesheet" href="listen.css">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <nav class="toolbar" aria-label="활동지 도구">
+    <div class="toolbar__brand"><img src="oncuvate-brand-logo.png" alt="Oncuvate"><strong>실전! 문해력</strong></div>
+    <div class="toolbar__pages">
+      <a href="#page-1">1 기사·어휘</a><a href="#page-2">2 정확히 읽기</a><a href="#page-3">3 기사 이해</a><a href="#page-4">4 핵심 낱말</a>
+    </div>
+    <div class="toolbar__actions">
+      <button type="button" id="printBlank">빈 활동지 인쇄</button>
+      <button type="button" id="printFilled">내 답 포함 인쇄</button>
+      <a class="primary" href="output/pdf/siljeon-literacy-esports-reading.pdf">PDF</a>
+      <button type="button" id="resetAll">다시 시작</button>
+    </div>
+  </nav>
+
+  <main class="workbook">
+    <section class="sheet" id="page-1" data-page="1">
+      <header class="sheet-head">
+        <div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">NIE 신문 읽기 02</span></div>
+        <div class="student-line">이름 <input aria-label="이름" data-save="student-name"> 날짜 <input aria-label="날짜" data-save="student-date"></div>
+      </header>
+      <div class="title-block title-block--article"><h2 data-seg="0">열한 살 선수가 아시안게임 금메달을 땄대요!</h2></div>
+      <section class="listen-box" aria-label="본문 듣기">
+        <div>
+          <ol class="listen-steps">
+            <li><b><span class="print-only">QR 코드를 찍어 본문을 들어요.</span><span class="screen-only">▶ 본문 듣기를 눌러 본문을 들어요.</span></b></li>
+            <li><span>들으면서 뜻이 이어지는 말 사이에 <b>/</b>를 표시해요.</span></li>
+            <li><span>표시한 곳에서 잠깐 쉬며 <b>스스로 다시 읽어요.</b></span></li>
+          </ol>
+          <p class="listen-eg">예: 일본에서 열린<i>/</i>2026 아이치·나고야 아시안게임에서<i>/</i>e스포츠는 …</p>
+          <div class="listen-player" role="group" aria-label="본문 음성">
+            <button type="button" id="listenPlay">▶ 본문 듣기</button><button type="button" id="listenRestart">처음부터</button>
+            <div class="listen-track" id="listenTrack"><span id="listenBar"></span></div><span id="listenTime">0:00</span>
+          </div>
+          <audio id="listenAudio" src="audio/article.mp3" preload="metadata"></audio>
+        </div>
+        <figure class="listen-qr"><svg role="img" aria-label="본문 듣기 QR" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><path class="qrline" stroke="#10213b" d="M2 2.5h7m1 0h1m1 0h1m3 0h1m4 0h2m1 0h2m1 0h2m3 0h7m-37 1h1m5 0h1m1 0h1m1 0h4m1 0h3m1 0h1m3 0h3m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h1m2 0h2m4 0h1m1 0h1m1 0h1m1 0h1m1 0h1m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m3 0h3m3 0h2m2 0h2m1 0h5m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h5m3 0h1m1 0h2m1 0h2m2 0h1m4 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m2 0h2m2 0h1m1 0h2m3 0h1m1 0h2m1 0h2m3 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-28 1h1m1 0h1m1 0h3m1 0h2m3 0h2m1 0h1m1 0h1m-28 1h1m2 0h7m1 0h2m8 0h2m1 0h1m1 0h4m2 0h1m1 0h3m-37 1h1m2 0h1m1 0h1m3 0h3m1 0h2m1 0h3m5 0h5m2 0h2m1 0h2m-36 1h4m1 0h2m1 0h3m2 0h1m1 0h2m2 0h6m1 0h2m1 0h1m1 0h1m2 0h1m1 0h1m-37 1h1m4 0h1m3 0h2m1 0h3m1 0h5m1 0h3m2 0h1m1 0h2m2 0h4m-37 1h2m1 0h1m1 0h3m2 0h3m1 0h3m3 0h1m2 0h2m1 0h1m3 0h2m4 0h1m-37 1h1m2 0h3m1 0h1m2 0h2m3 0h1m2 0h1m1 0h2m1 0h1m1 0h3m4 0h2m1 0h1m-35 1h1m4 0h2m2 0h1m1 0h2m1 0h1m2 0h3m3 0h1m2 0h1m4 0h5m-36 1h1m1 0h1m3 0h1m1 0h2m1 0h1m1 0h1m4 0h1m1 0h3m3 0h1m1 0h3m1 0h4m-37 1h1m2 0h1m1 0h2m1 0h1m1 0h1m1 0h1m1 0h2m1 0h3m1 0h2m1 0h2m1 0h1m2 0h2m2 0h1m1 0h1m-36 1h3m4 0h1m5 0h1m2 0h1m3 0h7m1 0h1m1 0h1m2 0h1m-34 1h1m3 0h2m1 0h1m2 0h1m2 0h1m1 0h1m1 0h2m1 0h3m1 0h1m1 0h1m1 0h1m6 0h1m-37 1h2m1 0h3m7 0h4m2 0h2m2 0h1m1 0h1m1 0h4m2 0h1m2 0h1m-37 1h1m1 0h1m1 0h4m4 0h2m2 0h2m1 0h1m3 0h2m1 0h1m3 0h4m-33 1h1m1 0h1m1 0h1m4 0h1m2 0h1m1 0h1m1 0h1m1 0h1m3 0h2m1 0h4m2 0h1m1 0h1m-34 1h3m2 0h2m1 0h2m2 0h1m1 0h1m5 0h1m1 0h2m2 0h2m2 0h1m1 0h1m2 0h1m-36 1h3m4 0h1m2 0h1m6 0h1m4 0h2m4 0h8m-37 1h1m2 0h2m1 0h1m1 0h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h5m1 0h3m1 0h2m-32 1h1m1 0h2m3 0h2m9 0h2m2 0h7m2 0h4m-35 1h2m1 0h2m1 0h1m1 0h1m3 0h2m1 0h1m5 0h1m5 0h1m2 0h1m1 0h1m2 0h2m-37 1h1m2 0h2m6 0h1m1 0h1m2 0h1m2 0h1m3 0h2m1 0h1m2 0h1m2 0h5m-37 1h1m1 0h12m1 0h2m2 0h2m1 0h2m1 0h1m1 0h10m-29 1h1m2 0h1m1 0h1m1 0h1m1 0h1m1 0h4m2 0h1m1 0h2m3 0h1m1 0h2m-36 1h7m1 0h2m3 0h1m1 0h1m1 0h4m2 0h1m4 0h1m1 0h1m1 0h1m3 0h1m-37 1h1m5 0h1m1 0h4m9 0h1m1 0h1m1 0h1m2 0h1m3 0h1m2 0h2m-37 1h1m1 0h3m1 0h1m1 0h1m1 0h2m2 0h3m1 0h1m1 0h2m1 0h1m2 0h7m2 0h1m-36 1h1m1 0h3m1 0h1m1 0h1m3 0h3m5 0h1m1 0h4m1 0h2m1 0h1m2 0h1m2 0h1m-37 1h1m1 0h3m1 0h1m2 0h1m2 0h1m1 0h1m8 0h1m1 0h1m1 0h2m3 0h3m1 0h1m-37 1h1m5 0h1m4 0h1m1 0h3m1 0h2m3 0h1m3 0h1m2 0h1m2 0h5m-37 1h7m1 0h1m3 0h1m3 0h1m2 0h2m1 0h3m3 0h2m1 0h1m4 0h1"/></svg>
+<figcaption>본문 듣기</figcaption></figure>
+      </section>
+      <article class="news-article news-article--single">
+        <h3 data-seg="1">열한 살 챔피언이 보여 준 e스포츠의 새로운 모습</h3>
+        <p><span data-seg="2">일본에서 열린 2026 아이치·나고야 아시안게임에서 e스포츠는 9월 22일부터 10월 2일까지 11개 <b>종목</b>으로 치러졌습니다.</span> <span data-seg="3">e스포츠는 2018년 대회에서 <b>시범</b> 종목으로 처음 선보였고, 2022년 항저우 대회부터 <b>정식</b> 종목이 되었습니다.</span> <span data-seg="4">이번 대회에는 리그 오브 레전드처럼 익숙한 게임과 함께 새 종목도 여럿 들어왔습니다.</span> <span data-seg="5">그중 하나가 <b>개최국</b> 일본에서 만든 퍼즐 게임 ‘뿌요뿌요 챔피언스’입니다.</span> <span data-seg="6">9월 26일 뿌요뿌요 결승에서 일본의 열한 살 구리하라 유키 선수가 한국의 강동신 선수를 10대 2로 이겼고, 강동신 선수는 은메달을 받았습니다.</span> <span data-seg="7">이 승리로 구리하라 선수는 아시안게임 역사상 <b>최연소</b> 금메달리스트라는 새 <b>기록</b>을 세웠습니다.</span> <span data-seg="8">뿌요뿌요는 같은 색 뿌요 네 개를 붙여 터뜨리고, 줄줄이 터지는 <b>연쇄</b>를 만들어 상대를 공격하는 게임입니다.</span> <span data-seg="9">구리하라 선수는 여섯 살 때 처음 이 게임을 만났고, 평일에는 한 시간쯤 연습하며 학교생활도 함께 해 왔습니다.</span> <span data-seg="10">같은 날 한국 대전격투 게임 대표팀은 결승에서 일본을 5대 2로 꺾고 한국 e스포츠의 첫 금메달을 땄습니다.</span> <span data-seg="11">이 팀 세 선수의 평균 나이는 41.7세였습니다.</span> <span data-seg="12">열한 살부터 마흔 살이 넘은 선수까지 함께 겨룰 수 있다는 점이 e스포츠의 특징으로 꼽힙니다.</span> <span data-seg="13">하지만 국제올림픽위원회가 준비하던 e스포츠 올림픽은 어떤 게임을 넣을지 생각이 달라 계획을 다시 세우고 있어, e스포츠를 스포츠로 볼지에 대한 <b>논쟁</b>은 이어지고 있습니다.</span></p>
+        <p class="source">출처: 인벤·서울신문·게임메카·게임뷰(2026. 9.) 기사를 교육용으로 재구성</p>
+      </article>
+      <section class="vocab-strip">
+        <div class="section-kicker"><span>🔎</span><b>낱말 돋보기</b><em>뜻과 한자를 살펴보세요.</em></div>
+        <div class="vocab-grid">
+          <div class="vocab-card"><h3>종목 <small>種目</small></h3><p>경기를 종류에 따라 나눈 하나하나</p><label>같은 <b>目(눈 목)</b>이 든 말 <input data-save="vocab-mok" aria-label="목이 든 말"></label></div>
+          <div class="vocab-card"><h3>개최국 <small>開催國</small></h3><p>큰 대회나 행사를 여는 나라</p><label>같은 <b>國(나라 국)</b>이 든 말 <input data-save="vocab-guk" aria-label="국이 든 말"></label></div>
+          <div class="vocab-card"><h3>최연소 <small>最年少</small></h3><p>여럿 가운데 나이가 가장 어림</p><label>같은 <b>年(해 년)</b>이 든 말 <input data-save="vocab-nyeon" aria-label="년이 든 말"></label></div>
+          <div class="vocab-card"><h3>기록 <small>記錄</small></h3><p>경기에서 낸 결과를 적어 남긴 것</p><label>같은 <b>記(기록할 기)</b>가 든 말 <input data-save="vocab-gi" aria-label="기가 든 말"></label></div>
+        </div>
+      </section>
+      <footer><span>기사에서 중요한 날짜와 점수에 표시했나요?</span><b>1 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-2" data-page="2">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">정확히 읽기</span></div><div class="student-line">이름 <input data-save="student-name-2" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 1</span><h2>본문에 나온 말로 빈칸을 채우세요.</h2></div>
+      <div class="word-bank"><b>보기</b><span>종목</span><span>시범</span><span>정식</span><span>개최국</span><span>최연소</span><span>연쇄</span></div>
+      <ol class="fill-list esports-fill">
+        <li>이번 아시안게임에서 e스포츠는 11개 <input data-save="fill-1" data-answer="종목" aria-label="첫 번째 빈칸">으로 치러졌습니다.</li>
+        <li>e스포츠는 2018년에는 <input data-save="fill-2a" data-answer="시범" aria-label="두 번째 빈칸">, 2022년부터는 <input data-save="fill-2b" data-answer="정식" aria-label="세 번째 빈칸"> 종목이 되었습니다.</li>
+        <li>뿌요뿌요는 <input data-save="fill-3" data-answer="개최국" aria-label="네 번째 빈칸"> 일본에서 만든 퍼즐 게임입니다.</li>
+        <li>구리하라 유키 선수는 아시안게임 역사상 <input data-save="fill-4" data-answer="최연소" aria-label="다섯 번째 빈칸"> 금메달리스트가 되었습니다.</li>
+        <li>같은 색 뿌요를 줄줄이 터뜨리는 것을 <input data-save="fill-5" data-answer="연쇄" aria-label="여섯 번째 빈칸">라고 합니다.</li>
+      </ol>
+      <button class="check-btn" type="button" data-check-group="fill-list">확인하기</button>
+
+      <div class="page-title second"><span>활동 2</span><h2>본문과 다른 부분을 찾아 바르게 고쳐 쓰세요.</h2></div>
+      <div class="correction-list">
+        <div><p><b>1</b> e스포츠는 2022년 항저우 대회부터 <u>시범 종목</u>이 되었습니다.</p><label>바르게 고치기 <input data-save="correct-1" data-answer="정식 종목" aria-label="첫 번째 고쳐 쓰기"></label></div>
+        <div><p><b>2</b> 뿌요뿌요 결승은 <u>10월 2일, 10대 5</u>로 끝났습니다.</p><label>바르게 고치기 <input data-save="correct-2" data-answer="9월 26일, 10대 2" aria-label="두 번째 고쳐 쓰기"></label></div>
+        <div><p><b>3</b> 한국 대전격투 대표팀 세 선수의 평균 나이는 <u>14.7세</u>였습니다.</p><label>바르게 고치기 <input data-save="correct-3" data-answer="41.7세" aria-label="세 번째 고쳐 쓰기"></label></div>
+      </div>
+      <button class="check-btn" type="button" data-check-group="correction-list">확인하기</button>
+      <div class="self-check"><b>읽기 점검</b><label><input type="checkbox" data-save="self-1"> 날짜와 점수를 정확히 읽었어요.</label><label><input type="checkbox" data-save="self-2"> 문장을 끝까지 읽고 본문과 비교했어요.</label></div>
+      <footer><span>숫자의 순서와 문장을 마무리하는 말까지 확인했나요?</span><b>2 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-3" data-page="3">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">기사 이해</span></div><div class="student-line">이름 <input data-save="student-name-3" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 3</span><h2>기사의 내용을 생각하며 답하세요.</h2></div>
+      <div class="quiz-grid">
+        <fieldset class="quiz"><legend><b>1</b> e스포츠가 아시안게임 정식 종목이 된 때는?</legend><label><input type="radio" name="q1" data-save="q1" value="a" data-correct="true"> 2022년 항저우 대회부터</label><label><input type="radio" name="q1" data-save="q1" value="b"> 2018년 대회부터</label><label><input type="radio" name="q1" data-save="q1" value="c"> 2026년 대회부터</label></fieldset>
+        <fieldset class="quiz"><legend><b>2</b> 구리하라 유키 선수가 세운 기록은?</legend><label><input type="radio" name="q2" data-save="q2" value="a"> 가장 오래 연습한 선수</label><label><input type="radio" name="q2" data-save="q2" value="b" data-correct="true"> 아시안게임 최연소 금메달리스트</label><label><input type="radio" name="q2" data-save="q2" value="c"> 금메달을 가장 많이 딴 선수</label></fieldset>
+        <fieldset class="quiz wide-quiz"><legend><b>3</b> 기사에서 꼽은 e스포츠의 특징은?</legend><label><input type="radio" name="q3" data-save="q3" value="a"> 몸을 가장 많이 움직이는 경기이다.</label><label><input type="radio" name="q3" data-save="q3" value="b"> 이미 올림픽 정식 종목이다.</label><label><input type="radio" name="q3" data-save="q3" value="c" data-correct="true"> 나이 차이가 큰 선수들도 함께 겨룰 수 있다.</label></fieldset>
+      </div>
+      <button class="check-btn compact" type="button" data-check-group="quiz-grid">확인하기</button>
+
+      <div class="page-title mini"><span>활동 4</span><h2>맞으면 O, 다르면 X에 표시하세요.</h2></div>
+      <div class="ox-grid">
+        <div><p>이번 대회 e스포츠는 11개 종목으로 치러졌습니다.</p><label><input type="radio" name="ox1" data-save="ox1" value="O" data-correct="true">O</label><label><input type="radio" name="ox1" data-save="ox1" value="X">X</label></div>
+        <div><p>뿌요뿌요 결승 점수는 10대 5였습니다.</p><label><input type="radio" name="ox2" data-save="ox2" value="O">O</label><label><input type="radio" name="ox2" data-save="ox2" value="X" data-correct="true">X</label></div>
+        <div><p>강동신 선수는 뿌요뿌요에서 은메달을 받았습니다.</p><label><input type="radio" name="ox3" data-save="ox3" value="O" data-correct="true">O</label><label><input type="radio" name="ox3" data-save="ox3" value="X">X</label></div>
+        <div><p>한국 대전격투 대표팀의 평균 나이는 40세가 넘습니다.</p><label><input type="radio" name="ox4" data-save="ox4" value="O" data-correct="true">O</label><label><input type="radio" name="ox4" data-save="ox4" value="X">X</label></div>
+      </div>
+
+      <div class="page-title mini"><span>활동 5</span><h2>설명 번호를 알맞은 칸에 쓰세요.</h2></div>
+      <div class="compare-statements"><span><b>1</b> 회사가 만든 게임으로 겨룸</span><span><b>2</b> 꾸준한 연습이 필요함</span><span><b>3</b> 화면을 보며 손으로 조작함</span><span><b>4</b> 몸을 크게 움직여 체력을 겨룸</span><span><b>5</b> 아시안게임에서 메달을 받음</span><span><b>6</b> 정해진 규칙과 심판이 있음</span></div>
+      <div class="compare-boxes"><label>e스포츠만<input data-save="compare-a" data-answer="1,3" aria-label="e스포츠만"></label><label>둘 다<input data-save="compare-b" data-answer="2,5,6" aria-label="둘 다"></label><label>전통 스포츠만<input data-save="compare-c" data-answer="4" aria-label="전통 스포츠만"></label></div>
+      <div class="short-answer"><label>e스포츠를 스포츠라고 생각하나요? 기사에서 근거를 찾아 한 문장으로 쓰세요.<textarea data-save="open-1" rows="2"></textarea></label></div>
+      <footer><span>답의 근거가 나온 문장을 기사에서 다시 찾아보세요.</span><b>3 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-4" data-page="4">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">핵심 낱말</span></div><div class="student-line">이름 <input data-save="student-name-4" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 6</span><h2>기사의 핵심 낱말 10개를 찾아 표시하세요.</h2></div>
+      <p class="wordsearch-help">첫 글자에서 마지막 글자까지 가로, 세로, 대각선으로 드래그하세요. 맞으면 바로 채점됩니다.</p>
+      <div class="wordsearch-layout">
+        <div id="wordGrid" class="word-grid" aria-label="낱말 찾기 글자판"></div>
+        <div class="word-list" aria-label="찾을 낱말">
+          <h3>찾을 낱말</h3>
+          <label><input type="checkbox" data-save="word-1" data-word="종목">종목</label><label><input type="checkbox" data-save="word-2" data-word="시범">시범</label><label><input type="checkbox" data-save="word-3" data-word="정식">정식</label><label><input type="checkbox" data-save="word-4" data-word="개최국">개최국</label><label><input type="checkbox" data-save="word-5" data-word="결승">결승</label><label><input type="checkbox" data-save="word-6" data-word="최연소">최연소</label><label><input type="checkbox" data-save="word-7" data-word="기록">기록</label><label><input type="checkbox" data-save="word-8" data-word="연쇄">연쇄</label><label><input type="checkbox" data-save="word-9" data-word="평균">평균</label><label><input type="checkbox" data-save="word-10" data-word="논쟁">논쟁</label>
+          <p id="wordFeedback" class="word-feedback" role="status" aria-live="polite">낱말을 드래그해 찾아보세요. <b>0 / 10</b></p>
+        </div>
+      </div>
+      <section class="finish-writing">
+        <div><span>1</span><label>찾은 낱말 중 이 기사의 제목과 가장 가까운 말은 무엇인가요?<input data-save="finish-1"></label></div>
+        <div><span>2</span><label>e스포츠의 특징을 기사에 나온 내용으로 한 문장으로 써 보세요.<textarea data-save="finish-2" rows="3"></textarea></label></div>
+      </section>
+      <div class="reflection"><b>신문 읽기 마무리</b><label><input type="checkbox" data-save="reflect-1"> 제목과 소제목을 먼저 읽었어요.</label><label><input type="checkbox" data-save="reflect-2"> 날짜와 점수를 정확히 확인했어요.</label><label><input type="checkbox" data-save="reflect-3"> 답의 근거를 기사에서 찾았어요.</label></div>
+      <footer><span>기사 한 편을 끝까지 꼼꼼하게 읽었습니다!</span><b>4 / 4</b></footer>
+    </section>
+  </main>
+  <script>window.LISTEN_MARKS=[[0.0, 3.8], [4.4, 8.75], [9.35, 18.45], [18.75, 26.75], [27.05, 33.4], [33.7, 39.45], [39.75, 49.7], [50.0, 56.45], [56.75, 64.95], [65.25, 72.75], [73.05, 80.05], [80.35, 84.1], [84.4, 90.7], [91.0, 101.9]];</script>
+  <script src="worksheet.js"></script>
+  <script src="listen.js"></script>
+</body>
+</html>

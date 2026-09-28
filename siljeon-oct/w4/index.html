@@ -1,0 +1,122 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>실전! 문해력 - 신문 읽기 - 스마트폰 없는 학교</title>
+  <link rel="stylesheet" href="worksheet.css">
+  <link rel="stylesheet" href="worksheet-overrides.css">
+  <link rel="stylesheet" href="listen.css">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <nav class="toolbar" aria-label="활동지 도구">
+    <div class="toolbar__brand"><img src="oncuvate-brand-logo.png" alt="Oncuvate"><strong>실전! 문해력</strong></div>
+    <div class="toolbar__pages"><a href="#page-1">1 기사·어휘</a><a href="#page-2">2 정확히 읽기</a><a href="#page-3">3 기사 이해</a><a href="#page-4">4 핵심 낱말</a></div>
+    <div class="toolbar__actions"><button type="button" id="printBlank">빈 활동지 인쇄</button><button type="button" id="printFilled">내 답 포함 인쇄</button><a class="primary" href="output/pdf/siljeon-literacy-phonefree-reading.pdf">PDF</a><button type="button" id="resetAll">다시 시작</button></div>
+  </nav>
+
+  <main class="workbook">
+    <section class="sheet" id="page-1" data-page="1">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">NIE 신문 읽기 03</span></div><div class="student-line">이름 <input aria-label="이름" data-save="student-name"> 날짜 <input aria-label="날짜" data-save="student-date"></div></header>
+      <div class="title-block title-block--article"><h2 data-seg="0">스마트폰 없는 학교, 규칙도 함께 정해요</h2></div>
+      <section class="listen-box" aria-label="본문 듣기">
+        <div>
+          <ol class="listen-steps">
+            <li><b><span class="print-only">QR 코드를 찍어 본문을 들어요.</span><span class="screen-only">▶ 본문 듣기를 눌러 본문을 들어요.</span></b></li>
+            <li><span>들으면서 뜻이 이어지는 말 사이에 <b>/</b>를 표시해요.</span></li>
+            <li><span>표시한 곳에서 잠깐 쉬며 <b>스스로 다시 읽어요.</b></span></li>
+          </ol>
+          <p class="listen-eg">예: 교육부는 9월 15일,<i>/</i>전국 276개 학교를<i>/</i>학교폭력 예방 …</p>
+          <div class="listen-player" role="group" aria-label="본문 음성">
+            <button type="button" id="listenPlay">▶ 본문 듣기</button><button type="button" id="listenRestart">처음부터</button>
+            <div class="listen-track" id="listenTrack"><span id="listenBar"></span></div><span id="listenTime">0:00</span>
+          </div>
+          <audio id="listenAudio" src="audio/article.mp3" preload="metadata"></audio>
+        </div>
+        <figure class="listen-qr"><svg role="img" aria-label="본문 듣기 QR" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><path class="qrline" stroke="#10213b" d="M2 2.5h7m1 0h2m6 0h2m1 0h3m3 0h4m1 0h7m-37 1h1m5 0h1m3 0h4m3 0h1m1 0h1m3 0h3m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m3 0h2m2 0h1m2 0h2m2 0h1m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m3 0h3m1 0h1m6 0h1m4 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m1 0h2m1 0h4m3 0h2m3 0h1m2 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h4m1 0h1m1 0h1m1 0h1m1 0h1m8 0h1m1 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h1m1 0h1m1 0h1m3 0h1m2 0h3m2 0h1m1 0h1m1 0h1m-29 1h1m3 0h1m1 0h4m1 0h2m2 0h2m3 0h1m3 0h1m4 0h5m2 0h1m-37 1h1m2 0h3m1 0h1m1 0h4m1 0h1m2 0h3m2 0h1m1 0h1m1 0h2m4 0h1m2 0h1m-35 1h2m1 0h3m1 0h2m2 0h4m2 0h2m1 0h1m1 0h1m3 0h6m-31 1h2m1 0h1m4 0h1m1 0h6m1 0h5m5 0h1m4 0h2m-36 1h3m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m2 0h1m2 0h3m1 0h1m1 0h6m1 0h4m-37 1h1m2 0h1m1 0h1m1 0h1m2 0h2m3 0h1m2 0h1m1 0h2m1 0h1m1 0h3m4 0h2m1 0h1m-36 1h1m3 0h3m3 0h2m1 0h1m1 0h1m1 0h1m2 0h1m2 0h1m1 0h1m1 0h1m1 0h6m-34 1h2m1 0h1m2 0h3m1 0h1m1 0h3m1 0h4m1 0h1m1 0h1m1 0h1m4 0h2m1 0h1m-34 1h1m4 0h3m1 0h3m5 0h1m3 0h3m4 0h2m2 0h4m-35 1h1m1 0h1m7 0h3m1 0h1m2 0h3m2 0h1m2 0h2m3 0h1m2 0h1m-36 1h1m4 0h2m6 0h1m2 0h1m3 0h5m1 0h2m1 0h4m-31 1h1m5 0h5m4 0h2m2 0h2m1 0h1m1 0h1m4 0h2m1 0h2m-36 1h1m2 0h1m1 0h11m1 0h1m1 0h6m2 0h2m1 0h2m2 0h1m-32 1h3m1 0h1m5 0h1m1 0h3m4 0h6m1 0h1m1 0h2m-33 1h1m2 0h1m1 0h5m2 0h5m1 0h1m1 0h4m2 0h2m2 0h5m-33 1h1m1 0h1m3 0h2m1 0h2m1 0h2m5 0h1m1 0h1m3 0h1m1 0h1m1 0h2m1 0h2m-35 1h1m3 0h2m3 0h1m1 0h1m3 0h1m3 0h1m3 0h1m1 0h1m2 0h3m1 0h3m-36 1h2m1 0h1m4 0h1m1 0h1m1 0h1m5 0h2m2 0h7m2 0h4m-31 1h4m4 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m-29 1h2m1 0h1m1 0h1m2 0h10m1 0h2m2 0h1m2 0h1m3 0h1m-35 1h3m1 0h1m1 0h3m1 0h1m1 0h1m3 0h2m2 0h3m5 0h5m1 0h1m1 0h1m-29 1h3m2 0h4m4 0h1m1 0h1m2 0h3m3 0h1m-33 1h7m1 0h1m3 0h4m1 0h1m5 0h4m1 0h1m1 0h1m1 0h1m-33 1h1m5 0h1m5 0h1m1 0h7m1 0h1m1 0h1m1 0h3m3 0h3m-35 1h1m1 0h3m1 0h1m1 0h2m1 0h1m1 0h2m3 0h1m3 0h2m4 0h8m-36 1h1m1 0h3m1 0h1m4 0h1m4 0h1m2 0h2m2 0h2m2 0h1m2 0h2m1 0h2m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h4m3 0h1m1 0h1m1 0h1m1 0h6m2 0h1m2 0h1m-34 1h1m5 0h1m2 0h1m2 0h3m2 0h1m3 0h2m1 0h1m1 0h2m1 0h2m1 0h1m1 0h2m-36 1h7m1 0h5m2 0h1m1 0h1m1 0h3m2 0h1m2 0h1m3 0h1m1 0h4"/></svg>
+<figcaption>본문 듣기</figcaption></figure>
+      </section>
+      <article class="news-article news-article--single">
+        <h3 data-seg="1">학생·교사·학부모가 함께 만드는 스마트폰 사용 원칙</h3>
+        <p><span data-seg="2">교육부는 9월 15일, 전국 276개 학교를 학교폭력 예방 ‘어울림 더하기 <b>선도</b>학교’로 선정해 이달부터 운영한다고 밝혔습니다.</span> <span data-seg="3">그중 46개 학교는 ‘스마트폰 없는 학교’를 <b>시범</b>으로 운영합니다.</span> <span data-seg="4">이 학교들은 학생들의 스마트폰을 한꺼번에 거두어 보관하는 대신, 학생 스스로 스마트폰을 내려놓도록 돕는 것을 목표로 합니다.</span> <span data-seg="5">교육부는 내년에 선도학교를 400곳으로 늘릴 계획입니다.</span> <span data-seg="6">스마트폰 없는 학교에서는 학생과 교사, 학부모가 스마트폰 사용 <b>원칙</b>을 함께 <b>논의</b>합니다.</span> <span data-seg="7">스마트폰을 따로 <b>보관</b>할지 학생이 가지고 있게 할지는 학교마다 <b>자율</b>적으로 정합니다.</span> <span data-seg="8">스마트폰을 쓰지 않는 시간은 <b>또래</b>놀이와 예술·체육, 동아리 활동으로 채웁니다.</span> <span data-seg="9">학생들은 ‘어울림 학생 지원단’을 만들어 친구 관계를 돕는 활동을 직접 계획하기도 합니다.</span> <span data-seg="10">올해 3월부터 개정된 초·중등교육법에 따라 전국의 학교에서 수업 중 스마트기기 사용이 금지되었습니다.</span> <span data-seg="11">다만 장애 학생의 보조 기기나 교육 목적 사용처럼 필요한 경우에는 <b>예외</b>를 둡니다.</span> <span data-seg="12">‘스마트폰 없는 학교’는 법으로 사용을 제한하는 데서 한 걸음 더 나아가, 규칙을 지킬 학생·교사·학부모가 <b>합의</b>해 사용 원칙을 정한다는 점이 다릅니다.</span> <span data-seg="13">교육부는 학생과 가정, 학교가 함께 힘을 모아 학생 관계와 학교 문화를 긍정적으로 바꾸는 것이 중요하다고 <b>강조</b>했습니다.</span></p>
+        <p class="source">출처: 뉴스핌(2026. 9. 15.), 대한민국 정책브리핑 기사를 교육용으로 재구성</p>
+      </article>
+      <section class="vocab-strip">
+        <div class="section-kicker"><span class="magnifier" aria-hidden="true"></span><b>낱말 돋보기</b><em>뜻과 한자를 살펴보세요.</em></div>
+        <div class="vocab-grid">
+          <div class="vocab-card"><h3>선도 <small>先導</small></h3><p>앞장서서 다른 사람을 이끎</p><label>같은 <b>先(먼저 선)</b>이 든 말 <input data-save="vocab-seon" aria-label="선이 든 말"></label></div>
+          <div class="vocab-card"><h3>논의 <small>論議</small></h3><p>서로 의견을 내어 따져 보고 이야기함</p><label>같은 <b>論(논할 론)</b>이 든 말 <input data-save="vocab-ron" aria-label="론이 든 말"></label></div>
+          <div class="vocab-card"><h3>자율 <small>自律</small></h3><p>스스로 원칙을 세워 지킴</p><label>같은 <b>自(스스로 자)</b>가 든 말 <input data-save="vocab-ja" aria-label="자가 든 말"></label></div>
+          <div class="vocab-card"><h3>합의 <small>合意</small></h3><p>서로 의견을 맞추어 하나로 정함</p><label>같은 <b>合(합할 합)</b>이 든 말 <input data-save="vocab-hap" aria-label="합이 든 말"></label></div>
+        </div>
+      </section>
+      <footer><span>누가 무엇을 함께 정하는지 표시했나요?</span><b>1 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-2" data-page="2">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">정확히 읽기</span></div><div class="student-line">이름 <input data-save="student-name-2" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 1</span><h2>본문에 나온 말로 빈칸을 채우세요.</h2></div>
+      <div class="word-bank"><b>보기</b><span>선도</span><span>시범</span><span>원칙</span><span>논의</span><span>자율</span><span>합의</span></div>
+      <ol class="fill-list phone-fill">
+        <li>교육부는 전국 276개 학교를 학교폭력 예방 <input data-save="fill-1" data-answer="선도" aria-label="첫 번째 빈칸">학교로 선정했습니다.</li>
+        <li>그중 46개 학교는 ‘스마트폰 없는 학교’를 <input data-save="fill-2" data-answer="시범" aria-label="두 번째 빈칸">으로 운영합니다.</li>
+        <li>학생·교사·학부모가 스마트폰 사용 <input data-save="fill-3a" data-answer="원칙" aria-label="세 번째 빈칸">을 함께 <input data-save="fill-3b" data-answer="논의" aria-label="네 번째 빈칸">합니다.</li>
+        <li>스마트폰 보관 방법은 학교마다 <input data-save="fill-4" data-answer="자율" aria-label="다섯 번째 빈칸">적으로 정합니다.</li>
+        <li>규칙을 지킬 사람들이 <input data-save="fill-5" data-answer="합의" aria-label="여섯 번째 빈칸">해 사용 원칙을 정합니다.</li>
+      </ol>
+      <button class="check-btn" type="button" data-check-group="fill-list">확인하기</button>
+
+      <div class="page-title second"><span>활동 2</span><h2>본문과 다른 부분을 찾아 바르게 고쳐 쓰세요.</h2></div>
+      <div class="correction-list">
+        <div><p><b>1</b> 교육부는 전국 <u>100개</u> 학교를 학교폭력 예방 선도학교로 선정했습니다.</p><label>바르게 고치기 <input data-save="correct-1" data-answer="276개" aria-label="첫 번째 고쳐 쓰기"></label></div>
+        <div><p><b>2</b> 스마트폰 없는 학교는 <u>100개 학교</u>에서 시범으로 운영합니다.</p><label>바르게 고치기 <input data-save="correct-2" data-answer="46개 학교" aria-label="두 번째 고쳐 쓰기"></label></div>
+        <div><p><b>3</b> 스마트폰을 보관하는 방법은 <u>교육부가 모든 학교에 똑같이</u> 정합니다.</p><label>바르게 고치기 <input data-save="correct-3" data-answer="학교마다 자율로" aria-label="세 번째 고쳐 쓰기"></label></div>
+      </div>
+      <button class="check-btn" type="button" data-check-group="correction-list">확인하기</button>
+      <div class="self-check"><b>읽기 점검</b><label><input type="checkbox" data-save="self-1"> 숫자와 학교 수를 정확히 읽었어요.</label><label><input type="checkbox" data-save="self-2"> 누가 정하는지 본문과 비교했어요.</label></div>
+      <footer><span>단어만 훑지 않고 문장을 끝까지 확인했나요?</span><b>2 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-3" data-page="3">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">기사 이해</span></div><div class="student-line">이름 <input data-save="student-name-3" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 3</span><h2>기사의 내용을 생각하며 답하세요.</h2></div>
+      <div class="quiz-grid">
+        <fieldset class="quiz"><legend><b>1</b> 스마트폰 없는 학교가 스마트폰을 다루는 방식은?</legend><label><input type="radio" name="q1" data-save="q1" value="a" data-correct="true"> 학생 스스로 내려놓도록 돕습니다.</label><label><input type="radio" name="q1" data-save="q1" value="b"> 아침마다 모두 거두어 보관합니다.</label><label><input type="radio" name="q1" data-save="q1" value="c"> 학교에 가져오지 못하게 합니다.</label></fieldset>
+        <fieldset class="quiz"><legend><b>2</b> 스마트폰 사용 원칙은 누가 정하나요?</legend><label><input type="radio" name="q2" data-save="q2" value="a"> 교육부가 모든 학교에 정해 줍니다.</label><label><input type="radio" name="q2" data-save="q2" value="b" data-correct="true"> 학생·교사·학부모가 함께 논의합니다.</label><label><input type="radio" name="q2" data-save="q2" value="c"> 학생회 대표 한 명이 정합니다.</label></fieldset>
+        <fieldset class="quiz wide-quiz"><legend><b>3</b> 법과 비교해 스마트폰 없는 학교가 다른 점은?</legend><label><input type="radio" name="q3" data-save="q3" value="a"> 법보다 벌을 더 무겁게 줍니다.</label><label><input type="radio" name="q3" data-save="q3" value="b"> 수업 중에도 스마트폰을 마음껏 씁니다.</label><label><input type="radio" name="q3" data-save="q3" value="c" data-correct="true"> 규칙을 지킬 사람들이 합의해 원칙을 정합니다.</label></fieldset>
+      </div>
+      <button class="check-btn compact" type="button" data-check-group="quiz-grid">확인하기</button>
+
+      <div class="page-title mini"><span>활동 4</span><h2>맞으면 O, 다르면 X에 표시하세요.</h2></div>
+      <div class="ox-grid">
+        <div><p>스마트폰 없는 학교는 46개 학교에서 시범 운영합니다.</p><label><input type="radio" name="ox1" data-save="ox1" value="O" data-correct="true">O</label><label><input type="radio" name="ox1" data-save="ox1" value="X">X</label></div>
+        <div><p>학생들의 스마트폰을 아침마다 모두 거두어 보관합니다.</p><label><input type="radio" name="ox2" data-save="ox2" value="O">O</label><label><input type="radio" name="ox2" data-save="ox2" value="X" data-correct="true">X</label></div>
+        <div><p>수업 중 스마트기기 금지에는 필요한 경우의 예외가 있습니다.</p><label><input type="radio" name="ox3" data-save="ox3" value="O" data-correct="true">O</label><label><input type="radio" name="ox3" data-save="ox3" value="X">X</label></div>
+        <div><p>스마트폰을 쓰지 않는 시간은 또래놀이와 다양한 활동으로 채웁니다.</p><label><input type="radio" name="ox4" data-save="ox4" value="O" data-correct="true">O</label><label><input type="radio" name="ox4" data-save="ox4" value="X">X</label></div>
+      </div>
+
+      <div class="page-title mini"><span>활동 5</span><h2>설명 번호를 알맞은 칸에 쓰세요.</h2></div>
+      <div class="compare-statements"><span><b>1</b> 46개 학교에서 시범 운영</span><span><b>2</b> 학생·교사·학부모가 함께 논의</span><span><b>3</b> 올해 3월부터 전국 학교에 적용</span><span><b>4</b> 수업 중 스마트폰을 쓰지 않음</span><span><b>5</b> 필요한 경우의 예외를 법에 정함</span><span><b>6</b> 더 나은 학교생활을 위해 만듦</span></div>
+      <div class="compare-boxes"><label>스마트폰 없는 학교만<input data-save="compare-a" data-answer="1,2" aria-label="스마트폰 없는 학교만"></label><label>둘 다<input data-save="compare-b" data-answer="4,6" aria-label="둘 다"></label><label>법만<input data-save="compare-c" data-answer="3,5" aria-label="법만"></label></div>
+      <div class="short-answer"><label>우리 반 스마트폰 약속을 하나 정하고, 그 약속이 필요한 까닭을 쓰세요.<textarea data-save="open-1" rows="2"></textarea></label></div>
+      <footer><span>법으로 정한 것과 함께 합의한 것을 구분해 보세요.</span><b>3 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-4" data-page="4">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">핵심 낱말</span></div><div class="student-line">이름 <input data-save="student-name-4" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 6</span><h2>기사의 핵심 낱말 10개를 찾아 표시하세요.</h2></div>
+      <p class="wordsearch-help">첫 글자에서 마지막 글자까지 가로, 세로, 대각선으로 드래그하세요. 맞으면 바로 채점됩니다.</p>
+      <div class="wordsearch-layout"><div id="wordGrid" class="word-grid" aria-label="낱말 찾기 글자판"></div><div class="word-list" aria-label="찾을 낱말"><h3>찾을 낱말</h3>
+        <label><input type="checkbox" data-save="word-1" data-word="선도">선도</label><label><input type="checkbox" data-save="word-2" data-word="시범">시범</label><label><input type="checkbox" data-save="word-3" data-word="원칙">원칙</label><label><input type="checkbox" data-save="word-4" data-word="논의">논의</label><label><input type="checkbox" data-save="word-5" data-word="보관">보관</label><label><input type="checkbox" data-save="word-6" data-word="자율">자율</label><label><input type="checkbox" data-save="word-7" data-word="또래">또래</label><label><input type="checkbox" data-save="word-8" data-word="개정">개정</label><label><input type="checkbox" data-save="word-9" data-word="예외">예외</label><label><input type="checkbox" data-save="word-10" data-word="합의">합의</label>
+        <p id="wordFeedback" class="word-feedback" role="status" aria-live="polite">낱말을 드래그해 찾아보세요. <b>0 / 10</b></p></div></div>
+      <section class="finish-writing"><div><span>1</span><label>찾은 낱말 중 ‘함께 의견을 맞추어 정함’이라는 뜻의 말은 무엇인가요?<input data-save="finish-1"></label></div><div><span>2</span><label>스마트폰 없는 학교가 스마트폰을 한꺼번에 거두어 보관하지 않는 까닭을 생각해 써 보세요.<textarea data-save="finish-2" rows="3"></textarea></label></div></section>
+      <div class="reflection"><b>신문 읽기 마무리</b><label><input type="checkbox" data-save="reflect-1"> 숫자와 대상을 정확히 확인했어요.</label><label><input type="checkbox" data-save="reflect-2"> 법과 약속의 차이를 비교했어요.</label><label><input type="checkbox" data-save="reflect-3"> 답의 근거를 기사에서 찾았어요.</label></div>
+      <footer><span>기사 한 편을 끝까지 꼼꼼하게 읽었습니다!</span><b>4 / 4</b></footer>
+    </section>
+  </main>
+  <script>window.LISTEN_MARKS=[[0.0, 3.35], [3.95, 8.25], [8.85, 17.8], [18.1, 23.15], [23.45, 31.2], [31.5, 35.4], [35.7, 41.85], [42.15, 48.0], [48.3, 53.35], [53.65, 59.6], [59.9, 66.45], [66.75, 72.35], [72.65, 82.55], [82.85, 90.8]];</script>
+  <script src="worksheet.js"></script>
+  <script src="listen.js"></script>
+</body>
+</html>
