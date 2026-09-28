@@ -81,3 +81,8 @@ html[data-coach-dock="open"] .oc-dock .oc-console-head{padding-right:36px}
 .oc-dock .oc-toggle{white-space:normal}
 .oc-dock .oc-toggle span{display:block;margin:2px 0 0}
 .oc-dock[hidden]{display:none!important}
+
+/* 파일럿: 칭찬 단추 */
+.oc-praise-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:6px 0 8px}
+.oc-praise{min-height:32px;padding:4px 6px;border:1px solid #e7d9a6;border-radius:10px;background:#fff8df;color:#6b4d00;font:inherit;font-size:12px;font-weight:800;cursor:pointer;text-align:left}
+.oc-praise:hover{background:#ffefb3}.oc-praise:active{transform:translateY(1px)}

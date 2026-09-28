@@ -40,3 +40,16 @@ export async function connectBridge(value){
   window.dispatchEvent(new CustomEvent("oncuvate:pilot-realtime-ready"));
   return status
 }
+
+/* 한글 닉네임: 방 안에서 겹치지 않게 하나 잡음(같은 기기 코드는 같은 닉네임). 실패하면 코드로 고른 닉네임 */
+const NICKS=["토끼", "고래", "펭귄", "다람쥐", "부엉이", "수달", "판다", "여우", "사자", "호랑이", "코알라", "돌고래", "기린", "하마", "오리", "병아리", "거북이", "고양이", "강아지", "햄스터", "딸기", "사과", "포도", "수박", "레몬", "복숭아", "체리", "망고", "바나나", "귤"];
+export async function claimNick(value,code){const room=validRoom(value);code=String(code||"").slice(0,12);let h=0;for(const c of code)h=(h*31+c.charCodeAt(0))>>>0;
+  const order=NICKS.map((n,i)=>NICKS[(i+h)%NICKS.length]);let got="";
+  await runTransaction(ref(db,`${ROOT}/${room}/nicks`),cur=>{cur=cur||{};if(cur[code]){got=cur[code];return cur}const used=new Set(Object.values(cur));got=order.find(n=>!used.has(n))||order[0];cur[code]=got;return cur});
+  return got||order[0]}
+
+/* 칭찬 점수: rooms/<방>/praise/<아이> = {total, seq, last} — 코치가 보내고 학생 화면이 받아 축포 */
+export async function sendPraise(value,child,delta,reason){const room=validRoom(value);child=String(child||"").slice(0,60);let out=null;
+  await runTransaction(ref(db,`${ROOT}/${room}/praise/${child}`),cur=>{cur=cur||{total:0,seq:0};cur.total=(Number(cur.total)||0)+Number(delta||0);cur.seq=(Number(cur.seq)||0)+1;cur.last={delta:Number(delta||0),reason:String(reason||"").slice(0,60),at:Date.now()};out=cur;return cur});
+  return out}
+export function listenPraise(value,child,cb){const room=validRoom(value);return onValue(ref(db,`${ROOT}/${room}/praise/${String(child||"").slice(0,60)}`),s=>cb(s.val()))}

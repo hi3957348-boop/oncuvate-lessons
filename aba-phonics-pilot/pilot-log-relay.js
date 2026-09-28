@@ -24,7 +24,7 @@
   let record=load()||fresh();
   let dirty=false,timer=0,busy=false;
 
-  function fresh(){return{schema:'oncuvate.pilot-log.v1',lessonId:'aba-phonics',sourceFile,sessionNo:Number(R.session)||0,child:String(R.child||''),room:String(R.room||''),classroomCode:String(CONFIG.classroomCode||'SPACE-PILOT'),sessionId:'sp-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),startedAt:new Date().toISOString(),events:[],tracks:[],completed:false,completedAt:null,lastSubmittedAt:null}}
+  function fresh(){return{schema:'oncuvate.pilot-log.v1',lessonId:'aba-phonics',sourceFile,sessionNo:Number(R.session)||0,child:String(R.child||''),nick:String(R.childName||''),room:String(R.room||''),classroomCode:String(CONFIG.classroomCode||'SPACE-PILOT'),sessionId:'sp-'+Date.now().toString(36)+'-'+Math.random().toString(36).slice(2,8),startedAt:new Date().toISOString(),events:[],tracks:[],completed:false,completedAt:null,lastSubmittedAt:null}}
   function load(){try{const v=JSON.parse(localStorage.getItem(KEY)||'null');if(v&&v.schema==='oncuvate.pilot-log.v1'&&v.completed){try{localStorage.setItem(KEY+'.done',JSON.stringify(v))}catch(_){}return null}return v&&v.schema==='oncuvate.pilot-log.v1'?v:null}catch(_){return null}}
   function save(){try{localStorage.setItem(KEY,JSON.stringify(record));if(record.completed)localStorage.setItem(KEY+'.done',JSON.stringify(record))}catch(_){}}
   /* 파일럿 Firebase 방에도 기록 사본을 둔다(logs/<아이>) — 메일이 안 와도 REST 로 걷을 수 있게 */

@@ -21,8 +21,7 @@
   const room = String(gate.room || "");
   const sessionNo = Number(String(injected?.session || html.dataset.session || 6).replace(/\D/g, "")) || 6;
   const folder = String(injected?.folder || html.dataset.lessonId || "lesson");
-  const coachScoreEndpoint = typeof injected?.coachScoreEndpoint === "string" && injected.coachScoreEndpoint.trim()
-    ? injected.coachScoreEndpoint.trim() : "";
+  const coachScoreEndpoint = "pilot-praise";   // 파일럿: 방의 praise 통로(window.ONQ_PILOT_PRAISE)
   const memoEndpoint = injected ? `${injected.base || ""}__memo` : "";
   const busKey = `onq.coach.bus.v1:${room}`;
 
@@ -138,7 +137,7 @@
     const pageTotal = Math.max(pageIndex, Number(source.pageTotal) || 0);
     return {
       id: compact(source.child || key, 60),
-      name: compact(source.child || key, 40),
+      name: compact(source.childName || source.child || key, 40),   // 파일럿: 한글 닉네임
       pageIndex, pageTotal,
       pageLabel: pageIndex ? compact(source.screenLabel || `화면 ${pageIndex}`, 60) : "표지",
       activityLabel: compact(source.activityLabel || last.activityId || "활동 대기", 80),
@@ -303,21 +302,15 @@
     if (!reason) { setState("score", "점수 근거를 입력하세요", "warn"); return; }
     setState("score", "서버 기록 중…");
     try {
-      const response = await fetch(coachScoreEndpoint, {
-        method: "POST", credentials: "same-origin", cache: "no-store",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ childId: learner.id, sessionNo, delta, reason, at: nowIso() })
-      });
-      if (!response.ok) throw new Error(String(response.status));
-      let result = {};
-      try { result = await response.json(); } catch (_) { result = {}; }
+      if (typeof window.ONQ_PILOT_PRAISE !== "function") throw new Error("offline");
+      const result = await window.ONQ_PILOT_PRAISE(learner.id, delta, reason);   // 파일럿: 학생 화면에 축포
       const total = Number.isFinite(Number(result.total)) ? Number(result.total) : null;
       const preview = dock.querySelector("[data-score-preview]");
       if (preview) preview.innerHTML = `<strong>${esc(learner.name)}</strong> ${delta > 0 ? "+" : ""}${delta}점 기록${total == null ? "" : ` · 누적 ${total}점`}`;
       dock.querySelector("[data-score-reason]").value = "";
-      setState("score", "코치 전용 점수 서버에 기록됨", "ok");
+      setState("score", "학생 화면에 칭찬을 보냈어요 🎉", "ok");
     } catch (error) {
-      setState("score", String(error.message) === "403" ? "코치 권한 없음 · 기록 실패" : "점수 서버 기록 실패", "warn");
+      setState("score", String(error.message) === "403" ? "코치 권한 없음 · 기록 실패" : "칭찬을 보내지 못했어요 · 연결 확인", "warn");
     }
   }
 
@@ -347,9 +340,9 @@
           <button class="oc-action" type="button" data-action="memo-save" disabled>메모 서버 저장</button><p class="oc-save-state" data-memo-state></p>
         </section>
         <section class="oc-section"><h2>개별 점수 <small data-selected-name>아이를 선택하세요</small></h2>
-          <p class="oc-endpoint-note ${endpointReady ? "ready" : ""}">${endpointReady ? "코치 전용 점수 서버가 연결되었습니다." : "플랫폼에 점수 통로가 아직 없습니다 · 연결되면 자동으로 켜집니다."}</p>
-          <div class="oc-inline"><label class="oc-field">추가 점수<input type="number" step="1" data-score-delta value="10"></label><label class="oc-field">기록 근거<input type="text" maxlength="160" data-score-reason placeholder="예: 독립적으로 읽음"></label></div>
-          <button class="oc-action" type="button" data-action="score-save" disabled>점수 기록</button><p class="oc-score-preview" data-score-preview>점수는 아이 화면에 표시하지 않습니다.</p><p class="oc-save-state" data-score-state></p>
+          <p class="oc-endpoint-note ready">칭찬을 누르면 바로 학생 화면에 축포와 점수가 떠요.</p><div class="oc-praise-row"><button type="button" class="oc-praise" data-action="praise" data-praise="적극적인 발표">🙋 적극적인 발표</button><button type="button" class="oc-praise" data-action="praise" data-praise="친구 도와주기">🤝 친구 도와주기</button><button type="button" class="oc-praise" data-action="praise" data-praise="좋은 질문">💡 좋은 질문</button><button type="button" class="oc-praise" data-action="praise" data-praise="끝까지 도전">💪 끝까지 도전</button><button type="button" class="oc-praise" data-action="praise" data-praise="또박또박 읽기">📖 또박또박 읽기</button><button type="button" class="oc-praise" data-action="praise" data-praise="바른 자세·집중">🎯 바른 자세·집중</button></div>
+          <div class="oc-inline"><label class="oc-field">추가 점수<input type="number" step="1" data-score-delta value="50"></label><label class="oc-field">기록 근거<input type="text" maxlength="160" data-score-reason placeholder="예: 독립적으로 읽음"></label></div>
+          <button class="oc-action" type="button" data-action="score-save" disabled>점수 기록</button><p class="oc-score-preview" data-score-preview>직접 쓰려면 점수·근거를 넣고 「점수 기록」.</p><p class="oc-save-state" data-score-state></p>
         </section>
       </div></div>`;
     renderLocks(); renderGoal(); renderParticipants(); renderPage();
@@ -412,6 +405,8 @@
     if (action === "goal-save") saveGoal();
     if (action === "memo-save") saveMemo();
     if (action === "score-save") saveScore();
+    // 파일럿: 칭찬 단추 = 근거 채우고 기본 점수(50)로 바로 보내기
+    if (action === "praise") { const r = dock.querySelector("[data-score-reason]"); if (r) r.value = button.dataset.praise; const d = dock.querySelector("[data-score-delta]"); if (d && !(Number(d.value) > 0)) d.value = 50; saveScore(); }
   });
 
   dock.addEventListener("input", event => {

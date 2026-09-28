@@ -281,6 +281,7 @@
     var meta = currentPageMeta();
     return Object.assign({}, base, progressExtra, meta, counters, {
       child: child || null,
+      childName: (global.ONCUVATE && global.ONCUVATE.childName) || null,   // 파일럿: 한글 닉네임
       session: session,
       folder: folder,
       role: role,
