@@ -159,6 +159,10 @@
   const learnerArray = () => [...model.learners.values()].sort((a, b) => a.name.localeCompare(b.name, "ko"));
   const selectedLearner = () => model.learners.get(model.selected) || learnerArray()[0] || null;
 
+  // 파일럿: 참가자 상자 아래 칭찬 칸
+  function praiseBox(learner) {
+    return `<div class="oc-praise-box"><small><b>${esc(learner.name)}</b>에게 칭찬 보내기 · +50</small><div class="oc-praise-row"><button type="button" class="oc-praise" data-action="praise" data-praise="적극적인 발표">🙋 적극적인 발표</button><button type="button" class="oc-praise" data-action="praise" data-praise="친구 도와주기">🤝 친구 도와주기</button><button type="button" class="oc-praise" data-action="praise" data-praise="좋은 질문">💡 좋은 질문</button><button type="button" class="oc-praise" data-action="praise" data-praise="끝까지 도전">💪 끝까지 도전</button><button type="button" class="oc-praise" data-action="praise" data-praise="또박또박 읽기">📖 또박또박 읽기</button><button type="button" class="oc-praise" data-action="praise" data-praise="바른 자세·집중">🎯 바른 자세·집중</button></div><label class="oc-inline-memo"><span>빠른 메모</span><textarea maxlength="500" rows="2" data-inline-memo placeholder="관찰한 반응을 짧게 (아이에게 안 보임)">${esc((model.memoDraft || {})[learner.id] || "")}</textarea></label><div class="oc-inline-memo-row"><button type="button" class="oc-inline-save" data-action="inline-memo">메모 저장</button><span data-inline-memo-state>${esc((model.memoSaved || {})[learner.id] || "")}</span></div></div>`;
+  }
   function participantMarkup(learner) {
     const pagePercent = learner.pageTotal ? Math.max(0, Math.min(100, Math.round(learner.pageIndex / learner.pageTotal * 100))) : 0;
     const age = Date.now() - new Date(learner.lastSeen || 0).getTime();
@@ -167,14 +171,14 @@
     const verdict = learner.lastCorrect === true ? " · 맞음" : learner.lastCorrect === false ? " · 다시 시도" : learner.helpLevel ? ` · 도움 ${learner.helpLevel}` : "";
     const coachPage = currentPage().page;
     const away = coachPage && learner.pageIndex && learner.pageIndex !== coachPage;
-    return `<button type="button" class="oc-person${learner.needsHelp ? " help" : ""}" data-select-child="${esc(learner.id)}" aria-current="${learner.id === model.selected}">
+    return `<div class="oc-person-wrap${model.praiseFor === learner.id ? " open" : ""}"><button type="button" class="oc-person${learner.needsHelp ? " help" : ""}" data-select-child="${esc(learner.id)}" aria-current="${learner.id === model.selected}">
       <span class="oc-person-top"><strong>${esc(learner.name)}</strong>${learner.needsHelp ? `<em class="oc-flag">도움 요청</em>` : ""}<span class="${fresh ? "fresh" : ""}">${esc(ago(learner.lastSeen))}</span></span>
       <span class="oc-progress-line"><b>${esc(learner.pageLabel)}</b><span class="${away ? "away" : ""}">${learner.pageIndex || "-"} / ${learner.pageTotal || "-"}${away ? " · 코치와 다른 화면" : ""}</span></span>
       <span class="oc-person-track"><i style="width:${pagePercent}%"></i></span>
       <span class="oc-person-meta"><span>${esc(learner.activityLabel)}</span><span>${esc(item)}</span></span>
       <span class="oc-person-stats"><span>응답 <b>${learner.answers}</b></span><span>맞음 <b>${learner.correct}</b></span><span>힌트 <b>${learner.hints}</b></span><span>요청 <b>${learner.helpRequests}</b></span></span>
       <span class="oc-person-response">최근 응답: <b class="${learner.lastCorrect === false ? "wrong" : ""}">${esc(learner.response || "아직 없음")}${esc(verdict)}</b></span>
-    </button>`;
+    </button>${model.praiseFor === learner.id ? praiseBox(learner) : ""}</div>`;
   }
 
   function emptyMessage() {
@@ -185,6 +189,9 @@
   }
 
   function renderParticipants() {
+    // 파일럿: 메모를 쓰는 중이면 다시 그리지 않음(쓰던 글 보존) — 입력칸을 벗어나면 그때 그림
+    const typing = document.activeElement && document.activeElement.matches && document.activeElement.matches("[data-inline-memo]");
+    if (typing) { model.renderPending = true; return; }
     const list = dock.querySelector("[data-participants]");
     const count = dock.querySelector("[data-participant-count]");
     if (!list || !count) return;
@@ -268,17 +275,34 @@
   }
 
   /* ── 코치 메모(__memo) · 개별 점수 ───────────────────── */
+  // 파일럿: 메모 = 방 notes/<아이> 저장 + coach-note 로그(파일럿 relay가 메일로 보냄)
+  async function savePilotNote(textRaw, box) {
+    const learner = selectedLearner(); const text = compact(textRaw || "", 2000);
+    const stateEl = box ? box.querySelector("[data-inline-memo-state]") : null;
+    const say = (m, kind) => { if (stateEl) { stateEl.textContent = m; stateEl.className = kind || ""; } else setState("memo", m, kind); };
+    if (!learner) return say("아이를 먼저 선택하세요", "warn");
+    if (!text) return say("메모 내용을 입력하세요", "warn");
+    window.dispatchEvent(new CustomEvent("oncuvate:log", { detail: { type: "coach-note", childId: learner.id, childName: learner.name, sessionNo, text } }));
+    try {
+      if (typeof window.ONQ_PILOT_NOTE === "function") await window.ONQ_PILOT_NOTE(learner.id, text);
+      const t = new Date(); const stamp = `저장됨 · ${String(t.getHours()).padStart(2, "0")}:${String(t.getMinutes()).padStart(2, "0")}`;
+      model.memoSaved = model.memoSaved || {}; model.memoSaved[learner.id] = stamp; model.memoDraft = model.memoDraft || {}; model.memoDraft[learner.id] = "";
+      if (box) { const ta = box.querySelector("[data-inline-memo]"); if (ta) ta.value = ""; }
+      say(stamp, "ok"); renderParticipants();   // 다시 그려도 「저장됨」이 남게(model.memoSaved)
+    } catch (_) { say("저장 실패 · 메일 기록만 보냄", "warn"); }
+  }
   async function saveMemo() {
     const learner = selectedLearner();
     const textarea = dock.querySelector("[data-memo]");
     const text = compact(textarea?.value || "", 2000);
     if (!learner) { setState("memo", "아이를 먼저 선택하세요", "warn"); return; }
     if (!text) { setState("memo", "메모 내용을 입력하세요", "warn"); return; }
-    if (!injected) {
+    if (false) {
       ssSet(`coach-memo:${learner.id}`, text);
       setState("memo", "로컬 미리보기 저장 · 서버 기록 아님", "warn");
       return;
     }
+    return savePilotNote(text, null);   // 파일럿: 방에 저장 + 메일 기록
     setState("memo", "서버 기록 중…");
     try {
       const response = await fetch(memoEndpoint, {
@@ -396,7 +420,7 @@
   dock.addEventListener("click", event => {
     if (event.target.closest("[data-dock-toggle]")) { setDockOpen(html.dataset.coachDock !== "open"); return; }
     const child = event.target.closest("[data-select-child]");
-    if (child) { model.selected = child.dataset.selectChild; renderParticipants(); return; }
+    if (child) { const id = child.dataset.selectChild; model.praiseFor = model.praiseFor === id ? null : id; model.selected = id; renderParticipants(); return; }
     const button = event.target.closest("[data-action]");
     if (!button) return;
     const action = button.dataset.action;
@@ -405,11 +429,13 @@
     if (action === "goal-save") saveGoal();
     if (action === "memo-save") saveMemo();
     if (action === "score-save") saveScore();
+    if (action === "inline-memo") savePilotNote(button.closest(".oc-praise-box")?.querySelector("[data-inline-memo]")?.value || "", button.closest(".oc-praise-box"));
     // 파일럿: 칭찬 단추 = 근거 채우고 기본 점수(50)로 바로 보내기
     if (action === "praise") { const r = dock.querySelector("[data-score-reason]"); if (r) r.value = button.dataset.praise; const d = dock.querySelector("[data-score-delta]"); if (d && !(Number(d.value) > 0)) d.value = 50; saveScore(); }
   });
 
-  dock.addEventListener("input", event => {
+  dock.addEventListener("focusout", event => { if (event.target.matches && event.target.matches("[data-inline-memo]") && model.renderPending) { model.renderPending = false; setTimeout(renderParticipants, 0); } });
+  dock.addEventListener("input", event => { if (event.target.matches("[data-inline-memo]")) { model.memoDraft = model.memoDraft || {}; model.memoDraft[model.selected] = event.target.value; }
     if (event.target.matches("[data-goal-current],[data-goal-target]")) {
       model.goal.current = Math.max(0, Number(dock.querySelector("[data-goal-current]")?.value) || 0);
       model.goal.target = Math.max(1, Number(dock.querySelector("[data-goal-target]")?.value) || 1);

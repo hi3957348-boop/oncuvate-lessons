@@ -53,3 +53,6 @@ export async function sendPraise(value,child,delta,reason){const room=validRoom(
   await runTransaction(ref(db,`${ROOT}/${room}/praise/${child}`),cur=>{cur=cur||{total:0,seq:0};cur.total=(Number(cur.total)||0)+Number(delta||0);cur.seq=(Number(cur.seq)||0)+1;cur.last={delta:Number(delta||0),reason:String(reason||"").slice(0,60),at:Date.now()};out=cur;return cur});
   return out}
 export function listenPraise(value,child,cb){const room=validRoom(value);return onValue(ref(db,`${ROOT}/${room}/praise/${String(child||"").slice(0,60)}`),s=>cb(s.val()))}
+
+/* 코치 메모: rooms/<방>/notes/<아이>/<시각> = {text, at} (방이 닫혀도 남음) */
+export async function sendNote(value,child,text){const room=validRoom(value),at=Date.now();await set(ref(db,`${ROOT}/${room}/notes/${String(child||"").slice(0,60)}/${at}`),{text:String(text||"").slice(0,2000),at});return{ok:true,at}}

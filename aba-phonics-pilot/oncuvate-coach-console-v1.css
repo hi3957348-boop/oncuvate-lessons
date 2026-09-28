@@ -82,6 +82,20 @@ html[data-coach-dock="open"] .oc-dock .oc-console-head{padding-right:36px}
 .oc-dock .oc-toggle span{display:block;margin:2px 0 0}
 .oc-dock[hidden]{display:none!important}
 
+/* 파일럿: 참가자 상자 아래 빠른 메모 */
+.oc-inline-memo{display:grid;gap:3px;margin-top:7px;font-size:11px;font-weight:800;color:#5b4a8e}
+.oc-inline-memo textarea{width:100%;box-sizing:border-box;min-height:42px;padding:5px 7px;border:1px solid #d9cff5;border-radius:8px;font:inherit;font-size:12px;font-weight:600;resize:vertical}
+.oc-inline-memo-row{display:flex;gap:6px;align-items:center;margin-top:4px}
+.oc-inline-save{height:28px;padding:0 12px;border:0;border-radius:8px;background:#5b48d6;color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer}
+.oc-inline-memo-row span{font-size:11px;color:#6b6385}.oc-inline-memo-row span.ok{color:#1f8a5b}.oc-inline-memo-row span.warn{color:#c2410c}
+
+/* 파일럿: 참가자 상자 아래 칭찬 칸 */
+.oc-person-wrap{display:grid;gap:0}
+.oc-person-wrap.open>.oc-person{border-bottom-left-radius:0;border-bottom-right-radius:0}
+.oc-praise-box{margin-top:-1px;padding:7px 8px 8px;border:1px solid #e7d9a6;border-top:0;border-radius:0 0 12px 12px;background:#fffbea}
+.oc-praise-box small{display:block;margin-bottom:5px;color:#6b4d00;font-size:11px}
+.oc-praise-box .oc-praise-row{margin:0}
+
 /* 파일럿: 칭찬 단추 */
 .oc-praise-row{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin:6px 0 8px}
 .oc-praise{min-height:32px;padding:4px 6px;border:1px solid #e7d9a6;border-radius:10px;background:#fff8df;color:#6b4d00;font:inherit;font-size:12px;font-weight:800;cursor:pointer;text-align:left}

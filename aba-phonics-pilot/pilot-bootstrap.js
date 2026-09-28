@@ -36,6 +36,7 @@
   import('./pilot-firebase-core.js').then(async api=>{
     if(role==='child'){let nick='';try{nick=await api.claimNick(room,child)}catch(_){}if(nick){window.ONCUVATE.childName=nick;showNick(nick)}}
     if(role==='coach')window.ONQ_PILOT_PRAISE=(childId,delta,reason)=>api.sendPraise(room,childId,delta,reason);
+    if(role==='coach')window.ONQ_PILOT_NOTE=(childId,text)=>api.sendNote(room,childId,text);
     if(role==='child'){let seen=-1;api.listenPraise(room,child,v=>{if(!v){if(seen<0)seen=0;return}showTotal(v.total);if(seen>=0&&v.seq>seen&&v.last)celebrate(v.last);seen=Number(v.seq)||0})}
     return api.connectBridge(room)}).catch(()=>{document.documentElement.dataset.pilotRelay='offline'});
 })();
