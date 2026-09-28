@@ -1,0 +1,121 @@
+/* Picture/word cards have a softly lit rim; phoneme controls stay flat.
+   Keep navigation, empty drop slots and the envelope's three layers unchanged. */
+#s6Stage{
+  --s6-card-face:radial-gradient(ellipse at 20% 5%,#fff 15%,transparent 72%),url("assets/images/session06-card-grain.svg"),linear-gradient(145deg,#fffefa,#f4f8fa);
+  --s6-card-shadow:inset 0 0 7px rgba(70,101,119,.26),0 5px 10px rgba(38,66,86,.18);
+}
+#s6Stage :is(.s6-picture,.s6-match-card,.s6-letter-picture,.s6-word-hero,.s6-build-art,.s6-intro-word-sound,.s6-word-grid>button){
+  border:1px solid #c9e4ed;
+  border-top-color:#eefaff;
+  border-left-color:#e2f5fb;
+  border-radius:10px;
+  background:var(--s6-card-face);
+  background-size:auto,160px 160px,auto;
+  box-shadow:var(--s6-card-shadow);
+  transition:border-color .16s,box-shadow .16s,transform .16s;
+}
+#s6Stage .s6-match-card:before{content:none}
+#s6Stage :is(.s6-picture,.s6-match-card,.s6-letter-picture,.s6-word-hero,.s6-build-art,.s6-intro-word-sound,.s6-word-grid>button):not(:disabled):hover{
+  border-color:#82cad8;
+  box-shadow:inset 0 0 7px rgba(70,101,119,.28),0 5px 12px rgba(55,169,193,.25);
+}
+#s6Stage :is(.s6-picture,.s6-match-card,.s6-word-grid>button).selected{
+  color:var(--oc-violet-900);
+  border-color:var(--oc-violet-700);
+  background:linear-gradient(rgba(240,234,251,.45),rgba(240,234,251,.45)),var(--s6-card-face);
+  box-shadow:inset 0 0 7px rgba(104,80,144,.22),0 5px 10px rgba(57,44,78,.18);
+}
+#s6Stage :is(.s6-reflection-sound,.s6-intro-phoneme,.s6-answer-row>button,.s6-korean>button,.s6-memory-candidates>button,.s6-coach-phonemes>button,.s6-pieces>button,.s6-piece-tray>button,.s6-segment-bank>button,.s6-segment-fixed){
+  border:1px solid var(--oc-violet-200);
+  border-radius:10px;
+  background:#fff;
+  box-shadow:none;
+  transition:border-color .16s,background-color .16s;
+}
+#s6Stage :is(.s6-reflection-sound,.s6-intro-phoneme,.s6-answer-row>button,.s6-korean>button,.s6-memory-candidates>button,.s6-coach-phonemes>button,.s6-pieces>button,.s6-piece-tray>button,.s6-segment-bank>button,.s6-segment-fixed):not(:disabled):hover{
+  border-color:var(--oc-cyan);
+  background:#f2fbfd;
+  box-shadow:none;
+}
+#s6Stage :is(.s6-reflection-sound,.s6-intro-phoneme,.s6-answer-row>button,.s6-korean>button,.s6-memory-candidates>button,.s6-coach-phonemes>button,.s6-pieces>button,.s6-piece-tray>button,.s6-segment-bank>button,.s6-segment-fixed).selected{
+  color:var(--oc-violet-900);
+  border-color:var(--oc-violet-700);
+  background:var(--oc-violet-050);
+  box-shadow:none;
+}
+#s6Stage :is(.s6-match-card,.s6-word-grid>button):focus-visible{outline:3px solid var(--oc-cyan);outline-offset:4px}
+#s6Stage .s6-envelope-slot .s6-picture{
+  /* The pocket stays in front of the card's rim and shading. */
+  z-index:1;box-shadow:inset 0 0 5px rgba(70,101,119,.2),0 3px 5px rgba(38,66,86,.14);
+}
+#s6Stage .s6-build-art{padding:5px}
+#s6Stage .s6-word-grid{row-gap:10px}
+#s6Stage .s6-bridge .s6-letter-poster{border:0;border-radius:0;background:transparent;box-shadow:none}
+@media(prefers-reduced-motion:reduce){
+  #s6Stage :is(.s6-picture,.s6-match-card,.s6-letter-picture,.s6-word-hero,.s6-build-art,.s6-intro-word-sound,.s6-word-grid>button,.s6-reflection-sound,.s6-intro-phoneme,.s6-answer-row>button,.s6-korean>button,.s6-memory-candidates>button,.s6-coach-phonemes>button,.s6-pieces>button,.s6-piece-tray>button,.s6-segment-bank>button,.s6-segment-fixed){transition:none}
+}
+
+/* Display lettering is reserved for large standalone sound headings. */
+#s6Stage .s6-phoneme-pair:not(.target):not(.poster),
+#s6Stage .s6-letter-quiz .s6-answer-row button>b,
+#s6Stage .s6-letter-quiz .s6-answer-row button>span{
+  font-family:"S6Comparison",var(--oc-font);
+  font-weight:700;
+  line-height:1.15;
+  text-shadow:none;
+  filter:none;
+}
+#s6Stage .s6-phoneme-pair:not(.target):not(.poster)>b{font:inherit;color:inherit;text-shadow:none}
+#s6Stage .s6-match-card.type-korean strong,
+#s6Stage .s6-intro-symbol strong,
+#s6Stage .s6-korean>button{
+  font-family:"S6Comparison",var(--oc-font);
+  font-weight:700;
+  text-shadow:none;
+}
+#s6Stage .s6-final-seal strong{font-family:var(--oc-font);font-weight:700}
+
+/* Infer the new word from an onset change; choices remain subordinate to the source. */
+#s6Stage .s6-swap-choices{width:min(366px,100%);gap:12px}
+#s6Stage .s6-swap-choices>.s6-picture{width:100%;height:84px;padding:6px}
+#s6Stage .s6-swap-token{min-width:48px;min-height:44px;padding:5px 8px;border:1px solid var(--oc-violet-200);border-radius:9px;background:#fff;font:700 30px/1.1 "S6Comparison",var(--oc-font);text-shadow:none;cursor:pointer}
+#s6Stage .s6-swap-token:hover{border-color:var(--oc-cyan);background:#f2fbfd}
+#s6Stage .s6-swap-token small{left:0;width:100%;text-align:center}
+#s6Stage .s6-swap-word-change{gap:12px;text-shadow:none}
+
+/* Give picture, choices and confirmation separate breathing room. */
+#s6Stage .s6-letter-quiz{gap:20px}
+#s6Stage .s6-activity:has(>.s6-letter-quiz){row-gap:20px}
+#s6Stage .s6-letter-quiz .s6-answer-row{gap:20px}
+#s6Stage .s6-letter-quiz .s6-answer-row button{width:124px;padding:6px 10px;gap:10px}
+#s6Stage .s6-letter-quiz .s6-answer-row button>span:not(.s6-phoneme-pair){padding-left:10px}
+#s6Stage .s6-letter-quiz .s6-answer-row .s6-phoneme-pair{padding:0;gap:5px}
+
+/* The introductory sound is a bare, clickable letter pair, not a box. */
+#s6Stage .s6-intro-symbol .s6-intro-phoneme,
+#s6Stage .s6-intro-symbol .s6-intro-phoneme:hover{border:0;border-radius:10px;background:transparent;box-shadow:none;animation:none}
+
+/* Activity area sits flush against the main stage; the footer keeps the base line. */
+#s6Stage{padding:0}
+#s6Stage article{border-top:0;border-left:0;border-right:0;border-radius:0!important;box-shadow:none}
+#s6Stage>article.s6-intro-layout,#s6Stage>article.s6-coach-layout.s6-top-instruction-layout{border-radius:0!important}
+#s6Stage>article.s6-coach-layout.s6-top-instruction-layout{padding-left:16px;padding-right:16px}
+#s6Stage>article.s6-coach-layout.s6-top-instruction-layout .s6-work-panel{border-bottom-left-radius:0;border-bottom-right-radius:0}
+
+/* Sentence listening: blanks open into real words, hints turn only unresolved blanks into pictures. */
+#s6Stage .s6-sentence-game{width:min(500px,100%);display:grid;justify-items:center;gap:12px}
+#s6Stage .s6-sentence-top{width:100%;display:flex;align-items:center;justify-content:space-between;gap:12px}
+#s6Stage .s6-sentence-top span{min-width:48px;padding:6px 10px;border:1px solid #b7e6ed;border-radius:999px;color:#17606c;background:#effcff;font:800 11px/1 var(--oc-en)}
+#s6Stage .s6-sentence-listen{min-width:94px;color:#17606c;border-color:#b7e6ed;background:#effcff}
+#s6Stage .s6-sentence-line{width:100%;min-height:118px;margin:0;padding:18px 20px;display:flex;align-items:center;justify-content:center;flex-wrap:wrap;gap:10px;border:1px solid var(--oc-line);border-radius:8px;background:#fffefa;color:#4f4b5d;font:800 25px/1.55 var(--oc-en);text-align:center}
+#s6Stage .s6-sentence-slot{width:112px;height:62px;padding:6px 10px;display:grid;place-items:center;border:1px solid #c9e4ed;border-radius:8px;background:var(--s6-card-face);background-size:auto,160px 160px,auto;box-shadow:inset 0 0 7px rgba(70,101,119,.22),0 5px 10px rgba(38,66,86,.14);color:#686575;transition:border-color .16s,box-shadow .16s,transform .16s}
+#s6Stage .s6-sentence-slot:hover,#s6Stage .s6-sentence-slot.active{border-color:var(--oc-cyan);box-shadow:inset 0 0 7px rgba(70,101,119,.24),0 0 0 4px rgba(75,201,220,.18),0 6px 13px rgba(55,169,193,.22);transform:translateY(-1px)}
+#s6Stage .s6-sentence-slot i{width:66px;height:8px;border-radius:999px;background:#d5d1e2}
+#s6Stage .s6-sentence-slot strong{font:800 24px/1 var(--oc-en);color:#5f5b6d;text-shadow:none}
+#s6Stage .s6-sentence-slot.hinted .s6-vocab-art{width:100%;height:100%;padding:0;object-fit:contain;transform:scale(1.08);filter:drop-shadow(0 4px 5px rgba(78,61,42,.08))}
+#s6Stage .s6-sentence-slot.revealed{border-color:#bfe5d5;background:linear-gradient(rgba(240,251,246,.55),rgba(240,251,246,.55)),var(--s6-card-face);box-shadow:inset 0 0 7px rgba(47,117,87,.16),0 5px 10px rgba(38,66,86,.12)}
+#s6Stage .s6-sentence-choice-row{display:flex;gap:16px}
+#s6Stage .s6-sentence-choice-row button{width:82px;height:48px;border:1px solid var(--oc-violet-200);border-radius:8px;background:#fff;color:#686575;font-family:"S6Comparison",var(--oc-font);font-weight:700;box-shadow:none}
+#s6Stage .s6-sentence-choice-row button:not(:disabled):hover{border-color:var(--oc-cyan);background:#f2fbfd}
+#s6Stage .s6-sentence-choice-row button:disabled{opacity:.45}
+#s6Stage .s6-sentence-choice-row .s6-phoneme-pair{font:inherit;color:inherit;text-shadow:none;filter:none}

@@ -1,0 +1,12 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="150" height="170" viewBox="0 0 150 170" fill="none">
+<defs>
+ <linearGradient id="left" x1="7" y1="78" x2="109" y2="152" gradientUnits="userSpaceOnUse"><stop stop-color="#d8f0f8"/><stop offset=".5" stop-color="#aed7e9"/><stop offset="1" stop-color="#87b8d2"/></linearGradient>
+ <linearGradient id="right" x1="143" y1="78" x2="45" y2="154" gradientUnits="userSpaceOnUse"><stop stop-color="#d2ecf6"/><stop offset=".65" stop-color="#9ac9e0"/><stop offset="1" stop-color="#83b3cf"/></linearGradient>
+ <linearGradient id="bottom" x1="73" y1="107" x2="79" y2="162" gradientUnits="userSpaceOnUse"><stop stop-color="#def3fa"/><stop offset=".3" stop-color="#c2e5f1"/><stop offset="1" stop-color="#9ccce2"/></linearGradient>
+</defs>
+<path d="M7 79Q37 93 76 119L138 156Q136 160 130 160H19Q7 160 7 148Z" fill="url(#left)"/>
+<path d="M143 79Q113 93 74 119L12 156Q14 160 20 160H131Q143 160 143 148Z" fill="url(#right)"/>
+<path d="M9 155L67 113Q75 107 83 113L141 155Q137 161 130 161H20Q13 161 9 155Z" fill="url(#bottom)"/>
+<path d="M10 155L68 113Q75 108 82 113L140 155" stroke="#f0fbff" stroke-width="1.4" stroke-linecap="round" opacity=".65"/>
+<path d="M7.5 81V148Q7.5 159.5 19 159.5H131Q142.5 159.5 142.5 148V81" stroke="#92bdd5" stroke-opacity=".6"/>
+</svg>

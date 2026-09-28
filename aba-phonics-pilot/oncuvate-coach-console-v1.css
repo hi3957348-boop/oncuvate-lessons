@@ -1,0 +1,83 @@
+/* Oncuvate coach console v2 — 회차 파일 안의 오른쪽 도크.
+ * 아이 화면에서는 .oc-dock 자체가 만들어지지 않는다. 모든 규칙은 .oc-dock 또는
+ * html[data-oncuvate-role="coach"] 아래로만 건다(수업 화면 스타일에 새지 않게). */
+/* 콘솔은 수업 옆에 붙는다: 폭 = 메뉴바, 높이 = 메뉴바·활동영역, 활동영역 오른쪽 12 간격.
+ * 수업 쪽 비켜서기는 session06-sample.js fit() 이 scale·left 로 한다(활동영역을 가리지 않게). */
+.oc-dock{
+  --oc-violet-950:#24144f;--oc-violet-900:#35206f;--oc-violet-800:#4b24a5;
+  --oc-violet-700:#5932b6;--oc-violet-500:#8d70d7;--oc-violet-200:#d9cff5;
+  --oc-violet-100:#eee9fb;--oc-violet-050:#f8f6fd;--oc-cyan:#4bc9dc;
+  --oc-blue:#2785c7;--oc-ink:#29243a;--oc-muted:#777187;--oc-paper:#fffefb;
+  --oc-line:#e8e3f3;--oc-good:#35a978;--oc-warn:#c55d62;
+  position:fixed;top:0;right:0;bottom:0;z-index:2147483000;width:260px;
+  font-family:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;color:var(--oc-ink);
+  font-size:12px;line-height:1.4;text-align:left;
+  border-left:1px solid var(--oc-violet-200);background:#fbfaff;box-shadow:-10px 0 30px rgba(37,20,78,.12);
+  transition:transform .2s ease
+}
+.oc-dock *,.oc-dock *::before,.oc-dock *::after{box-sizing:border-box}
+/* 수업 카드와 맞춘 카드형 — top/left/width/height는 JS가 실제 좌표로 넣는다 */
+.oc-dock.oc-dock--fit{right:auto;bottom:auto;border:1px solid var(--oc-violet-200);border-radius:20px;box-shadow:0 10px 25px rgba(37,20,78,.1)}
+.oc-dock.oc-dock--fit .oc-dock-inner{border-radius:inherit}
+/* 접으면 오른쪽 끝에 펼치기 탭만 남는다 */
+html[data-coach-dock="closed"] .oc-dock{left:auto!important;right:0!important;width:0!important;border:0;box-shadow:none}
+html[data-coach-dock="closed"] .oc-dock-inner{display:none}
+.oc-dock button,.oc-dock input,.oc-dock textarea,.oc-dock select{font:inherit;letter-spacing:normal}
+.oc-dock button{cursor:pointer}
+.oc-dock button:focus-visible,.oc-dock input:focus-visible,.oc-dock textarea:focus-visible{outline:3px solid rgba(75,201,220,.48);outline-offset:2px}
+.oc-dock code{padding:0 3px;border-radius:4px;background:#fff;color:var(--oc-violet-800);font-size:10px}
+
+.oc-dock-inner{height:100%;display:grid;grid-template-rows:auto minmax(0,1fr);overflow:hidden}
+.oc-dock-tab{position:absolute;left:-30px;top:14px;width:30px;height:44px;padding:0;border:1px solid var(--oc-violet-200);border-right:0;border-radius:10px 0 0 10px;background:var(--oc-violet-800);color:#fff;font-size:18px;font-weight:900;box-shadow:-4px 4px 12px rgba(37,20,78,.14)}
+.oc-dock-tab span{display:inline-block;transition:transform .2s ease}
+html[data-coach-dock="closed"] .oc-dock-tab span{transform:rotate(180deg)}
+/* 펼친 동안엔 접기 버튼을 머리 안에 둔다 — 활동영역 위로 튀어나오지 않게 */
+html[data-coach-dock="open"] .oc-dock-tab{left:auto;right:8px;top:9px;z-index:3;width:24px;height:24px;border:0;border-radius:7px;background:rgba(255,255,255,.16);box-shadow:none;font-size:15px;line-height:24px}
+html[data-coach-dock="open"] .oc-console-head{padding-right:38px}
+
+.oc-console-head{padding:15px 16px 12px;color:#fff;background:linear-gradient(135deg,var(--oc-violet-950),var(--oc-violet-700))}
+.oc-console-head div{display:flex;align-items:center;justify-content:space-between;gap:10px}.oc-console-head h1{margin:0;font-size:18px;letter-spacing:-.03em;color:#fff}.oc-live{display:inline-flex;align-items:center;gap:6px;font-size:10px;font-weight:850}.oc-live:before{content:"";width:8px;height:8px;border-radius:50%;background:#aaa3bd}.oc-live[data-live="true"]:before{background:var(--oc-cyan);box-shadow:0 0 0 4px rgba(75,201,220,.16)}
+.oc-console-head p{margin:7px 0 0;color:#e8e2fb;font-size:11px;line-height:1.45}
+.oc-console-body{min-height:0;overflow:auto;padding:11px;scrollbar-color:#c9bee9 transparent}
+.oc-section{margin:0 0 10px;padding:12px;border:1px solid var(--oc-line);border-radius:14px;background:#fff}
+.oc-section:last-child{margin-bottom:0}.oc-section h2{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:0 0 9px;color:var(--oc-violet-950);font-size:14px}.oc-section h2 small{color:var(--oc-muted);font-size:10px;font-weight:750;text-align:right}
+.oc-lock-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}.oc-toggle{min-height:50px;padding:8px;border:1px solid var(--oc-violet-200);border-radius:11px;background:#fff;color:var(--oc-violet-900);font-size:12px;font-weight:850}.oc-toggle[aria-pressed="true"]{border-color:var(--oc-violet-800);background:var(--oc-violet-800);color:#fff}.oc-toggle span{display:block;margin-top:3px;font-size:9px;font-weight:650;opacity:.76}
+.oc-save-state{min-height:17px;margin:8px 0 0;color:var(--oc-muted);font-size:10px;font-weight:750}.oc-save-state[data-kind="ok"]{color:#247354}.oc-save-state[data-kind="warn"]{color:var(--oc-warn)}
+.oc-participants{display:grid;gap:7px}.oc-empty{margin:0;padding:12px;border:1px dashed var(--oc-violet-200);border-radius:11px;background:var(--oc-violet-050);color:var(--oc-muted);font-size:11px;line-height:1.6;text-align:center}
+.oc-person{display:block;width:100%;padding:10px;border:1px solid var(--oc-line);border-radius:12px;background:#fff;color:var(--oc-ink);text-align:left}.oc-person.help{border-color:#f0b3b6;background:#fff8f8}.oc-person[aria-current="true"]{border-color:#7ed8e5;box-shadow:0 0 0 2px rgba(75,201,220,.14)}
+.oc-person-top,.oc-progress-line,.oc-person-meta,.oc-person-stats{display:flex;align-items:center;justify-content:space-between;gap:8px}.oc-person-top strong{font-size:12px}.oc-person-top>span{margin-left:auto;color:var(--oc-muted);font-size:9px;font-weight:800}.oc-person-top>span.fresh{color:#247354}
+.oc-flag{padding:1px 6px;border-radius:999px;background:var(--oc-warn);color:#fff;font-size:9px;font-style:normal;font-weight:900}
+.oc-progress-line{margin-top:7px;font-size:10px}.oc-progress-line b{color:var(--oc-violet-900)}.oc-progress-line .away{color:#b06a12;font-weight:800}
+.oc-person-track{display:block;width:100%;height:5px;margin:5px 0;border-radius:999px;background:var(--oc-violet-100);overflow:hidden;line-height:0}.oc-person-track i{display:block;max-width:100%;height:100%;border-radius:inherit;background:var(--oc-cyan)}
+.oc-person-meta{align-items:flex-start;color:var(--oc-muted);font-size:9px;line-height:1.35}.oc-person-meta span:first-child{max-width:70%;font-weight:750}.oc-person-meta span:last-child{text-align:right}
+.oc-person-stats{margin-top:6px;justify-content:flex-start;gap:10px;color:var(--oc-muted);font-size:9px}.oc-person-stats b{color:var(--oc-violet-900);font-size:11px}
+.oc-person-response{display:block;margin:7px 0 0;padding-top:7px;border-top:1px solid var(--oc-line);font-size:10px}.oc-person-response b{color:var(--oc-blue)}.oc-person-response .wrong{color:var(--oc-warn)}
+.oc-field{display:grid;gap:5px;margin:0 0 9px;color:var(--oc-muted);font-size:10px;font-weight:800}.oc-field input,.oc-field textarea{width:100%;border:1px solid var(--oc-violet-200);border-radius:10px;background:#fff;color:var(--oc-ink)}.oc-field input{height:37px;padding:0 10px}.oc-field textarea{min-height:78px;padding:9px 10px;line-height:1.45;resize:vertical}.oc-inline{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.oc-action{width:100%;min-height:40px;border:0;border-radius:10px;background:var(--oc-violet-800);color:#fff;font-size:12px;font-weight:900;box-shadow:0 6px 15px rgba(75,36,165,.16)}.oc-action.secondary{border:1px solid #8fd9e7;background:#effcff;color:#17606c;box-shadow:none}.oc-action:disabled{cursor:not-allowed;opacity:.48;box-shadow:none}
+.oc-endpoint-note{margin:0 0 9px;padding:8px 9px;border-radius:9px;background:#f6f4fb;color:var(--oc-muted);font-size:10px;line-height:1.45}.oc-endpoint-note.ready{background:#f0fbf6;color:#247354}
+.oc-score-preview{min-height:20px;margin:8px 0 0;color:var(--oc-muted);font-size:10px;line-height:1.4}.oc-score-preview strong{color:var(--oc-violet-900)}
+.oc-goal-meter{height:9px;margin:4px 0 10px;border-radius:999px;background:var(--oc-violet-100);overflow:hidden}.oc-goal-meter i{display:block;height:100%;border-radius:inherit;background:linear-gradient(90deg,var(--oc-cyan),var(--oc-violet-500));transition:width .2s ease}
+@media(prefers-reduced-motion:reduce){.oc-dock,.oc-dock *{transition:none!important}}
+
+/* ── 좁은 콘솔(메뉴바 폭 ≈ 170~220px)용 촘촘한 배치 ── */
+.oc-dock .oc-console-head{padding:11px 12px 10px}
+html[data-coach-dock="open"] .oc-dock .oc-console-head{padding-right:36px}
+.oc-dock .oc-console-head div{display:block}
+.oc-dock .oc-console-head h1{font-size:15px;white-space:nowrap}
+.oc-dock .oc-live{margin-top:4px}
+.oc-dock .oc-console-head p{display:none}
+.oc-dock .oc-console-body{padding:8px}
+.oc-dock .oc-section{margin-bottom:8px;padding:10px;border-radius:12px}
+.oc-dock .oc-section h2{flex-wrap:wrap;gap:2px 6px;margin-bottom:7px;font-size:13px;white-space:nowrap}
+.oc-dock .oc-section h2 small{flex:1 1 100%;text-align:left;white-space:normal}
+.oc-dock .oc-lock-grid{grid-template-columns:1fr;gap:6px}
+.oc-dock .oc-toggle{min-height:0;padding:7px 8px;font-size:12px;text-align:left;white-space:nowrap}
+.oc-dock .oc-toggle span{display:inline;margin:0 0 0 4px;font-size:9px}
+.oc-dock .oc-inline{grid-template-columns:1fr;gap:0}
+.oc-dock .oc-person{padding:8px}
+.oc-dock .oc-person-stats{flex-wrap:wrap;gap:2px 8px}
+.oc-dock .oc-progress-line,.oc-dock .oc-person-meta{flex-wrap:wrap;gap:2px 6px}
+.oc-dock .oc-console-body{overflow-x:hidden}
+.oc-dock .oc-toggle{white-space:normal}
+.oc-dock .oc-toggle span{display:block;margin:2px 0 0}
+.oc-dock[hidden]{display:none!important}

@@ -1,0 +1,16 @@
+.s6x-illustration{display:block;max-width:100%;object-fit:contain}
+#s6Stage .s6-sound-intro.s6-intro-no-tabs{grid-template-rows:250px;padding-top:96px}
+#s6Stage .s6-intro-no-tabs>.s6-intro-feature{grid-row:1}
+/* Scope above the inherited compact-card selectors, including the zoom wrapper. */
+#s6Stage .s6-intro-feature .s6-intro-feature-visual{grid-template-rows:30px 156px 34px;row-gap:4px}
+#s6Stage .s6-intro-feature .s6-intro-symbol{height:30px}
+#s6Stage .s6-intro-feature .s6-intro-symbol .s6-intro-phoneme{height:30px;min-height:0}
+#s6Stage .s6-intro-feature .s6x-illustration.s6-intro-jelly{width:180px;height:180px;max-height:180px;justify-self:center;align-self:center;object-fit:contain;transform:none}
+#s6Stage .s6-intro-feature .s6-intro-word{min-height:34px;padding:0}
+#s6Stage .s6-intro-feature .s6-intro-word-sound{min-height:34px;padding:1px 6px 2px}
+#s6Stage .s6-intro-feature .s6-intro-motion{grid-template-columns:124px minmax(0,1fr);gap:10px}
+#s6Stage .s6-intro-feature .s6-intro-motion .s6-mouth-zoom{width:124px;height:124px;min-width:124px;padding:0;border:0;background:transparent;cursor:default}
+#s6Stage .s6-intro-feature .s6-intro-motion .s6-mouth-zoom img.s6x-illustration{width:124px;height:124px;max-width:124px;max-height:none;object-fit:contain}
+#s6Stage .s6-sound-intro.s6-intro-no-tabs{grid-template-rows:274px;padding-top:84px}
+#s6Stage .s6-intro-no-tabs>.s6-intro-feature{height:274px;min-height:274px}
+#s6Stage .s6-intro-feature .s6-intro-feature-visual{align-content:center;padding-block:6px;box-sizing:border-box}

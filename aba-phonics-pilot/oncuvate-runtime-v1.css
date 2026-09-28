@@ -1,0 +1,40 @@
+/* Minimal runtime-only states.  The Session 06 component geometry is untouched. */
+.onq-runtime-lock-banner {
+  position: absolute;
+  z-index: 80;
+  left: 50%;
+  bottom: 48px;
+  transform: translateX(-50%);
+  max-width: min(540px, calc(100% - 40px));
+  padding: 9px 16px;
+  border: 1px solid #9edee8;
+  border-radius: 999px;
+  background: rgba(240, 253, 255, .97);
+  box-shadow: 0 8px 24px rgba(27, 44, 96, .14);
+  color: #17606c;
+  font-size: 13px;
+  font-weight: 850;
+  text-align: center;
+}
+
+.onq-runtime-lock-banner[hidden] { display: none !important; }
+
+html[data-oncuvate-activity-locked="true"] #s6Stage {
+  cursor: not-allowed;
+  filter: saturate(.72);
+}
+
+html[data-oncuvate-page-locked="true"] [data-prev],
+html[data-oncuvate-page-locked="true"] [data-next],
+html[data-oncuvate-page-locked="true"] [data-page],
+html[data-oncuvate-page-locked="true"] [data-menu-group] {
+  cursor: not-allowed;
+}
+
+html[data-oncuvate-mode="review"] .onq-runtime-lock-banner { display: none !important; }
+
+.onq-shared-goal{
+  position:relative;overflow:hidden;flex:0 0 auto;padding:6px 10px;border:1px solid #a9e4ec;border-radius:999px;
+  background:#f1fcfe;color:#17606c;font-size:10px;font-weight:900;white-space:nowrap
+}
+.onq-shared-goal:after{content:"";position:absolute;left:0;bottom:0;width:var(--onq-goal,0%);height:3px;background:#4bc9dc;transition:width .3s ease}

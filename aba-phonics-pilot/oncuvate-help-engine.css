@@ -1,0 +1,8 @@
+#s6Stage{position:relative}
+.s6-help-nudge{position:absolute;z-index:80;left:50%;bottom:9px;display:flex;align-items:center;gap:9px;max-width:min(520px,calc(100% - 28px));box-sizing:border-box;padding:9px 14px;border:1px solid #98deea;border-radius:13px;background:#f4fcfe;color:#24505b;box-shadow:0 8px 22px rgba(39,133,199,.16);font-size:13px;font-weight:850;line-height:1.35;transform:translateX(-50%);pointer-events:none}
+.s6-help-nudge i{flex:0 0 18px;width:18px;height:18px;border-radius:7px;background:radial-gradient(circle at 50% 50%,#fff 0 18%,#4bc9dc 20% 48%,#dff8fb 50% 100%);box-shadow:0 0 0 3px rgba(75,201,220,.14)}
+.s6-help-nudge.is-specific{border-color:#b7a5e7;background:#faf8ff;color:#432b79}
+.s6-help-focus{position:relative;z-index:5;outline:0!important;box-shadow:0 0 0 3px #4bc9dc,0 0 0 7px rgba(75,201,220,.16),0 10px 24px rgba(39,133,199,.16)!important;animation:s6HelpPulse 1.05s ease-in-out infinite alternate}
+.s6-help-focus-strong{box-shadow:0 0 0 3px #8d70d7,0 0 0 7px rgba(141,112,215,.17),0 10px 24px rgba(75,36,165,.15)!important}
+@keyframes s6HelpPulse{from{transform:translateY(0)}to{transform:translateY(-3px)}}
+@media(prefers-reduced-motion:reduce){.s6-help-focus{animation:none}}

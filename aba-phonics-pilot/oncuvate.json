@@ -1,0 +1,267 @@
+{
+  "oncuvate": 2,
+  "id": "ogkr-digraph",
+  "version": "0.1.0",
+  "updatedAt": "2026-09-27",
+  "files": {
+    "session01.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 1회차 ch·j 소리 공방 · 비공개 검토본",
+      "order": 1,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "ch"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 1회차 ch·j 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session02.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 2회차 wh 소리 공방 · 비공개 검토본",
+      "order": 2,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "wh"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 2회차 wh 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session03.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 3회차 ck 소리 공방 · 비공개 검토본",
+      "order": 3,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "ck"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 3회차 ck 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session04.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 4회차 qu 소리 공방 · 비공개 검토본",
+      "order": 4,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "qu"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 4회차 qu 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session05.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 5회차 th 소리 공방 · 비공개 검토본",
+      "order": 5,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "th"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 5회차 th 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session06.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 6회차 sh 소리 공방 · 비공개 검토본",
+      "order": 6,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "sh"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 6회차 sh 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session07.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 7회차 ff·ss·ll·zz 소리 공방 · 비공개 검토본",
+      "order": 7,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "ff",
+        "ss",
+        "ll",
+        "zz"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 7회차 ff·ss·ll·zz 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    },
+    "session08.html": {
+      "use": "content",
+      "version": "0.1.0",
+      "title": "이중자 8회차 복수 s·es 소리 공방 · 비공개 검토본",
+      "order": 8,
+      "minDurationMin": 50,
+      "classification": {
+        "area": "언어"
+      },
+      "tags": [
+        "영어",
+        "파닉스",
+        "이중자",
+        "es"
+      ],
+      "level": "L1",
+      "axes": [
+        "accuracy"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "이중자 8회차 복수 s·es 소리 공방",
+        "author": "온큐베이트",
+        "source": "자체 제작 · 단어 선정은 Orton-Gillingham 교재 Unit 1 순서를 참고",
+        "license": "온큐베이트 수업용",
+        "modified": true
+      }
+    }
+  }
+}

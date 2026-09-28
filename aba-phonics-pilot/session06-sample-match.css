@@ -1,0 +1,15 @@
+/* Three matching steps share one compact board. */
+#s6Stage .s6x-match-wrap{gap:7px}
+.s6x-match-steps{display:flex;justify-content:center;gap:6px;margin-bottom:2px}
+.s6x-match-steps button{border:1px solid #e0d9ed;border-radius:16px;padding:5px 11px;background:#fffefb;color:#6c647a;font:700 11px/1.2 Pretendard,sans-serif;cursor:pointer}
+.s6x-match-steps button[aria-current="step"]{background:#eefbfe;border-color:#4bc9dc;color:#126478}
+#s6Stage .s6x-match{width:min(365px,100%);grid-template-columns:116px 116px;padding:1px 0}
+#s6Stage .s6x-match-col{gap:8px}
+#s6Stage .s6x-match .s6-match-card{height:55px;min-height:0;position:relative;display:flex;align-items:center;justify-content:center;padding:4px 10px}
+#s6Stage .s6x-match .s6-match-card strong{font-size:26px!important;line-height:1.2}
+#s6Stage .s6x-match .s6-phoneme-pair{font-size:29px!important}
+#s6Stage .s6x-match.is-picture .s6-vocab-art{height:47px;width:78px;object-fit:contain;transform:none}
+#s6Stage .s6x-match-wrap .s6-feedback{min-height:0;margin:0;font-size:12px;line-height:1.35}
+#s6Stage .s6x-match-wrap .s6-feedback:empty{display:none}
+#s6Stage .s6x-match-wrap>.s6-primary{min-height:32px;padding:7px 18px;font-size:12px}
+.s6x-match-steps button:focus-visible{outline:3px solid #4bc9dc;outline-offset:2px}

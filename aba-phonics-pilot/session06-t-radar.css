@@ -1,0 +1,41 @@
+/* 기존 온큐베이트 프레임 안에 들어가는 한 장의 소리 게임판 */
+#s6Stage .tr-work{background:linear-gradient(145deg,#fffefb 65%,#effbfd);border-radius:16px;padding:0!important;display:block!important}
+#s6Stage .tr-work .s6-activity{width:100%;height:100%;padding:13px 20px;display:block;max-width:none;box-sizing:border-box}
+.tr-modal .s6-t-radar{width:100%;height:100%;display:flex;flex-direction:column;gap:12px;color:#29243a;font-family:Pretendard,'Noto Sans KR',sans-serif;text-align:center}
+.s6-t-radar button{font-family:inherit;cursor:pointer;touch-action:manipulation}
+.s6-t-radar button:focus-visible{outline:3px solid #2785c7;outline-offset:3px}
+.s6-t-radar button:disabled{cursor:default}
+.tr-top{display:flex;justify-content:space-between;align-items:center;height:25px;flex-shrink:0}
+.tr-title{display:flex;align-items:center;gap:7px;font-size:14px;font-weight:850;color:#35206f}
+.tr-brand-icon{display:inline-grid;place-items:center;flex-shrink:0;width:30px;height:30px;border-radius:10px;color:#177d8e;background:linear-gradient(145deg,#f1fdff,#cef2f7);border:1px solid #b3e8ef;box-shadow:0 2px 5px #238c9a12}
+.tr-brand-icon svg{display:block;width:26px;height:26px}
+.tr-launch .tr-brand-icon{width:24px;height:24px;border:0;border-radius:8px;background:#ffffff1c;color:#b5f4fa;box-shadow:none}.tr-launch .tr-brand-icon svg{width:23px;height:23px}
+.tr-counter{font-size:15px;font-weight:850;color:#35206f}.tr-counter span{font-size:11px;color:#777187}
+.tr-position{display:flex;justify-content:center;align-items:center;gap:12px;height:27px;flex-shrink:0}
+.tr-position span{padding:4px 14px;border-radius:20px;font-size:12px;color:#777187;background:#f2f1f4;border:1px solid transparent}
+.tr-position span.active{background:#e5f9fc;color:#17606c;border-color:#80d9e5;font-weight:850}
+.tr-position i{font-style:normal;color:#b6bcc3;letter-spacing:3px}
+.tr-console{display:flex;align-items:center;justify-content:center;gap:24px;min-height:77px}
+.tr-word{display:flex;gap:7px;align-items:center;justify-content:center}
+.tr-letter{display:grid;place-items:center;width:49px;height:61px;border:1px solid #e8e3f3;border-bottom:4px solid #ded8e8;border-radius:12px;background:linear-gradient(#fff,#f8f6fd);font:700 39px/1 var(--oc-en,ABeeZee,sans-serif);box-shadow:0 4px 9px #24144f0b;color:#57516b}
+.tr-letter.tr-target{color:#126576;background:#ecfbfe;border:2px dashed #4bc9dc;border-bottom:4px solid #4bc9dc}
+.tr-play{width:113px;height:68px;display:grid;grid-template-columns:22px 1fr;align-content:center;justify-content:center;gap:5px 3px;border:1px solid #a1dfe8;border-bottom:4px solid #87ceda;border-radius:16px;background:#f1fcff;color:#17606c;box-shadow:0 5px 11px #2785c710;padding:9px}
+.tr-play .tr-brand-icon{width:22px;height:22px;align-self:center;border-radius:7px;color:#177d8e;background:#dff8fb;border-color:#a1dfe8;box-shadow:none}.tr-play .tr-brand-icon svg{width:20px;height:20px}
+.tr-play b{font-size:12px;align-self:center}.tr-wave{grid-column:1/-1;display:flex;align-items:center;justify-content:center;gap:4px;height:15px}.tr-wave i{width:3px;height:7px;border-radius:2px;background:#4bc9dc}.tr-wave i:nth-child(2n){height:12px}.tr-wave i:nth-child(3){height:15px}
+.tr-question{margin:0;font-size:14px;line-height:21px;font-weight:700}.tr-question b{display:inline-block;color:#4b24a5;font:800 22px/1 var(--oc-en,sans-serif);margin:0 3px}
+.tr-answers{display:flex;justify-content:center;gap:14px}
+.tr-choice{display:flex;align-items:center;justify-content:center;gap:12px;width:155px;min-height:58px;border:1px solid #ded8e8;border-bottom:4px solid #cec6e2;border-radius:15px;background:#fffefb;color:#57516b;box-shadow:0 4px 10px #24144f0b}
+.tr-choice b{font-size:0}.tr-choice small{display:block;font-size:14px;font-weight:800}.tr-choice.selected{background:#f0eafb;color:#4b24a5;border-color:#8d70d7;border-bottom-color:#5932b6}.tr-choice:disabled{opacity:1}.tr-choice:disabled:not(.selected){opacity:.5}
+.tr-circle{display:block;width:26px;height:26px;border:5px solid currentColor;border-radius:50%;box-sizing:border-box}.tr-cross{position:relative;width:27px;height:27px}.tr-cross:before,.tr-cross:after{content:'';position:absolute;top:11px;left:0;width:28px;height:5px;border-radius:3px;background:currentColor;transform:rotate(45deg)}.tr-cross:after{transform:rotate(-45deg)}
+.tr-action{display:flex;justify-content:center;align-items:center;gap:8px;min-height:38px}.tr-message{font-size:11px;line-height:1.4;max-width:235px;color:#17606c;margin:0}.tr-message:empty{display:none}
+.s6-t-radar .tr-primary{min-height:35px;padding:6px 19px;background:#4b24a5;border:1px solid #4b24a5;border-bottom:3px solid #35206f;color:white;border-radius:11px;font-size:12px;font-weight:800;white-space:nowrap;box-shadow:0 4px 9px #4b24a51c}.s6-t-radar .tr-primary:disabled{background:#ede9f4;color:#8a829b;border-color:#e0dbea;box-shadow:none}
+.tr-bottom{margin-top:auto;display:flex;align-items:center;justify-content:space-between;gap:5px;min-height:29px;border-top:1px solid #e8e3f3;padding-top:3px}.tr-route{display:flex;gap:1px}.tr-route button{width:20px;height:26px;border:0;background:transparent;padding:4px}.tr-route span{display:block;width:10px;height:10px;border-radius:50%;background:#e4e1eb}.tr-route .current span{background:#4b24a5;box-shadow:0 0 0 3px #ece5fa}.tr-route .visited span{background:#4bc9dc}.tr-bottom small{font-size:9px;color:#777187;white-space:nowrap}
+.tr-modal .s6-t-radar.tr-finish{justify-content:center;align-items:center;gap:15px}.tr-finish h3{font-size:24px;color:#35206f;margin:0}.tr-finish p{font-size:14px;color:#57516b;margin:0}.tr-finish-badge{position:relative;display:grid;place-items:center;width:92px;height:92px;background:#ecfbfe;border:5px double #4bc9dc;border-radius:50%;font:bold 45px/1 var(--oc-en,sans-serif);color:#17606c}.tr-finish-badge span{position:absolute;bottom:-4px;right:-3px;font:800 15px/28px Pretendard,sans-serif;border-radius:20px;width:30px;height:30px;background:#4b24a5;color:white}.tr-again{border:0;background:none;color:#57516b;font-size:12px;text-decoration:underline;padding:7px}
+#s6Stage .s6-intro-layout:has(.tr-launch){position:relative}
+#s6Stage .tr-launch{position:absolute;bottom:12px;left:50%;transform:translateX(-50%);display:flex;align-items:center;gap:12px;padding:9px 20px;min-height:38px;white-space:nowrap;border:1px solid #4b24a5;border-bottom:3px solid #35206f;border-radius:13px;background:#4b24a5;color:white;font:800 13px/1 Pretendard,sans-serif;box-shadow:0 5px 12px #4b24a51c;cursor:pointer}
+.tr-launch span{font-size:12px;letter-spacing:3px;color:#abf0f8}.tr-launch:focus-visible{outline:3px solid #2785c7;outline-offset:3px}
+.tr-modal{width:min(600px,calc(100vw - 32px));max-height:calc(100dvh - 28px);box-sizing:border-box;border:1px solid #e8e3f3;border-radius:24px;padding:0;background:linear-gradient(135deg,#fffefb 65%,#effbfd);box-shadow:0 24px 80px #24144f38;color:#29243a;overflow:auto}
+.tr-modal::backdrop{background:#24144f70;backdrop-filter:blur(4px)}
+.tr-modal-bar{display:flex;align-items:center;justify-content:space-between;padding:10px 20px;border-bottom:1px solid #e8e3f3;font:800 12px/1 Pretendard,sans-serif;color:#17606c}.tr-modal-bar button{display:flex;align-items:center;gap:9px;min-height:36px;padding:5px 10px;border:0;background:transparent;border-radius:9px;font:700 12px/1 Pretendard,sans-serif;color:#57516b;cursor:pointer}.tr-modal-bar button b{font-size:23px;font-weight:500}.tr-modal-bar button:focus-visible{outline:3px solid #2785c7}
+.tr-modal-content{height:382px;padding:20px 32px;box-sizing:border-box}.tr-modal .tr-console{min-height:90px}.tr-modal .tr-question{font-size:16px}.tr-modal .tr-letter{width:55px;height:66px}.tr-modal .tr-bottom small{font-size:10px}.tr-modal .tr-route button{height:36px;width:24px;padding:7px}
+@media(max-width:480px){.tr-modal-content{padding:16px;height:400px}.tr-modal .s6-t-radar{gap:12px}.tr-console{gap:12px}.tr-modal .tr-letter{width:40px;height:58px;font-size:33px}.tr-play{width:100px}.tr-choice{width:135px}.tr-bottom{flex-wrap:wrap;justify-content:center}.tr-modal .tr-route button{width:22px}.tr-modal .tr-bottom small{font-size:9px}.tr-message{max-width:175px}}

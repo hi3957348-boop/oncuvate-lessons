@@ -1,0 +1,47 @@
+/* Extend the established coach rail; do not override the shared title geometry. */
+.s6-path-workshop{width:100%;display:grid;justify-items:center;gap:9px;color:var(--oc-ink)}
+.s6-path-targets{height:55px;display:flex;align-items:center;justify-content:center;gap:7px}
+.s6-path-target{width:54px;height:52px;position:relative;display:grid;place-items:center;border-bottom:2px solid transparent}
+.s6-path-target img{width:43px;height:43px;object-fit:contain;padding:2px}
+.s6-path-target small{position:absolute;left:0;top:0;color:var(--oc-muted);font-size:10px}
+.s6-path-target b{position:absolute;bottom:-3px;right:0;background:var(--oc-paper);color:var(--oc-violet-800);font:800 18px/1 var(--oc-en);padding:2px 4px;border-radius:4px}
+.s6-path-target.active{border-color:var(--oc-cyan)}
+.s6-path-arrow{color:#97929f;font-size:16px}
+.s6-path-board-wrap{height:145px;display:grid;align-items:center}
+.s6-path-board{position:relative;display:grid;grid-template-columns:repeat(var(--path-cols),60px);grid-template-rows:repeat(var(--path-rows),44px);gap:6px}
+.s6-path-line{position:absolute;inset:0;width:100%;height:100%;overflow:visible;pointer-events:none}
+.s6-path-line polyline{fill:none;stroke:#89d9e2;stroke-width:7;stroke-linejoin:round;stroke-linecap:round}
+.s6-path-cell{position:relative;min-width:0;height:44px;padding:0;display:grid;place-items:center;border:1px solid var(--oc-line);border-radius:9px;background:#f7f7f3;color:#5b5567}
+.s6-path-cell.available{border:2px dashed #91ced8;background:#f1fbfc}
+.s6-path-cell.placed{border-color:#a6d7df;background:var(--oc-paper);box-shadow:0 2px 3px #29243a0d}
+.s6-path-cell b{font:800 23px/1 var(--oc-en)}
+.s6-path-cell small{position:absolute;left:5px;top:3px;font-size:8px;color:var(--oc-muted)}
+.s6-path-cell.start,.s6-path-cell.goal{border-color:#b9e7ee;background:#edfafb;color:#17606c;font-size:10px;font-weight:800}
+.s6-path-cell.blocked{border:0;background:repeating-linear-gradient(135deg,#eeede8 0 5px,#f6f5f0 5px 10px);color:#969187;font-size:20px}
+.s6-path-cell.highlight{outline:3px solid var(--oc-cyan);outline-offset:1px}
+.s6-path-cell:disabled{opacity:1;cursor:default}
+.s6-path-dot{width:4px;height:4px;border-radius:50%;background:#bfc0b9}
+.s6-path-traveler{position:absolute;right:3px;bottom:2px;display:flex;gap:2px;transform:rotate(-15deg)}
+.s6-path-traveler span{display:block;width:6px;height:10px;background:#2785c7;border-radius:60% 60% 35% 35%;box-shadow:0 0 0 2px #fff}
+.s6-path-traveler span:last-child{transform:translateY(-4px)}
+.s6-path-flag{width:14px;height:13px;border-left:2px solid #2785c7;position:absolute;left:6px;top:5px}
+.s6-path-flag:after{content:'';display:block;width:10px;height:7px;background:#4bc9dc;border-radius:0 3px 3px 0}
+.s6-path-bank{display:flex;gap:9px}
+.s6-path-bank button{width:58px;height:42px;border:1px solid #cfcad8;border-radius:10px;color:#615b6b;background:var(--oc-paper);font:800 24px/1 var(--oc-en)}
+.s6-path-bank button[aria-pressed=true]{color:var(--oc-violet-800);border:2px solid var(--oc-violet-700);background:var(--oc-violet-050)}
+.s6-path-actions{height:40px;display:flex;align-items:center;gap:10px}
+.s6-path-actions button{min-height:40px}
+.s6-path-actions button:disabled,.s6-path-bank button:disabled{opacity:.45;cursor:default;box-shadow:none}
+.s6-path-workshop button:focus-visible{outline:3px solid var(--oc-cyan);outline-offset:2px}
+.s6-path-workshop button:not(:disabled):hover{border-color:var(--oc-cyan)}
+.s6-memory-options{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+.s6-memory-options button{min-height:40px;padding:0 12px}
+.s6-memory-slots{max-width:100%;flex-wrap:wrap}
+.s6-memory-slots i.active{border-color:var(--oc-cyan);background:#edfafd}
+.s6-memory-slots i.mismatch{outline:2px solid #d3a271;outline-offset:2px}
+.s6-memory-game .s6-memory-hud{position:static;justify-self:end}
+.s6-memory-game{padding-top:0}
+.s6-memory-actions button{min-height:40px}
+/* All onset discrimination questions now compare the three lesson sounds. */
+#s6Stage .s6-letter-quiz .s6-answer-row button{width:88px}
+@media(prefers-reduced-motion:reduce){.s6-path-workshop *{transition:none;animation:none}}

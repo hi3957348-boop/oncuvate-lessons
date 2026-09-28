@@ -1,0 +1,156 @@
+<!doctype html><html lang="ko" data-lesson-id="ogkr-digraph" data-lesson-version="0.1.0" data-session="3"><head><script src="pilot-bootstrap.js"></script><meta charset="utf-8"><meta http-equiv="Cache-Control" content="no-cache"><meta name="viewport" content="width=device-width,initial-scale=1"><title>OGKR 이중자 3회차 · ck 소리 공방</title>
+<script src="oncuvate-role.js?v=role-2"></script>
+<link rel="stylesheet" href="shared.css"><link rel="stylesheet" href="session06.css?v=20260922-flow-32"><link rel="stylesheet" href="session06-coach-layout.css?v=20260922-flow-32"><link rel="stylesheet" href="session06-card-material.css?v=20260922-flow-32"><link rel="stylesheet" href="session06-restructure.css?v=20260922-flow-32">
+<style>
+/* ── 샘플 전용: 이미지 자리 표시 + 새 활동 배치. 원본 디자인 파일은 건드리지 않음 ── */
+.s6x-slot{box-sizing:border-box;width:100%;height:100%;min-height:40px;display:grid;place-content:center;gap:2px;padding:4px;border:2px dashed #b9a9e6;border-radius:12px;background:repeating-linear-gradient(135deg,#faf8ff 0 10px,#f3effd 10px 20px);color:#5932b6;text-align:center;font-size:11px;line-height:1.25}
+.s6x-slot em{font-style:normal;font-weight:900;font-size:10px;color:#17606c;background:#e8fbfd;border-radius:6px;padding:1px 6px;justify-self:center}
+.s6x-slot b{font-weight:800;font-size:11px}
+.s6x-slot.s6-intro-jelly{height:122px;width:70%;justify-self:center}
+.s6-mouth-zoom .s6x-slot{height:96px;width:110px}
+.s6x-v{color:#e0524d!important}
+.s6x-w{display:inline}
+.s6x-scene-img{place-content:start;justify-items:start;text-align:left}
+.s6-sound-tabs button.s6x-later{opacity:.42;cursor:default}
+.s6-phoneme-pair.inline{display:inline-flex;gap:2px;font-weight:900}
+/* OX */
+.s6x-ox button b{font:900 34px/1 var(--oc-en,sans-serif)}
+/* 선 잇기 */
+.s6x-match{position:relative;width:min(400px,100%);display:grid;grid-template-columns:120px 120px;justify-content:space-between;padding:4px 0}
+.s6x-match-col{display:grid;gap:10px}
+.s6x-match .s6-match-card{height:64px;overflow:visible;touch-action:none}
+.s6x-match .s6-match-card strong,.s6x-match .s6-phoneme-pair{font-size:34px!important}
+.s6x-match-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;z-index:2;overflow:visible}
+.s6x-match-lines line{stroke:#5932b6;stroke-width:4;stroke-linecap:round}
+.s6x-match-lines line.good{stroke:#2bb3c7}
+.s6x-match-lines line.live{stroke:#4bc9dc;stroke-dasharray:6 6}
+.s6x-dot{position:absolute;right:-7px;top:50%;width:12px;height:12px;margin-top:-6px;border-radius:50%;background:#fff;border:3px solid #b9a9e6}
+.s6x-dot.left{right:auto;left:-7px}
+.s6x-linked .s6x-dot{border-color:#5932b6;background:#5932b6}
+/* 숨은그림 */
+.s6x-hidden{width:100%;display:grid;justify-items:center;gap:8px}
+.s6x-scene{position:relative;width:100%;height:178px}
+.s6x-scene-img{position:absolute;inset:0}
+.s6x-hotspot{position:absolute;transform:translate(-50%,-50%);min-width:44px;height:30px;padding:0 6px;border:2px dashed #e0524d;border-radius:15px;background:rgba(255,255,255,.75);color:#b23a36;font-size:10px;font-weight:900}
+.s6x-hotspot.on{background:#4bc9dc;color:#fff;border-style:solid;border-color:#2bb3c7}
+.s6x-sort-row{display:flex;gap:10px;align-items:center}
+.s6x-picked{width:86px;height:56px;display:grid;place-items:center;border:1px solid #c9e4ed;border-radius:10px;background:#fff;font:900 20px/1 var(--oc-en,sans-serif);color:#35206f}
+.s6x-picked em{font:800 11px/1.2 var(--oc-font,sans-serif);font-style:normal;color:#9d93b8}
+.s6x-bin{position:relative;width:92px;height:56px;border:2px solid #d9cff5;border-radius:0 0 14px 14px;border-top:5px solid #8d70d7;background:#fff;color:#35206f;font-size:22px;font-weight:900}
+.s6x-bin small{position:absolute;right:-8px;top:-12px;min-width:22px;height:22px;border-radius:11px;background:#4bc9dc;color:#fff;font-size:11px;display:grid;place-items:center}
+.s6x-bin:disabled{opacity:.6}
+/* 모음 a */
+.s6x-vowel{width:100%;gap:13px;align-content:center}
+.s6x-vowel-row{display:flex;align-items:center;justify-content:center;gap:12px}
+.s6x-mouth{width:118px;height:110px}
+.s6x-vowel-target{cursor:default}
+.s6x-vowel-actions{display:flex;justify-content:center;gap:12px}
+.s6x-vowel-actions button{display:inline-flex;align-items:center;justify-content:center;gap:9px;min-width:148px;height:46px;border-radius:11px;font-size:14px;font-weight:900}
+.s6x-vowel-actions button:first-child{border:1px solid #8fd9e7;background:#effcff;color:#17606c}
+.s6x-vowel-actions button:last-child{border:1px solid #4b24a5;background:#4b24a5;color:#fff;box-shadow:0 5px 12px rgba(75,36,165,.18)}
+.s6x-vowel-actions button:focus-visible{outline:3px solid rgba(75,201,220,.48);outline-offset:3px}
+.s6x-vowel-actions i{display:block;position:relative;width:17px;height:17px}
+.s6x-vowel-actions i.listen:before{content:'';position:absolute;left:1px;top:4px;width:7px;height:9px;background:currentColor;clip-path:polygon(0 30%,40% 30%,100% 0,100% 100%,40% 70%,0 70%)}
+.s6x-vowel-actions i.listen:after{content:'))';position:absolute;left:7px;top:-1px;font:900 14px/1 sans-serif;letter-spacing:-5px}
+.s6x-vowel-actions i.check{box-sizing:border-box;border:2px solid currentColor;border-radius:4px}
+.s6x-vowel-actions i.check:after{content:'';position:absolute;left:3px;top:2px;width:7px;height:4px;border-left:2px solid currentColor;border-bottom:2px solid currentColor;transform:rotate(-45deg)}
+.s6x-vowel-check{width:min(430px,100%);min-height:84px;box-sizing:border-box;padding:9px 12px;border:1px solid #d9cff5;border-radius:13px;background:#faf8ff}
+.s6x-check-progress{display:flex;justify-content:center;gap:8px;margin-bottom:7px}.s6x-check-progress i{display:grid;place-items:center;width:20px;height:20px;border-radius:50%;background:#e8e4ef;color:#777187;font-style:normal;font-size:11px;font-weight:900}.s6x-check-progress i.now{background:#dff8fb;color:#17606c;box-shadow:0 0 0 2px #8fd9e7}.s6x-check-progress i.done{background:#35a978;color:#fff}
+.s6x-check-step{display:grid;grid-template-columns:30px minmax(0,1fr) auto;align-items:center;gap:9px}.s6x-check-step>span{display:grid;place-items:center;width:28px;height:28px;border-radius:9px;background:#eee9fb;color:#4b24a5;font-weight:900}.s6x-check-step p{margin:0;color:#29243a;font-size:13px;font-weight:800;text-align:left}.s6x-check-step label{display:flex;align-items:center;gap:6px;padding:7px 9px;border:1px solid #b9e7ee;border-radius:9px;background:#fff;color:#17606c;font-size:11px;font-weight:900;cursor:pointer}.s6x-check-step input{width:17px;height:17px;margin:0;accent-color:#4b24a5}
+.s6x-check-done{display:flex;align-items:center;justify-content:center;gap:8px;margin:10px 0 0;color:#247354;font-size:13px;font-weight:850}.s6x-check-done b{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;background:#35a978;color:#fff}
+#s6Stage .s6-vowel-mode .s6-coach-panel{padding:8px!important;gap:0!important}
+#s6Stage .s6-vowel-mode .s6-coach-panel>.s6-coach-image{width:184px!important;height:286px!important;flex:0 0 286px!important;object-fit:contain}
+.s6x-steps{display:flex;gap:6px;justify-content:center}
+.s6x-steps i{font-style:normal;font-size:12px;font-weight:800;color:#17606c;background:#effcff;border:1px solid #b9e7ee;border-radius:8px;padding:4px 9px}
+/* 다른 모음 */
+.s6x-odd-item{display:grid;justify-items:center;gap:6px}
+.s6x-odd-item .s6-picture{width:100%}
+.s6x-word{font:900 22px/1.1 var(--oc-en,sans-serif);color:#35206f}
+/* 엘코닌 */
+.s6x-found{display:flex;gap:6px;justify-content:center}
+.s6x-found i{font-style:normal;min-width:48px;padding:3px 8px;border:1px dashed #d9cff5;border-radius:8px;text-align:center;font:900 15px/1.3 var(--oc-en,sans-serif);color:#9d93b8}
+.s6x-found i.on{border-style:solid;border-color:#8fd9e7;background:#effcff;color:#35206f}
+.s6-elkonin-boxes .s6x-v{color:#e0524d}
+/* I have */
+.s6x-ihave{display:grid;grid-template-columns:180px 1fr;gap:16px;align-items:center;width:100%}
+.s6x-card-big{display:grid;grid-template-rows:112px 40px 1px 44px;row-gap:4px;justify-items:center;align-items:center;min-height:221px;box-sizing:border-box;overflow:hidden;padding:11px 12px;border:3px solid #8d70d7;border-radius:14px;background:#fff;box-shadow:0 4px 0 #d9cff5}
+.s6x-card-big p{margin:0;font:900 15px/1.2 var(--oc-en,sans-serif);color:#35206f}
+.s6x-card-big .s6x-card-word{font-size:22px}
+.s6x-card-art{width:100px;height:94px;display:grid;place-items:center;overflow:hidden}
+.s6x-card-art img{max-width:94px;max-height:88px;object-fit:contain}
+.s6x-card-big hr{width:100%;height:0;border:0;border-top:1px dashed #d9cff5;margin:0}
+.s6x-who{display:flex;align-items:center;justify-content:center;width:100%;min-height:44px;box-sizing:border-box;border:1px solid #8fd9e7;border-radius:10px;background:#effcff;padding:7px 8px;font:900 23px/1 var(--oc-en,sans-serif);color:#35206f;box-shadow:0 3px 8px rgba(39,133,199,.08)}
+.s6x-who:hover{border-color:#4bc9dc;background:#e8fbfd;transform:translateY(-1px)}
+.s6x-who:focus-visible{outline:3px solid rgba(75,201,220,.5);outline-offset:2px}
+.s6x-who-line{display:flex;align-items:center;justify-content:center;gap:5px;width:100%;white-space:nowrap;color:#35206f;font:800 14px/1.2 var(--oc-en,sans-serif)}
+.s6x-who-line .s6x-who{position:relative;isolation:isolate;flex:0 0 auto;width:auto;min-width:44px;min-height:40px;padding:4px 5px;border:0;border-radius:3px;background:transparent;box-shadow:none;font-size:22px}
+.s6x-who-line .s6x-who::before{content:'';position:absolute;z-index:-1;left:0;right:0;top:48%;height:36%;border-radius:2px 5px 3px 4px;background:#fff0a6;transform:rotate(-2deg)}
+.s6x-who-line .s6x-who:hover{background:transparent;box-shadow:none;transform:none}
+.s6x-who-line .s6x-who:hover::before{background:#ffe578}
+.s6x-who-line .s6x-who:focus-visible{outline:2px solid #4bc9dc;outline-offset:2px}
+.s6x-hand>span{display:block;margin-bottom:5px;font-size:12px;font-weight:900;color:#35206f}
+.s6x-hand .s6-match-card{height:96px;grid-template-rows:minmax(0,1fr) 20px;gap:2px;padding:5px 8px}
+.s6x-hand .s6-match-card .s6-vocab-art{width:62px;height:62px;transform:none}
+.s6x-hand .s6x-slot{height:62px;min-height:0}
+.s6x-hand-label{font:900 12px/1 var(--oc-en,sans-serif);font-style:normal;color:#35206f}
+.s6x-word-highlight{padding:0 2px;background:linear-gradient(transparent 48%,#fff0a6 48% 92%,transparent 92%);border-radius:2px}
+/* 문장 */
+.s6x-sentence{gap:8px!important}
+.s6x-sentence-pic{width:260px;height:100px}
+.s6x-sentence .s6-sentence-line{min-height:0;padding:10px 14px}
+.s6x-sentence .s6-sentence-slot{height:58px;grid-template-rows:1fr auto;gap:0;cursor:pointer}
+.s6x-toggle-dots{font-size:8px;letter-spacing:2px;color:#8d70d7}
+.s6x-transfer-label{margin:-5px 0 -3px;padding:4px 10px;border:1px solid #b9e7ee;border-radius:999px;background:#effcff;color:#17606c;font-size:10px;font-weight:900}
+#s6Stage .s6x-sentence .s6-sentence-line{min-height:80px;padding:8px 10px;gap:8px;font-size:22px}
+#s6Stage .s6x-sentence .s6-sentence-slot{width:90px}
+.s6x-sentence .s6x-sentence-pic{height:80px}
++/* a 소리 톡톡: 자음 소개 화면과 같은 도해 카드 패턴 */
+.s6x-vowel{position:relative}
+.s6x-vowel-row{gap:8px}
+.s6x-vowel-target{width:150px;height:110px;box-sizing:border-box;cursor:pointer;border:1px solid #d9cff5;background:#fff;font:inherit}
+.s6x-vowel-target:hover{border-color:#4bc9dc;box-shadow:0 0 0 4px rgba(75,201,220,.14)}
+.s6x-vowel-target:focus-visible{outline:3px solid rgba(75,201,220,.5);outline-offset:2px}
+.s6x-mouth-card{width:150px;height:110px;box-sizing:border-box;display:grid;grid-template-columns:84px minmax(0,1fr);align-items:center;gap:4px;padding:7px 6px;border:1px solid #e8e3f3;border-radius:13px;background:#f8f6fd}
+.s6x-mouth-card .s6x-mouth{width:84px;height:92px;max-width:84px;max-height:92px;object-fit:contain}
+.s6x-mouth-card>span{color:#29243a;font-size:10px;line-height:1.45;font-weight:800;text-align:left;word-break:keep-all}
+.s6x-vowel-actions button.s6x-action-check{border:1px solid #4b24a5;background:#4b24a5;color:#fff;box-shadow:0 5px 12px rgba(75,36,165,.18)}
+.s6x-vowel-actions button.s6x-action-odd{border:1px solid #8fd9e7;background:#effcff;color:#17606c;box-shadow:none}
+.s6x-vowel-actions i.search{box-sizing:border-box;border:2px solid currentColor;border-radius:50%}
+.s6x-vowel-actions i.search:after{content:'';position:absolute;right:-4px;bottom:-3px;width:7px;height:2px;border-radius:2px;background:currentColor;transform:rotate(45deg)}
+.s6x-odd-dialog{width:min(620px,calc(100vw - 28px));max-height:calc(100vh - 28px);box-sizing:border-box;margin:auto;padding:0;border:0;border-radius:20px;background:#fffefb;box-shadow:0 24px 70px rgba(36,20,79,.3);overflow:auto}
+.s6x-odd-dialog::backdrop{background:rgba(36,20,79,.48);backdrop-filter:blur(3px)}
+.s6x-odd-modal{padding:0}
+.s6x-odd-modal>header{display:flex;align-items:center;justify-content:space-between;gap:18px;padding:18px 20px;border-bottom:1px solid #e8e3f3;background:#f8f6fd}
+.s6x-odd-modal>header small{display:block;margin-bottom:3px;color:#2785c7;font-size:10px;font-weight:900;letter-spacing:.08em}
+.s6x-odd-modal>header h3{margin:0;color:#29243a;font-size:20px;line-height:1.25}
+.s6x-odd-modal>header>[data-odd-close]{flex:0 0 38px;width:38px;height:38px;border:1px solid #d9cff5;border-radius:12px;background:#fff;color:#4b24a5;font-size:24px;line-height:1}
+.s6x-odd-modal-body{padding:16px 20px 20px}
+.s6x-odd-popup-activity{display:grid;justify-items:center;gap:10px}
+.s6x-odd-guide{margin:0;color:#777187;font-size:12px;font-weight:750}
+.s6x-odd-popup-activity .s6-picture-grid{width:min(500px,100%);gap:12px}
+.s6x-odd-popup-activity .s6-picture{height:124px}
+.s6x-odd-controls{display:flex;justify-content:center;gap:10px;min-height:42px}
+.s6x-odd-controls .s6-primary,.s6x-odd-next{min-width:104px}
+.s6x-odd-hint{min-width:96px;height:40px;border:1px solid #8fd9e7;border-radius:11px;background:#effcff;color:#17606c;font-weight:900}
+.s6x-odd-popup-activity .s6-feedback{min-height:24px}
+@media(max-width:560px){
+  .s6x-odd-modal>header{padding:14px 15px}.s6x-odd-modal>header h3{font-size:17px}.s6x-odd-modal-body{padding:13px}
+  .s6x-odd-popup-activity .s6-picture{height:100px}
+}
+</style>
+<link rel="stylesheet" href="session06-sample-art.css?v=art-2">
+<link rel="stylesheet" href="session06-sample-match.css?v=steps-1">
+<link rel="stylesheet" href="session06-sample-hidden.css?v=hidden-3">
+<link rel="stylesheet" href="session06-sample-wordlab.css?v=wordlab-2">
+<link rel="stylesheet" href="session06-sample-wordlab-overrides.css?v=wordlab-3">
+<link rel="stylesheet" href="oncuvate-jelly-lab.css?v=jelly-shared-3">
+<link rel="stylesheet" href="oncuvate-help-engine.css?v=help-1">
+<link rel="stylesheet" href="oncuvate-runtime-v1.css?v=runtime-2">
+<link rel="stylesheet" href="session06-listen-icon.css?v=listen-2">
+<link rel="stylesheet" href="session06-sentence-maker.css?v=sentence-2">
+<link rel="stylesheet" href="session06-t-radar.css?v=tps-3">
+<link rel="stylesheet" href="session06-card-coop.css?v=board-game-1">
+<link rel="stylesheet" href="oncuvate-coach-console-v1.css?v=coach-dock-9">
+<script src="og-sound-radar.js?v=4"></script>
+<script src="oncuvate-help-engine.js?v=help-1-dg9"></script>
+<meta name="description" content="온큐베이트 이중자 3회차 ck 소리 공방 · 비공개 검토용 수업자료"><link rel="stylesheet" href="og-digraph.css?v=42"></head><body><script src="oncuvate-jelly-lab.js?v=jelly-shared-3"></script><script src="og-jump-game.js?v=8"></script><script src="og-drawboard.js?v=3"></script><script src="og-trials.js?v=2"></script><script src="og-audio-index.js?v=5"></script><script src="session03-data.js?v=1"></script><script src="og-digraph-engine.js?v=6"></script><script src="oncuvate-runtime-v1.js?v=runtime-4-dg1"></script><script src="oncuvate-coach-console-v1.js?v=coach-dock-9-dg1"></script><script src="pilot-config.js"></script><script src="pilot-log-relay.js"></script></body></html>
