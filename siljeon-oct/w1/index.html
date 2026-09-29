@@ -98,7 +98,6 @@
         <fieldset class="quiz"><legend><b>2</b> 훈맹정음은 누구를 위해, 어떻게 만들었나요?</legend><label><input type="radio" name="q2" data-save="q2" value="a" data-correct="true"> 눈이 보이지 않는 사람이 여섯 점을 손끝으로 읽도록</label><label><input type="radio" name="q2" data-save="q2" value="b"> 귀가 들리지 않는 사람이 손 모양으로 말하도록</label><label><input type="radio" name="q2" data-save="q2" value="c"> 어린이가 그림을 보고 글자를 외우도록</label></fieldset>
         <fieldset class="quiz wide-quiz"><legend><b>3</b> 2026년이 ‘한글의 해’가 된 까닭은?</legend><label><input type="radio" name="q3" data-save="q3" value="a" data-correct="true"> 훈민정음 580돌, 한글날 100돌, 훈맹정음 100돌이 겹쳐서</label><label><input type="radio" name="q3" data-save="q3" value="b"> 올해 처음 한글날이 생겨서</label><label><input type="radio" name="q3" data-save="q3" value="c"> 올해 자음과 모음이 새로 만들어져서</label></fieldset>
       </div>
-      <button class="check-btn compact" type="button" data-check-group="quiz-grid">확인하기</button>
 
       <div class="page-title mini"><span>활동 4</span><h2>맞으면 O, 다르면 X에 표시하세요.</h2></div>
       <div class="ox-grid">
@@ -132,9 +131,19 @@
         <div><span>2</span><label>훈민정음과 훈맹정음이 ‘모두를 위한 글자’인 까닭을 한 문장으로 써 보세요.<textarea data-save="finish-2" rows="3"></textarea></label></div>
       </section>
       <div class="reflection"><b>신문 읽기 마무리</b><label><input type="checkbox" data-save="reflect-1"> 제목과 소제목을 먼저 읽었어요.</label><label><input type="checkbox" data-save="reflect-2"> 날짜와 숫자를 정확히 확인했어요.</label><label><input type="checkbox" data-save="reflect-3"> 답의 근거를 기사에서 찾았어요.</label></div>
+      <section class="result-callout screen-only" aria-label="활동 결과표 만들기">
+        <div><b>활동을 마쳤나요?</b><span>빈 답이 있어도 결과표를 만들 수 있어요. 미응답 문항은 결과표에 따로 표시됩니다.</span></div>
+        <button type="button" id="makeResult">결과표 만들기</button>
+      </section>
       <footer><span>기사 한 편을 끝까지 꼼꼼하게 읽었습니다!</span><b>4 / 4</b></footer>
     </section>
   </main>
+  <dialog id="resultDialog" class="result-dialog" aria-labelledby="resultTitle">
+    <div class="result-dialog__head"><div><span>ONCUVATE · 실전! 문해력</span><h2 id="resultTitle">신문 읽기 활동 결과표</h2></div><button type="button" id="closeResult" aria-label="결과표 닫기">×</button></div>
+    <div id="resultSummary" class="result-summary" aria-live="polite"></div>
+    <div id="resultDetails" class="result-details"></div>
+    <div class="result-dialog__actions"><button type="button" id="downloadResult">이미지 저장</button><button type="button" id="shareResult" class="primary">공유하기</button></div>
+  </dialog>
   <script>window.LISTEN_MARKS=[[0.0, 2.7], [3.3, 5.65], [6.25, 11.3], [11.6, 17.9], [18.2, 24.35], [24.65, 31.1], [31.4, 39.15], [39.45, 46.0], [46.3, 52.95], [53.25, 60.5], [60.8, 70.5], [70.8, 76.6], [76.9, 80.9], [81.2, 87.6]];</script>
   <script src="worksheet.js"></script>
   <script src="listen.js"></script>
