@@ -1,0 +1,16 @@
+{
+  "id": "history-distortion-careful-reading",
+  "title": "같은 역사, 왜 다르게 말할까?",
+  "version": "1.0.0",
+  "entry": "session01.html",
+  "audience": "초등 3학년 이상",
+  "subject": "사회·역사 교과 연계 비문학 읽기",
+  "levels": [
+    {"key": "steady", "label": "차근차근 읽기", "difficulty": 75},
+    {"key": "deep", "label": "깊이 읽기", "difficulty": 100}
+  ],
+  "steps": ["예측하기", "꼼꼼하게 읽기", "단어 스파이", "설명 분류", "꼼꼼하게 풀기", "새롭게 만나보기", "확인 기록"],
+  "axes": ["metacognitivePreview", "basicComprehension", "detailComparison", "relationshipClassification", "conditionVerification", "strategyGeneralization", "metacognitiveReflection"],
+  "contentSpec": "v1.28",
+  "theme": "official-oncuvate-default"
+}

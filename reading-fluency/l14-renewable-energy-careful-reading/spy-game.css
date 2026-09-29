@@ -1,0 +1,157 @@
+/* 3 · 단어 스파이 — 3×3 숫자 타일 게임 */
+.spy-game{--tile-a:#7a4fe0;--tile-b:#4a26b0;--tile-edge:#2f1880;--gold:#ffc83d;--good:#16a37f;--bad:#e0544c;position:relative;max-width:1040px;margin:0 auto}
+.spy-arena{display:grid;grid-template-columns:auto minmax(260px,1fr);gap:clamp(16px,3vw,34px);align-items:center;padding:clamp(10px,2vh,22px) clamp(12px,2vw,26px);border-radius:28px;background:radial-gradient(circle at 18% 12%,rgba(122,79,224,.16),transparent 42%),radial-gradient(circle at 88% 90%,rgba(66,197,216,.2),transparent 45%),linear-gradient(160deg,#faf8ff,#eef9fa);border:1px solid #e3def3;box-shadow:inset 0 1px 0 #fff}
+
+/* 보드 */
+.spy-board-wrap{position:relative;width:clamp(230px,min(40vw,calc(100vh - 340px)),364px);aspect-ratio:1/1;perspective:1100px}
+.spy-board{display:grid;grid-template-columns:repeat(3,1fr);grid-template-rows:repeat(3,1fr);gap:clamp(8px,1.6vw,14px);width:100%;height:100%}
+.spy-lines{position:absolute;inset:0;width:100%;height:100%;pointer-events:none;overflow:visible;z-index:3}
+.spy-lines line{stroke:#ffc83d;stroke-width:6;stroke-linecap:round;opacity:.85;transition:opacity 1.2s ease;filter:drop-shadow(0 0 6px rgba(255,190,40,.85))}
+.spy-lines.all-done line{opacity:.22}
+.spy-lines line.draw{stroke-dasharray:1;stroke-dashoffset:1;animation:spyDraw .6s cubic-bezier(.6,0,.3,1) forwards}
+@keyframes spyDraw{to{stroke-dashoffset:0}}
+
+.spy-tile{position:relative;border:0;padding:0;background:transparent;border-radius:20px;cursor:pointer;perspective:700px;outline:none;-webkit-tap-highlight-color:transparent}
+.spy-tile-inner{position:absolute;inset:0;border-radius:inherit;transform-style:preserve-3d;transition:transform .55s cubic-bezier(.3,1.4,.5,1)}
+.spy-face{position:absolute;inset:0;border-radius:inherit;display:grid;place-items:center;backface-visibility:hidden;-webkit-backface-visibility:hidden;overflow:hidden}
+.spy-face.front{background:linear-gradient(150deg,var(--tile-a),var(--tile-b));box-shadow:0 7px 0 var(--tile-edge),0 14px 22px rgba(47,24,128,.32),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -6px 12px rgba(20,8,70,.25);transform:translateZ(1px)}
+.spy-face.front i{font-style:normal;font-weight:900;font-size:clamp(30px,4.4vw,50px);color:#fff;text-shadow:0 3px 0 rgba(30,10,90,.45),0 0 18px rgba(255,255,255,.35);font-family:"Pretendard",system-ui,sans-serif;letter-spacing:-.02em}
+.spy-face.front::before{content:"";position:absolute;left:10%;right:10%;top:7%;height:26%;border-radius:40px;background:linear-gradient(rgba(255,255,255,.34),rgba(255,255,255,0))}
+.spy-tile:nth-child(3n+2) .spy-face.front{background:linear-gradient(150deg,#5a6ef0,#3446c4);box-shadow:0 7px 0 #22318f,0 14px 22px rgba(34,49,143,.3),inset 0 2px 0 rgba(255,255,255,.35),inset 0 -6px 12px rgba(10,20,80,.25)}
+.spy-tile:nth-child(3n) .spy-face.front{background:linear-gradient(150deg,#2eb8cc,#1b8ea8);box-shadow:0 7px 0 #136a7e,0 14px 22px rgba(19,106,126,.3),inset 0 2px 0 rgba(255,255,255,.4),inset 0 -6px 12px rgba(5,60,75,.25)}
+.spy-shine{position:absolute;inset:-40%;background:linear-gradient(115deg,transparent 42%,rgba(255,255,255,.45) 50%,transparent 58%);transform:translateX(-70%);animation:spyShine 5.5s ease-in-out infinite;animation-delay:calc(var(--i) * .35s)}
+@keyframes spyShine{0%,70%{transform:translateX(-70%)}85%,100%{transform:translateX(70%)}}
+.spy-face.back{transform:rotateY(180deg) translateZ(1px);background:linear-gradient(160deg,#ffffff,#eefaf6);border:2px solid #bfe9dc;box-shadow:0 5px 0 #a7d9c8,0 10px 18px rgba(22,131,108,.18);grid-template-rows:auto auto;align-content:center;gap:4px;padding:8px}
+.spy-face.back em{font-style:normal;font-weight:900;font-size:clamp(26px,3.6vw,40px);line-height:1}
+.spy-face.back em.ok{color:var(--good)}
+.spy-face.back em.fix{color:#7a4fe0}
+.spy-face.back small{font-size:clamp(11px,1.25vw,14px);font-weight:800;color:#35504a;text-align:center;line-height:1.25;word-break:keep-all}
+.spy-tile.perfect .spy-face.back{background:linear-gradient(160deg,#fffdf1,#fff3c4);border-color:#ffd978;box-shadow:0 5px 0 #f1c24a,0 10px 18px rgba(214,160,20,.25)}
+.spy-star{position:absolute;right:8px;top:6px;color:#f2a900;font-size:clamp(14px,1.8vw,20px);text-shadow:0 1px 0 #fff;animation:spyTwinkle 2.4s ease-in-out infinite}
+@keyframes spyTwinkle{50%{transform:scale(1.25) rotate(15deg)}}
+
+.spy-tile:not(.solved){animation:spyFloat 3.6s ease-in-out infinite;animation-delay:calc(var(--i) * -.4s)}
+@keyframes spyFloat{50%{transform:translateY(-4px)}}
+.spy-tile:not(.solved):hover .spy-tile-inner,.spy-tile:not(.solved):focus-visible .spy-tile-inner{transform:translateY(-5px) rotateX(8deg) scale(1.04)}
+.spy-tile:not(.solved):active .spy-tile-inner{transform:translateY(5px) scale(.97);transition-duration:.08s}
+.spy-tile:not(.solved):active .spy-face.front{box-shadow:0 2px 0 var(--tile-edge),0 5px 10px rgba(47,24,128,.3),inset 0 2px 0 rgba(255,255,255,.35)}
+.spy-tile:focus-visible{box-shadow:0 0 0 4px rgba(66,197,216,.55)}
+.spy-tile.solved .spy-tile-inner{transform:rotateY(180deg)}
+.spy-tile.solved:hover .spy-tile-inner{transform:rotateY(180deg) translateY(-3px)}
+.spy-tile.just-solved .spy-tile-inner{animation:spyFlip .75s cubic-bezier(.3,1.35,.5,1) both}
+@keyframes spyFlip{0%{transform:rotateY(0) scale(1)}45%{transform:rotateY(100deg) scale(1.12)}100%{transform:rotateY(180deg) scale(1)}}
+.spy-tile.opening .spy-tile-inner{animation:spyPress .5s ease both}
+@keyframes spyPress{0%{transform:scale(1)}30%{transform:scale(.9) translateY(4px)}100%{transform:scale(1)}}
+.spy-tile.line-glow .spy-face.back{animation:spyGlow .9s ease both}
+@keyframes spyGlow{0%{filter:brightness(1)}35%{filter:brightness(1.18) drop-shadow(0 0 14px rgba(255,200,61,.95));transform:rotateY(180deg) translateZ(1px) scale(1.07)}100%{filter:brightness(1)}}
+
+.spy-board.intro .spy-tile{animation:spyDrop .6s cubic-bezier(.3,1.5,.55,1) both;animation-delay:calc(var(--i) * 55ms)}
+.spy-board.intro .spy-tile:not(.solved){animation:spyDrop .6s cubic-bezier(.3,1.5,.55,1) both calc(var(--i) * 55ms),spyFloat 3.6s ease-in-out calc(.7s + var(--i) * -.4s) infinite}
+@keyframes spyDrop{0%{opacity:0;transform:translateY(-38px) scale(.6) rotate(-6deg)}100%{opacity:1;transform:none}}
+
+.spy-banner{position:absolute;left:50%;top:50%;z-index:5;transform:translate(-50%,-50%);pointer-events:none;font-weight:900;font-size:clamp(34px,6vw,64px);color:#fff;letter-spacing:.04em;-webkit-text-stroke:2px #5526b8;text-shadow:0 5px 0 #5526b8,0 10px 24px rgba(85,38,184,.45);animation:spyBanner 1.3s cubic-bezier(.2,1.4,.4,1) forwards}
+@keyframes spyBanner{0%{opacity:0;transform:translate(-50%,-50%) scale(.3) rotate(-12deg)}25%{opacity:1;transform:translate(-50%,-50%) scale(1.15) rotate(3deg)}40%{transform:translate(-50%,-50%) scale(1) rotate(0)}80%{opacity:1}100%{opacity:0;transform:translate(-50%,-80%) scale(1)}}
+
+/* 오른쪽 기록판 */
+.spy-hud{display:grid;gap:12px;align-content:center}
+.spy-hud-title{display:flex;align-items:center;gap:10px}
+.spy-hud-title small{display:block;font-size:11px;font-weight:900;letter-spacing:.14em;color:#8a7bb8}
+.spy-hud-title b{font-size:19px;color:#221450}
+.spy-badge{display:grid;place-items:center;width:42px;height:42px;border-radius:14px;background:linear-gradient(150deg,#7a4fe0,#42c5d8);box-shadow:0 4px 0 #3b1f99}
+.spy-badge svg{width:22px;height:22px;fill:none;stroke:#fff;stroke-width:2.6;stroke-linecap:round}
+.spy-sound{margin-left:auto;width:38px;height:38px;border-radius:12px;border:1px solid #ddd6f0;background:#fff;font-size:17px}
+.spy-howto{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.spy-howto li{display:flex;align-items:center;gap:9px;padding:8px 11px;border-radius:12px;background:rgba(255,255,255,.75);border:1px solid #e6e1f3;font-weight:750;font-size:14.5px;color:#34385a}
+.spy-howto li>b{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;background:#efe9fd;color:#5526b8;font-size:12px;flex:none}
+.spy-howto i{font-style:normal;font-weight:900;display:inline-grid;place-items:center;width:22px;height:22px;border-radius:50%;margin:0 2px;font-size:13px;color:#fff}
+.spy-howto i.o{background:var(--good)}.spy-howto i.x{background:var(--bad)}
+.spy-stats{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.spy-stats>div{padding:10px 12px;border-radius:15px;background:#fff;border:1px solid #e3def3;box-shadow:0 4px 0 #ebe6f7}
+.spy-stats small{display:block;font-size:12px;font-weight:800;color:#7b7f96}
+.spy-stats strong{display:inline-block;font-size:30px;font-weight:900;color:#5526b8;line-height:1.1}
+.spy-stats>div:last-child strong{color:#d99a00}
+.spy-stats span{font-weight:800;color:#9a9db0;margin-left:3px}
+.bump{animation:spyBump .5s cubic-bezier(.3,1.8,.5,1)}
+@keyframes spyBump{40%{transform:scale(1.5) translateY(-3px)}}
+.spy-meter{height:10px;border-radius:10px;background:#e7e4f0;overflow:hidden}
+.spy-meter span{display:block;height:100%;width:0;border-radius:inherit;background:linear-gradient(90deg,#7a4fe0,#42c5d8,#16a37f);background-size:200% 100%;transition:width .7s cubic-bezier(.3,1.3,.5,1);animation:spyFlow 3s linear infinite}
+@keyframes spyFlow{to{background-position:-200% 0}}
+.spy-hud-msg{margin:0;padding:11px 13px;border-radius:13px;background:#fff;border:1px dashed #cfc5ee;color:#4d5270;font-weight:750;line-height:1.45}
+.spy-hud-msg.ok{border-style:solid;border-color:#9fdcc9;background:#ebf9f4;color:#136e58}
+
+/* 수사 문장 카드 (보드 위로 열림) */
+.spy-modal{position:fixed;inset:0;z-index:100000;display:grid;place-items:center;padding:14px;background:rgba(28,20,60,.42);-webkit-backdrop-filter:blur(5px);backdrop-filter:blur(5px);animation:spyFade .3s ease both}
+.spy-modal.closing{animation:spyFadeOut .38s ease forwards}
+@keyframes spyFade{from{opacity:0}}
+@keyframes spyFadeOut{to{opacity:0}}
+.spy-case{position:relative;width:min(760px,100%);max-height:calc(100vh - 28px);overflow:auto;padding:clamp(16px,2.6vh,26px) clamp(18px,3vw,30px);border-radius:26px;background:#fffdf8;border:1px solid #e6e0f4;box-shadow:0 30px 80px rgba(20,10,60,.35),0 0 0 6px rgba(255,255,255,.35);font-family:"Pretendard","Noto Sans KR",system-ui,sans-serif;color:#17243b;transform-origin:center}
+.spy-case.shake{animation:spyShake .45s cubic-bezier(.36,.07,.19,.97)}
+@keyframes spyShake{15%,85%{transform:translateX(-3px)}30%,70%{transform:translateX(6px)}45%,55%{transform:translateX(-8px)}}
+.spy-case header{display:flex;align-items:center;gap:12px}
+.spy-case-no{display:grid;place-items:center;width:46px;height:46px;border-radius:14px;flex:none;background:linear-gradient(150deg,#7a4fe0,#4a26b0);box-shadow:0 4px 0 #2f1880;color:#fff;font-size:24px;font-weight:900}
+.spy-case header small{display:block;font-size:12px;font-weight:900;color:#8a7bb8;letter-spacing:.06em}
+.spy-case header b{font-size:clamp(18px,2.2vw,22px)}
+.spy-close{margin-left:auto;width:38px;height:38px;border-radius:12px;border:1px solid #e1dcef;background:#fff;font-size:22px;color:#6b6883}
+.spy-sentence{position:relative;margin:clamp(12px,2vh,20px) 0 12px;padding:clamp(16px,3vh,28px) clamp(14px,2.4vw,26px);border-radius:18px;background:#f7f3ea;border:1px solid #ece4d3;font-family:"Noto Serif KR","Batang",serif;font-size:clamp(20px,2.5vw,27px);line-height:1.75;word-break:keep-all;overflow:hidden}
+.spy-word{position:relative;display:inline-block;font:inherit;color:inherit;border:0;background:transparent;padding:0 3px;margin:0 -1px;border-radius:8px;cursor:default;transition:background .2s,color .2s,opacity .3s,transform .2s}
+.spy-word:disabled{color:inherit;opacity:1}
+.spy-word.enter{animation:spyWordIn .45s cubic-bezier(.2,1.2,.4,1) both;animation-delay:calc(.2s + var(--k) * 45ms)}
+@keyframes spyWordIn{from{opacity:0;transform:translateY(10px)}}
+.spy-sentence.scan::after{content:"";position:absolute;top:0;bottom:0;width:90px;left:-100px;background:linear-gradient(90deg,transparent,rgba(66,197,216,.35),transparent);animation:spyScan 1.6s ease-in-out 2;pointer-events:none}
+@keyframes spyScan{to{left:calc(100% + 10px)}}
+.spy-sentence.scan .spy-word{cursor:pointer;box-shadow:inset 0 -3px 0 rgba(122,79,224,.18)}
+.spy-sentence.scan .spy-word:hover,.spy-sentence.scan .spy-word:focus-visible{background:#ece4ff;box-shadow:inset 0 -3px 0 #7a4fe0;transform:translateY(-2px);outline:none}
+.spy-word.miss{animation:spyMiss .5s ease;background:#ffe3e0}
+@keyframes spyMiss{20%,60%{transform:translateX(-4px) rotate(-2deg)}40%,80%{transform:translateX(4px) rotate(2deg)}}
+.spy-word.hint{animation:spyHint 1.2s ease-in-out infinite}
+@keyframes spyHint{50%{background:#fff0a8;box-shadow:0 0 0 4px rgba(255,200,61,.45)}}
+.spy-word.dim{opacity:.35}
+.spy-word.caught{background:#ffe0dc;color:#b3261e;transform:scale(1.12);box-shadow:0 0 0 3px rgba(224,84,76,.35)}
+.spy-word.caught::after{content:"";position:absolute;left:2px;right:2px;top:52%;height:3px;border-radius:3px;background:#e0544c;transform:scaleX(0);transform-origin:left;animation:spyStrike .35s .1s ease-out forwards}
+@keyframes spyStrike{to{transform:scaleX(1)}}
+.spy-word.fixing{background:transparent;box-shadow:none;transform:none;color:inherit}
+.spy-word.fixing::after{display:none}
+.spy-old{position:absolute;left:3px;top:0;white-space:nowrap;color:#b3261e;text-decoration:line-through 3px #e0544c;animation:spyOldOut .6s cubic-bezier(.5,0,.8,.4) forwards}
+@keyframes spyOldOut{to{opacity:0;transform:translateY(-38px) rotate(-14deg) scale(.8)}}
+.spy-new,.spy-word.fixed-static{display:inline-block;color:#0f7a5f;font-weight:800;background:linear-gradient(transparent 58%,#bff0df 58%);border-radius:4px}
+.spy-new{animation:spyNewIn .6s .2s cubic-bezier(.2,1.6,.4,1) both}
+@keyframes spyNewIn{0%{opacity:0;transform:translateY(22px) scale(.6)}100%{opacity:1;transform:none}}
+
+.spy-stamp{position:absolute;right:clamp(64px,8vw,84px);top:clamp(10px,2vh,18px);z-index:2;padding:6px 16px;border:4px solid currentColor;border-radius:14px;font-weight:900;font-size:clamp(20px,2.6vw,28px);letter-spacing:.04em;opacity:0;pointer-events:none;transform:rotate(-12deg);background:rgba(255,255,255,.85)}
+.spy-stamp.ok{color:#16a37f}.spy-stamp.bad{color:#e0544c}.spy-stamp.fix{color:#7a4fe0}
+.spy-stamp.show{animation:spyStamp .5s cubic-bezier(.2,1.5,.4,1) forwards}
+@keyframes spyStamp{0%{opacity:0;transform:rotate(-24deg) scale(2.4)}60%{opacity:1;transform:rotate(-10deg) scale(.92)}100%{opacity:1;transform:rotate(-12deg) scale(1)}}
+
+.spy-judge{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.spy-judge button{display:flex;align-items:center;justify-content:center;gap:12px;min-height:clamp(62px,10vh,82px);border-radius:20px;border:0;font-weight:850;font-size:clamp(16px,1.8vw,19px);color:#fff;transition:transform .12s,box-shadow .12s,filter .2s}
+.spy-judge button span{display:grid;place-items:center;width:clamp(40px,6vh,52px);height:clamp(40px,6vh,52px);border-radius:50%;background:rgba(255,255,255,.22);border:3px solid rgba(255,255,255,.9);font-size:clamp(22px,3.4vh,30px);font-weight:900}
+.spy-o{background:linear-gradient(150deg,#22bf93,#139273);box-shadow:0 6px 0 #0c6e56,0 12px 20px rgba(19,146,115,.28)}
+.spy-x{background:linear-gradient(150deg,#f07065,#d0463e);box-shadow:0 6px 0 #9c2f29,0 12px 20px rgba(208,70,62,.28)}
+.spy-judge button:hover:not(:disabled){transform:translateY(-2px);filter:brightness(1.06)}
+.spy-judge button:active:not(:disabled){transform:translateY(5px);box-shadow:0 1px 0 rgba(0,0,0,.25)}
+.spy-judge button:disabled{filter:grayscale(.55) opacity(.5)}
+.spy-judge button.right:disabled{filter:none;animation:spyRight .5s cubic-bezier(.2,1.6,.4,1)}
+@keyframes spyRight{40%{transform:scale(1.08)}}
+.spy-judge button.wrong{animation:spyMiss .45s ease}
+.spy-case-msg{margin:12px 0 0;padding:11px 14px;border-radius:13px;background:#f3f4f8;color:#4d5270;font-weight:750;line-height:1.5}
+.spy-case-msg.ok{background:#e8f8f2;color:#126b56;animation:spyPop .35s ease}
+.spy-case-msg.bad{background:#fff0ee;color:#9a3a33;animation:spyPop .35s ease}
+@keyframes spyPop{from{transform:scale(.97);opacity:.4}}
+.spy-case-foot{display:flex;justify-content:space-between;align-items:center;gap:10px;margin-top:12px}
+.spy-peek{border:1px solid #d8d0ee;background:#fff;color:#5526b8;border-radius:12px;padding:10px 14px;font-weight:800}
+.spy-case-foot .primary{padding:12px 22px;animation:spyPop .35s ease}
+.spy-peek-panel{margin-top:12px;max-height:190px;overflow:auto;padding:4px 16px;border-radius:14px;background:#faf6ec;border:1px solid #ece2cc;font-family:"Noto Serif KR","Batang",serif;font-size:15px;line-height:1.85;animation:spyFade .3s ease}
+.spy-peek-panel p{margin:10px 0;text-indent:1em}
+
+/* 임무 완료 */
+.spy-finale{position:fixed;inset:0;z-index:100001;display:grid;place-items:center;padding:16px;background:rgba(28,20,60,.35);animation:spyFade .3s ease;cursor:pointer}
+.spy-finale>div{text-align:center;padding:30px 40px;border-radius:28px;background:linear-gradient(160deg,#fffdf4,#f3eeff);border:2px solid #ffe08a;box-shadow:0 30px 80px rgba(20,10,60,.35);animation:spyFinale .7s cubic-bezier(.2,1.5,.4,1) both;font-family:"Pretendard","Noto Sans KR",system-ui,sans-serif}
+@keyframes spyFinale{from{opacity:0;transform:scale(.4) rotate(-6deg)}}
+.spy-finale span{display:block;font-size:64px;line-height:1;color:#ffb800;text-shadow:0 4px 0 #e08f00;animation:spyTwinkle 1.6s ease-in-out infinite}
+.spy-finale strong{display:block;margin-top:10px;font-size:28px;color:#3b1f99}
+.spy-finale p{margin:10px 0 0;font-weight:750;color:#4d5270}
+.spy-fx{position:fixed;inset:0;width:100vw;height:100vh;z-index:100002;pointer-events:none}
+
+@media(max-width:760px){.spy-arena{grid-template-columns:1fr;justify-items:center}.spy-board-wrap{width:min(88vw,380px)}.spy-hud{width:100%}.spy-judge{grid-template-columns:1fr 1fr}}
+@media(max-height:600px){.spy-howto{display:none}.spy-hud{gap:9px}}
+@media(prefers-reduced-motion:reduce){.spy-game *,.spy-modal *,.spy-modal,.spy-finale *{animation:none!important;transition:none!important}.spy-lines line.draw{stroke-dashoffset:0}}
