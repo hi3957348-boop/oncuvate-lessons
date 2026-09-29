@@ -169,6 +169,7 @@
   function missingNeeds(){const needs=new Set(C.game.modules.filter(m=>S.selectedModules.includes(m.id)).map(m=>m.need));return C.game.required.filter(n=>!needs.has(n))}
   function renderBaseGame(){
     if(C.mission&&S.mission.phase!=='build'&&!S.gameComplete){renderMissionBrief();return}
+    if(C.mission){renderMissionBuild();return}
     const total=moduleTotal(),missing=missingNeeds();
     $('gameCounter').textContent=total+' / '+C.game.budget+' credits';
     const modules=C.game.modules.map(m=>'<button class="module '+(S.selectedModules.includes(m.id)?'selected':'')+'" type="button" data-module="'+m.id+'"><b>'+m.cost+'</b><strong>'+m.name+'</strong><span>'+esc(m.detail)+'</span></button>').join('');
@@ -338,6 +339,42 @@
     const anchor=$('coachParticipants')?.closest('section');if(!anchor)return;
     anchor.insertAdjacentHTML('afterend','<section class="crew-board"><small>크루 보드 · 기억 금고 작전 (화면 공유용)</small><div id="crewTeam" class="crew-team"><p>수업방이 열리면 학생별 보석이 여기 모여요.</p></div><ul id="crewRows" class="crew-rows"></ul></section><section class="group-tips"><small>그룹 진행 (4명 안팎)</small><ol>'+(C.mission.groupTips||[]).map(t=>'<li>'+t+'</li>').join('')+'</ol></section>');
   }
+
+  /* 설계 화면(미션 모드): 장비 카드는 한 장씩 슬라이드로 넘겨 보고, 화물칸 동전·실은 장비 아이콘·필요 다섯 칸 불빛만 곁에 둔다. */
+  function renderMissionBuild(){
+    const mods=C.game.modules,total=moduleTotal(),missing=missingNeeds(),m=S.mission;
+    const idx=Math.max(0,Math.min(mods.length-1,m.card||0)),mod=mods[idx],loaded=S.selectedModules.includes(mod.id);
+    const coins=n=>'<span class="mb-coins" aria-label="'+n+' 크레딧">'+'<i></i>'.repeat(n)+'</span>';
+    const slots=[];let used=0;
+    mods.filter(x=>S.selectedModules.includes(x.id)).forEach(x=>{for(let i=0;i<x.cost;i++)slots.push('<i class="on" title="'+esc(x.name)+'"></i>');used+=x.cost});
+    for(let i=used;i<C.game.budget;i++)slots.push('<i></i>');
+    const loadedIcons=mods.map((x,i)=>S.selectedModules.includes(x.id)?'<button type="button" data-mb-jump="'+i+'" aria-label="'+esc(x.name)+' 카드 보기">'+x.icon+'</button>':'').join('');
+    const lights=S.testsRun?'<ul class="mb-lights" aria-label="시험 결과">'+C.mission.needs.map(n=>'<li class="'+(missing.includes(n[0])?'fail':'pass')+'"><span aria-hidden="true">'+n[1]+'</span><b>'+(missing.includes(n[0])?'✗':'✓')+'</b></li>').join('')+'</ul>':'';
+    $('gameArea').innerHTML='<div class="mb-layout">'
+      +'<section class="mb-stage" id="mbStage"><button class="mb-arrow" type="button" data-mb-nav="-1" aria-label="이전 장비 카드"'+(idx===0?' disabled':'')+'>◀</button>'
+      +'<article class="mb-card'+(loaded?' loaded':'')+'" id="mbCard"><small>MODULE '+(idx+1)+' / '+mods.length+'</small><span class="mb-icon" aria-hidden="true">'+mod.icon+'</span><strong>'+esc(mod.name)+'</strong>'+coins(mod.cost)+'<p>'+esc(mod.detail)+'</p>'
+      +'<button class="mb-load" type="button" data-module="'+mod.id+'">'+(loaded?'✓ 실음 · 빼기':'🚀 싣기')+'</button></article>'
+      +'<button class="mb-arrow" type="button" data-mb-nav="1" aria-label="다음 장비 카드"'+(idx===mods.length-1?' disabled':'')+'>▶</button>'
+      +'<div class="mb-dots" aria-hidden="true">'+mods.map((x,i)=>'<i class="'+(i===idx?'now ':'')+(S.selectedModules.includes(x.id)?'on':'')+'"></i>').join('')+'</div></section>'
+      +'<aside class="side-panel mb-side"><div class="mb-cargo" id="mbCargo" aria-label="화물칸 '+total+' / '+C.game.budget+'">'+slots.join('')+'</div>'
+      +'<div class="mb-loaded">'+(loadedIcons||'<span class="mb-empty" aria-hidden="true"></span>')+'</div>'
+      +'<button class="primary" id="runTests" type="button" data-track="answer" data-item-id="base-design" data-correct="'+(missing.length===0&&S.selectedModules.length>0)+'" '+(!S.selectedModules.length?'disabled':'')+'>🚀 시험 발사</button>'+lights+'</aside></div>';
+    $('gameCounter').textContent=total+' / '+C.game.budget+' credits';
+    if(!S.gameComplete){signals.decorate([$('runTests')],'game','base-design',()=>missingNeeds().length===0&&S.selectedModules.length>0);signals.ready('game','base-design',{textNode:$('gameArea'),attempts:S.testsRun,measureId:'case.game'})}
+    $('gameArea').querySelector('[data-module]').addEventListener('click',()=>{const selected=S.selectedModules.includes(mod.id);signals.log('base-module',{activityId:'game',itemId:'base-design',module:mod.id,selected:!selected,overBudget:!selected&&total+mod.cost>C.game.budget});if(!selected&&total+mod.cost>C.game.budget){$('gameFeedback').textContent='화물칸이 모자라요. 다른 장비 하나를 빼 봐요.';$('gameFeedback').className='feedback attention';const cg=$('mbCargo');cg.classList.remove('full');void cg.offsetWidth;cg.classList.add('full');return}S.selectedModules=selected?S.selectedModules.filter(id=>id!==mod.id):[...S.selectedModules,mod.id];S.gameComplete=false;save();renderGame()});
+    $('runTests').addEventListener('click',()=>{S.testsRun++;const pass=missingNeeds().length===0;signals.respond('game','base-design',{correct:pass,value:S.selectedModules.join('+'),expected:C.game.required.join('+'),missing:missingNeeds().join(','),credits:moduleTotal(),measureId:'case.game'});S.gameComplete=pass;mgAfterTest(pass);save();renderGame();updateChrome();updateCoach()});
+    $('gameFeedback').textContent=S.gameComplete?'모든 불이 초록! 크레딧 안에서 통과했어요.':S.testsRun?'빨간 칸을 채울 장비로 하나만 바꿔 봐요.':'카드를 넘겨 보며 실을 장비를 골라요.';
+    $('gameFeedback').className=S.gameComplete?'feedback success':S.testsRun?'feedback attention':'feedback';
+    mgDecorateBuild();
+  }
+  function mbGo(delta){const n=C.game.modules.length;S.mission.card=Math.max(0,Math.min(n-1,(S.mission.card||0)+delta));save();renderGame();const c=$('mbCard');if(c){c.classList.add(delta<0?'from-left':'from-right')}}
+  function mbJump(i){S.mission.card=i;save();renderGame()}
+  function mbKeys(e){
+    if(!C.mission||S.screen!=='game'||S.mission.phase!=='build'||document.querySelector('dialog[open]'))return;
+    if(e.target.closest&&e.target.closest('input, textarea, select'))return;
+    if(e.key==='ArrowLeft'){mbGo(-1);e.preventDefault()}else if(e.key==='ArrowRight'){mbGo(1);e.preventDefault()}
+  }
+  let mbSwipeX=null;
 
   function renderCheck(){
     if(C.check.judge){renderJudge();return}
@@ -531,6 +568,11 @@
   $('gameContinue').addEventListener('click',()=>{signals.activityComplete('game',{gameType:C.game.type,testsRun:S.testsRun});show('check')});
   $('checkChoices').addEventListener('click',e=>{if(C.check.judge)mgJudgeClick(e);else chooseCheck(e)});
   document.addEventListener('keydown',mgKeys);
+  document.addEventListener('keydown',mbKeys);
+  if(C.mission)$('gameScreen').classList.add('mg-mode');
+  $('gameArea').addEventListener('click',e=>{const nav=e.target.closest('[data-mb-nav]');if(nav&&!nav.disabled){mbGo(Number(nav.dataset.mbNav));return}const j=e.target.closest('[data-mb-jump]');if(j)mbJump(Number(j.dataset.mbJump))});
+  $('gameArea').addEventListener('pointerdown',e=>{if(e.target.closest('#mbStage')&&!e.target.closest('button'))mbSwipeX=e.clientX});
+  $('gameArea').addEventListener('pointerup',e=>{if(mbSwipeX===null)return;const dx=e.clientX-mbSwipeX;mbSwipeX=null;if(Math.abs(dx)>40)mbGo(dx<0?1:-1)});
   $('gameArea').addEventListener('click',e=>{const b=e.target.closest('[data-bubble]');if(b){b.classList.remove('popped');void b.offsetWidth;b.classList.add('popped')}});
   $('checkContinue').addEventListener('click',()=>{signals.activityComplete('check');show('reading')});
   $('sentenceNext').addEventListener('click',nextSentence);

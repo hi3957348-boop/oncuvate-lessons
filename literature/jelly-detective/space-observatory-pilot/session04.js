@@ -15,7 +15,7 @@ window.SPACE_SESSION={
   strategy:{labels:['필요 확인','설계 시험','한 가지 수정'],game:'필요와 크레딧을 보며 기지를 설계해요',check:'실패한 시험 하나를 보고 설계를 바꿔요'},
   guide:{game:[
     {en:'Lock the five crew needs in your memory.',ko:'크루에게 필요한 다섯 가지를 기억에 잠가요.'},
-    {en:'Choose modules within 11 cargo credits.',ko:'11 화물 크레딧 안에서 장비를 골라요.'},
+    {en:'Swipe through the module cards. Load what the crew needs.',ko:'장비 카드를 넘겨 보며 크루에게 필요한 것을 실어요.'},
     {en:'Run the survival tests.',ko:'생존 시험을 실행해요.'},
     {en:'If a test fails, change only one module.',ko:'시험이 실패하면 장비 하나만 바꿔요.'}
   ],check:[
@@ -32,12 +32,12 @@ window.SPACE_SESSION={
     '<b>팀 보물</b> 순위 없이 합계만 봐요. 🔎 탐정 보석도 똑같이 한 칸이에요.'
   ]},
   game:{type:'base',title:'Build and test a Moon habitat.',eyebrow:'LUNAR BASE BUILDER',intro:'Choose modules up to 11 credits. Run the tests, then change only what is needed.',budget:11,modules:[
-    {id:'solar',name:'SOLAR ARRAY',cost:2,need:'power',detail:'makes electrical power in sunlight'},
-    {id:'oxygen',name:'OXYGEN RECYCLER',cost:2,need:'air',detail:'reuses air inside the habitat'},
-    {id:'water',name:'WATER RECYCLER',cost:2,need:'water',detail:'cleans water for use again'},
-    {id:'shelter',name:'INSULATED SHELTER',cost:3,need:'temperature',detail:'slows dangerous temperature change'},
-    {id:'airlock',name:'DUST AIRLOCK',cost:2,need:'dust',detail:'keeps sharp Moon dust outside'},
-    {id:'greenhouse',name:'GREENHOUSE',cost:4,need:'food',detail:'grows some fresh food; useful but not required for this short test'}
+    {id:'solar',icon:'☀️',name:'SOLAR ARRAY',cost:2,need:'power',detail:'makes electrical power in sunlight'},
+    {id:'oxygen',icon:'🌬️',name:'OXYGEN RECYCLER',cost:2,need:'air',detail:'reuses air inside the habitat'},
+    {id:'water',icon:'🚰',name:'WATER RECYCLER',cost:2,need:'water',detail:'cleans water for use again'},
+    {id:'shelter',icon:'🏠',name:'INSULATED SHELTER',cost:3,need:'temperature',detail:'slows dangerous temperature change'},
+    {id:'airlock',icon:'🚪',name:'DUST AIRLOCK',cost:2,need:'dust',detail:'keeps sharp Moon dust outside'},
+    {id:'greenhouse',icon:'🌱',name:'GREENHOUSE',cost:4,need:'food',detail:'grows some fresh food; useful but not required for this short test'}
   ],required:['power','air','water','temperature','dust']},
   check:{title:'Which design rule solved the cargo problem?',lead:'Think about what happened when a test failed.',correct:'revise',choices:[
     ['all','Take every module, even if the cargo limit is broken.'],['guess','Keep the first design even when a need is missing.'],['revise','Use the test result to replace one module and test again.']
