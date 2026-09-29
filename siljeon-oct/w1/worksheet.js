@@ -1,9 +1,9 @@
 const STORE='oncuvate-hangul-review-v1';
 const saved=JSON.parse(localStorage.getItem(STORE)||'{}');
-if(saved.wordGridVersion!==2){
+if(saved.wordGridVersion!==3){
   Object.keys(saved).filter(key=>key.startsWith('word-')).forEach(key=>delete saved[key]);
   saved.solvedWords=[];
-  saved.wordGridVersion=2;
+  saved.wordGridVersion=3;
   localStorage.setItem(STORE,JSON.stringify(saved));
 }
 const controls=[...document.querySelectorAll('[data-save]')];
@@ -35,9 +35,9 @@ const rows=[
   '특꽃음소별책움나식희봄구',
   '별친종학배구움늘한랑한날',
   '전빛라식람람늘하한한나격',
-  '라학구꽃사정끝봄학세친려',
-  '나념구학제소구망글화라친',
-  '글기움끝말소별문글한종끝',
+  '라학구꽃사정끝봄글세친려',
+  '나념구학제소구망의화라친',
+  '글기움끝말소별문해한종끝',
   '끝희꿈빛책우점자날날리리'
 ];
 const grid=document.getElementById('wordGrid');
@@ -51,7 +51,7 @@ const solutions=[
   {word:'점자',start:[11,6],end:[11,7]},
   {word:'특별전',start:[5,0],end:[7,0]},
   {word:'학술대회',start:[0,4],end:[3,7]},
-  {word:'격려',start:[7,11],end:[8,11]}
+  {word:'한글의 해',start:[7,8],end:[10,8]}
 ];
 const cellAt=(r,c)=>grid.querySelector(`[data-row="${r}"][data-col="${c}"]`);
 const lineBetween=(start,end)=>{
@@ -169,7 +169,7 @@ const RESULT_GROUPS=[
     ['훈민정음만 해당하는 설명 번호','compare-a'],['두 글자 모두 해당하는 설명 번호','compare-b'],['훈맹정음만 해당하는 설명 번호','compare-c'],['두 글자가 덜어 주려 한 어려움','open-1','open']
   ]},
   {title:'활동 6 · 핵심 낱말과 마무리',items:[
-    ['기사 제목과 가장 가까운 핵심 낱말','finish-1'],['두 글자가 모두를 위한 글자인 까닭','finish-2','open']
+    ['기사 전체의 핵심을 가장 잘 드러내는 말','finish-1'],['두 글자가 모두를 위한 글자인 까닭','finish-2','open']
   ]}
 ];
 
