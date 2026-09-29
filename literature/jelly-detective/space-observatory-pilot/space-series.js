@@ -17,6 +17,7 @@
   try{stored=JSON.parse(sessionStorage.getItem(C.storage)||'null')}catch(_){}
   const S=Object.assign({},defaults,stored||{});
   S.visited=Array.isArray(S.visited)?S.visited:[];S.notes=S.notes||{};S.plan=Array.isArray(S.plan)?S.plan:[];S.repaired=S.repaired||{};S.selectedModules=Array.isArray(S.selectedModules)?S.selectedModules:[];S.placements=S.placements||{};S.vocabOpened=Array.isArray(S.vocabOpened)?S.vocabOpened:[];S.itemAttempts=S.itemAttempts&&typeof S.itemAttempts==='object'?S.itemAttempts:{};
+  if(C.mission){const m=S.mission&&typeof S.mission==='object'?S.mission:{};S.mission=Object.assign({phase:'brief',peeks:0,gem:'',judged:{},judgeAttempts:{},slide:0,flips:0,testLog:[]},m);if(!Array.isArray(S.mission.testLog))S.mission.testLog=[];if(!S.mission.judged||typeof S.mission.judged!=='object')S.mission.judged={};if(!S.mission.judgeAttempts||typeof S.mission.judgeAttempts!=='object')S.mission.judgeAttempts={};if(S.gameComplete)S.mission.phase='build'}
   function bumpAttempt(id){S.itemAttempts[id]=(S.itemAttempts[id]||0)+1;return S.itemAttempts[id]}
   const screens=Object.fromEntries(order.map(n=>[n,$(n+'Screen')]));
   let korean=false;
@@ -33,7 +34,7 @@
       case:[{en:'Read one incident record at a time.',ko:'사건 기록을 한 번에 한 문장씩 읽어요.'}],
       goal:[{en:'Choose the one mission goal that solves this case.',ko:'이 사건을 해결할 임무 목표 하나를 골라요.'}],
       game:C.guide?.game||[{en:'Use one control at a time.',ko:'한 번에는 조작 하나만 해요.'}],
-      check:[{en:'Look across all of your results.',ko:'지금까지 얻은 결과를 모두 살펴봐요.'},{en:'Choose the one report that fits every result.',ko:'모든 결과와 맞는 보고서 하나를 골라요.'}],
+      check:C.guide?.check||[{en:'Look across all of your results.',ko:'지금까지 얻은 결과를 모두 살펴봐요.'},{en:'Choose the one report that fits every result.',ko:'모든 결과와 맞는 보고서 하나를 골라요.'}],
       reading:[{en:'Read one sentence at a time. Keep the idea that helps the case.',ko:'한 문장씩 읽고 사건 해결에 필요한 생각을 남겨요.'}],
       organize:[{en:'Move one card, then complete one key word.',ko:'카드 하나를 옮긴 뒤 핵심 단어 하나를 완성해요.'},{en:'Check the connections only after every card is placed.',ko:'모든 카드를 놓은 뒤 연결을 확인해요.'}],
       retell:[{en:'Use your work to explain the solution in your own words.',ko:'내가 정리한 내용을 보며 해결 과정을 내 말로 설명해요.'},{en:'Name evidence or a reason.',ko:'증거나 이유를 꼭 하나 넣어요.'}]
@@ -53,7 +54,7 @@
     if(S.checkSolved)parts.push('증거 확인 ✓');else if(S.checkAttempts)parts.push('증거 확인 시도 '+S.checkAttempts);
     if(S.sentenceIndex)parts.push('정보글 '+Math.min(S.sentenceIndex,C.reading[S.readingLevel].length)+'/'+C.reading[S.readingLevel].length+(S.readingRereads?' · 다시 읽기 '+S.readingRereads:'')+(S.readingSelfCheck?' · '+({understood:'이해했어요',reread:'다시 볼래요',unsure:'잘 모르겠어요'})[S.readingSelfCheck]:''));
     if(S.organizeSolved)parts.push('정보 정리 ✓');else if(S.organizeAttempts)parts.push('정리 시도 '+S.organizeAttempts);
-    return{screen:S.screen,screenLabel:labels[S.screen]||S.screen,summary:parts.join(' · '),retell:String(S.retell||'').slice(0,240),done:S.screen==='solved',sessionNo:Number(C.id)||0,helpRequestedAt:S.helpRequestedAt||0,helpRequests:S.helpRequests||0};
+    return{screen:S.screen,screenLabel:labels[S.screen]||S.screen,summary:parts.join(' · '),retell:String(S.retell||'').slice(0,240),done:S.screen==='solved',sessionNo:Number(C.id)||0,helpRequestedAt:S.helpRequestedAt||0,helpRequests:S.helpRequests||0,vault:C.mission?Object.assign(mgStats(),{stage:mgStage(),diving:Boolean(mgDiveTimer),tests:S.testsRun}):undefined};
   }
   function setWatermark(){const child=typeof runtime.child==='string'?runtime.child:runtime.child?.nickname||runtime.child?.name||runtime.child?.id;$('childWatermark').textContent=child?'ONCUVATE · '+child:'ONCUVATE · DEMO'}
   function unlocked(name){
@@ -167,6 +168,7 @@
   function moduleTotal(){return C.game.modules.filter(m=>S.selectedModules.includes(m.id)).reduce((a,m)=>a+m.cost,0)}
   function missingNeeds(){const needs=new Set(C.game.modules.filter(m=>S.selectedModules.includes(m.id)).map(m=>m.need));return C.game.required.filter(n=>!needs.has(n))}
   function renderBaseGame(){
+    if(C.mission&&S.mission.phase!=='build'&&!S.gameComplete){renderMissionBrief();return}
     const total=moduleTotal(),missing=missingNeeds();
     $('gameCounter').textContent=total+' / '+C.game.budget+' credits';
     const modules=C.game.modules.map(m=>'<button class="module '+(S.selectedModules.includes(m.id)?'selected':'')+'" type="button" data-module="'+m.id+'"><b>'+m.cost+'</b><strong>'+m.name+'</strong><span>'+esc(m.detail)+'</span></button>').join('');
@@ -174,13 +176,171 @@
     $('gameArea').innerHTML='<div class="build-layout"><section><div class="module-bank">'+modules+'</div></section><aside class="side-panel"><h3>CARGO METER</h3><div class="meter"><i style="width:'+Math.min(100,total/C.game.budget*100)+'%"></i></div><p><b>'+total+'</b> of '+C.game.budget+' credits used</p><button class="primary" id="runTests" type="button" data-track="answer" data-item-id="base-design" data-correct="'+(missing.length===0&&S.selectedModules.length>0)+'" '+(!S.selectedModules.length?'disabled':'')+'>Run 3 survival tests</button>'+tests+'</aside></div>';
     if(!S.gameComplete){signals.decorate([$('runTests')],'game','base-design',()=>missingNeeds().length===0&&S.selectedModules.length>0);signals.ready('game','base-design',{textNode:$('gameArea'),attempts:S.testsRun,measureId:'case.game'})}
     $('gameArea').querySelectorAll('[data-module]').forEach(b=>b.addEventListener('click',()=>{const m=C.game.modules.find(x=>x.id===b.dataset.module),selected=S.selectedModules.includes(m.id);signals.log('base-module',{activityId:'game',itemId:'base-design',module:m.id,selected:!selected,overBudget:!selected&&total+m.cost>C.game.budget});if(!selected&&total+m.cost>C.game.budget){$('gameFeedback').textContent='Cargo limit reached. Remove or replace one module first.';$('gameFeedback').className='feedback attention';return}S.selectedModules=selected?S.selectedModules.filter(id=>id!==m.id):[...S.selectedModules,m.id];S.gameComplete=false;save();renderGame()}));
-    $('runTests')?.addEventListener('click',()=>{S.testsRun++;const pass=missingNeeds().length===0;signals.respond('game','base-design',{correct:pass,value:S.selectedModules.join('+'),expected:C.game.required.join('+'),missing:missingNeeds().join(','),credits:moduleTotal(),measureId:'case.game'});S.gameComplete=pass;save();renderGame();updateChrome();updateCoach()});
+    $('runTests')?.addEventListener('click',()=>{S.testsRun++;const pass=missingNeeds().length===0;signals.respond('game','base-design',{correct:pass,value:S.selectedModules.join('+'),expected:C.game.required.join('+'),missing:missingNeeds().join(','),credits:moduleTotal(),measureId:'case.game'});S.gameComplete=pass;if(C.mission)mgAfterTest(pass);save();renderGame();updateChrome();updateCoach()});
     $('gameFeedback').textContent=S.gameComplete?'All tests pass within the cargo limit.':S.testsRun?'A test is not ready. Compare it with the crew needs, then replace one module.':'Build a first design. It does not need to be perfect.';
     $('gameFeedback').className=S.gameComplete?'feedback success':S.testsRun?'feedback attention':'feedback';
+    if(C.mission)mgDecorateBuild();
   }
 
 
+  /* ---------- 기억 금고 작전(C.mission이 있는 회차만): 필요 기억 → 잠그기 → 잠수 → 설계·시험 → 보석, 증거 확인은 한 장씩 TRUE/FAKE ---------- */
+  let mgDiveTimer=0,mgDiveEnds=0,mgDiveStart=0,mgDiveTotal=0,mgPeekTimer=0;
+  function needLabel(id){const n=(C.mission.needs||[]).find(x=>x[0]===id);return n?n[1]+' '+n[2]:id}
+  function mgStats(){
+    const m=S.mission||{};const judged=Object.keys(m.judged||{}).length;
+    const boss=Boolean(C.check.judge)&&judged>=C.check.judge.cards.length;
+    return{memory:m.gem==='memory'?1:0,detective:m.gem==='detective'?1:0,boss:boss,bare:boss&&!(m.flips>0),peeks:m.peeks||0,flips:m.flips||0};
+  }
+  function mgStage(){
+    const m=S.mission||{};
+    if(mgStats().boss)return 'boss-cleared';
+    if(S.gameComplete)return 'boss';
+    if(mgDiveTimer)return 'diving';
+    if(m.phase==='build')return 'vault';
+    return 'search';
+  }
+  function mgHud(){
+    const m=S.mission,st=mgStats();
+    const stepA=m.phase==='build'||S.gameComplete?'done':'current';
+    const stepB=S.gameComplete?'done':m.phase==='build'?'current':'';
+    const stepC=st.boss?'done':S.gameComplete?'current':'';
+    const gemIcon=m.gem==='memory'?'💎':m.gem==='detective'?'🔎':'🔒';
+    return '<div class="vault-hud" aria-label="기억 금고 작전 진행"><span class="hud-title"><b>MISSION</b>기억 금고 작전</span><ol class="hud-steps"><li class="'+stepA+'"><span aria-hidden="true">🔒</span>필요 기억</li><li class="'+stepB+'"><span aria-hidden="true">'+(S.gameComplete?gemIcon:'🛠️')+'</span>설계·시험</li><li class="boss '+stepC+'"><span aria-hidden="true">'+(st.boss?'🏴‍☠️':'👾')+'</span>규칙 판정</li></ol><span class="hud-gems" aria-label="모은 보석">💎 '+st.memory+' <i>·</i> 🔎 '+st.detective+'</span></div>';
+  }
+  function mgNeedsList(){return '<ul class="mg-needs-list">'+C.mission.needs.map(n=>'<li><span aria-hidden="true">'+n[1]+'</span><b>'+esc(n[2])+'</b><small>'+esc(n[3])+'</small></li>').join('')+'</ul>'}
+  function renderMissionBrief(){
+    const m=S.mission;
+    $('gameCounter').textContent='CREW NEEDS';
+    $('gameContinue').disabled=true;
+    if(mgDiveTimer){
+      $('gameArea').innerHTML=mgHud()+'<div class="dive-row mg-dive"><div class="dive-panel"><div class="dive-sonar" aria-hidden="true"><i class="dive-gauge" id="diveGauge"></i><b id="diveCount">'+mgDiveTotal+'</b></div><div class="dive-copy"><small>DIVE · 달 기지까지</small><h3>다섯 가지를 꼭 붙들고 내려가요</h3><p>🫧 방울은 톡톡 터뜨려도 괜찮아요.</p></div></div><div class="dive-sea" aria-hidden="true">'+[1,2,3,4,5,6].map(i=>'<button type="button" class="dive-bubble b'+i+'" data-bubble tabindex="-1"></button>').join('')+'</div></div>';
+      $('gameFeedback').textContent='목록은 잠겼어요. 머릿속에서 꼭 붙들어요.';$('gameFeedback').className='feedback';
+      return;
+    }
+    $('gameArea').innerHTML=mgHud()+'<div class="mg-needs"><small>CREW NEEDS · 🔒 금고에 잠글 기억</small><h3>'+esc(C.mission.title)+'</h3>'+mgNeedsList()+'<button class="primary" id="mgLock" type="button">🔒 기억 잠그기</button></div>';
+    $('gameFeedback').textContent='다 외웠으면 잠가요.';$('gameFeedback').className='feedback';
+    $('mgLock').addEventListener('click',()=>{signals.log('memory-lock',{activityId:'game',itemId:'base-design',readMs:Math.round(performance.now()-mgBriefShownAt)});mgStartDive(C.mission.diveSeconds||5)});
+    mgBriefShownAt=performance.now();
+  }
+  let mgBriefShownAt=0;
+  function mgStartDive(sec){
+    clearInterval(mgDiveTimer);mgDiveTotal=sec;mgDiveStart=Date.now();mgDiveEnds=mgDiveStart+sec*1000;
+    mgDiveTimer=setInterval(mgTick,200);renderGame();liveMirror?.publishSoon(100);
+  }
+  function mgTick(){
+    const left=Math.max(0,Math.ceil((mgDiveEnds-Date.now())/1000));
+    if($('diveCount'))$('diveCount').textContent=String(left);
+    if($('diveGauge'))$('diveGauge').style.height=Math.min(100,(Date.now()-mgDiveStart)/(mgDiveTotal*1000)*100)+'%';
+    if(Date.now()<mgDiveEnds)return;
+    clearInterval(mgDiveTimer);mgDiveTimer=0;
+    signals.log('memory-hold',{activityId:'game',itemId:'base-design',holdMs:mgDiveTotal*1000});
+    S.mission.phase='build';save();renderGame();updateCoach();
+  }
+  function mgAfterTest(pass){
+    S.mission.testLog.push(missingNeeds());
+    if(pass&&!S.mission.gem){S.mission.gem=S.mission.peeks?'detective':'memory';signals.log('vault-open',{activityId:'game',itemId:'base-design',gem:S.mission.gem,tests:S.testsRun,peeks:S.mission.peeks})}
+    if(pass)setTimeout(()=>$('gameContinue')?.scrollIntoView({block:'nearest',behavior:'smooth'}),450);
+  }
+  function mgDecorateBuild(){
+    const area=$('gameArea');
+    area.insertAdjacentHTML('afterbegin',mgHud());
+    const panel=area.querySelector('.side-panel');
+    if(!panel)return;
+    if(!S.gameComplete)panel.insertAdjacentHTML('afterbegin','<button class="quiet mg-peek" id="mgPeek" type="button" data-track="hint" data-help-level="A3" data-help-type="needs-review">🔭 필요 살짝 보기</button>');
+    const m=S.mission;
+    if(S.gameComplete&&m.gem){
+      const fixed=S.testsRun>1?'<small class="mg-fix">🔧 시험 '+S.testsRun+'번 · 고쳐서 통과했어요</small>':'';
+      panel.insertAdjacentHTML('beforeend','<div class="vault-reward '+m.gem+'" role="status"><span class="reward-gem" aria-hidden="true">'+(m.gem==='memory'?'💎':'🔎')+'</span><div><strong>'+(m.gem==='memory'?'기억 보석 획득!':'탐정 보석 획득!')+'</strong><small>'+(m.gem==='memory'?'목록을 다시 보지 않고 다섯 가지를 채웠어요.':'목록을 확인하고 정확하게 채웠어요.')+'</small>'+fixed+'</div></div>');
+    }
+    $('mgPeek')?.addEventListener('click',()=>{S.mission.peeks++;signals.hint('game','base-design',{helpLevel:'A3',helpType:'needs-review',trigger:'child-request'});signals.decorateLater([$('runTests')],'game','base-design',()=>missingNeeds().length===0&&S.selectedModules.length>0);save();openModal('PEEK · 살짝 다시 보기','CREW NEEDS',mgNeedsList(),'다시 설계하기')});
+  }
+  function mgTestSummary(){
+    const log=S.mission.testLog||[];
+    if(!log.length)return '아직 시험 기록이 없어요.';
+    const first=log[0];
+    if(log.length===1&&!first.length)return '시험 1번 · 한 번에 모두 통과';
+    return '시험 '+log.length+'번 · 처음엔 '+(first.length?first.map(needLabel).join(', ')+' 빠짐':'통과')+' → 고친 뒤 통과';
+  }
+  function renderJudge(){
+    const J=C.check.judge,m=S.mission;
+    const index=Math.min(m.slide||0,J.cards.length-1),card=J.cards[index],judged=m.judged[card[0]];
+    const solved=mgStats().boss;
+    $('checkTitle').textContent=J.title;$('checkLead').textContent=J.lead;
+    $('checkChoices').className='mg-judge'+(solved?' is-cleared':'');
+    $('checkChoices').innerHTML=mgHud()
+      +'<div class="gem-peek"><small>MY RESULTS</small><button type="button" id="mgLogPeek" data-track="hint" data-help-level="A1" data-help-type="evidence-flip" aria-label="내 시험 기록 잠깐 보기">📋<i>기록</i></button></div><p class="gem-peek-bubble" id="mgLogBubble" role="status" hidden></p>'
+      +'<div class="boss-stage"><article class="mg-log'+(judged==='true'?' is-true':judged==='fake'?' is-fake':'')+'" id="mgLogCard"><small>MISSION LOG · RULE '+(index+1)+' / '+J.cards.length+'</small><strong>'+esc(card[1])+'</strong><span class="mg-log-scan" aria-hidden="true"></span></article>'
+      +'<div class="judge-row" id="judgeRow"'+(judged?' hidden':'')+'><button type="button" class="game-btn" data-judge="true" data-track="answer" data-item-id="check-'+card[0]+'" data-correct="'+card[2]+'"><span class="game-btn-icon" aria-hidden="true">✓</span><span class="game-btn-label">TRUE<em>통한 규칙</em></span><kbd>T</kbd></button><button type="button" class="game-btn" data-judge="fake" data-track="answer" data-item-id="check-'+card[0]+'" data-correct="'+(!card[2])+'"><span class="game-btn-icon" aria-hidden="true">✗</span><span class="game-btn-label">FAKE<em>안 통한 규칙</em></span><kbd>F</kbd></button></div></div>'
+      +'<div class="record-nav"><div class="record-dots" aria-hidden="true">'+J.cards.map((c,i)=>'<i class="'+(m.judged[c[0]]?(c[2]?'true':'fake'):'')+(i===index?' now':'')+'"></i>').join('')+'</div><button class="primary" id="mgNextRule" type="button"'+(!judged||index>=J.cards.length-1?' hidden':'')+'>다음 규칙 ▶</button></div>'
+      +(solved?'<div class="boss-summary" role="status"><strong>MISSION CLEAR!</strong><ul><li><b>'+(m.gem==='memory'?'💎':'🔎')+'</b>보석</li>'+(S.testsRun>1?'<li><b>🔧</b>시험 '+S.testsRun+'번</li>':'')+(mgStats().bare?'<li class="gold"><b>🏆</b>맨기억 보너스</li>':'')+'</ul></div>':'');
+    if(judged){$('checkFeedback').textContent=card[3];$('checkFeedback').className='feedback success'}
+    else if(!$('checkFeedback').classList.contains('attention')){$('checkFeedback').textContent=J.prompt;$('checkFeedback').className='feedback'}
+    $('checkContinue').disabled=!solved;$('checkContinue').hidden=!solved;
+    signals.decorate($('checkChoices').querySelectorAll('[data-judge]'),'check','check-'+card[0],b=>(b.dataset.judge==='true')===card[2]);
+    if(!judged)signals.ready('check','check-'+card[0],{textNode:$('mgLogCard'),attempts:(m.judgeAttempts[card[0]]||0),measureId:'case.check'});
+  }
+  function mgJudgeClick(e){
+    if(!C.check.judge)return;
+    const J=C.check.judge,m=S.mission;
+    if(e.target.closest('#mgLogPeek')){
+      const card=J.cards[Math.min(m.slide||0,J.cards.length-1)];
+      if(!mgStats().boss){m.flips=(m.flips||0)+1;signals.hint('check','check-'+card[0],{helpLevel:'A1',helpType:'evidence-flip',trigger:'child-request'});save()}
+      const bub=$('mgLogBubble');bub.textContent=mgTestSummary();bub.hidden=false;clearTimeout(mgPeekTimer);mgPeekTimer=setTimeout(()=>{if($('mgLogBubble'))$('mgLogBubble').hidden=true},3500);return;
+    }
+    if(e.target.closest('#mgNextRule')){mgNextRule();return}
+    const b=e.target.closest('[data-judge]');if(!b||b.disabled)return;
+    const index=Math.min(m.slide||0,J.cards.length-1),card=J.cards[index];
+    if(m.judged[card[0]])return;
+    const saysTrue=b.dataset.judge==='true',correct=saysTrue===card[2];
+    m.judgeAttempts[card[0]]=(m.judgeAttempts[card[0]]||0)+1;S.checkAttempts++;
+    signals.respond('check','check-'+card[0],{correct:correct,value:b.dataset.judge,expected:card[2]?'true':'fake',visibleTextLen:signals.textLength($('mgLogCard')),measureId:'case.check'});
+    signals.decorateLater($('checkChoices').querySelectorAll('[data-judge]'),'check','check-'+card[0],x=>(x.dataset.judge==='true')===card[2]);
+    if(!correct){
+      b.classList.add('incorrect');const lc=$('mgLogCard');lc.classList.remove('dial-miss');void lc.offsetWidth;lc.classList.add('dial-miss');
+      $('checkFeedback').textContent=m.judgeAttempts[card[0]]>=2?'📋 기록을 눌러 내 시험 결과를 잠깐 확인해 봐요.':'음, 내 시험 결과와 한 번 더 맞춰 봐요.';$('checkFeedback').className='feedback attention';
+      save();return;
+    }
+    m.judged[card[0]]=card[2]?'true':'fake';
+    if(mgStats().boss){S.checkSolved=true;signals.log('boss-cleared',{activityId:'check',flips:m.flips||0,attempts:S.checkAttempts})}
+    $('checkFeedback').className='feedback';
+    save();renderJudge();updateChrome();updateCoach();
+  }
+  function mgNextRule(){
+    const J=C.check.judge,m=S.mission,index=m.slide||0;
+    if(!m.judged[J.cards[index][0]]||index>=J.cards.length-1)return;
+    m.slide=index+1;$('checkFeedback').className='feedback';save();renderJudge();
+    const lc=$('mgLogCard');lc.classList.add('slide-in');
+  }
+  function mgKeys(e){
+    if(!C.check.judge||S.screen!=='check'||document.querySelector('dialog[open]'))return;
+    if(e.target.closest&&e.target.closest('input, textarea, select'))return;
+    const k=e.key.toLowerCase();
+    if(k==='t'||k==='1'){$('checkChoices').querySelector('[data-judge="true"]:not(:disabled)')?.click();e.preventDefault()}
+    else if(k==='f'||k==='2'){$('checkChoices').querySelector('[data-judge="fake"]:not(:disabled)')?.click();e.preventDefault()}
+    else if((k==='arrowright'||k==='enter')&&$('mgNextRule')&&!$('mgNextRule').hidden){mgNextRule();e.preventDefault()}
+  }
+  /* 그룹 수업: 아이별 보석·단계를 코치 화면 「크루 보드」에 모은다(순위 없음, 팀 합계). */
+  function renderCrewBoard(map){
+    const rowsEl=$('crewRows'),teamEl=$('crewTeam');if(!rowsEl||!teamEl)return;
+    const crew=Object.keys(map||{}).map(k=>[k,map[k]]).filter(p=>p[1]&&typeof p[1]==='object').sort((a,b)=>String(a[1].child||a[0]).localeCompare(String(b[1].child||b[0])));
+    if(!crew.length){teamEl.innerHTML='<p>수업방이 열리면 학생별 보석이 여기 모여요.</p>';rowsEl.innerHTML='';return}
+    const stageLabel={search:'🔒 필요 외우는 중',diving:'🫧 잠수 중 (말 걸지 않기)',vault:'🛠️ 설계·시험 중',boss:'👾 규칙 판정 중','boss-cleared':'🏴‍☠️ 미션 완료'};
+    let gems=0,memory=0,bosses=0;
+    rowsEl.innerHTML=crew.map(([k,p])=>{const v=p.vault||{};const mm=Number(v.memory)||0,d=Number(v.detective)||0;gems+=mm+d;memory+=mm;if(v.boss)bosses++;
+      const extra=[v.bare?'🏆 맨기억':'',v.peeks?'살짝 보기 '+v.peeks:'',v.tests?'시험 '+v.tests+'번':'',v.flips?'기록 보기 '+v.flips:''].filter(Boolean).join(' · ');
+      return '<li class="'+(v.boss?'done':'')+(v.diving?' diving':'')+'"><b>'+esc(p.child||k)+'</b><span class="crew-gems">'+('💎'.repeat(mm)+'🔎'.repeat(d)||'<i>🔒</i>')+(v.boss?' 🏴‍☠️':'')+'</span><small>'+(stageLabel[v.stage]||esc(p.screenLabel||''))+(extra?' · '+extra:'')+'</small></li>'}).join('');
+    const goal=crew.length*2,got=gems+bosses,pct=Math.round(got/goal*100);
+    const cheer=bosses===crew.length?'🎉 모든 크루가 미션을 마쳤어요! 달 기지 승인':got>=Math.ceil(goal/2)?'🚀 절반 넘게 모았어요. 발사 준비 중':'🧭 크루 모두의 보석이 로켓을 채워요';
+    teamEl.innerHTML='<div class="crew-ship"><span style="width:'+pct+'%"></span><em aria-hidden="true" style="left:'+Math.min(94,pct)+'%">🚀</em></div><p><b>팀 보물 '+got+' / '+goal+'</b> · 기억 보석 '+memory+' · 미션 완료 '+bosses+'/'+crew.length+'</p><p class="crew-cheer">'+cheer+'</p>';
+  }
+  function buildMissionCoach(){
+    if(!isCoach||!C.mission)return;
+    const anchor=$('coachParticipants')?.closest('section');if(!anchor)return;
+    anchor.insertAdjacentHTML('afterend','<section class="crew-board"><small>크루 보드 · 기억 금고 작전 (화면 공유용)</small><div id="crewTeam" class="crew-team"><p>수업방이 열리면 학생별 보석이 여기 모여요.</p></div><ul id="crewRows" class="crew-rows"></ul></section><section class="group-tips"><small>그룹 진행 (4명 안팎)</small><ol>'+(C.mission.groupTips||[]).map(t=>'<li>'+t+'</li>').join('')+'</ol></section>');
+  }
+
   function renderCheck(){
+    if(C.check.judge){renderJudge();return}
     $('checkTitle').textContent=C.check.title;$('checkLead').textContent=C.check.lead;
     $('checkChoices').innerHTML=C.check.choices.map(([id,text])=>'<button type="button" data-check="'+id+'" data-item-id="check" data-track="answer" data-correct="'+(id===C.check.correct)+'" class="'+(S.checkSolved&&id===C.check.correct?'correct':'')+'">'+esc(text)+'</button>').join('');
     signals.decorate(document.querySelectorAll('[data-check]'),'check','check',b=>b.dataset.check===C.check.correct);
@@ -369,7 +529,9 @@
   $('startButton').addEventListener('click',()=>signals.startLesson());
   $('goalContinue').addEventListener('click',()=>{signals.activityComplete('goal');show('game')});
   $('gameContinue').addEventListener('click',()=>{signals.activityComplete('game',{gameType:C.game.type,testsRun:S.testsRun});show('check')});
-  $('checkChoices').addEventListener('click',chooseCheck);
+  $('checkChoices').addEventListener('click',e=>{if(C.check.judge)mgJudgeClick(e);else chooseCheck(e)});
+  document.addEventListener('keydown',mgKeys);
+  $('gameArea').addEventListener('click',e=>{const b=e.target.closest('[data-bubble]');if(b){b.classList.remove('popped');void b.offsetWidth;b.classList.add('popped')}});
   $('checkContinue').addEventListener('click',()=>{signals.activityComplete('check');show('reading')});
   $('sentenceNext').addEventListener('click',nextSentence);
   $('readingLevel').addEventListener('click',toggleReading);
@@ -406,6 +568,6 @@
     event.currentTarget.setAttribute('aria-expanded',String(!collapsed));
     event.currentTarget.setAttribute('aria-label',collapsed?'코치 패널 펼치기':'코치 패널 접기');
   });
-  setWatermark();buildChrome();buildCoach();renderSolved();restore();
-  liveMirror=window.OncuvateLiveMirror?window.OncuvateLiveMirror.create({sessionNo:Number(C.id)||0,snapshot:buildProgressSnapshot,onParticipants:map=>window.OncuvateLiveMirror.renderList($('coachParticipants'),map,Number(C.id)||0),onStatus:text=>{const el=$('coachLiveStatus');if(el)el.textContent=text}}):null;
+  setWatermark();buildChrome();buildCoach();buildMissionCoach();renderSolved();restore();
+  liveMirror=window.OncuvateLiveMirror?window.OncuvateLiveMirror.create({sessionNo:Number(C.id)||0,snapshot:buildProgressSnapshot,onParticipants:map=>{window.OncuvateLiveMirror.renderList($('coachParticipants'),map,Number(C.id)||0);if(C.mission)renderCrewBoard(map)},onStatus:text=>{const el=$('coachLiveStatus');if(el)el.textContent=text}}):null;
 }());
