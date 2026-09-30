@@ -207,6 +207,29 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .ref-actions button{min-height:40px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:13.5px;font-weight:850}
 .ref-actions .save{border:0;color:#fff;background:var(--violet)}
 .ref-actions .msg{color:var(--ok);font-size:13px;font-weight:800}
+
+/* 2 문장 카드 잇기 */
+.links{display:grid;gap:10px}
+.link-set{position:relative;padding:10px 12px 10px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+.link-head{display:inline-block;margin-bottom:6px;padding:2px 10px;border-radius:999px;color:#1f5f8f;background:#e3f1fb;font-size:11.5px;font-weight:900}
+.link-grid{position:relative;display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1.2fr);column-gap:70px;row-gap:8px}
+.link-card{position:relative;z-index:2;display:flex;align-items:center;min-height:46px;padding:7px 12px;border:1.5px solid #cfc9bd;border-radius:12px;background:#fff;color:var(--ink);font-size:16px;font-weight:850;line-height:1.45;text-align:left;cursor:pointer}
+.link-card.l{grid-column:1;justify-content:flex-start;background:linear-gradient(155deg,#fff,#f8f6fd)}
+.link-card.r{grid-column:2}
+.link-card .dot{position:absolute;top:50%;width:13px;height:13px;margin-top:-6.5px;border:2.5px solid #8d83a3;border-radius:50%;background:#fff}
+.link-card.l .dot{right:-8px}.link-card.r .dot{left:-8px}
+.link-card:hover{border-color:var(--cyan-line)}
+.link-card.sel{border-color:var(--violet);background:var(--violet-soft);box-shadow:0 0 0 3px rgba(141,112,215,.18)}
+.link-card.sel .dot{border-color:var(--violet);background:var(--violet)}
+.link-card.ok{border-color:var(--ok);background:var(--ok-bg);cursor:default}
+.link-card.ok .dot{border-color:var(--ok);background:var(--ok)}
+.link-card.bad{border-color:var(--no);background:var(--no-bg);animation:lk-shake .35s}
+@keyframes lk-shake{25%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+.link-card .slot{display:inline-block;min-width:92px;margin:0 3px;border-bottom:2px solid var(--violet);color:transparent}
+.link-card .slot.filled{min-width:0;color:var(--violet);border-bottom-color:transparent;background:linear-gradient(transparent 55%,var(--mark) 55%)}
+.link-svg{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;overflow:visible}
+.link-set .feedback{margin-top:6px}
+@media(max-width:560px){.link-grid{column-gap:34px}.link-card{font-size:14.5px}}
 @page{size:A4;margin:0}
 @media print{
   html,body{background:#fff}
@@ -240,6 +263,11 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
   .print-blank .option input:checked+.radio-mark{border:1.5px solid #9995a1}
   .print-blank .self-check input{appearance:none;-webkit-appearance:none;border:1.5px solid #9aa1ad;border-radius:4px;background:#fff}
   .print-blank .key{display:none!important}
+  .print-blank .link-svg{display:none}
+  .print-blank .link-card{border-color:#cfc9bd!important;background:#fff!important}
+  .print-blank .link-card .dot{border-color:#8d83a3!important;background:#fff!important}
+  .print-blank .link-card .slot.filled{min-width:92px;color:transparent;background:none;border-bottom-color:var(--violet)}
+  .print-blank .link-card .slot.filled *{background:none!important;color:transparent!important}
   .show-key:not(.print-blank) .key{display:block}
 }
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
@@ -261,10 +289,10 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 </section>
 <section class="sheet" id="activity2" aria-labelledby="title2">
 <header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 앞뒤 문맥 살피기</div></header><div class="king"><div class="say">앞뒤 문장이<br><b>힌트</b>로다!</div><img src="assets/king-think.webp" alt="세종대왕"></div>
-<div class="title-row"><span class="number">2</span><h2 id="title2">흐름에 맞는 문장</h2></div>
-<p class="intro">앞 문장이나 뒷 문장을 단서로, 자연스럽게 이어지는 문장을 골라요.</p>
-<div class="flows" id="flows"></div>
-<p class="teacher-note">지도 메모: ‘이/가’와 ‘은/는’은 모두 문법적으로 가능한 자리가 많습니다. 문장 자체의 옳고 그름보다, 제시된 문맥에서 무엇을 두드러지게 말하는지 비교해 주세요.</p>
+<div class="title-row"><span class="number">2</span><h2 id="title2">문장 카드 잇기</h2></div>
+<p class="intro">왼쪽 문장 카드를 빈칸에 넣으면 자연스러운 곳과 선으로 이어요.</p>
+<div class="links" id="links"></div>
+<p class="teacher-note">지도 메모: 두 카드는 조사만 다릅니다. ‘이/가’는 새로 알게 된 것·‘누가?’의 대답에, ‘은/는’은 다른 것과 견주어 말할 때 잘 어울립니다. 빈칸에 넣어 소리 내어 이어 읽게 해 주세요.</p>
 <footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 2 / 5</span><div class="pager"><a href="#activity1">← 이전</a><a href="#activity3">다음: 빈칸 →</a></div></footer>
 </section>
 <section class="sheet" id="activity3" aria-labelledby="title3">
@@ -345,16 +373,42 @@ const talk=[
 {q:'누가 먼저 도착했나요?',focus:'대상',o:['민호[는] 먼저 도착했어요.','민호[가] 먼저 도착했어요.'],a:1,why:'먼저 도착한 사람이 누구인지 묻고 있어요. 그 사람을 ‘민호가’로 알려 줘요.'},
 {q:'민호는 어떤 음식을 좋아하나요?',focus:'서술',o:['민호[는] 김밥을 좋아해요.','민호[가] 김밥을 좋아해요.'],a:0,why:'민호에 관해 좋아하는 음식을 묻고 있어요. ‘민호는’ 뒤에서 좋아하는 것을 설명해요.'}
 ];
-const flows=[
-{tag:'앞 문장 → 대상을 밝히기',pre:'문밖에서 발소리가 들렸어요. “누가 왔니?”',target:'“할머니(가 / 는) 오셨어요.”',o:['할머니[가] 오셨어요.','할머니[는] 오셨어요.'],a:0,why:'앞의 ‘누가 왔니?’에 답하면서, 온 사람이 할머니라는 것을 알려 줘요.'},
-{tag:'앞 문장 → 다른 대상과 비교하기',pre:'형은 매운 음식을 잘 먹어요.',target:'하지만 동생(이 / 은) 매운 음식을 잘 못 먹어요.',o:['하지만 동생[이] 매운 음식을 잘 못 먹어요.','하지만 동생[은] 매운 음식을 잘 못 먹어요.'],a:1,why:'형과 동생을 나란히 비교하고 있어요. ‘형은 … 동생은 …’이 대비를 또렷하게 해요.'},
-{tag:'뒷 문장 ← 비교의 흐름 살피기',target:'수박(이 / 은) 껍질이 두꺼워요.',post:'반면에 포도는 껍질이 얇아요.',o:['수박[은] 껍질이 두꺼워요.','수박[이] 껍질이 두꺼워요.'],a:0,why:'뒤에서 ‘반면에 포도는’이라고 비교해요. 앞에서도 ‘수박은’으로 두 대상을 나란히 놓아요.'},
-{tag:'앞 문장 → 이미 나온 대상 설명하기',pre:'운동장에 강아지 한 마리가 들어왔어요.',target:'그 강아지(는 / 가) 목에 빨간 리본을 달고 있었어요.',o:['그 강아지[가] 목에 빨간 리본을 달고 있었어요.','그 강아지[는] 목에 빨간 리본을 달고 있었어요.'],a:1,why:'앞에 나온 강아지를 화제로 이어 설명해요. ‘그 강아지는’이 이런 흐름에 잘 어울려요.'}
+/* 2 문장 카드 잇기: 조사만 다른 두 카드(l)를 빈칸(___)이 있는 두 문맥(r)에 선으로 잇기. ans[i] = l[i]가 들어갈 r의 번호 */
+const links=[
+{tag:'물',l:['물[이] 차가워요.','물[은] 차가워요.'],r:['수영장에서 놀고 싶어요. 그런데 ___','___ 그런데 커피는 뜨거워요.'],ans:[0,1],why:['놀고 싶은데 새로 알게 된 걸림돌을 말해요. → 물이','물과 커피를 견주어 말해요. → 물은']},
+{tag:'비',l:['비[는] 와요.','비[가] 와요.'],r:['창밖을 보세요! ___','___ 그런데 바람은 안 불어요.'],ans:[1,0],why:['비와 바람을 견주어 말해요. → 비는','창밖에서 새로 본 것을 알려 줘요. → 비가']},
+{tag:'형',l:['형[이] 왔어요.','형[은] 왔어요.'],r:['“누가 왔어?” ___','___ 그런데 누나는 아직 안 왔어요.'],ans:[0,1],why:['‘누가?’에 대답해요. → 형이','형과 누나를 견주어 말해요. → 형은']},
+{tag:'고양이',l:['고양이[는] 자요.','고양이[가] 자요.'],r:['소파 위를 보세요. ___','___ 그런데 강아지는 뛰어놀아요.'],ans:[1,0],why:['고양이와 강아지를 견주어 말해요. → 고양이는','소파 위에서 새로 본 것을 알려 줘요. → 고양이가']}
 ];
-function option(groupId,value,text){return `<label class="option"><input type="radio" name="${groupId}" value="${value}"><span class="radio-mark" aria-hidden="true"></span><span>${mark(text)}</span></label>`;}
-function wireChoice(el,q,id,hasFocus){const button=el.querySelector('.check'),fb=el.querySelector('.feedback');el.addEventListener('change',()=>{button.hidden=false;fb.textContent='';});button.onclick=()=>{const answer=el.querySelector(`input[name="${id}"]:checked`),focus=hasFocus?el.querySelector(`input[name="${id}-focus"]:checked`):null;if(!answer||(hasFocus&&!focus)){fb.textContent=hasFocus?'질문의 초점과 대답을 하나씩 골라요.':'이어질 문장을 하나 골라요.';return;}if(hasFocus&&focus.value!==q.focus){fb.textContent=q.focus==='대상'?'‘누가’ 또는 ‘무엇이’를 묻는지 다시 살펴요.':'이미 나온 대상이 무엇을 하는지, 어떤지 묻고 있어요.';return;}if(Number(answer.value)!==q.a){fb.textContent='이 표현도 쓸 수 있어요. '+q.why+' 질문이나 흐름에 더 잘 맞는 대답을 다시 골라요.';return;}fb.textContent='잘 살폈어요. '+q.why;button.hidden=true;};}
-talk.forEach((q,i)=>{const id='talk'+i,el=document.createElement('article');el.className='question';el.innerHTML=`<h3><span class="qid">${i+1}</span>${esc(q.q)}</h3><p class="sub">어디에 주목하나요?</p><div class="focus-group">${option(id+'-focus','대상','대상 · 누가, 무엇이')}${option(id+'-focus','서술','서술 · 행동, 특징')}</div><p class="sub">질문에 어울리는 대답</p>${q.o.map((s,j)=>option(id,j,s)).join('')}<button class="check">확인</button><div class="feedback" role="status"></div><p class="key">해설: ${q.focus} / ${mark(q.o[q.a])}<br>${q.why}</p>`;$('questions').append(el);wireChoice(el,q,id,true);});
-flows.forEach((q,i)=>{const id='flow'+i,el=document.createElement('article');el.className='flow';el.innerHTML=`<div class="flow-head">${i+1}　${q.tag}</div>${q.pre?`<p class="context">${esc(q.pre)}</p>`:''}<p class="target">${esc(q.target)}</p>${q.post?`<p class="context">${esc(q.post)}</p>`:''}<div class="answers">${q.o.map((s,j)=>option(id,j,s)).join('')}</div><button class="check">확인</button><div class="feedback" role="status"></div><p class="key">해설: ${mark(q.o[q.a])}<br>${q.why}</p>`;$('flows').append(el);wireChoice(el,q,id,false);});
+function drawLine(set,li,ri,cls){const svg=set.querySelector('.link-svg'),box=set.querySelector('.link-grid').getBoundingClientRect();
+  const d1=set.querySelector(`.l[data-i="${li}"] .dot`).getBoundingClientRect(),d2=set.querySelector(`.r[data-i="${ri}"] .dot`).getBoundingClientRect();
+  const x1=d1.left+d1.width/2-box.left,y1=d1.top+d1.height/2-box.top,x2=d2.left+d2.width/2-box.left,y2=d2.top+d2.height/2-box.top;
+  const ln=document.createElementNS('http://www.w3.org/2000/svg','line');
+  ln.setAttribute('x1',x1);ln.setAttribute('y1',y1);ln.setAttribute('x2',x2);ln.setAttribute('y2',y2);
+  ln.setAttribute('stroke',cls==='ok'?'#27866a':'#c2575d');ln.setAttribute('stroke-width','3.5');ln.setAttribute('stroke-linecap','round');ln.dataset.l=li;ln.dataset.r=ri;
+  svg.appendChild(ln);return ln;}
+function redrawLinks(){document.querySelectorAll('.link-set').forEach(set=>{const done=[...set.querySelectorAll('.link-svg line')].map(x=>[x.dataset.l,x.dataset.r]);
+  set.querySelector('.link-svg').innerHTML='';done.forEach(([l,r])=>drawLine(set,l,r,'ok'));});}
+links.forEach((q,i)=>{const el=document.createElement('article');el.className='link-set';
+  const rtxt=t=>esc(t).replace('___','<span class="slot">빈칸</span>');
+  el.innerHTML=`<div class="link-head">${i+1}　${esc(q.tag)}</div><div class="link-grid"><svg class="link-svg" aria-hidden="true"></svg>`+
+    q.l.map((t,j)=>`<button type="button" class="link-card l" data-i="${j}" style="grid-row:${j+1}" data-track="answer"><span>${mark(t)}</span><span class="dot"></span></button>`).join('')+
+    q.r.map((t,j)=>`<button type="button" class="link-card r" data-i="${j}" style="grid-row:${j+1}" data-track="answer"><span class="dot"></span><span>${rtxt(t)}</span></button>`).join('')+
+    `</div><div class="feedback" role="status"></div><p class="key">해설: ${q.why.map(esc).join('<br>')}</p>`;
+  $('links').append(el);
+  let pick=null;const fb=el.querySelector('.feedback');
+  el.querySelector('.link-grid').addEventListener('click',e=>{const c=e.target.closest('.link-card');if(!c||c.classList.contains('ok'))return;
+    const side=c.classList.contains('l')?'l':'r';
+    if(!pick||pick.side===side){el.querySelectorAll('.link-card.sel').forEach(x=>x.classList.remove('sel'));c.classList.add('sel');pick={side,i:+c.dataset.i,el:c};return;}
+    const li=side==='l'?+c.dataset.i:pick.i,ri=side==='r'?+c.dataset.i:pick.i,L=el.querySelector(`.l[data-i="${li}"]`),R=el.querySelector(`.r[data-i="${ri}"]`);
+    el.querySelectorAll('.link-card.sel').forEach(x=>x.classList.remove('sel'));pick=null;
+    if(q.ans[li]===ri){L.classList.add('ok');R.classList.add('ok');drawLine(el,li,ri,'ok');
+      const slot=R.querySelector('.slot');slot.classList.add('filled');slot.innerHTML=mark(q.l[li]);
+      fb.textContent=q.why[li];if(el.querySelectorAll('.link-card.ok').length===4)fb.textContent='다 이었어요! 두 곳을 이어서 소리 내어 읽어 봐요.';}
+    else{const ln=drawLine(el,li,ri,'bad');[L,R].forEach(x=>{x.classList.remove('bad');void x.offsetWidth;x.classList.add('bad');});
+      fb.textContent='빈칸에 넣어 소리 내어 읽어 봐요. 새로 알게 된 것일까, 다른 것과 견주는 것일까?';setTimeout(()=>{ln.remove();L.classList.remove('bad');R.classList.remove('bad');},700);}
+  });});
+window.addEventListener('resize',redrawLinks);window.addEventListener('beforeprint',redrawLinks);
 const stories={
 '3':{label:'3학년 수준 · 생활 속 짧은 글',blocks:[
 {title:'1. 우리 반 새 친구',text:'오늘 우리 반에 새 {친구|가|는|누가 왔는지 새로 알려 주는 자리예요.} 왔어요. 그 {친구|는|가|앞에 나온 친구를 화제로 이어 설명해요.} 이름이 지우예요. 지우를 소개할게요. {지우|는|가|지우에 관해 좋아하는 것을 설명해요.} 축구를 좋아해요. 반면에 {동생|은|이|지우와 동생의 취향을 비교해요.} 야구를 좋아해요.'},
