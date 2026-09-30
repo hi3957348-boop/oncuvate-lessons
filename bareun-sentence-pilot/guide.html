@@ -1,0 +1,178 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, noarchive">
+<title>바른 문장 쓰기 — 보호자 안내</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --ink:#27344e;--muted:#6a7386;--line:#e6e0d4;--paper:#fffdf7;--bg:#f3f4ef;
+  --violet:#35206f;--violet-2:#4b24a5;--violet-soft:#f3effd;--cyan:#2785c7;--cyan-soft:#eaf6fa;--mark:#fde9a6;
+  --s1:#d6585c;--s2:#2785c7;--s3:#27866a;--s4:#d68a1f;--s5:#7b4fd0;
+  --font:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--font);word-break:keep-all;line-break:strict;line-height:1.6}
+.wrap{max-width:860px;margin:0 auto;padding:22px 16px 48px}
+.hero{position:relative;display:grid;grid-template-columns:1fr auto;gap:16px;align-items:center;padding:24px 24px 22px 28px;border:1.5px solid #ddd3f3;border-radius:22px;
+  background:linear-gradient(120deg,#f6f2ff 0%,#fffdf7 55%,#eaf8fa 100%)}
+.hero::before{content:"";position:absolute;left:0;top:18px;bottom:18px;width:6px;border-radius:0 6px 6px 0;background:linear-gradient(180deg,#4b24a5,#4bc9dc)}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;color:#fff;background:var(--violet);font-size:12px;font-weight:900}
+.hero h1{margin:8px 0 2px;font-size:clamp(28px,5vw,36px);font-weight:900;letter-spacing:-.05em;color:var(--violet)}
+.hero h1 span{background:linear-gradient(transparent 62%,var(--mark) 62%,var(--mark) 90%,transparent 90%);padding:0 2px}
+.hero p{margin:0;color:#566077;font-weight:750}
+.hero img{height:128px}
+h2{display:flex;align-items:center;gap:9px;margin:30px 0 12px;font-size:21px;letter-spacing:-.03em}
+h2 i{display:grid;place-items:center;width:30px;height:30px;border-radius:9px;color:#fff;background:var(--ink);font-style:normal;font-size:15px}
+.card{padding:16px 18px;border:1px solid var(--line);border-radius:16px;background:var(--paper)}
+.grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+.grid3 .card b{display:block;margin-bottom:4px;font-size:16px}
+.grid3 .card{font-size:14px;color:#465269}
+.flow{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;counter-reset:f}
+.flow div{position:relative;padding:12px 12px 12px 14px;border:1px solid var(--line);border-radius:14px;background:#fff;font-size:13.5px;color:#465269}
+.flow div b{display:block;color:var(--ink);font-size:15px}
+.flow div::before{counter-increment:f;content:counter(f);position:absolute;right:10px;top:8px;color:#c9c1d9;font-weight:900;font-size:18px}
+.stage{margin-top:14px;border:1px solid var(--line);border-radius:18px;background:var(--paper);overflow:hidden}
+.stage>summary{list-style:none;display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;padding:14px 18px;cursor:pointer}
+.stage>summary::-webkit-details-marker{display:none}
+.stage .no{display:grid;place-items:center;width:44px;height:44px;border-radius:13px;color:#fff;font-weight:900;font-size:13px;line-height:1.1;text-align:center}
+.stage h3{margin:0;font-size:18px;letter-spacing:-.03em}
+.stage h3 small{display:block;color:var(--muted);font-size:13px;font-weight:750;letter-spacing:0}
+.stage .range{padding:4px 10px;border-radius:999px;background:#fff;border:1px solid var(--line);font-size:12.5px;font-weight:850;color:#566077;white-space:nowrap}
+.stage .range::after{content:" ▾";color:#a8a1b3}
+.stage[open] .range::after{content:" ▴"}
+.stage table{width:100%;border-collapse:collapse;font-size:14px}
+.stage th,.stage td{padding:9px 12px;border-top:1px solid var(--line);text-align:left;vertical-align:top}
+.stage th{color:var(--muted);font-size:12px;font-weight:850;background:#faf8f3}
+.stage td:first-child{width:52px;font-weight:900;color:var(--muted);white-space:nowrap}
+.stage td:nth-child(2) b{color:var(--ink)}
+.stage td:last-child{color:#566077;width:34%}
+.stage tr.sum td{background:#fbf9f2}
+.home{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.home .card{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:start;font-size:14.5px}
+.home .card span{font-size:24px;line-height:1}
+.note{margin-top:12px;color:var(--muted);font-size:13px}
+.foot{margin-top:34px;color:#8c93a1;font-size:11px;text-align:center}
+mark{background:linear-gradient(transparent 50%,var(--mark) 50%);color:inherit}
+@media (max-width:680px){
+  .hero{grid-template-columns:1fr}.hero img{position:absolute;right:12px;top:12px;height:78px}
+  .hero h1{padding-right:70px}
+  .grid3,.home{grid-template-columns:1fr}.flow{grid-template-columns:1fr 1fr}
+  .stage td:last-child{display:none}.stage th:last-child{display:none}
+}
+@media print{body{background:#fff}.stage{break-inside:avoid}.stage:not([open]) table{display:table}}
+</style>
+</head>
+<body>
+<main class="wrap">
+  <header class="hero">
+    <div>
+      <span class="badge">보호자 안내</span>
+      <h1><span>바른 문장 쓰기</span></h1>
+      <p>문해력이 자라는 문장구조·문법</p>
+    </div>
+    <img src="assets/king-thumbs.webp" alt="세종대왕 캐릭터">
+  </header>
+
+  <h2><i>1</i>이런 아이를 위한 수업이에요</h2>
+  <div class="grid3">
+    <div class="card"><b>✏️ 문장을 끝맺기 어려워요</b>「강아지가 아주 빠르게.」처럼 문장이 중간에서 멈춰요.</div>
+    <div class="card"><b>🔤 은/는·이/가가 헷갈려요</b>「동생는」, 「나가 할게요」처럼 뒤에 붙는 글자를 자주 틀려요.</div>
+    <div class="card"><b>🔗 문장을 잇기 어려워요</b>「그리고」만 계속 쓰거나, 긴 문장을 쓰면 뜻이 꼬여요.</div>
+  </div>
+  <p class="note">대상: 쓰기에 어려움이 있는 초등 3~4학년 · 한 회 50분 · 온큐베이트 수업 화면에서 코치와 함께해요.</p>
+
+  <h2><i>2</i>한 번의 수업은 이렇게 흘러가요</h2>
+  <div class="flow">
+    <div><b>다시 보기·게임</b>지난 시간 내용을 짧은 게임으로 떠올려요.</div>
+    <div><b>문장 기차</b>문장을 칸으로 나눠 누가·무엇을·끝 말을 찾아요.</div>
+    <div><b>짝 문장 비교</b>두 문장을 소리 내어 읽고 더 자연스러운 쪽을 골라 규칙을 찾아요.</div>
+    <div><b>빈칸 채우기</b>찾은 규칙으로 알맞은 말을 골라 넣어요.</div>
+    <div><b>틀린 문장 고치기</b>틀린 곳을 찾고, 고치고, 이유까지 말해요.</div>
+    <div><b>내 문장 쓰기</b>오늘 배운 것으로 내 이야기를 직접 써요.</div>
+    <div><b>점검과 정리</b>점검표로 스스로 확인하고 오늘의 문장을 골라요.</div>
+    <div><b>복습 워크지</b>집에서 화면으로 풀거나 A4로 인쇄해 풀어요.</div>
+  </div>
+
+  <h2><i>3</i>전체 흐름 — 다섯 단계</h2>
+  <p class="note" style="margin-top:-4px">단계를 누르면 회차별 내용이 펼쳐져요.</p>
+
+  <details class="stage" open>
+    <summary><span class="no" style="background:var(--s1)">1<br>단계</span><h3>문장의 뼈대와 조사<small>누가·무엇을·어디에 — 문장의 기본 틀을 세워요</small></h3><span class="range">1~7회</span></summary>
+    <table><tr><th>회</th><th>배우는 것</th><th>쓰는 글</th></tr>
+      <tr><td>1</td><td><b>은/는 · 이/가</b> — 문장의 주인공</td><td>나와 가족 비교하기</td></tr>
+      <tr><td>2</td><td><b>에 · 를</b> — 곳과 움직임을 받는 말</td><td>소풍 가방 싸기</td></tr>
+      <tr><td>3</td><td><b>에 · 에서</b> — 곳을 알려 주는 말</td><td>우리 집 소개</td></tr>
+      <tr><td>4</td><td><b>로 · 를</b> — 도구를 알려 주는 말</td><td>내가 쓰는 도구</td></tr>
+      <tr><td>5</td><td><b>만 · 도 · 밖에</b> — 뜻을 더하는 말</td><td>나도 · 나만</td></tr>
+      <tr><td>6</td><td><b>부터 · 까지 · 이나</b> — 시작과 끝, 많음</td><td>나의 하루</td></tr>
+      <tr class="sum"><td>7</td><td><b>1단계 정리</b> — 다섯 칸 문장 기차</td><td>놀이터 장면</td></tr></table>
+  </details>
+
+  <details class="stage">
+    <summary><span class="no" style="background:var(--s2)">2<br>단계</span><h3>끝 말 다듬기<small>언제 일어난 일인지, 안 한 일인지 정확하게 써요</small></h3><span class="range">8~13회</span></summary>
+    <table><tr><th>회</th><th>배우는 것</th><th>쓰는 글</th></tr>
+      <tr><td>8</td><td><b>어제 · 지금 · 내일</b> — 때에 맞는 끝 말</td><td>어제·지금·내일 이야기</td></tr>
+      <tr><td>9</td><td><b>전에 · 다음에</b> — 일의 순서</td><td>하루 순서</td></tr>
+      <tr><td>10</td><td><b>안 · 못</b> — 하지 않은 일, 할 수 없는 일</td><td>안 하는 것 · 못 하는 것</td></tr>
+      <tr><td>11</td><td><b>잡았어요 · 잡혔어요</b> — 한 일과 당한 일</td><td>한 문장 · 당한 문장</td></tr>
+      <tr><td>12</td><td><b>먹었어요 · 먹였어요</b> — 해 준 일</td><td>내가 해 준 일</td></tr>
+      <tr class="sum"><td>13</td><td><b>2단계 정리</b> — 일기 속 틀린 곳 고치기</td><td>다섯 문장 일기</td></tr></table>
+  </details>
+
+  <details class="stage">
+    <summary><span class="no" style="background:var(--s3)">3<br>단계</span><h3>뜻 더하기<small>'동안·대로·뻔했어요', '할 수 있어요·할 줄 알아요'</small></h3><span class="range">14~15회</span></summary>
+    <table><tr><th>회</th><th>배우는 것</th><th>쓰는 글</th></tr>
+      <tr><td>14</td><td><b>동안 · 대로 · 뻔했어요</b> — 언제? 어떻게?</td><td>내 이야기</td></tr>
+      <tr><td>15</td><td><b>할 수 있어요 · 할 줄 알아요</b></td><td>할 수 있는 것 · 할 줄 아는 것</td></tr></table>
+  </details>
+
+  <details class="stage">
+    <summary><span class="no" style="background:var(--s4)">4<br>단계</span><h3>이어진 문장<small>두 문장을 알맞은 말로 하나로 이어요</small></h3><span class="range">16~23회</span></summary>
+    <table><tr><th>회</th><th>배우는 것</th><th>쓰는 글</th></tr>
+      <tr><td>16</td><td><b>그리고 · ~고</b></td><td>~고로 이은 문장</td></tr>
+      <tr><td>17</td><td><b>그렇지만 · ~지만</b></td><td>반대인 일</td></tr>
+      <tr><td>18</td><td><b>그래서 · ~어서</b> — 까닭과 결과</td><td>까닭 잇기</td></tr>
+      <tr><td>19</td><td><b>그러니까 · ~으니까</b> — 부탁할 때</td><td>부탁이 있는 문장</td></tr>
+      <tr><td>20</td><td><b>~면</b> — 아직 안 일어난 일</td><td>조건 문장</td></tr>
+      <tr><td>21</td><td><b>~려고 · ~러</b> — 하려는 까닭</td><td>무엇을 하려고</td></tr>
+      <tr><td>22</td><td><b>잇는 말 모으기</b> — 짧은 글에서 찾기</td><td>오늘 이야기</td></tr>
+      <tr class="sum"><td>23</td><td><b>4단계 정리</b></td><td>이어진 문장으로 한 문단</td></tr></table>
+  </details>
+
+  <details class="stage">
+    <summary><span class="no" style="background:var(--s5)">5<br>단계</span><h3>문장 속 문장<small>문장 안에 작은 문장을 넣어 자세하게 써요</small></h3><span class="range">24~32회</span></summary>
+    <table><tr><th>회</th><th>배우는 것</th><th>쓰는 글</th></tr>
+      <tr><td>24</td><td><b>문장 속 문장 맛보기</b></td><td>상자가 든 문장</td></tr>
+      <tr><td>25</td><td><b>꾸며 주는 말 ~는 · ~은</b> — 읽는 책, 읽은 책</td><td>꾸며 주는 말 문장</td></tr>
+      <tr><td>26</td><td><b>꾸며 주는 말 ~을</b> — 읽을 책</td><td>앞으로 할 일</td></tr>
+      <tr><td>27</td><td><b>~것</b> — 좋아하는 것</td><td>좋아하는 것</td></tr>
+      <tr><td>28</td><td><b>~기 · ~음</b> — 알림장 말투</td><td>약속과 알림</td></tr>
+      <tr><td>29</td><td><b>"~"라고 했어요</b> — 들은 말 그대로</td><td>들은 말 전하기</td></tr>
+      <tr><td>30</td><td><b>~다고 했어요</b> — 바꿔서 전하기</td><td>전하는 말</td></tr>
+      <tr><td>31</td><td><b>~게 · ~도록</b> — 어떻게 하는지</td><td>조심하는 일</td></tr>
+      <tr class="sum"><td>32</td><td><b>5단계 정리</b> — 1~5단계 모아 보기</td><td>소개하는 글 한 편</td></tr></table>
+  </details>
+  <p class="note">회차 구성과 속도는 아이의 수업 모습에 맞춰 코치가 조정할 수 있어요.</p>
+
+  <h2><i>4</i>집에서 이렇게 도와주세요</h2>
+  <div class="home">
+    <div class="card"><span>🗣️</span><div><b>소리 내어 읽기</b><br>틀린 곳을 바로 고쳐 주기보다 "소리 내어 한 번 읽어 볼까?" 하고 물어봐 주세요. 스스로 어색함을 찾는 힘이 자라요.</div></div>
+    <div class="card"><span>⭐</span><div><b>오늘의 문장 칭찬하기</b><br>수업 끝에 고른 '오늘의 문장'을 함께 읽고 칭찬해 주세요.</div></div>
+    <div class="card"><span>📄</span><div><b>복습 워크지</b><br>회차마다 워크지가 있어요. 화면으로 풀면 바로 채점되고, A4로 인쇄해서 풀 수도 있어요.</div></div>
+    <div class="card"><span>🌱</span><div><b>틀려도 괜찮아요</b><br>틀린 답은 도움이 필요한 곳을 알려 주는 신호예요. 코치가 그 자리를 다시 짚어 줘요.</div></div>
+  </div>
+
+  <h2><i>5</i>수업 기록으로 이런 것을 봐요</h2>
+  <div class="grid3">
+    <div class="card"><b>첫 반응 정확</b>처음 고른 답이 맞았는지 봐요.</div>
+    <div class="card"><b>도움 없이 해결</b>힌트 없이 스스로 해결했는지 봐요.</div>
+    <div class="card"><b>스스로 고침</b>틀린 뒤에 다시 생각해서 고쳤는지 봐요.</div>
+  </div>
+
+  <p class="foot">자체 제작 텍스트 · 활동 설계 © Oncuvate. All rights reserved.</p>
+</main>
+</body>
+</html>

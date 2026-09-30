@@ -1,0 +1,295 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="grammar-sentence-structure">
+<head>
+<script>try{if(localStorage.getItem('oncuvate-bareun-pilot:ok')!=='1')location.replace('index.html')}catch(e){}</script>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, noarchive">
+<title>바른 문장 쓰기 1회 복습 워크지 — 은/는·이/가</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{
+  --ink:#27344e;--muted:#6f7789;--line:#e2ddd2;--paper:#fffdf7;--violet:#4b24a5;--violet-soft:#eee9fb;
+  --cyan-soft:#e9f8fa;--ok:#27866a;--ok-bg:#eef9f5;--no:#c2575d;--no-bg:#fff3f3;--mark:#fde9a6;--subj:#d6585c;--pred:#2785c7;
+  --font:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif;
+}
+*{box-sizing:border-box}
+html{background:#eef0ec}
+body{margin:0;color:var(--ink);font-family:var(--font);word-break:keep-all;line-break:strict;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+button{font:inherit;cursor:pointer}
+.pt{padding:0 1px;border-radius:3px;background:linear-gradient(transparent 50%,var(--mark) 50%);color:inherit}
+
+/* 도구 막대 (화면 전용) */
+.toolbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:10px 12px;background:rgba(238,240,236,.94);border-bottom:1px solid var(--line)}
+.toolbar button{min-height:40px;padding:0 14px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);font-size:13px;font-weight:850}
+.toolbar button.main{border:0;color:#fff;background:var(--violet)}
+.toolbar button[aria-pressed="true"]{border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
+.score{padding:8px 12px;border-radius:11px;background:#fff;border:1px solid var(--line);font-size:13px;font-weight:850}
+.score b{color:var(--ok);font-size:15px}
+
+/* A4 종이 */
+.sheet{width:210mm;min-height:297mm;margin:16px auto;padding:13mm 13mm 12mm;background:var(--paper);box-shadow:0 10px 30px rgba(37,45,81,.12)}
+@media (max-width:840px){.sheet{width:auto;min-height:0;margin:10px;padding:18px 14px}}
+.head{position:relative;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 16px 12px 18px;border:1.5px solid #ddd3f3;border-radius:18px;
+  background:linear-gradient(120deg,#f6f2ff 0%,#fffdf7 55%,#eaf8fa 100%)}
+.head::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:5px;border-radius:0 5px 5px 0;background:linear-gradient(180deg,#4b24a5,#4bc9dc)}
+.series{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.series-name{position:relative;font-size:27px;font-weight:900;letter-spacing:-.05em;color:#35206f;
+  background:linear-gradient(transparent 62%,#fde9a6 62%,#fde9a6 90%,transparent 90%);padding:0 2px}
+.series-sub{color:#566077;font-size:12.5px;font-weight:800;letter-spacing:-.01em}
+.head h1{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin:8px 0 0;font-size:15px;font-weight:850;letter-spacing:-.02em;color:var(--ink)}
+.lesson-no{padding:3px 9px;border-radius:999px;color:#fff;background:#35206f;font-size:12px;font-weight:900}
+.head img{height:88px;margin:-6px 0 -8px}
+.who{display:none;gap:18px;margin-top:8px;font-size:13px;font-weight:800}
+.who span{flex:1;border-bottom:1px solid #9aa1ad;padding-bottom:2px}
+.rules{display:grid;grid-template-columns:1fr 1fr 1fr;gap:6px;margin:10px 0 4px}
+.rules div{padding:7px 9px;border:1px solid var(--line);border-radius:10px;background:#fff;font-size:11.5px;font-weight:780;line-height:1.45}
+.rules b{color:var(--violet)}
+
+section{margin-top:14px;break-inside:avoid}
+section>h2{display:flex;align-items:center;gap:8px;margin:0 0 7px;font-size:16px;letter-spacing:-.02em}
+section>h2 .no{display:grid;place-items:center;width:24px;height:24px;border-radius:7px;color:#fff;background:var(--ink);font-size:13px}
+section>h2 small{color:var(--muted);font-size:12px;font-weight:700}
+.grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:7px}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:7px}
+.box{position:relative;padding:8px 10px;border:1px solid var(--line);border-radius:11px;background:#fff}
+.box .n{color:var(--muted);font-size:11px;font-weight:850;margin-right:4px}
+.big{font-size:17px;font-weight:850;letter-spacing:-.02em}
+.ctx{display:block;margin-bottom:3px;color:var(--muted);font-size:12px;font-weight:750}
+
+/* 고르기 칩 */
+.opts{display:flex;flex-wrap:wrap;gap:5px;margin-top:5px}
+.opt{min-height:34px;padding:3px 11px;border:1.5px solid #cfc9bd;border-radius:999px;background:#fff;color:var(--ink);font-size:15px;font-weight:850}
+.opt.wide{display:block;width:100%;min-height:38px;border-radius:10px;text-align:left;font-size:15px;line-height:1.45}
+.opt:hover{border-color:#9fd9e3}
+.opt.ok{border-color:var(--ok);background:var(--ok-bg)}
+.opt.no{border-color:var(--no);background:var(--no-bg);animation:shake .35s}
+@keyframes shake{25%{transform:translateX(-4px)}60%{transform:translateX(4px)}}
+.opt:disabled{cursor:default}
+.fb{min-height:0;margin-top:4px;color:var(--ok);font-size:12px;font-weight:800}
+.fb.bad{color:var(--no)}
+.fix{display:none;margin-top:5px;font-size:13px;font-weight:800;color:var(--muted)}
+.fb:empty{display:none}
+.fix .wline{display:inline-block;min-width:110px;border-bottom:1px solid #9aa1ad}
+.scroll{display:inline-block;padding:4px 12px;border:2px solid #b8925a;border-radius:5px;background:#fbf3e2;font-size:15px;font-weight:900}
+.scroll small{margin-right:6px;color:#8a6a45;font-size:11px}
+.link{display:inline-block;margin-top:6px;padding:3px 10px;border:1.5px dashed var(--pred);border-radius:9px;background:#edf5fb;color:#1f5f8f;font-size:13px;font-weight:900}
+.token{min-height:34px;padding:2px 8px;border:1.5px solid transparent;border-radius:8px;background:transparent;color:var(--ink);font-size:17px;font-weight:850}
+.token.tap{border-color:#d9d3c7;background:#fff}
+.token.hit{border-color:var(--subj);background:#fff4f2}
+.write{display:grid;grid-template-columns:auto 1fr;gap:8px;align-items:end;margin-top:7px;font-size:16px;font-weight:850}
+.write input{width:100%;min-height:36px;padding:0 8px;border:0;border-bottom:1.5px solid #9aa1ad;background:transparent;color:var(--ink);font:inherit;font-weight:700}
+.write input:focus{outline:none;border-bottom-color:var(--violet)}
+.checks{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}
+.checks label{display:flex;gap:6px;align-items:center;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12.5px;font-weight:800}
+.checks input{width:16px;height:16px;accent-color:var(--violet)}
+.key{display:none;color:var(--violet);font-size:12px;font-weight:900}
+.show-key .key{display:inline}
+.foot{margin-top:14px;padding-top:8px;border-top:1px solid var(--line);color:var(--muted);font-size:10px;text-align:center}
+.page-break{break-before:page}
+
+.sheet{position:relative;display:flex;flex-direction:column}
+.foot{margin-top:auto}
+.king{display:flex;align-items:flex-end;justify-content:flex-end;gap:6px;margin:10px 0 -4px}
+.king img{height:84px}
+.king .say{position:relative;margin-bottom:26px;padding:7px 12px;border:2px solid #2e2848;border-radius:14px 14px 4px 14px;background:#fff;font-size:13px;font-weight:850;line-height:1.4}
+.king .say b{color:var(--no)}
+.sheet>.king:first-child{margin:0 0 4px}
+.done{display:grid;grid-template-columns:auto 1fr auto;gap:12px;align-items:center;margin-top:14px;padding:10px 14px;border:2px dashed #e1b72c;border-radius:16px;background:#fffaf0;font-size:14px;font-weight:780;line-height:1.5}
+.done img{height:72px}
+.done b{font-size:17px}
+.stamp{display:grid;place-items:center;width:62px;height:62px;border:3px solid #c2575d;border-radius:50%;color:#c2575d;font-size:14px;font-weight:950;line-height:1.1;text-align:center;transform:rotate(-12deg);opacity:.85}
+@media (max-width:840px){.king .pg{right:14px;top:10px}}
+.side .opts{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.qa{display:grid;grid-template-columns:1.25fr 1fr;gap:12px}
+.qa>div+div{padding-left:12px;border-left:1px dashed var(--line)}
+.lab{margin-top:6px;font-size:12px;font-weight:800;color:var(--muted)}
+.grid4 .opt{padding:3px 8px;font-size:14px}
+.grid4 .opts{flex-wrap:nowrap;gap:4px}
+section{margin-top:11px}
+.box{padding:7px 10px}
+.done{margin-top:10px;padding:6px 12px}.done img{height:56px}.stamp{width:54px;height:54px;font-size:13px}
+.king img{height:72px}
+.sheet>.king:first-child{position:absolute;top:9mm;right:13mm;margin:0}
+.sheet>.king:first-child .say{margin-bottom:20px}
+.sheet>.king:first-child+section>h2{min-height:58px;align-items:flex-end;padding-right:230px}
+.write{margin-top:3px}.write input{min-height:32px}
+section:nth-last-of-type(1) .box{padding-bottom:6px}
+.foot{margin-top:auto;padding-top:6px}
+#app .sheet:last-child section .box{padding-top:5px;padding-bottom:5px}
+.ox-row{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:4px 8px}
+.ox-row .fb{flex-basis:100%;margin-top:0}
+.ox-row .opts{flex:0 0 auto;margin-top:0;flex-wrap:nowrap}
+.opt.ox{display:grid;place-items:center;width:38px;height:38px;min-height:0;padding:0;border-radius:50%;font-size:22px;line-height:1}
+.opt.ox .o{color:#2479c9;font-weight:950}
+.opt.ox .x{color:#d2454c;font-weight:950}
+/* ===== 인쇄: A4 빈 활동지 ===== */
+@page{size:A4;margin:0}
+@media print{
+  html,body{background:#fff}
+  .toolbar,.fb,.xfix{display:none!important}
+  .sheet{width:210mm;min-height:297mm;margin:0;box-shadow:none;padding:12mm 13mm 10mm}
+  .sheet+.sheet{break-before:page}
+  .who{display:flex}
+  .opt{border-color:#b9b3a8!important;background:#fff!important;animation:none!important}
+  .token.tap,.token.hit{border-color:transparent!important;background:transparent!important}
+  .fix{display:block!important}
+  .write input{color:transparent}
+  .opt.ok,.opt.no{border-color:#b9b3a8!important}
+  .show-key .opt[data-right]{border-color:var(--ok)!important;background:var(--ok-bg)!important}
+}
+</style>
+</head>
+<body>
+<div class="toolbar" id="toolbar">
+  <span class="score">맞힌 문항 <b id="score">0</b> / <span id="total">0</span></span>
+  <button type="button" id="keyBtn" aria-pressed="false">정답지 보기</button>
+  <button type="button" id="resetBtn">처음부터</button>
+  <button type="button" class="main" id="printBtn">A4 인쇄</button>
+</div>
+
+<main id="app"></main>
+
+<script>
+(function(){
+'use strict';
+const $=id=>document.getElementById(id);
+const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const mk=t=>esc(t).replace(/\[(.+?)\]/g,'<mark class="pt">$1</mark>');
+
+/* ---------- 문항 (수업과 같은 활동, 새 낱말) ---------- */
+const W1=[['가방','t'],['우산','s'],['나무','t'],['시계','s'],['연못','t'],['기차','s'],['호랑이','t'],['달걀','s']];
+const hasB=w=>{const c=w.charCodeAt(w.length-1)-0xAC00;return c>=0&&c<11172&&c%28!==0;};
+const RUN=[
+  {s:'가방[이] 무거워요.',ok:true},{s:'우산[는] 파래요.',fix:'우산은'},
+  {s:'기차[가] 빨라요.',ok:true},{s:'나무[이] 커요.',fix:'나무가'},
+  {s:'우유[을] 마셔요.',fix:'우유를'},{s:'공[을] 던져요.',ok:true},
+  {s:'나[가] 할게요.',fix:'내가'},{s:'시계[는] 둥글어요.',ok:true}];
+const PAIR=[
+  {ctx:'“누가 문을 열었어요?”',o:['아빠[가] 열었어요.','아빠[는] 열었어요.'],a:0},
+  {ctx:'누나와 나를 비교해요.',o:['누나[가] 노래를 잘해요. 내[가] 춤을 잘해요.','누나[는] 노래를 잘해요. 나[는] 춤을 잘해요.'],a:1},
+  {ctx:'수박이 무엇인지 설명해요.',o:['수박[은] 여름 과일이에요.','수박[이] 여름 과일이에요.'],a:0}];
+const QA=[
+  {q:'무엇이 짖느냐?',o:['강아지[는] 짖어요.','강아지[가] 짖어요.'],a:1,link:'그런데 고양이는 안 짖어요.',pos:'뒤',la:0},
+  {q:'달은 어떠하냐?',o:['달[은] 밝아요.','달[이] 밝아요.'],a:0,link:'와, 하늘을 봐요!',pos:'앞',la:1},
+  {q:'누가 웃느냐?',o:['아기[가] 웃어요.','아기[는] 웃어요.'],a:0,link:'그런데 형은 울어요.',pos:'뒤',la:1}];
+const FILL=[
+  {t:'“누가 노래해?” “민지{_} 노래해.”',a:'가'},
+  {t:'나는 사과를 좋아해요. 동생{_} 포도를 좋아해요.',a:'은'},
+  {t:'옛날에 호랑이{_} 살았어요.',a:'가'},
+  {t:'그 호랑이{_} 욕심이 많았어요.',a:'는'},
+  {t:'책상 위에 연필{_} 있어요.',a:'이'}];
+const FIX=[
+  {toks:['우리','동생가','웃어요.'],bad:1,fixes:['동생이','동생를'],a:'동생이'},
+  {ctx:'“누가 왔어?”',toks:['삼촌은','왔어요.'],bad:0,fixes:['삼촌을','삼촌이'],a:'삼촌이'},
+  {toks:['나는','빵를','먹어요.'],bad:1,fixes:['빵을','빵이'],a:'빵을'}];
+
+/* ---------- 채점 기록 ---------- */
+const done=new Set();let total=0;
+function emit(type,detail){try{window.dispatchEvent(new CustomEvent('oc:track',{detail:{type,page:'review01',...detail}}));}catch(e){}}
+function score(){$('score').textContent=done.size;$('total').textContent=total;}
+/* 고르기 한 묶음: 맞으면 잠그고, 틀리면 그 칩만 잠가 다시 고르게 */
+function choice(id,labels,right,cls,count=true){
+  if(count)total++;
+  return `<div class="opts" data-q="${id}">${labels.map((l,k)=>`<button type="button" class="opt ${cls||''}" data-k="${k}" data-track="answer"${k===right?' data-right':''}>${l}</button>`).join('')}</div><div class="fb" id="fb-${id}"></div>`;
+}
+const handlers={};
+document.addEventListener('click',e=>{
+  const b=e.target.closest('.opt');if(!b||b.disabled)return;
+  const box=b.parentElement,id=box.dataset.q,h=handlers[id];if(!h)return;
+  if(b.hasAttribute('data-right')){b.classList.add('ok');[...box.children].forEach(x=>x.disabled=true);done.add(id);score();
+    $('fb-'+id).className='fb';$('fb-'+id).innerHTML=h.ok||'맞았어요!';emit('answer',{key:id,correct:true});h.after&&h.after();}
+  else{b.classList.add('no');b.disabled=true;$('fb-'+id).className='fb bad';$('fb-'+id).innerHTML=h.no||'다시 읽어 보고 골라요.';emit('answer',{key:id,correct:false});}
+});
+
+function build(){
+  total=0;done.clear();Object.keys(handlers).forEach(k=>delete handlers[k]);
+  const head=`<div class="head"><div><div class="series"><span class="series-name">바른 문장 쓰기</span><span class="series-sub">문해력이 자라는 문장구조·문법</span></div>
+      <h1><span class="lesson-no">1회 복습</span>문장의 주인공과 은/는 · 이/가</h1>
+      <div class="who"><span>이름</span><span>날짜</span></div></div><img src="assets/king-thumbs.webp" alt="세종대왕"></div>
+    <div class="rules"><div>① 받침이 있으면 <b>은/이/을</b>,<br>없으면 <b>는/가/를</b></div><div>② 처음 나온 것, '누가?'의 대답<br>→ <b>이/가</b></div><div>③ 비교·다시 말하기·설명<br>→ <b>은/는</b></div></div>`;
+
+  /* 1 받침 살피기 */
+  let s1=`<section><h2><span class="no">1</span>받침 살피기 <small>알맞은 것에 ○ 해요.</small></h2><div class="grid4">`;
+  W1.forEach(([w,t],k)=>{const f=t==='t'?[w+'은',w+'는']:[w+'이',w+'가'],r=t==='t'?(hasB(w)?0:1):(hasB(w)?0:1),id='w'+k;
+    handlers[id]={ok:`'${w.slice(-1)}'에 받침이 ${hasB(w)?'있어요':'없어요'}.`,no:'마지막 글자의 받침을 봐요.'};
+    s1+=`<div class="box"><span class="big">${esc(w)}</span>${choice(id,f,r)}</div>`;});
+  s1+='</div></section>';
+
+  /* 2 맞는 문장일까? (수업의 젤리런 복습) */
+  let s2=`<section><h2><span class="no">2</span>맞는 문장일까? <small>맞으면 ○, 틀리면 ✕ 하고 바르게 고쳐 써요.</small></h2><div class="grid2">`;
+  RUN.forEach((r,k)=>{const id='r'+k;handlers[id]={ok:r.ok?'맞는 문장이에요.':`틀린 문장! 바르게 고치면 <b>${esc(r.fix)}</b>`,no:'받침 규칙을 다시 봐요.'};
+    s2+=`<div class="box"><div class="ox-row"><span class="big"><span class="n">${k+1}</span>${mk(r.s)}</span>${choice(id,['<span class="o">○</span>','<span class="x">✕</span>'],r.ok?0:1,'ox')}</div>
+      <div class="fix">✕라면 고쳐 쓰기: <span class="wline">&nbsp;</span> <span class="key">${r.ok?'(맞는 문장)':esc(r.fix)}</span></div></div>`;});
+  s2+='</div></section>';
+
+  /* 3 짝 문장 */
+  let s3=`<section><h2><span class="no">3</span>짝 문장 <small>상황에 더 자연스러운 문장에 ○ 해요.</small></h2><div style="display:grid;gap:7px">`;
+  PAIR.forEach((p,k)=>{const id='p'+k;handlers[id]={ok:'맞았어요! 규칙 '+(p.ctx.includes('누가')?'②':'③')+'이에요.',no:'상황을 다시 읽어 봐요.'};
+    s3+=`<div class="box"><span class="ctx">상황: ${esc(p.ctx)}</span><div class="side">${choice(id,p.o.map((o,j)=>'ⓐⓑ'[j]+' '+mk(o)),p.a,'wide')}</div></div>`;});
+  s3+='</div></section>';
+
+  /* 4 세종문답 */
+  let s4=`<section><h2><span class="no">4</span>세종문답 <small>둘 다 맞는 문장! 물음에 맞는 대답과 이어지는 문장을 골라요.</small></h2><div style="display:grid;gap:7px">`;
+  QA.forEach((q,k)=>{const a='qa'+k,l='ql'+k;
+    const who=q.q.startsWith('누가')||q.q.startsWith('무엇');
+    handlers[a]={ok:who?"'누가? 무엇이?'의 대답은 이/가!":'물음에 나온 말을 다시 말하니까 은/는!',no:'임금님 물음을 다시 읽어 봐요.'};
+    handlers[l]={ok:q.pos==='뒤'?"'그런데'로 견줄 때는 은/는!":'처음 보고 가리킬 때는 이/가!',no:'붙여서 소리 내어 읽어 봐요.'};
+    s4+=`<div class="box qa"><div><span class="scroll"><small>세종대왕의 물음</small>“${esc(q.q)}”</span>
+      <div class="lab">① 알맞은 대답</div>${choice(a,q.o.map((o,j)=>'ⓐⓑ'[j]+' '+mk(o)),q.a)}</div>
+      <div><div class="lab">② 이 말이 ${q.pos}에 붙는 문장은?</div><span class="link">${esc(q.link)}</span>${choice(l,['ⓐ','ⓑ'],q.la)}</div></div>`;});
+  s4+='</div></section>';
+
+  /* 5 빈칸 채우기 */
+  let s5=`<section><h2><span class="no">5</span>빈칸 채우기 <small>은 · 는 · 이 · 가 중에서 골라 써요.</small></h2><div style="display:grid;gap:6px">`;
+  FILL.forEach((f,k)=>{const id='f'+k,[x,y]=f.t.split('{_}'),r=['은','는','이','가'].indexOf(f.a);
+    handlers[id]={ok:'맞았어요!',no:'뜻 먼저(은/는? 이/가?), 받침 다음!'};
+    s5+=`<div class="box" style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center"><span class="big"><span class="n">${k+1}</span>${esc(x)}<span style="display:inline-block;min-width:34px;border-bottom:2px solid var(--violet);text-align:center"><span class="key">${f.a}</span>&nbsp;</span>${esc(y)}</span>${choice(id,['은','는','이','가'],r)}</div>`;});
+  s5+='</div></section>';
+
+  /* 6 틀린 문장 고치기 */
+  let s6=`<section><h2><span class="no">6</span>틀린 문장 고치기 <small>틀린 낱말을 누르고(○ 하고) 바르게 고쳐요.</small></h2><div style="display:grid;gap:7px">`;
+  FIX.forEach((x,k)=>{const id='x'+k;handlers[id]={ok:'고쳤어요!',no:'다시 소리 내어 읽어 봐요.'};total++;
+    s6+=`<div class="box" data-fix="${k}">${x.ctx?`<span class="ctx">${esc(x.ctx)}</span>`:''}<span class="n">${k+1}</span>${x.toks.map((t,j)=>`<button type="button" class="token tap" data-j="${j}">${esc(t)}</button>`).join(' ')}
+      <div class="fb" id="fbt-${k}"></div><div class="xfix" id="xf-${k}"></div>
+      <div class="fix">고쳐 쓰기: <span class="wline" style="min-width:260px">&nbsp;</span> <span class="key">${esc(x.a)}</span></div></div>`;});
+  s6+='</div></section>';
+
+  /* 7 내 문장 쓰기 */
+  const s7=`<section><h2><span class="no">7</span>내 문장 쓰기 <small>주인공 · 은/는·이/가 · 끝 말 · 마침표!</small></h2>
+    <div class="box"><span class="ctx">가족 한 명과 나를 비교해요.</span>
+      <div class="write"><span>(가족)은/는</span><input aria-label="가족 문장"></div>
+      <div class="write"><span>나는</span><input aria-label="나 문장"></div>
+      <span class="ctx" style="margin-top:10px">질문에 대답해요: 우리 반에서 누가 제일 잘 달려요?</span>
+      <div class="write"><span>대답</span><input aria-label="대답 문장"></div>
+      <div class="checks"><label><input type="checkbox">주인공이 있나요?</label><label><input type="checkbox">은/는·이/가를 맞게 썼나요?</label><label><input type="checkbox">끝 말이 있나요?</label><label><input type="checkbox">마침표를 찍었나요?</label></div></div>
+  </section>`;
+
+  const foot=`<div class="foot">자체 제작 텍스트 · 활동 설계 © Oncuvate. All rights reserved.</div>`;
+  const king=(img,txt)=>`<div class="king"><div class="say">${txt}</div><img src="assets/king-${img}.webp" alt="세종대왕"></div>`;
+  const ft=n=>`<div class="foot">${n} / 3 · 자체 제작 텍스트 · 활동 설계 © Oncuvate. All rights reserved.</div>`;
+  $('app').innerHTML=`<div class="sheet">${head}${s1}${s2}${king('cheer','받침만 잘 봐도<br>반은 맞힌 것이로다!',1)}${ft(1)}</div>
+    <div class="sheet">${king('think','둘 다 맞는 문장일 땐<br><b>물음</b>을 잘 읽거라.',2)}${s3}${s4}${ft(2)}</div>
+    <div class="sheet">${king('scold','틀린 문장은 과인이<br>그냥 넘기지 않는다!',3)}${s5}${s6}${s7}
+      <div class="done"><img src="assets/king-thumbs.webp" alt=""><div><b>참 잘했노라!</b><br>오늘 배운 은/는 · 이/가로 한 문장 더 말해 보거라.</div><span class="stamp">참<br>잘함</span></div>${ft(3)}</div>`;
+
+  /* 6번: 낱말 누르기 → 고칠 말 고르기 */
+  FIX.forEach((x,k)=>{const box=document.querySelector(`[data-fix="${k}"]`),id='x'+k;
+    box.querySelectorAll('.token').forEach(t=>t.onclick=()=>{
+      if(box.dataset.found)return;const j=+t.dataset.j;
+      if(j===x.bad){box.dataset.found=1;t.classList.add('hit');$('fbt-'+k).className='fb';$('fbt-'+k).textContent='찾았어요! 이제 고쳐요.';
+        $('xf-'+k).innerHTML=choice(id,x.fixes,x.fixes.indexOf(x.a),'',false);}
+      else{$('fbt-'+k).className='fb bad';$('fbt-'+k).textContent='그 낱말은 괜찮아요. 뒤에 붙은 글자를 살펴봐요.';}
+    });});
+  score();
+}
+build();
+
+$('printBtn').onclick=()=>window.print();
+$('resetBtn').onclick=()=>{const k=document.body.classList.contains('show-key');build();document.body.classList.toggle('show-key',k);};
+$('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'정답지 끄기':'정답지 보기';
+  document.querySelectorAll('.opt[data-right]').forEach(b=>b.classList.toggle('ok',on||done.has(b.parentElement.dataset.q)));};
+})();
+</script>
+</body>
+</html>
