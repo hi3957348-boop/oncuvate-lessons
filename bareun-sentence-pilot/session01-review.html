@@ -172,6 +172,11 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .ef-go{width:100%;min-height:48px;margin-top:12px;border:0;border-radius:14px;color:#fff;background:linear-gradient(135deg,#4b24a5,#8d70d7);font-size:16px;font-weight:900}
 .ef-go:disabled{opacity:.45;cursor:not-allowed}
 .ef-go.sub{margin-top:6px;border:1px solid var(--line);color:var(--ink);background:#fff;font-size:14px;min-height:42px}
+.miss-list{display:grid;gap:6px;margin:12px 0 4px;padding:0;list-style:none}
+.miss-list li{display:grid;grid-template-columns:auto 1fr;gap:10px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14px;font-weight:800}
+.miss-list li b{padding:2px 9px;border-radius:999px;color:#fff;background:var(--ink);font-size:12px}
+.miss-flash{animation:miss-flash 1.6s ease-out}
+@keyframes miss-flash{0%,60%{box-shadow:0 0 0 4px rgba(214,138,31,.55)}100%{box-shadow:0 0 0 0 rgba(214,138,31,0)}}
 .ef-toast{position:fixed;z-index:60;left:50%;bottom:22px;max-width:min(520px,calc(100vw - 32px));padding:11px 16px;border-radius:13px;color:#fff;background:#403a46;font-size:13.5px;font-weight:800;transform:translate(-50%,20px);opacity:0;transition:.25s;pointer-events:none}
 .ef-toast.show{opacity:1;transform:translate(-50%,0)}
 /* 5쪽 돌아보기 */
@@ -392,6 +397,14 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
     <button class="ef-go sub" id="efNew" type="button" hidden>처음부터 새로 시작</button>
   </div>
 </div>
+<div class="ef-cover" id="efMiss" role="dialog" aria-modal="true" aria-labelledby="efMissTitle" hidden>
+  <div class="ef-card">
+    <div class="ef-card-head"><div><h2 id="efMissTitle">잠깐! 빈 곳이 있어요</h2><p class="lead">아래를 채우면 더 좋아요. 그래도 끝내도 괜찮아요.</p></div><img src="assets/king-think.webp" alt=""></div>
+    <ul class="miss-list" id="efMissList"></ul>
+    <button class="ef-go" id="efMissGo" type="button">빈 곳으로 가기</button>
+    <button class="ef-go sub" id="efMissEnd" type="button">그래도 끝낼래요</button>
+  </div>
+</div>
 <div class="ef-toast" id="efToast" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
@@ -569,9 +582,29 @@ $('efGo').onclick=()=>{const now=Date.now();
 $('efNew').onclick=()=>{st={est:null,start:null,end:null,active:0,away:0,awayCount:0,savedAt:0,ref:{}};save();[...$('efEst').children].forEach(x=>x.setAttribute('aria-pressed','false'));restoreRef();$('efGo').disabled=true;$('efGo').textContent='시작하기';$('efNew').hidden=true;
   ['tStart','tEnd','tTotal','tEst','tActive','tAway'].forEach(i=>$(i).textContent='-');$('tCompare').textContent='4쪽 끝의 「다 했어요」를 누르면 시간이 여기에 정리돼요.';$('efResume').hidden=true;};
 /* 끝내기 */
-$('efDone').onclick=()=>{if(!running()){location.hash='#activity5';return;}const now=Date.now();settle(now);st.end=now;save();showClock(false);fill();
+/* 「다 했어요」 전에 1~4쪽에서 빈 곳 찾기 (지금 고른 글·단계만) */
+function findMissing(){const out=[];
+  const q=[...document.querySelectorAll('#questions .question')].map((el,i)=>{const r=[...el.querySelectorAll('input[type=radio]')],names=[...new Set(r.map(x=>x.name))];return names.every(n=>el.querySelector(`input[name="${n}"]:checked`))?null:{n:i+1,el};}).filter(Boolean);
+  if(q.length)out.push({page:'1쪽',text:'질문에 답하기 '+q.map(x=>x.n+'번').join(', '),el:q[0].el});
+  const l=[...document.querySelectorAll('.link-set')].map((el,i)=>el.querySelectorAll('.link-card.ok').length<4?{n:i+1,el}:null).filter(Boolean);
+  if(l.length)out.push({page:'2쪽',text:'문장 카드 잇기 '+l.map(x=>x.n+'번').join(', '),el:l[0].el});
+  const sp=document.querySelector('.story-panel:not([hidden])');
+  if(sp){const g=[...sp.querySelectorAll('.gap')].map((x,i)=>x.value.trim()?null:{n:i+1,el:x}).filter(Boolean);
+    if(g.length)out.push({page:'3쪽',text:'빈칸 채우기 '+(g.length>6?g.length+'칸':g.map(x=>x.n+'번').join(', ')),el:g[0].el});}
+  const pp=document.querySelector('.picture-panel:not([hidden])');
+  if(pp){const w=[...pp.querySelectorAll('.dict-input,textarea')].map((x,i)=>x.value.trim()?null:{n:i+1,el:x}).filter(Boolean);
+    if(w.length)out.push({page:'4쪽',text:'그림 보고 쓰기 '+w.map(x=>x.n+'번').join(', '),el:w[0].el});}
+  return out;}
+let missFirst=null;
+function showMissing(m){missFirst=m[0].el;$('efMissList').innerHTML=m.map(x=>`<li><b>${x.page}</b><span>${x.text}</span></li>`).join('');$('efMiss').hidden=false;$('efMissGo').focus();}
+$('efMissGo').onclick=()=>{$('efMiss').hidden=true;const el=missFirst;if(!el)return;const box=el.closest('.question,.link-set,.story-block,.dict-row,.guided-row')||el;
+  box.scrollIntoView({behavior:'smooth',block:'center'});box.classList.remove('miss-flash');void box.offsetWidth;box.classList.add('miss-flash');
+  if(el.matches('input,textarea'))setTimeout(()=>el.focus({preventScroll:true}),500);};
+$('efMissEnd').onclick=()=>{$('efMiss').hidden=true;finishNow();};
+function finishNow(){if(!running()){location.hash='#activity5';return;}const now=Date.now();settle(now);st.end=now;save();showClock(false);fill();
   emit('ef-finish',{estimateMin:st.est,startedAt:st.start,endedAt:st.end,activeMs:st.active,awayMs:st.away,awayCount:st.awayCount});
-  location.hash='#activity5';toast('끝까지 했어요! 마지막으로 돌아보기를 해요.');};
+  location.hash='#activity5';toast('끝까지 했어요! 마지막으로 돌아보기를 해요.');}
+$('efDone').onclick=()=>{const m=findMissing();if(m.length)showMissing(m);else finishNow();};
 $('efResume').onclick=()=>{if(!st.end)return;const now=Date.now();st.away+=now-st.end;st.awayCount++;st.end=null;last=now;save();showClock(true);$('efResume').hidden=true;toast('이어서 해요. 4쪽 끝의 「다 했어요」를 눌러 끝내요.');};
 /* 돌아보기 저장 */
 function collect(){const ch=n=>[...document.querySelectorAll(`input[name="${n}"]:checked`)].map(x=>x.value);
