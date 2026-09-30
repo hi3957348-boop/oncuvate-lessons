@@ -346,7 +346,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 <div class="variant" aria-label="쓰기 단계"><button data-picture-level="d0" aria-pressed="true">0단계 · 초성 받아쓰기</button><button data-picture-level="d1" aria-pressed="false">1단계 · 받아쓰기</button><button data-picture-level="easy" aria-pressed="false">2단계 · 3학년 질문</button><button data-picture-level="hard" aria-pressed="false">3단계 · 5학년 질문</button></div>
 <div id="picture-d0" class="picture-panel"></div><div id="picture-d1" class="picture-panel" hidden></div><div id="picture-easy" class="picture-panel" hidden></div><div id="picture-hard" class="picture-panel" hidden></div>
 <div class="self-check"><label><input type="checkbox">답을 순서대로 이어 읽었나요?</label><label><input type="checkbox">상상한 일도 자연스럽게 이어지나요?</label></div>
-<footer class="foot"><span>Oncuvate · 자체 제작 장면·질문 · 그림 AI 생성 · 4 / 5</span><div class="pager"><a href="#activity3">← 이전</a><a href="#activity5" id="efNext5">다음: 돌아보기 →</a><button type="button" class="finish-btn" id="efDone" hidden>다 마쳤어요 ✓</button></div></footer>
+<footer class="foot"><span>Oncuvate · 자체 제작 장면·질문 · 그림 AI 생성 · 4 / 5</span><div class="pager"><a href="#activity3">← 이전</a><button type="button" class="finish-btn" id="efDone">다 했어요 ✓</button></div></footer>
 </section>
 <section class="sheet" id="activity5" aria-labelledby="title5">
 <header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 나의 학습 돌아보기</div></header><div class="king"><div class="say">어떻게 공부했는지<br><b>돌아보는 것</b>도 실력이로다!</div><img src="assets/king-think.webp" alt="세종대왕"></div>
@@ -355,7 +355,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 <div class="time-screen" id="timeScreen">
   <div class="time-card"><div><span>시작한 시각</span><b id="tStart">-</b></div><div><span>끝낸 시각</span><b id="tEnd">-</b></div><div><span>시작부터 끝까지</span><b id="tTotal">-</b></div>
     <div><span>예상한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
-  <p class="time-compare" id="tCompare">4쪽 끝의 「다 마쳤어요」를 누르면 시간이 여기에 정리돼요.</p>
+  <p class="time-compare" id="tCompare">4쪽 끝의 「다 했어요」를 누르면 시간이 여기에 정리돼요.</p>
 </div>
 <div class="time-paper">
   <div class="row"><span>예상한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
@@ -543,7 +543,7 @@ function tick(){if(!running())return;const now=Date.now(),gap=document.hidden?0:
   $('efActive').textContent=mmss(st.active+(idle?0:gap));$('efAway').textContent=mmss(st.away+(idle?gap:0));
   $('efClock').classList.toggle('paused',idle);if(idle&&!idleShown){idleShown=true;}}
 setInterval(tick,1000);setInterval(()=>{if(running()){save();}},10000);
-function showClock(on){$('efClock').hidden=!on;$('efDone').hidden=!on;$('efNext5').hidden=on;}
+function showClock(on){$('efClock').hidden=!on;}
 $('efClock').onclick=()=>{const b=$('efClock'),open=b.getAttribute('aria-expanded')!=='true';b.setAttribute('aria-expanded',open);b.querySelector('.ef-times').hidden=!open;b.setAttribute('aria-label',open?'학습 시간 숨기기':'학습 시간 보기');};
 function fill(){
   const total=st.end-st.start;
@@ -567,12 +567,12 @@ $('efGo').onclick=()=>{const now=Date.now();
   else{st.start=now;st.end=null;st.active=0;st.away=0;st.awayCount=0;emit('ef-start',{estimateMin:st.est});}
   last=now;cover.hidden=true;showClock(true);save();};
 $('efNew').onclick=()=>{st={est:null,start:null,end:null,active:0,away:0,awayCount:0,savedAt:0,ref:{}};save();[...$('efEst').children].forEach(x=>x.setAttribute('aria-pressed','false'));restoreRef();$('efGo').disabled=true;$('efGo').textContent='시작하기';$('efNew').hidden=true;
-  ['tStart','tEnd','tTotal','tEst','tActive','tAway'].forEach(i=>$(i).textContent='-');$('tCompare').textContent='4쪽 끝의 「다 마쳤어요」를 누르면 시간이 여기에 정리돼요.';$('efResume').hidden=true;};
+  ['tStart','tEnd','tTotal','tEst','tActive','tAway'].forEach(i=>$(i).textContent='-');$('tCompare').textContent='4쪽 끝의 「다 했어요」를 누르면 시간이 여기에 정리돼요.';$('efResume').hidden=true;};
 /* 끝내기 */
-$('efDone').onclick=()=>{if(!running())return;const now=Date.now();settle(now);st.end=now;save();showClock(false);fill();
+$('efDone').onclick=()=>{if(!running()){location.hash='#activity5';return;}const now=Date.now();settle(now);st.end=now;save();showClock(false);fill();
   emit('ef-finish',{estimateMin:st.est,startedAt:st.start,endedAt:st.end,activeMs:st.active,awayMs:st.away,awayCount:st.awayCount});
   location.hash='#activity5';toast('끝까지 했어요! 마지막으로 돌아보기를 해요.');};
-$('efResume').onclick=()=>{if(!st.end)return;const now=Date.now();st.away+=now-st.end;st.awayCount++;st.end=null;last=now;save();showClock(true);$('efResume').hidden=true;toast('이어서 해요. 4쪽 끝의 「다 마쳤어요」를 눌러 끝내요.');};
+$('efResume').onclick=()=>{if(!st.end)return;const now=Date.now();st.away+=now-st.end;st.awayCount++;st.end=null;last=now;save();showClock(true);$('efResume').hidden=true;toast('이어서 해요. 4쪽 끝의 「다 했어요」를 눌러 끝내요.');};
 /* 돌아보기 저장 */
 function collect(){const ch=n=>[...document.querySelectorAll(`input[name="${n}"]:checked`)].map(x=>x.value);
   const sm=document.querySelector('input[name="efSmooth"]:checked');
