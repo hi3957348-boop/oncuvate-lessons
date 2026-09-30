@@ -22,6 +22,7 @@
  */
 window.ONQ_CONTENT_PACK = Object.freeze({
   version: "0.1.0",
+  contentId: "RF-L9-005",   // 제작 순서로 붙였다 — L9는 지구온난화 네 편(001~004) 다음이다
   series: "읽기유창성",
   bookTitle: "게으른 거미 아난시",
   credit: {
