@@ -397,63 +397,64 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 @keyframes qa-snap{from{opacity:0;transform:translateY(-14px) scale(.8)}to{opacity:1;transform:none}}
 .qa-rules{display:grid;gap:8px;margin:12px 0 0;padding:0;list-style:none}
 .qa-rules li{padding:10px 12px;border:1px solid var(--warm-line);border-radius:13px;background:#fff;font-size:15px;font-weight:780;line-height:1.5}
-/* ===== 젤리런: 뒷모습 젤리코치가 길을 달리며 맞는 문장은 먹고 틀린 문장은 피하기 ===== */
+/* ===== 젤리런: 문장 카드를 보고 멈춰서 O / X 고르기 ===== */
 .work.solo{grid-template-columns:minmax(0,1fr)}
-.run-hud{display:flex;flex-wrap:wrap;gap:6px;align-items:center}
-.run-hud .pill{display:inline-flex;gap:4px;align-items:center;padding:5px 10px;border:1px solid var(--warm-line);border-radius:999px;background:#fff;font-size:12px;font-weight:850;color:#566077}
-.run-hud .pill b{color:var(--oc-ink);font-size:14px}
-.run-track{position:relative;flex:1 1 auto;min-height:230px;margin-top:10px;overflow:hidden;border:1px solid #d9e6e3;border-radius:18px;touch-action:manipulation;user-select:none;-webkit-user-select:none;cursor:pointer;
-  background:linear-gradient(180deg,#e6f4fa 0%,#f4fafb 16%,#e7f2e3 16.2%,#dfecda 100%)}
-.run-prop{position:absolute;left:0;top:0;width:64px;height:78px;transform-origin:50% 100%;pointer-events:none;will-change:transform}
-.run-prop svg{display:block;width:100%;height:100%;overflow:visible}
-.run-cloud{position:absolute;height:14px;border:2px solid #b9c9d6;border-radius:20px;background:#fff;opacity:.85;pointer-events:none}
-.run-speedlines{position:absolute;inset:0;z-index:95;pointer-events:none;opacity:0;transition:opacity .2s;
-  background:repeating-linear-gradient(90deg,transparent 0 46px,rgba(255,255,255,.55) 46px 48px);-webkit-mask-image:linear-gradient(180deg,transparent 40%,#000);mask-image:linear-gradient(180deg,transparent 40%,#000)}
-.run-track.boost .run-speedlines{opacity:.9}
-.run-track.boost .run-jelly img{animation-duration:.16s}
-.run-road{position:absolute;inset:0;width:100%;height:100%}
-.run-tick{position:absolute;height:3px;border-radius:3px;background:#d8ccb6;opacity:.7;pointer-events:none}
-.run-jelly{position:absolute;z-index:90;width:86px;height:94px;transition:left .13s ease-out;pointer-events:none}
-.run-jelly img{display:block;width:100%;height:100%;object-fit:contain;object-position:50% 100%;transform-origin:50% 100%;animation:rj-run .3s ease-in-out infinite alternate}
-@keyframes rj-run{from{transform:translateY(0) rotate(-2deg)}to{transform:translateY(-7px) rotate(2deg)}}
-.run-track.paused .run-jelly img{animation-play-state:paused}
-.run-jelly.chomp img{animation:rj-chomp .34s ease-out}
-@keyframes rj-chomp{0%{transform:scale(1)}40%{transform:scale(1.18,.86)}100%{transform:scale(1)}}
-.run-jelly.ouch img{animation:rj-ouch .5s ease-out}
-@keyframes rj-ouch{0%,100%{transform:rotate(0)}25%{transform:rotate(-13deg) translateX(-7px)}60%{transform:rotate(9deg)}}
-.run-card{position:absolute;left:0;top:0;display:block;padding:7px 12px 8px;border:2px solid #cfc8dc;border-radius:13px;background:#fff;
-  box-shadow:0 5px 12px rgba(37,45,81,.12);text-align:center;white-space:nowrap;transform-origin:50% 100%;will-change:transform,opacity}
-.run-card b{display:block;font-size:20px;font-weight:900;letter-spacing:-.03em;line-height:1.25}
-.run-card span{display:block;font-size:17px;font-weight:800;line-height:1.3;color:#3c4760}
-.run-card.eaten{transition:transform .26s ease-in,opacity .26s}
-.run-card.bumped{border-color:#e89ea2;background:#fff3f3}
-.run-card.bumped s{color:#b86a6e;text-decoration-thickness:2px}
-.run-card.bumped i{display:block;font-style:normal;color:#247354;font-size:18px;font-weight:900}
-.run-card.fade{transition:opacity .5s;opacity:0!important}
-.run-pop{position:absolute;z-index:110;padding:3px 10px;border-radius:999px;color:#fff;font-size:15px;font-weight:950;pointer-events:none;transform:translateX(-50%);animation:run-pop .75s ease-out forwards}
-.run-pop.good{background:#2f8a68}.run-pop.dodge{background:#2785c7}.run-pop.bad{background:#c2575d}.run-pop.miss{background:#8c8496}
-@keyframes run-pop{from{opacity:1;margin-top:0}to{opacity:0;margin-top:-28px}}
-#coachR{position:absolute;z-index:120;top:8px;left:8px;max-width:min(46%,300px);pointer-events:none}
-#coachR .coach-msg{padding:8px 11px;font-size:12.5px;line-height:1.45;box-shadow:0 4px 10px rgba(37,45,81,.08)}
+#areaR{position:relative}
+#areaR>.jr{bottom:74px;right:16px}
+#areaR>.jr img{height:128px}
+.ox-top{display:flex;align-items:center;gap:10px;margin-top:8px}
+.ox-dots{display:flex;flex:1;gap:5px}
+.ox-dots i{flex:1;height:9px;border-radius:9px;background:#e4def3}
+.ox-dots i.now{background:#4b24a5}
+.ox-dots i.ok{background:#4bb58e}.ox-dots i.no{background:#e08a8e}
+.ox-count{padding:5px 12px;border-radius:10px;color:#fff;background:#35206f;font-size:13px;font-weight:900}
+.ox-stage{position:relative;margin-top:8px;padding:10px 12px 12px;border:1.5px solid #ddd3f3;border-radius:18px;background:linear-gradient(180deg,#f7f4ff,#fbfaff)}
+.ox-card{position:relative;overflow:hidden;padding:14px 16px 12px;border:1.5px solid #e2dcef;border-radius:14px;background:#fff;text-align:center;box-shadow:0 6px 14px rgba(37,20,78,.06);
+  animation:ox-in .38s cubic-bezier(.2,1.3,.4,1) both}
+@keyframes ox-in{from{opacity:0;transform:translateY(-18px) scale(.94)}to{opacity:1;transform:none}}
+.ox-timer{position:absolute;left:0;top:0;height:5px;width:100%;background:linear-gradient(90deg,#e1b72c,#e87a7f);transform-origin:0 50%}
+.ox-card small{display:block;color:#6b5bb0;font-size:12px;font-weight:900}
+.ox-card p{margin:2px 0 0;font-size:clamp(24px,2.6vw,30px);font-weight:900;letter-spacing:-.03em}
+.ox-card p s{color:#b86a6e;text-decoration-thickness:3px}
+.ox-card p .fix{color:#247354}
+.ox-floor{position:relative;display:grid;grid-template-columns:1fr 1fr;gap:10px;height:150px;margin-top:10px}
+.ox-zone{position:relative;display:grid;place-items:center;border:0;border-radius:14px;cursor:pointer;
+  clip-path:polygon(8% 0,100% 0,100% 100%,0 100%);transition:filter .15s,transform .15s}
+.ox-zone.x{clip-path:polygon(0 0,92% 0,100% 100%,0 100%)}
+.ox-zone.o{background:repeating-linear-gradient(180deg,#e3eefb 0 26px,#d6e6f8 26px 28px)}
+.ox-zone.x{background:repeating-linear-gradient(180deg,#fbe6e6 0 26px,#f6d8d8 26px 28px)}
+.ox-zone:hover{filter:brightness(1.03)}
+.ox-zone .arch{display:grid;place-items:center;align-content:center;width:112px;height:106px;border:4px solid #cfdbe6;border-radius:56px 56px 16px 16px;background:#fff;box-shadow:0 6px 0 #d7dde6}
+.ox-zone .arch b{font-size:58px;line-height:.95;font-weight:950}
+.ox-zone.o .arch b{color:#2479c9}.ox-zone.x .arch b{color:#d2454c}
+.ox-zone .arch small{color:#566077;font-size:11px;font-weight:850}
+.ox-zone .hint{position:absolute;bottom:7px;padding:2px 10px;border-radius:999px;background:#fff;font-size:11.5px;font-weight:900}
+.ox-zone.o .hint{left:14px;color:#2479c9}.ox-zone.x .hint{right:14px;color:#d2454c}
+.ox-zone.pick .arch{border-color:#8d70d7;box-shadow:0 6px 0 #8d70d7,0 0 0 6px rgba(141,112,215,.18);transform:translateY(-4px)}
+.ox-zone.right .arch{border-color:#4bb58e;box-shadow:0 6px 0 #4bb58e,0 0 0 8px rgba(75,181,142,.22)}
+.ox-zone.wrong .arch{border-color:#e08a8e;box-shadow:0 6px 0 #e08a8e;animation:pc-shake .45s}
+.ox-zone:disabled{cursor:default}
+.ox-jelly{position:absolute;z-index:3;bottom:-4px;width:56px;height:56px;left:calc(50% - 28px);transition:left .28s cubic-bezier(.3,1.4,.5,1);pointer-events:none}
+.ox-jelly img{width:100%;height:100%;object-fit:contain;animation:ox-bob .5s ease-in-out infinite alternate}
+@keyframes ox-bob{from{transform:translateY(0)}to{transform:translateY(-5px)}}
+.ox-floor[data-pick="o"] .ox-jelly{left:calc(25% - 28px)}
+.ox-floor[data-pick="x"] .ox-jelly{left:calc(75% - 28px)}
+.ox-bar{display:grid;grid-template-columns:auto 1fr auto;gap:10px;align-items:center;margin-top:10px}
+.ox-bar>img{width:40px;height:40px;object-fit:contain}
+#coachR{min-height:40px;padding:8px 12px;border:1px dashed #d4c9ee;border-radius:12px;background:#fbfaff;color:#35206f;font-size:13.5px;font-weight:800;line-height:1.45}
+#coachR .coach-msg{padding:0;border:0;background:none;font-size:inherit;color:inherit}
 #coachR .coach-msg:not(:last-child){display:none}
-.run-cover{position:absolute;z-index:130;inset:0;display:grid;place-items:center;align-content:center;gap:10px;padding:14px;background:rgba(255,253,247,.92);text-align:center;cursor:default}
-.run-endhead{display:flex;align-items:center;gap:12px;text-align:left}
-.run-king{height:84px;animation:jr-jump .4s ease-in-out 3 alternate}
-.run-cover h3{margin:0;font-size:22px;font-weight:900;letter-spacing:-.03em}
-.run-cover p{margin:0;color:#566077;font-size:14px;font-weight:780;line-height:1.5}
-.run-legend{display:flex;flex-wrap:wrap;justify-content:center;gap:10px}
-.run-legend>div{display:flex;align-items:center;gap:8px;font-size:15px;font-weight:900}
-.run-legend .run-card{position:static;transform:none}
-.run-speed{display:inline-flex;gap:4px;padding:3px;border:1px solid var(--warm-line);border-radius:12px;background:#fff}
-.run-speed button{min-height:34px;padding:0 12px;border:0;border-radius:9px;background:transparent;color:#566077;font-size:13px;font-weight:850}
-.run-speed button.on{color:#fff;background:#2785c7}
-.run-ctrl{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:8px;margin-top:9px}
-.run-ctrl button{min-height:46px;border:1px solid var(--warm-line);border-radius:13px;background:#fff;color:var(--oc-ink);font-size:15px;font-weight:900}
-.run-ctrl button:active,.run-ctrl button.on{background:var(--oc-cyan-soft);border-color:#9fd9e3}
-.run-review{display:grid;gap:5px;width:min(100%,420px);max-height:88px;overflow-y:auto}
-.run-review div{padding:6px 10px;border-radius:10px;background:#fff;border:1px solid var(--warm-line);font-size:15px;font-weight:800}
-.run-review s{color:#b86a6e}.run-review b{color:#247354}
-@media (max-width:620px){.run-card b{font-size:16px}.run-card span{font-size:14px}.run-jelly{width:66px;height:72px}}
+#coachR .coach-msg.hint::before{display:none}
+.ox-bar .primary{min-width:130px}
+.ox-end{position:absolute;z-index:30;inset:0;display:grid;place-items:center;align-content:center;gap:10px;padding:14px;border-radius:18px;background:rgba(255,253,247,.96);text-align:center}
+.ox-end-head{display:flex;align-items:center;gap:12px;text-align:left}
+.ox-end-head img{height:88px;animation:jr-jump .4s ease-in-out 3 alternate}
+.ox-end h3{margin:0;font-size:22px;font-weight:900}
+.ox-end p{margin:0;color:#566077;font-size:14px;font-weight:800}
+.ox-review{display:grid;gap:5px;width:min(100%,420px);max-height:96px;overflow-y:auto}
+.ox-review div{padding:6px 10px;border-radius:10px;background:#fff;border:1px solid var(--warm-line);font-size:15px;font-weight:800}
+.ox-review s{color:#b86a6e}.ox-review b{color:#247354}
+@media (max-width:620px){.ox-floor{height:120px}.ox-zone .arch{width:84px;height:84px}.ox-zone .arch b{font-size:44px}}
 </style>
 </head>
 <body>
@@ -478,7 +479,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
         </div>
       </section>
 
-      <section class="page fill" data-page="1" data-title="젤리런" data-sub="맞는 문장 먹고 · 틀린 문장 피하기" data-activity-id="jelly-run" data-measure-id="particleForm">
+      <section class="page fill" data-page="1" data-title="젤리런" data-sub="맞으면 O · 틀리면 X" data-activity-id="jelly-run" data-measure-id="particleForm">
         <div class="work solo">
           <article class="activity-card" id="areaR"></article>
         </div>
@@ -622,7 +623,7 @@ const P0={i:0,tries:0,hintLv:0,
     hint(0,this.hintLv===1?'낱말의 <b>마지막 글자</b>만 따로 소리 내어 읽어 봐.':`'${it.w.slice(-1)}'에는 받침이 ${hasBatchim(it.w)?`있어(${jong(it.w)}). 받침이 있으면 <b>${it.type==='topic'?'은':'이'}</b>!`:`없어. 받침이 없으면 <b>${it.type==='topic'?'는':'가'}</b>!`}`);}
 };
 
-/* ================= 1-2. 젤리런 ================= */
+/* ================= 1-2. 젤리런 (O X 고르기) ================= */
 /* 짧은 문장만: 주인공(또는 받는 말) + 끝 말. 틀린 모양은 받침 규칙을 어긴 것. */
 const RUN_BANK=[
   {w:'책',ok:'이',bad:'가',p:'있어요'},{w:'강아지',ok:'가',bad:'이',p:'뛰어요'},
@@ -636,169 +637,82 @@ const RUN_BANK=[
   {w:'공',ok:'을',bad:'를',p:'차요'},{w:'우유',ok:'를',bad:'을',p:'마셔요'},
   {w:'빵',ok:'을',bad:'를',p:'먹어요'},{w:'나',okW:'내가',badW:'나가',p:'할게요'}];
 const runWord=(b,good)=>b.okW?(good?b.okW:b.badW):b.w+(good?b.ok:b.bad);
-const runCard=(b,good)=>{const t=runWord(b,good),n=b.okW?1:b.w.length;return `<b>${esc(t.slice(0,n))}<mark class="pt">${esc(t.slice(n))}</mark></b><span>${esc(b.p)}</span>`;};
+const runLine=(b,good)=>{const t=runWord(b,good),n=b.okW?1:b.w.length;return esc(t.slice(0,n))+'<mark class="pt">'+esc(t.slice(n))+'</mark> '+esc(b.p)+'.';};
 const runWhy=b=>b.okW?"'나' 뒤에 '가'가 오면 <b>내가</b>!":`'${b.w.slice(-1)}'에 받침이 ${hasBatchim(b.w)?`있어요(${jong(b.w)})`:'없어요'} → <b>${b.w+b.ok}</b>`;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
-/* 뒷모습 젤리코치 그림: assets/jelly-run-back.png (없으면 기본 젤리코치) · 풍경용 색연필 필터는 아래 defs */
-const RUN_DEFS=`<svg width="0" height="0" style="position:absolute" aria-hidden="true"><defs>
-<filter id="rjRough" x="-15%" y="-15%" width="130%" height="130%"><feTurbulence type="fractalNoise" baseFrequency="0.045" numOctaves="2" seed="4" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3.2" xChannelSelector="R" yChannelSelector="G"/></filter>
-<pattern id="rjHatchB" width="4" height="4" patternUnits="userSpaceOnUse" patternTransform="rotate(-30)"><line x1="0" y1="0" x2="0" y2="4" stroke="#2f7d3c" stroke-width="1.6" stroke-opacity="0.55"/></pattern></defs></svg>`;
-const JELLY_BACK=`<img src="assets/jelly-run-back.png" alt="" onerror="this.onerror=null;this.src='assets/jelly-coach-square.png'">`;
-const PROP_TREE=`<svg viewBox="0 0 64 78" aria-hidden="true"><g filter="url(#rjRough)"><path d="M32 74 L32 46" stroke="#6b5140" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="30" r="22" fill="#9fd49a"/><circle cx="32" cy="30" r="22" fill="url(#rjHatchB)" opacity=".35"/><circle cx="32" cy="30" r="22" fill="none" stroke="#2e4a33" stroke-width="3"/></g></svg>`;
-const PROP_BUSH=`<svg viewBox="0 0 64 78" aria-hidden="true"><g filter="url(#rjRough)"><path d="M8 74 Q6 52 22 54 Q26 40 40 48 Q56 46 56 74 Z" fill="#b6dca6" stroke="#3d5a3a" stroke-width="3"/></g></svg>`;
-const PROP_FLOWER=`<svg viewBox="0 0 64 78" aria-hidden="true"><g filter="url(#rjRough)"><path d="M32 76 L32 50" stroke="#4f7a4a" stroke-width="3"/><circle cx="32" cy="44" r="9" fill="#f6c7d9" stroke="#6b3a52" stroke-width="2.5"/><circle cx="32" cy="44" r="3.5" fill="#f3d36b"/></g></svg>`;
-const RUN_SPEED={slow:10.5,mid:8,fast:5.8}; /* 카드가 지평선에서 발밑까지 오는 초 */
-const F0=.2,FP=.9,FHIT=.86,NL=5;             /* 깊이(0=지평선 1=화면 아래) · 젤리 위치 · 부딪힘 · 줄 수 */
-const PR={round:0,speed:'slow',state:'ready',lane:0,raf:0,waves:[],
-  render(){this.stop();if(!$('rTrack'))this.shell();this.clear();this.state='ready';this.cover('start');
-    say('R','<b>맞는 문장</b>은 냠! <b>틀린 문장</b>은 휙!');},
-  shell(){
-    $('areaR').innerHTML=`<div class="card-head"><span class="prompt-label">젤리런</span>
-        <div class="run-hud">${soundBtn()}<span class="pill">냠 <b id="rEat">0</b></span><span class="pill">휙 <b id="rDodge">0</b></span><span class="pill" id="rLeft">0 / 0</span></div></div>
-      <div class="run-track" id="rTrack" aria-label="달리기 길. 왼쪽·오른쪽 화살표로 움직여요">
-        <i class="run-cloud" id="rC0" style="width:58px"></i><i class="run-cloud" id="rC1" style="width:40px"></i><i class="run-cloud" id="rC2" style="width:50px"></i><svg class="run-road" id="rRoad" aria-hidden="true"></svg><div id="rTicks"></div><div id="rProps"></div><div class="run-speedlines"></div>
-        ${RUN_DEFS}<div class="run-jelly" id="rJelly">${JELLY_BACK}</div>
-        <div id="coachR" aria-live="polite"></div>
-        <div class="run-cover hidden" id="rCover"></div></div>
-      <div class="run-ctrl"><button type="button" id="rL">◀ 왼쪽</button><button type="button" id="rU">▲ 빠르게</button><button type="button" id="rD">▼ 천천히</button><button type="button" id="rR">오른쪽 ▶</button></div>`;
-    const tr=$('rTrack');
-    tr.onpointerdown=e=>{if(this.state!=='run'||e.target.closest('.run-cover'))return;const r=tr.getBoundingClientRect();this.move(e.clientX-r.left<this.lx(this.lane,FP)?-1:1);};
-    $('rL').onclick=()=>this.move(-1);$('rR').onclick=()=>this.move(1);
-    [['rU',1],['rD',-1]].forEach(([id,v])=>{const b=$(id);b.onpointerdown=e=>{e.preventDefault();this.throttle(v);b.classList.add('on');};
-      b.onpointerup=b.onpointerleave=b.onpointercancel=()=>{if(this.gas===v)this.throttle(0);b.classList.remove('on');};});
-    $('rProps').innerHTML=Array.from({length:12},()=>'<div class="run-prop"></div>').join('');
-    this.props=[...$('rProps').children].map((el,k)=>this.newProp(el,k/12));
-    this.clouds=[.1,.45,.8];
-    $('rTicks').innerHTML='<i class="run-tick"></i>'.repeat(7);this.tickP=[0,1,2,3,4,5,6].map(k=>k/7);
-    this.layout();
-  },
-  /* 원근: 깊이 f에 따라 아래로 내려오고 커짐 */
-  dims(){const t=$('rTrack');return{W:t.clientWidth,H:t.clientHeight,hz:t.clientHeight*.16,sp:t.clientWidth/5.4};},
-  gas:0,mult:1,
-  throttle(v){this.gas=v;},
-  newProp(el,p){const side=Math.random()<.5?-1:1,off=side<0?-1.2-Math.random()*1.6:5.2+Math.random()*1.6,t=Math.random();
-    el.innerHTML=t<.45?PROP_TREE:t<.8?PROP_BUSH:PROP_FLOWER;return{el,p,off};},
-  ly(f){const d=this.dims();return d.hz+(d.H-d.hz)*f;},
-  lx(l,f){const d=this.dims();return d.W/2+(l-2)*d.sp*f;},
-  layout(){
-    const {W,H,hz,sp}=this.dims(),y=f=>hz+(H-hz)*f,x=(l,f)=>W/2+(l-2)*sp*f,f0=.015,f1=1.1;
-    const edge=`<polygon points="${x(-.5,f0)},${y(f0)} ${x(4.5,f0)},${y(f0)} ${x(4.5,f1)},${y(f1)} ${x(-.5,f1)},${y(f1)}" fill="#f4efe4"/>`;
-    const lines=[.5,1.5,2.5,3.5].map(l=>`<line x1="${x(l,f0)}" y1="${y(f0)}" x2="${x(l,f1)}" y2="${y(f1)}" stroke="#d8ccb6" stroke-width="2" stroke-dasharray="10 12"/>`).join('');
-    const sides=[-.5,4.5].map(l=>`<line x1="${x(l,f0)}" y1="${y(f0)}" x2="${x(l,f1)}" y2="${y(f1)}" stroke="#a99d88" stroke-width="3"/>`).join('');
-    $('rRoad').setAttribute('viewBox',`0 0 ${W} ${H}`);
-    const hills=`<path d="M0 ${hz} Q${W*.12} ${hz-24} ${W*.24} ${hz-6} T${W*.5} ${hz-10} T${W*.76} ${hz-4} T${W} ${hz-18} L${W} ${hz} Z" fill="#cfe3c8" stroke="#8fb08a" stroke-width="2"/>`;
-    $('rRoad').innerHTML=`<defs><filter id="rdRough"><feTurbulence type="fractalNoise" baseFrequency="0.03" numOctaves="2" seed="9" result="n"/><feDisplacementMap in="SourceGraphic" in2="n" scale="3"/></filter></defs><g filter="url(#rdRough)">${hills}${edge}${lines}${sides}</g>`;
-    this.placeJelly();
-  },
-  placeJelly(){const j=$('rJelly');if(!j)return;j.style.left=(this.lx(this.lane,FP)-j.offsetWidth/2)+'px';j.style.top=(this.ly(FP)-j.offsetHeight+6)+'px';},
-  move(d){const l=Math.max(0,Math.min(NL-1,this.lane+d));if(l===this.lane)return;this.lane=l;this.placeJelly();},
-  clear(){this.waves.forEach(w=>w.cards.forEach(c=>c.el.remove()));this.waves=[];$('rTrack').querySelectorAll('.run-card,.run-pop').forEach(x=>x.remove());},
-  cover(kind){
-    const c=$('rCover');c.classList.remove('hidden');$('rTrack').classList.add('paused');
-    const sp=`<div class="run-speed" id="rSpeed">${[['slow','느리게'],['mid','보통'],['fast','빠르게']].map(([k,v])=>`<button type="button" data-s="${k}" class="${k===this.speed?'on':''}">${v}</button>`).join('')}</div>`;
-    if(kind==='start'){
-      c.innerHTML=`<h3>젤리런</h3>
-        <div class="run-legend"><div><span class="run-card">${runCard(RUN_BANK[0],true)}</span>냠!</div><div><span class="run-card">${runCard(RUN_BANK[0],false)}</span>휙!</div></div>
-        <p>← → 옆으로 · ↑ 빠르게 · ↓ 천천히</p>${sp}
-        <button class="primary" type="button" id="rGo">출발!</button>`;
-    }else if(kind==='pause'){
-      c.innerHTML=`<h3>잠깐 쉬어요</h3>${sp}<button class="primary" type="button" id="rGo">다시 달리기</button>`;
-    }else{
-      const n=this.plan.length,ok=this.win;
-      const kk=ok===n?'cheer':ok>=n-3?'thumbs':'cry';
-      c.innerHTML=`<div class="run-endhead"><img class="run-king" src="assets/king-${kk}.webp" alt=""><div><h3>${ok===n?'완벽한 질주!':ok>=n-3?'멋진 질주!':'끝까지 달렸어요!'}</h3>
-        <p>냠 ${this.eat} · 휙 ${this.dodge} · ${n}번 중 ${ok}번 성공</p></div></div>
-        ${this.bumps.length?`<div class="run-review">${this.bumps.map(b=>`<div><s>${esc(runWord(b,false))}</s> → <b>${esc(runWord(b,true))}</b> ${esc(b.p)}</div>`).join('')}</div>`:''}
-        ${sp}<button class="primary" type="button" id="rGo">한 번 더 달리기</button>`;
-    }
-    if(kind==='end'){const n=this.plan.length;if(this.win===n)SFX.happy();else if(this.win<n-3)SFX.cry();else SFX.happy();}
-    $('rSpeed').onclick=e=>{const b=e.target.closest('button');if(!b)return;this.speed=b.dataset.s;[...$('rSpeed').children].forEach(x=>x.classList.toggle('on',x===b));};
-    $('rGo').onclick=()=>kind==='pause'?this.resume():this.start();
-  },
+const OX_N=10,OX_SEC=15;
+const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
+  render(){this.start();},
   start(){
-    this.round++;this.eat=0;this.dodge=0;this.win=0;this.bumps=[];this.k=0;this.clear();this.lane=2;this.placeJelly();
-    /* 14번: 짝 3 · 셋 중 하나 4 · 맞는 문장만 3 · 틀린 문장이 내 앞으로 4 */
-    this.plan=shuffle([...Array(3).fill('pair'),...Array(4).fill('trio'),...Array(3).fill('ok'),...Array(4).fill('bad')]);
-    this.pool=shuffle(RUN_BANK.slice());
-    this.hud();this.resume();
-    say('R','달려! 형광펜 칠한 <b>글자</b>를 봐.');
+    this.round++;this.i=0;this.win=0;this.bumps=[];this.marks=[];
+    const picks=shuffle(RUN_BANK.slice()).slice(0,OX_N),goods=shuffle(picks.map((b,k)=>k<OX_N/2));
+    this.list=picks.map((b,k)=>({b,good:goods[k]}));
+    $('areaR').innerHTML=`<div class="card-head"><span class="prompt-label">젤리런 · O X</span><span style="display:flex;gap:6px;align-items:center">${soundBtn()}<span class="ox-count" id="oxCount"></span></span></div>
+      <div class="ox-top"><div class="ox-dots" id="oxDots">${'<i></i>'.repeat(OX_N)}</div></div>
+      <div class="ox-stage" id="oxStage">
+        <div id="oxCardBox"></div>
+        <div class="ox-floor" id="oxFloor">
+          <button type="button" class="ox-zone o" data-v="o" data-track="answer" aria-label="O 맞는 문장"><span class="arch"><b>O</b><small>맞아요</small></span><span class="hint">← 맞으면 O</span></button>
+          <button type="button" class="ox-zone x" data-v="x" data-track="answer" aria-label="X 틀린 문장"><span class="arch"><b>X</b><small>틀려요</small></span><span class="hint">틀리면 X →</span></button>
+          <div class="ox-jelly" aria-hidden="true"><img src="assets/jelly-coach-square.png" alt=""></div>
+        </div>
+      </div>
+      <div class="ox-bar"><img src="assets/jelly-coach-square.png" alt=""><div id="coachR" aria-live="polite"></div><button class="primary" type="button" id="oxGo" disabled>정했어요</button></div>`;
+    $('oxFloor').onclick=e=>{const z=e.target.closest('.ox-zone');if(z)this.choose(z.dataset.v);};
+    $('oxGo').onclick=()=>this.state==='pick'?this.reveal():this.next();
+    this.show();
   },
-  resume(){$('rCover').classList.add('hidden');$('rTrack').classList.remove('paused');this.state='run';this.layout();this.last=performance.now();this.stop();this.loop();},
-  stop(){cancelAnimationFrame(this.raf);this.raf=0;},
-  pause(){if(this.state!=='run')return;this.gas=0;this.stop();this.state='pause';this.cover('pause');},
-  leave(){this.pause();},
-  hud(){$('rEat').textContent=this.eat;$('rDodge').textContent=this.dodge;$('rLeft').textContent=`${this.k} / ${this.plan.length}`;},
-  draw(){const b=this.pool.shift();this.pool.push(b);return b;},
-  spawn(){
-    const kind=this.plan[this.k],me=this.lane,key=`pR${this.round}-${this.k}`;item(key);
-    const others=shuffle([0,1,2,3,4].filter(l=>l!==me)),near=others.filter(l=>Math.abs(l-me)<=2);
-    let spec=[];const main=this.draw();
-    if(kind==='bad')spec=[{b:main,good:false,lane:me}];
-    else if(kind==='ok')spec=[{b:main,good:true,lane:near[0]}];
-    else if(kind==='pair')spec=[{b:main,good:true,lane:others[0]},{b:main,good:false,lane:me}];
-    else{const g=near[0],o=others.filter(l=>l!==g&&Math.abs(l-g)!==1)[0];
-      spec=[{b:main,good:true,lane:g},{b:this.draw(),good:false,lane:me}];if(o!=null)spec.push({b:this.draw(),good:false,lane:o});}
-    const tr=$('rTrack');
-    const w={kind,key,p:0,done:false,cards:spec.map(c=>{const el=document.createElement('div');el.className='run-card';el.innerHTML=runCard(c.b,c.good);el.style.opacity=0;tr.appendChild(el);
-      return{...c,el,w:el.offsetWidth,h:el.offsetHeight};})};
-    this.waves.push(w);this.k++;this.hud();
+  show(){
+    const it=this.list[this.i];this.pick=null;this.state='pick';this.key=`pR${this.round}-${this.i}`;item(this.key);
+    $('oxCount').textContent=`${this.i+1} / ${OX_N}`;
+    [...$('oxDots').children].forEach((d,k)=>d.className=this.marks[k]||(k===this.i?'now':''));
+    $('oxCardBox').innerHTML=`<div class="ox-card"><span class="ox-timer" id="oxTimer"></span><small>문장 ${this.i+1}</small><p id="oxSent">${runLine(it.b,it.good)}</p></div>`;
+    $('oxFloor').removeAttribute('data-pick');
+    [...$('oxFloor').querySelectorAll('.ox-zone')].forEach(z=>{z.disabled=false;z.classList.remove('pick','right','wrong');});
+    $('oxGo').disabled=true;$('oxGo').textContent='정했어요';
+    this.timer();
+    say('R',this.i===0?'문장을 소리 내어 읽고 <b>O</b>나 <b>X</b>로 가 봐.<br>고른 다음 <b>정했어요</b>를 눌러.':'형광펜 칠한 글자를 잘 봐!');
   },
-  pop(txt,cls,lane){const p=document.createElement('div');p.className='run-pop '+cls;p.textContent=txt;p.style.left=this.lx(lane,FP)+'px';p.style.top=(this.ly(FP)-128)+'px';$('rTrack').appendChild(p);setTimeout(()=>p.remove(),780);},
-  react(cls){const j=$('rJelly');j.classList.remove('chomp','ouch');void j.offsetWidth;j.classList.add(cls);},
-  resolve(w){
-    w.done=true;const c=w.cards.find(c=>c.lane===this.lane),hasGood=w.cards.some(c=>c.good);
-    if(c&&c.good){this.eat++;this.win++;c.gone=true;c.el.classList.add('eaten');
-      c.el.style.transform=`translate(${this.lx(this.lane,FP)-c.w/2}px,${this.ly(FP)-c.h-30}px) scale(.12)`;c.el.style.opacity=0;
-      this.react('chomp');SFX.chomp();this.pop('냠!','good',this.lane);say('R','냠! '+runWord(c.b,true)+' '+esc(c.b.p));}
-    else if(c){miss(w.key);this.bumps.push(c.b);c.gone=true;c.el.classList.add('bumped');
-      c.el.innerHTML=`<b><s>${esc(runWord(c.b,false))}</s></b><i>${esc(runWord(c.b,true))}</i>`;
-      this.react('ouch');SFX.bump();this.pop('앗!','bad',this.lane);say('R','앗! '+runWhy(c.b));
-      setTimeout(()=>c.el.classList.add('fade'),900);setTimeout(()=>c.el.remove(),1450);}
-    else if(hasGood){miss(w.key);this.pop('놓쳤어!','miss',this.lane);say('R','맞는 문장이 지나갔어. 다음엔 냠!');}
-    else{this.dodge++;this.win++;SFX.whoosh();this.pop('휙!','dodge',this.lane);say('R','잘 피했어! '+runWhy(w.cards[0].b));}
-    finish(w.key);this.hud();
+  /* 시간 막대는 보여 주기만 — 다 되어도 틀린 것으로 치지 않음 */
+  timer(){const t=$('oxTimer');if(!t)return;t.style.transition='none';t.style.transform='scaleX(1)';void t.offsetWidth;
+    t.style.transition=`transform ${OX_SEC}s linear`;t.style.transform='scaleX(0)';
+    clearTimeout(this.tNudge);this.tNudge=setTimeout(()=>{if(this.state==='pick'&&!this.pick)say('R','천천히 골라도 괜찮아. 받침을 봐!');},OX_SEC*1000);},
+  choose(v){if(this.state!=='pick')return;this.pick=v;$('oxFloor').dataset.pick=v;
+    [...$('oxFloor').querySelectorAll('.ox-zone')].forEach(z=>z.classList.toggle('pick',z.dataset.v===v));
+    $('oxGo').disabled=false;SFX.tone(v==='o'?660:520,0,.08,'triangle',.08);},
+  reveal(){
+    if(!this.pick)return;const it=this.list[this.i],right=(this.pick==='o')===it.good;this.state='shown';clearTimeout(this.tNudge);
+    const t=$('oxTimer');if(t){const w=getComputedStyle(t).transform;t.style.transition='none';t.style.transform=w;}
+    [...$('oxFloor').querySelectorAll('.ox-zone')].forEach(z=>{z.disabled=true;z.classList.remove('pick');});
+    const zone=$('oxFloor').querySelector(`.ox-zone.${this.pick}`),answer=$('oxFloor').querySelector(`.ox-zone.${it.good?'o':'x'}`);
+    if(!it.good)$('oxSent').innerHTML=`<s>${esc(runWord(it.b,false))}</s> → <span class="fix">${esc(runWord(it.b,true))}</span> ${esc(it.b.p)}.`;
+    if(right){zone.classList.add('right');this.win++;this.marks[this.i]='ok';jellyReact($('areaR'),'happy');
+      say('R',it.good?'맞아! 받침 규칙에 딱 맞는 문장이야.':'맞아! 틀린 문장이었어. '+runWhy(it.b));}
+    else{zone.classList.add('wrong');answer.classList.add('right');miss(this.key);this.marks[this.i]='no';if(!it.good)this.bumps.push(it.b);jellyReact($('areaR'),'scold');
+      say('R',it.good?'이 문장은 맞는 문장이었어. '+runWhy(it.b):'틀린 문장이었어. '+runWhy(it.b));}
+    finish(this.key);
+    [...$('oxDots').children].forEach((d,k)=>d.className=this.marks[k]||'');
+    $('oxGo').disabled=false;$('oxGo').textContent=this.i<OX_N-1?'다음 문장':'결과 보기';$('oxGo').focus();
   },
-  loop(){
-    this.raf=requestAnimationFrame(t=>{
-      if(this.state!=='run')return;
-      const dt=Math.min(.05,(t-this.last)/1000);this.last=t;
-      const want=this.gas>0?1.9:this.gas<0?.5:1;this.mult+=(want-this.mult)*Math.min(1,dt*6);
-      $('rTrack').classList.toggle('boost',this.mult>1.3);
-      const rate=this.mult/RUN_SPEED[this.speed];
-      const {W,H,hz,sp}=this.dims(),y=f=>hz+(H-hz)*f,fo=p=>F0+(1.12-F0)*p;
-      /* 길 가로줄: 달리는 느낌 */
-      const ticks=$('rTicks').children;this.tickP=this.tickP.map(p=>(p+rate*1.5*dt)%1);
-      this.tickP.forEach((p,k)=>{const f=.03+p*p*1.05,e=ticks[k];e.style.top=y(f)+'px';e.style.left=(W/2-2.5*sp*f)+'px';e.style.width=(5*sp*f)+'px';e.style.opacity=(.25+.6*p).toFixed(2);});
-      /* 길가 풍경: 멀리서 다가와 옆으로 지나감 */
-      this.props.forEach(pr=>{pr.p+=rate*1.5*dt;if(pr.p>=1){Object.assign(pr,this.newProp(pr.el,pr.p-1));}
-        const f=.02+Math.pow(pr.p,1.5)*1.15,x=W/2+(pr.off-2)*sp*f,sc=f/FP*.9;
-        pr.el.style.transform=`translate(${x-32}px,${y(f)-78}px) scale(${sc.toFixed(3)})`;pr.el.style.zIndex=Math.round(f*100)-1;pr.el.style.opacity=Math.min(1,pr.p*6).toFixed(2);});
-      this.clouds=this.clouds.map((c,k)=>{c=(c+dt*(.012+k*.004)*this.mult)%1.2;const e=$('rC'+k);e.style.left=(W*(1.1-c)-40)+'px';e.style.top=(hz*(.18+k*.22))+'px';return c;});
-      const lastW=this.waves[this.waves.length-1];
-      if(this.k<this.plan.length&&(!lastW||lastW.p>=.5))this.spawn();
-      this.waves.forEach(w=>{w.p+=rate*dt;const f=fo(w.p),s=f/FP;
-        w.cards.forEach(c=>{if(c.gone)return;const x=W/2+(c.lane-2)*sp*f;
-          c.el.style.transform=`translate(${x-c.w/2}px,${y(f)-c.h}px) scale(${s.toFixed(3)})`;
-          c.el.style.opacity=Math.min(1,(f-F0)/.07,w.done?Math.max(0,(1.14-f)/.14):1).toFixed(2);c.el.style.zIndex=Math.round(f*100);});
-        if(!w.done&&f>=FHIT)this.resolve(w);});
-      this.waves=this.waves.filter(w=>{if(w.p<1.02)return true;w.cards.forEach(c=>{if(!c.gone)c.el.remove();});return false;});
-      if(this.k>=this.plan.length&&!this.waves.length){this.state='end';this.cover('end');
-        say('R',this.bumps.length?'부딪힌 문장을 <b>소리 내어</b> 고쳐 읽어 봐.':'하나도 안 부딪혔어! <b>다음</b>으로 가자.');return;}
-      this.loop();});
+  next(){if(this.i<OX_N-1){this.i++;this.show();}else this.end();},
+  end(){
+    this.state='end';const n=OX_N,ok=this.win,kk=ok===n?'cheer':ok>=n-3?'thumbs':'cry';
+    if(kk==='cry')SFX.cry();else SFX.happy();
+    const box=document.createElement('div');box.className='ox-end';
+    box.innerHTML=`<div class="ox-end-head"><img src="assets/king-${kk}.webp" alt=""><div><h3>${ok===n?'모두 맞혔어요!':ok>=n-3?'잘했어요!':'끝까지 했어요!'}</h3><p>${n}문장 중 ${ok}문장 맞힘</p></div></div>
+      ${this.bumps.length?`<div class="ox-review">${this.bumps.map(b=>`<div><s>${esc(runWord(b,false))}</s> → <b>${esc(runWord(b,true))}</b> ${esc(b.p)}</div>`).join('')}</div>`:''}
+      <button class="primary" type="button" id="oxAgain">한 번 더 하기</button>`;
+    $('oxStage').appendChild(box);$('oxGo').classList.add('hidden');$('oxAgain').onclick=()=>this.start();
+    say('R',this.bumps.length?'놓친 문장을 <b>소리 내어</b> 고쳐 읽어 봐.':'<b>다음</b>을 눌러 문장 기차로 가자!');
   },
-  help(){const w=this.waves[this.waves.length-1];hinted(w?w.key:null);
-    if(this.state==='run'&&this.speed!=='slow'){this.speed='slow';ocToast('속도를 느리게 바꿨어요.');}
-    say('R','주인공 낱말의 <b>마지막 글자</b>만 봐.<br>받침 있으면 <b>은·이·을</b>, 없으면 <b>는·가·를</b>. \'나\'는 <b>내가</b>.');}
+  leave(){clearTimeout(this.tNudge);const a=$('areaR');if(a)a.querySelectorAll('.jr,.spark').forEach(x=>x.remove());},
+  help(){hinted(this.key);jellyReact($('areaR'),'think');
+    hint('R','주인공 낱말의 <b>마지막 글자</b>만 봐.<br>받침 있으면 <b>은·이·을</b>, 없으면 <b>는·가·를</b>. \'나\'는 <b>내가</b>.');}
 };
-document.addEventListener('keydown',e=>{if(PAGES[cur]!==PR||PR.state!=='run')return;
-  if(e.key==='ArrowLeft'||e.key==='a'){PR.move(-1);e.preventDefault();}
-  else if(e.key==='ArrowRight'||e.key==='d'){PR.move(1);e.preventDefault();}
-  else if(e.key==='ArrowUp'||e.key==='w'){PR.throttle(1);e.preventDefault();}
-  else if(e.key==='ArrowDown'||e.key==='s'){PR.throttle(-1);e.preventDefault();}
-  else if(e.key===' '||e.key==='Escape'){PR.pause();e.preventDefault();}});
-document.addEventListener('keyup',e=>{if(['ArrowUp','w','ArrowDown','s'].includes(e.key))PR.throttle(0);});
-document.addEventListener('visibilitychange',()=>{if(document.hidden)PR.pause();});
-window.addEventListener('resize',()=>{if($('rTrack')&&PAGES[cur]===PR)PR.layout();});
+document.addEventListener('keydown',e=>{if(PAGES[cur]!==PR)return;
+  if(PR.state==='pick'&&(e.key==='ArrowLeft'||e.key==='o'||e.key==='O')){PR.choose('o');e.preventDefault();}
+  else if(PR.state==='pick'&&(e.key==='ArrowRight'||e.key==='x'||e.key==='X')){PR.choose('x');e.preventDefault();}
+  else if((e.key==='Enter'||e.key===' ')&&(PR.state==='pick'&&PR.pick||PR.state==='shown')&&!e.target.closest('button')){$('oxGo').click();e.preventDefault();}});
 
 /* ================= 2. 문장 기차 ================= */
 const TYPES={move:'움직이는 말',state:'상태나 느낌을 표현하는 말',what:'무엇인지 알려 주는 말'};
