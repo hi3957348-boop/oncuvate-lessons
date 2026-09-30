@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-lesson-id="history-distortion-careful-reading" data-lesson-version="1.0.0">
+<html lang="ko" data-lesson-id="history-distortion-careful-reading" data-lesson-version="1.1.0">
 <head>
   <meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
   <meta name="robots" content="noindex,noarchive"><meta name="theme-color" content="#f4f5fb">
@@ -8,8 +8,8 @@
   <link rel="stylesheet" href="layout-improvements.css"><link rel="stylesheet" href="reading-fluency-unified.css">
   <link rel="stylesheet" href="reading-fluency-fixes.css"><link rel="stylesheet" href="l2-shell-layout.css">
   <link rel="stylesheet" href="l2-activity-palette.css"><link rel="stylesheet" href="coach-sync.css">
-  <link rel="stylesheet" href="lesson.css?v=1.0.0"><link rel="stylesheet" href="spy-game.css?v=1.0.0">
-  <script src="level-data.js?v=1.0.0"></script>
+  <link rel="stylesheet" href="lesson.css?v=1.1.0"><link rel="stylesheet" href="spy-game.css?v=1.1.0">
+  <script src="level-data.js?v=1.1.0"></script>
 </head>
 <body>
 <div class="intro-gate" id="introGate">
@@ -86,33 +86,33 @@
           <aside class="reading-coach-panel coach-panel" id="readingCoachPanel"><div class="coach-title"><img src="assets/jelly-coach-square.png" alt=""><b>젤리코치</b><span>읽기</span></div><div class="coach-prompt"><strong>어려운 낱말은 눌러 확인해 봐.</strong><p>문장을 끝까지 천천히 읽고, 다 읽으면 아래 버튼을 눌러 줘.</p></div><button class="primary reading-done" id="readingDone" type="button">다 읽었어요</button></aside>
           <aside class="question-panel memory-chat hidden" id="questionPanel">
             <div class="coach-title"><img src="assets/jelly-coach-square.png" alt=""><b>젤리코치</b><span id="questionCounter">1 / 6</span></div>
-            <div class="memory-chat-heading"><strong>읽고 확인하기</strong><span>단어나 짧은 구로 답해요</span></div>
+            <div class="memory-chat-heading"><strong>읽고 확인하기</strong><span>알맞은 답을 하나 골라요</span></div>
             <div class="memory-chat-log" id="questionChat" aria-live="polite"></div>
-            <form class="memory-answer-form" id="questionForm"><label for="questionInput">짧게 답하기</label><div><input id="questionInput" maxlength="24" autocomplete="off" placeholder="단어나 짧은 구를 적어요"><button class="primary" id="questionSubmit" type="submit">보내기</button></div></form>
+            <div class="memory-choice-list" id="questionChoices" aria-label="답 고르기"></div>
             <button class="primary hidden" id="questionNext" type="button">다음 질문</button>
           </aside>
         </div>
       </section>
       <section class="page word-spy-page" data-page="2" data-activity-id="word-spy" data-measure-id="detailComparison">
-        <header class="page-head"><div><p class="eyebrow">3 · 단어 스파이</p><h1>숫자 타일 속 문장을 수사해요</h1></div><b class="page-count">3 / 7</b></header>
+        <header class="page-head"><div><p class="eyebrow">3 · 단어 스파이</p><h1>젤리코치와 틱택토 단어 수사를 해요</h1></div><b class="page-count">3 / 7</b></header>
         <div class="spy-game" id="spyGame">
           <div class="spy-arena">
             <div class="spy-board-wrap"><div class="spy-board" id="spyBoard" role="grid" aria-label="단어 스파이 숫자 타일"></div><svg class="spy-lines" id="spyLines" viewBox="0 0 300 300" preserveAspectRatio="none" aria-hidden="true"></svg></div>
             <aside class="spy-hud">
               <div class="spy-hud-title"><span class="spy-badge" aria-hidden="true"><svg viewBox="0 0 24 24"><circle cx="10" cy="10" r="6"/><path d="M14.5 14.5 20 20"/></svg></span><div><small>WORD SPY</small><b>단어 수사 보드</b></div><button class="spy-sound" id="spySound" type="button" aria-pressed="true" aria-label="효과음 끄기">🔊</button></div>
-              <ol class="spy-howto"><li><b>1</b>숫자 타일을 골라요</li><li><b>2</b>본문과 같으면 <i class="o">O</i>, 다르면 <i class="x">X</i></li><li><b>3</b><i class="x">X</i>라면 틀린 곳을 눌러 고쳐요</li></ol>
-              <div class="spy-stats"><div><small>해결</small><strong id="spySolved">0</strong><span>/ 9</span></div><div><small>빙고 줄</small><strong id="spyBingo">0</strong><span>/ 8</span></div></div>
+              <ol class="spy-howto"><li><b>1</b>숫자 칸을 하나 골라요</li><li><b>2</b>잘못 읽힌 낱말을 모두 눌러요</li><li><b>3</b>맞히면 나, 틀리면 코치가 칸을 얻어요</li></ol>
+              <div class="spy-stats"><div><small>나의 칸</small><strong id="spySolved">0</strong><span>/ 9</span></div><div><small>완성 줄</small><strong id="spyBingo">0</strong><span>/ 8</span></div></div>
               <div class="spy-meter"><span id="spyMeter"></span></div>
-              <p class="spy-hud-msg" id="spyFeedback" role="status">아무 숫자나 골라 수사를 시작해요.</p>
+              <p class="spy-hud-msg" id="spyFeedback" role="status">숫자 칸을 골라 젤리코치와 대결해요.</p>
             </aside>
           </div>
           <div class="spy-modal hidden" id="spyModal" aria-hidden="true">
             <section class="spy-case" id="spyCase" role="dialog" aria-modal="true" aria-labelledby="spyCaseNo">
-              <header><span class="spy-case-no" id="spyCaseNo">1</span><div><small id="spyCaseKicker">수사 문장</small><b id="spyCaseTitle">본문과 같은 문장일까요?</b></div><button class="spy-close" id="spyClose" type="button" aria-label="보드로 돌아가기">×</button></header>
+              <header><span class="spy-case-no" id="spyCaseNo">1</span><div><small id="spyCaseKicker">나의 차례</small><b id="spyCaseTitle">잘못 읽힌 낱말을 모두 눌러요</b></div><button class="spy-close" id="spyClose" type="button" aria-label="보드로 돌아가기">×</button></header>
               <div class="spy-sentence" id="spySentence"></div>
               <div class="spy-stamp" id="spyStamp" aria-hidden="true"></div>
-              <div class="spy-judge" id="spyJudge"><button type="button" class="spy-o" data-spy-judge="o"><span>O</span>본문과 같아요</button><button type="button" class="spy-x" data-spy-judge="x"><span>X</span>본문과 달라요</button></div>
-              <p class="spy-case-msg" id="spyCaseMsg" role="status">문장을 끝까지 읽고 판정해요.</p>
+              <div class="spy-judge hidden" id="spyJudge"></div>
+              <p class="spy-case-msg" id="spyCaseMsg" role="status">문장을 끝까지 읽고 바뀐 낱말을 찾아요.</p>
               <div class="spy-case-foot"><button type="button" class="spy-peek" id="spyPeek">본문 살짝 보기</button><button type="button" class="primary hidden" id="spyNext">보드로 돌아가기</button></div>
               <div class="spy-peek-panel hidden" id="spyPeekPanel"></div>
             </section>
@@ -172,5 +172,5 @@
 <div class="vocab-dialog hidden" id="vocabDialog"><section role="dialog" aria-modal="true" aria-labelledby="vocabTitle"><button class="vocab-close" id="vocabClose" aria-label="닫기">×</button><small>꼼꼼하게 읽기 도구</small><h2 id="vocabTitle"></h2><p class="vocab-hanja" id="vocabHanja"></p><dl><dt>뜻</dt><dd id="vocabMeaning"></dd><dt>예문</dt><dd id="vocabExample"></dd></dl><button type="button" id="vocabSave">단어장에 담기</button></section></div>
 <div class="toast" id="toast" role="status" aria-live="polite"></div><div class="watermark" id="watermark" aria-hidden="true"></div><div class="completion-signal" id="completionSignal" data-track="lesson-complete" hidden></div>
 <footer class="rights">자체 제작 텍스트 · 꼼꼼 읽기 활동 설계 © Oncuvate. All rights reserved.</footer>
-<script src="app.js?v=1.0.0"></script><script src="annotation.js"></script><script src="layout-controller.js"></script><script src="coach-sync.js?v=1.0.0"></script>
+<script src="app.js?v=1.1.0"></script><script src="annotation.js"></script><script src="layout-controller.js"></script><script src="coach-sync.js?v=1.0.0"></script>
 </body></html>
