@@ -535,6 +535,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 #coachR .coach-msg:not(:last-child){display:none}
 #coachR .coach-msg.hint::before{display:none}
 .ox-bar .primary{min-width:130px}
+.ox-bar .primary kbd{margin-left:6px;padding:1px 6px;border:1px solid rgba(255,255,255,.55);border-radius:6px;background:rgba(255,255,255,.18);font:800 11px/1.4 var(--font)}
 .ox-end{position:absolute;z-index:30;inset:0;display:grid;place-items:center;align-content:center;gap:10px;padding:14px;border-radius:18px;background:rgba(255,253,247,.96);text-align:center}
 .ox-end-head{display:flex;align-items:center;gap:12px;text-align:left}
 .ox-end-head img{height:88px;animation:jr-jump .4s ease-in-out 3 alternate}
@@ -753,7 +754,7 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
         </div>
       </div>
       <div class="ox-bar"><img src="assets/jelly-coach-square.png" alt=""><div id="coachR" aria-live="polite"></div><button class="primary" type="button" id="oxGo" disabled>정했어요</button></div>`;
-    $('oxFloor').onclick=e=>{const z=e.target.closest('.ox-zone');if(z)this.choose(z.dataset.v);};
+    $('oxFloor').onclick=e=>{const z=e.target.closest('.ox-zone');if(z){this.choose(z.dataset.v);z.blur();}};
     $('oxGo').onclick=()=>this.state==='pick'?this.reveal():this.next();
     this.show();
   },
@@ -764,9 +765,9 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
     $('oxCardBox').innerHTML=`<div class="ox-card"><span class="ox-timer" id="oxTimer"></span><small>문장 ${this.i+1}</small><p id="oxSent">${runLine(it.b,it.good)}</p></div>`;
     $('oxFloor').removeAttribute('data-pick');
     [...$('oxFloor').querySelectorAll('.ox-zone')].forEach(z=>{z.disabled=false;z.classList.remove('pick','right','wrong');});
-    $('oxGo').disabled=true;$('oxGo').textContent='정했어요';
+    $('oxGo').disabled=true;$('oxGo').innerHTML='정했어요 <kbd>Space</kbd>';
     this.timer();
-    say('R',this.i===0?'문장을 소리 내어 읽고 <b>O</b>나 <b>X</b>로 가 봐.<br>고른 다음 <b>정했어요</b>를 눌러.':'형광펜 칠한 글자를 잘 봐!');
+    say('R',this.i===0?'문장을 소리 내어 읽고 <b>O</b>나 <b>X</b>로 가 봐. (←·→ 키)<br>고른 다음 <b>정했어요</b>나 <b>스페이스</b>를 눌러.':'형광펜 칠한 글자를 잘 봐!');
   },
   /* 시간 막대는 보여 주기만 — 다 되어도 틀린 것으로 치지 않음 */
   timer(){const t=$('oxTimer');if(!t)return;t.style.transition='none';t.style.transform='scaleX(1)';void t.offsetWidth;
@@ -787,7 +788,7 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
       say('R',it.good?'이 문장은 맞는 문장이었어. '+runWhy(it.b):'틀린 문장이었어. '+runWhy(it.b));}
     finish(this.key);
     [...$('oxDots').children].forEach((d,k)=>d.className=this.marks[k]||'');
-    $('oxGo').disabled=false;$('oxGo').textContent=this.i<OX_N-1?'다음 문장':'결과 보기';$('oxGo').focus();
+    $('oxGo').disabled=false;$('oxGo').innerHTML=(this.i<OX_N-1?'다음 문장':'결과 보기')+' <kbd>Space</kbd>';$('oxGo').focus();
   },
   next(){if(this.i<OX_N-1){this.i++;this.show();}else this.end();},
   end(){
@@ -807,7 +808,7 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
 document.addEventListener('keydown',e=>{if(PAGES[cur]!==PR)return;
   if(PR.state==='pick'&&(e.key==='ArrowLeft'||e.key==='o'||e.key==='O')){PR.choose('o');e.preventDefault();}
   else if(PR.state==='pick'&&(e.key==='ArrowRight'||e.key==='x'||e.key==='X')){PR.choose('x');e.preventDefault();}
-  else if((e.key==='Enter'||e.key===' ')&&(PR.state==='pick'&&PR.pick||PR.state==='shown')&&!e.target.closest('button')){$('oxGo').click();e.preventDefault();}});
+  else if((e.key==='Enter'||e.key===' ')&&(PR.state==='pick'&&PR.pick||PR.state==='shown')&&!e.target.closest('input,textarea')){e.preventDefault();if(!e.repeat)$('oxGo').click();}});
 
 /* ================= 2. 문장 기차 ================= */
 const TYPES={move:'움직이는 말',state:'상태나 느낌을 나타내는 말',what:'무엇인지 알려 주는 말'};
