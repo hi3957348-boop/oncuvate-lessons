@@ -389,6 +389,17 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 .qa-scroll small{display:block;color:#8a6a45;font-size:11px;font-weight:850;letter-spacing:0}
 @keyframes qa-unroll{from{opacity:0;transform:scaleX(.2)}to{opacity:1;transform:none}}
 #areaQ .pair-h button{min-height:96px;font-size:21px}
+.qa-label2{color:#1f5f8f!important;background:#e3f1fb!important}
+.qa-h2{margin:10px 0 2px!important;font-size:21px!important}
+.qa-guide{margin:0 0 4px;color:#566077;font-size:13.5px;font-weight:800}
+.qa-guide b{display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;color:#fff;background:#35206f;font-size:12px}
+#areaQ .qa-pair2 button{align-content:start;justify-items:stretch;min-height:0;padding:12px 14px;text-align:left}
+#areaQ .qa-pair2 button>.tag{justify-self:center}
+.qa-seq{display:grid;gap:7px;margin:0;padding:0;list-style:none}
+.qa-seq li{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:center}
+.qa-seq i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;color:#fff;background:#35206f;font-style:normal;font-size:13px;font-weight:900}
+.qa-main{font-size:20px;font-weight:900;letter-spacing:-.02em}
+.qa-linkline{padding:3px 9px;border:1.5px dashed #2785c7;border-radius:9px;background:#edf5fb;color:#1f5f8f;font-size:17px;font-weight:850;justify-self:start}
 .qa-link{display:inline-flex;align-items:center;gap:8px;margin-top:10px;padding:8px 14px;border:2px dashed #2785c7;border-radius:12px;background:#edf5fb;color:#1f5f8f;font-size:18px;font-weight:900;
   animation:qa-float 1.6s ease-in-out infinite alternate}
 @keyframes qa-float{from{transform:translateY(0)}to{transform:translateY(-4px)}}
@@ -862,37 +873,46 @@ const QA={i:0,phase:'ask',
       <div class="qa-king"><img src="assets/king-think.webp" alt="임금님"><div class="qa-scroll" id="qaScroll"><small>세종대왕의 물음</small>“${esc(it.q)}”</div></div>
       <p class="phase-label" id="qaStep">① 임금님께 올릴 대답을 골라요.</p>
       <div class="pair-h" id="qaCards">${this.order.map((k,j)=>`<button type="button" data-k="${k}" data-track="answer"><span class="tag">${'AB'[j]}</span><span class="qa-s">${this.sen(it,k)}</span></button>`).join('')}</div>
-      <div id="qaLinkBox"></div>
-      <div class="inline-feedback" id="qaFb" role="status" aria-live="polite">두 대답 모두 맞는 문장이에요. 물음을 잘 읽어요.</div>
+            <div class="inline-feedback" id="qaFb" role="status" aria-live="polite">두 대답 모두 맞는 문장이에요. 물음을 잘 읽어요.</div>
       <div class="card-foot"><button class="primary hidden" id="qaNext" type="button">${this.i<n-1?'다음 물음':'문답 끝'}</button></div>`;
-    $('qaNext').onclick=()=>{if(this.i<n-1){this.i++;this.render();}else this.done();};
+    this.bindNext();
     $('qaCards').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;b.style.animation='';
-      if(this.phase==='ask')this.pickAnswer(b,it,ka);else if(this.phase==='link')this.pickLink(b,it);};
+      if(this.phase==='ask')this.pickAnswer(b,it,ka);};
     say('Q',this.i===0?'두 문장 다 <b>맞는 문장</b>이야.<br>그런데 임금님의 <b>물음</b>에 딱 맞는 대답은 하나뿐!':'물음을 소리 내어 읽고 골라 봐.');
   },
   pickAnswer(b,it,ka){
     if(b.dataset.k===it.a){b.classList.add('correct');sparkle(b);jellyReact($('areaQ'),'happy');finish(ka);
-      fb($('qaFb'),'success','맞았어요! '+it.why);
-      setTimeout(()=>{if(this.items[this.i]===it&&this.phase==='ask')this.toLink(it);},1100);
+      fb($('qaFb'),'success','맞았어요! '+it.why);[...$('qaCards').children].forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('dim');});
+      this.phase='asked';$('qaNext').textContent='이어 말하기로 →';$('qaNext').classList.remove('hidden');reveal($('qaNext'));
     }else{b.classList.add('wrong');b.disabled=true;miss(ka);jellyReact($('areaQ'),'scold');
       fb($('qaFb'),'attention','이 문장도 맞는 문장이지만, 임금님 물음에는 안 어울려요. 물음을 다시 읽어 봐요.');}
   },
+  bindNext(){const n=this.items.length;
+    $('qaNext').onclick=()=>{if(this.phase==='asked')this.toLink(this.items[this.i]);else if(this.i<n-1){this.i++;this.render();}else this.done();};},
+  /* ② 이어 말하기: ①과 다른 화면. 보기마다 두 문장을 1 → 2 순서로 보여 준다 */
   toLink(it){
-    this.phase='link';this.hintLv=0;const kb='pQ-'+this.i+'b';item(kb);this.kb=kb;
-    [...$('qaCards').children].forEach(x=>{x.disabled=false;x.classList.remove('correct','wrong','dim');x.style.animation='none';});
-    $('qaStep').textContent='② 이 말은 어느 문장과 이어질까요?';
-    $('qaLinkBox').innerHTML=`<div class="qa-link"><small>${it.pos==='after'?'뒤에 붙일 말':'앞에 붙일 말'}</small>${esc(it.link)}</div>`;
-    fb($('qaFb'),'','두 문장에 붙여서 소리 내어 읽어 봐요. 어느 쪽이 자연스러운가요?');
+    const n=this.items.length;this.phase='link';this.hintLv=0;const kb='pQ-'+this.i+'b';item(kb);this.kb=kb;
+    const order=Math.random()<.5?['t','c']:['c','t'];
+    const seq=k=>{const a=`<span class="qa-main">${this.sen(it,k)}</span>`,l=`<span class="qa-linkline">${esc(it.link)}</span>`,two=it.pos==='after'?[a,l]:[l,a];
+      return `<ol class="qa-seq">${two.map((x,j)=>`<li><i>${j+1}</i>${x}</li>`).join('')}</ol>`;};
+    $('areaQ').innerHTML=`<div class="card-head"><span class="prompt-label qa-label2">세종문답 · 이어 말하기</span><span style="display:flex;gap:6px;align-items:center">${soundBtn()}<span class="counter">${this.i+1} / ${n}</span></span></div>
+      <h2 class="qa-h2">어느 쪽이 더 자연스럽게 이어질까요?</h2>
+      <p class="qa-guide"><b>1</b> → <b>2</b> 순서로 소리 내어 읽어 봐요.</p>
+      <div class="pair-h qa-pair2" id="qaCards">${order.map((k,j)=>`<button type="button" data-k="${k}" data-track="answer"><span class="tag">${'AB'[j]}</span>${seq(k)}</button>`).join('')}</div>
+      <div class="inline-feedback" id="qaFb" role="status" aria-live="polite">파란 문장은 두 쪽이 똑같아요. 형광펜 칠한 글자만 달라요.</div>
+      <div class="card-foot"><button class="primary hidden" id="qaNext" type="button">${this.i<n-1?'다음 물음':'문답 끝'}</button></div>`;
+    this.bindNext();
+    $('qaCards').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;b.style.animation='';this.pickLink(b,it);};
     say('Q',it.pos==='after'?'<b>그런데</b>가 나오면 무엇과 무엇을 <b>견주는</b> 걸까?':'<b>처음 보고</b> 손가락으로 가리키는 느낌이야!');
   },
   pickLink(b,it){
+    if(this.phase!=='link')return;
     if(b.dataset.k===it.la){b.classList.add('correct');[...$('qaCards').children].forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('dim');});
-      const add=`<span class="qa-add">${esc(it.link)}</span>`,s=b.querySelector('.qa-s');s.innerHTML=it.pos==='after'?s.innerHTML+add:add+s.innerHTML;
-      $('qaLinkBox').innerHTML='';sparkle(b);jellyReact($('areaQ'),'happy');finish(this.kb);this.phase='done';
-      fb($('qaFb'),'success','이어졌어요! '+this.linkWhy[it.pos]+' 이어진 두 문장을 소리 내어 읽어요.');
+      sparkle(b);jellyReact($('areaQ'),'happy');finish(this.kb);this.phase='done';
+      fb($('qaFb'),'success','맞았어요! '+this.linkWhy[it.pos]+' 두 문장을 이어서 소리 내어 읽어요.');
       $('qaNext').classList.remove('hidden');reveal($('qaNext'));
     }else{b.classList.add('wrong');b.disabled=true;miss(this.kb);jellyReact($('areaQ'),'scold');
-      fb($('qaFb'),'attention','붙여서 읽어 보면 조금 어색해요. 다른 문장에 붙여 볼까요?');}
+      fb($('qaFb'),'attention','이어서 읽어 보면 조금 어색해요. 다른 쪽도 1 → 2 순서로 읽어 볼까요?');}
   },
   done(){
     $('areaQ').innerHTML=`<div class="card-head"><span class="prompt-label">세종문답 완료</span></div>
@@ -906,7 +926,7 @@ const QA={i:0,phase:'ask',
   },
   leave(){const a=$('areaQ');if(!a)return;a.querySelectorAll('.pair-h button,.qa-scroll,.qa-add').forEach(b=>b.style.animation='none');a.querySelectorAll('.jr,.spark').forEach(x=>x.remove());},
   help(){const it=this.items[this.i];if(!it)return;hinted(this.phase==='link'?this.kb:'pQ-'+this.i+'a');this.hintLv++;jellyReact($('areaQ'),'think');
-    if(this.phase==='link')hint('Q',this.hintLv===1?'두 문장 모두에 붙여서 소리 내어 읽어 봐.':this.linkWhy[it.pos]);
+    if(this.phase==='link')hint('Q',this.hintLv===1?'A와 B를 하나씩 1 → 2 순서로 소리 내어 읽어 봐.':this.linkWhy[it.pos]);
     else hint('Q',this.hintLv===1?"물음에 <b>'누가?·무엇이?'</b>가 있을까, 아니면 <b>'○○은/는'</b>이 있을까?":it.why);}
 };
 
