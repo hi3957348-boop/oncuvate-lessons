@@ -230,6 +230,30 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .link-svg{position:absolute;inset:0;z-index:1;width:100%;height:100%;pointer-events:none;overflow:visible}
 .link-set .feedback{margin-top:6px}
 @media(max-width:560px){.link-grid{column-gap:34px}.link-card{font-size:14.5px}}
+
+/* 4 쓰기 0·1단계: 받아쓰기 */
+.dict-guide{display:inline-block;margin:8px 0 6px;padding:3px 12px;border-radius:999px;color:#1f5f8f;background:#e3f1fb;font-size:12px;font-weight:900}
+.dict-row{margin:10px 0;padding:10px 12px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+.dict-top{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.dict-no{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;color:#fff;background:var(--violet-900);font-size:12px;font-weight:900}
+.listen{display:inline-flex;align-items:center;gap:4px;min-height:32px;padding:0 12px;border:1px solid var(--cyan-line);border-radius:999px;background:var(--cyan-soft);color:#1f5f8f;font-size:12.5px;font-weight:900;cursor:pointer}
+.listen.slow{border-color:#e3dcf3;background:#f6f3fb;color:var(--violet)}
+.listen.playing{box-shadow:0 0 0 3px rgba(75,201,220,.3)}
+.cells{display:flex;flex-wrap:wrap;gap:3px;row-gap:10px}
+.cell{position:relative;display:grid;place-items:center;width:34px;height:50px;border:1.5px solid #cfc9bd;border-radius:7px;background:#fff}
+.cell .cho{position:absolute;top:3px;left:5px;color:#b3aec0;font-size:13px;font-weight:800}
+.cell .typed{margin-top:8px;color:var(--ink);font-size:22px;font-weight:800}
+.cell.sp{width:14px;border:0;background:none}
+.cell.punct{width:18px;border:0;background:none;font-size:22px;font-weight:900}
+.cell.ok{border-color:var(--ok);background:var(--ok-bg)}
+.cell.no{border-color:#d68a1f;background:#fff7e8}
+.dict-input{width:100%;min-height:42px;margin-top:10px;padding:6px 10px;border:1.5px solid #d9cff5;border-radius:10px;background:#fbfaff;color:var(--ink);font-size:17px;font-weight:700}
+.dict-input:focus{outline:none;border-color:var(--violet)}
+.dict-line textarea{display:block;width:100%;min-height:56px;height:56px;padding:12px 6px 6px;border:0;border-bottom:1.5px solid #9aa1ad;background:repeating-linear-gradient(transparent 0 54px,#e9e5ef 54px 55px);color:var(--ink);font-size:22px;font-weight:700;letter-spacing:.06em;line-height:1.6;resize:none;overflow:hidden}
+.dict-line textarea:focus{outline:none;border-bottom-color:var(--violet)}
+.dict-line .answer-mirror{display:none}
+.dict-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
+#activity4:has(#picture-d0:not([hidden])) .self-check,#activity4:has(#picture-d1:not([hidden])) .self-check{display:none}
 @page{size:A4;margin:0}
 @media print{
   html,body{background:#fff}
@@ -263,6 +287,15 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
   .print-blank .option input:checked+.radio-mark{border:1.5px solid #9995a1}
   .print-blank .self-check input{appearance:none;-webkit-appearance:none;border:1.5px solid #9aa1ad;border-radius:4px;background:#fff}
   .print-blank .key{display:none!important}
+  .listen,.dict-input,.dict-actions{display:none!important}
+  .cells{gap:3px;row-gap:8px}.cell{width:33px;height:48px}.cell .typed{font-size:21px}.cell.sp{width:12px}.cell.punct{width:14px}
+  #activity4:has(#picture-d0:not([hidden])) .picture img,#activity4:has(#picture-d1:not([hidden])) .picture img{height:215px}
+  #activity4:has(#picture-d0:not([hidden])) .intro,#activity4:has(#picture-d1:not([hidden])) .intro{margin-bottom:6px}
+  .dict-row{margin:8px 0;padding:8px 10px 10px}
+  .dict-line textarea{display:none}
+  .dict-line .answer-mirror{display:block;min-height:58px;padding:14px 6px 6px;border-bottom:1.5px solid #9aa1ad;font-size:22px;letter-spacing:.06em;white-space:pre-wrap}
+  .print-blank .cell .typed{color:transparent}
+  .print-blank .cell.ok,.print-blank .cell.no{border-color:#cfc9bd;background:#fff}
   .print-blank .link-svg{display:none}
   .print-blank .link-card{border-color:#cfc9bd!important;background:#fff!important}
   .print-blank .link-card .dot{border-color:#8d83a3!important;background:#fff!important}
@@ -307,11 +340,11 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 </section>
 <section class="sheet" id="activity4" aria-labelledby="title4">
 <header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 질문을 따라 한 편의 글로</div></header><div class="king"><div class="say">질문을 따라 쓰면<br>멋진 글이 되느니라!</div><img src="assets/king-cheer.webp" alt="세종대왕"></div>
-<div class="title-row"><span class="number">4</span><h2 id="title4">그림 설명하기</h2></div>
-<p class="intro">그림을 보고 네 질문에 <b>한 문장씩 짧게</b> 답해요. 답을 순서대로 이으면 글이 돼요.</p>
+<div class="title-row"><span class="number">4</span><h2 id="title4">그림 보고 쓰기</h2></div>
+<p class="intro">그림을 보고, 알맞은 단계를 골라 써요.</p>
 <figure class="picture"><img src="assets/review-picture-apple-help.webp" alt="숲길에서 사과가 쏟아진 수레 곁에 토끼와 다람쥐가 있다. 다람쥐가 주운 사과를 토끼에게 건네고, 토끼는 사과를 쏟아 당황한 표정으로 다람쥐가 건네는 사과를 받으려 한다. 수레 바퀴 앞에는 돌이 있고, 길 끝에는 소풍 돗자리와 빈 접시가 있다."><figcaption>소풍길에 생긴 일 · 마지막 장면은 내가 상상해요.</figcaption></figure>
-<div class="variant" aria-label="그림 질문 수준"><button data-picture-level="easy" aria-pressed="true">기본 질문</button><button data-picture-level="hard" aria-pressed="false">생각을 넓히는 질문</button><span class="variant-info">같은 그림으로 질문만 바뀌어요.</span></div>
-<div id="picture-easy" class="picture-panel"></div><div id="picture-hard" class="picture-panel" hidden></div>
+<div class="variant" aria-label="쓰기 단계"><button data-picture-level="d0" aria-pressed="true">0단계 · 초성 받아쓰기</button><button data-picture-level="d1" aria-pressed="false">1단계 · 받아쓰기</button><button data-picture-level="easy" aria-pressed="false">2단계 · 3학년 질문</button><button data-picture-level="hard" aria-pressed="false">3단계 · 5학년 질문</button></div>
+<div id="picture-d0" class="picture-panel"></div><div id="picture-d1" class="picture-panel" hidden></div><div id="picture-easy" class="picture-panel" hidden></div><div id="picture-hard" class="picture-panel" hidden></div>
 <div class="self-check"><label><input type="checkbox">답을 순서대로 이어 읽었나요?</label><label><input type="checkbox">상상한 일도 자연스럽게 이어지나요?</label></div>
 <footer class="foot"><span>Oncuvate · 자체 제작 장면·질문 · 그림 AI 생성 · 4 / 5</span><div class="pager"><a href="#activity3">← 이전</a><a href="#activity5" id="efNext5">다음: 돌아보기 →</a><button type="button" class="finish-btn" id="efDone" hidden>다 마쳤어요 ✓</button></div></footer>
 </section>
@@ -441,7 +474,41 @@ Object.entries(pictures).forEach(([level,p])=>{const panel=$('picture-'+level);p
 panel.querySelectorAll('textarea').forEach(input=>input.addEventListener('input',()=>{input.style.height='42px';input.style.height=input.scrollHeight+'px';input.nextElementSibling.textContent=input.value;updateWriting(panel);}));panel.querySelector('.read-story').onclick=()=>{const button=panel.querySelector('.read-story'),area=panel.querySelector('.assembled'),show=area.hidden;area.hidden=!show;button.setAttribute('aria-expanded',show);button.textContent=show?'모은 글 접기':'내 답 이어 읽기';updateWriting(panel);};updateWriting(panel);
 });
 document.querySelectorAll('[data-story-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-story-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['3','5'].forEach(l=>$('story'+l).hidden=l!==b.dataset.storyLevel);});
-document.querySelectorAll('[data-picture-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-picture-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['easy','hard'].forEach(l=>$('picture-'+l).hidden=l!==b.dataset.pictureLevel);});
+/* 4 쓰기 0·1단계: 네 문장 받아쓰기 (0단계는 초성 칸, 둘 다 듣기) */
+const DICT=['수레에서 사과가 쏟아졌어요.','토끼는 깜짝 놀랐어요.','다람쥐가 사과를 주웠어요.','다람쥐는 토끼에게 사과를 건넸어요.'];
+const CHO='ㄱㄲㄴㄷㄸㄹㅁㅂㅃㅅㅆㅇㅈㅉㅊㅋㅌㅍㅎ';
+const cho=ch=>{const c=ch.charCodeAt(0)-0xAC00;return c>=0&&c<11172?CHO[Math.floor(c/588)]:ch;};
+const norm=t=>t.replace(/\s+/g,' ').trim();
+let nowAudio=null;
+function play(btn,i,slow){if(nowAudio){nowAudio.pause();document.querySelectorAll('.listen.playing').forEach(x=>x.classList.remove('playing'));}
+  const a=new Audio('assets/review01-dict-'+(i+1)+'.mp3');a.playbackRate=slow?0.8:1;nowAudio=a;btn.classList.add('playing');
+  a.onended=a.onerror=()=>btn.classList.remove('playing');a.play().catch(()=>btn.classList.remove('playing'));}
+function dictCheck(row,i,value,cells){const want=DICT[i],got=norm(value);const fb=row.querySelector('.feedback');
+  if(!got){fb.textContent='소리를 듣고 먼저 써 보세요.';return;}
+  if(cells){[...want].forEach((ch,k)=>{const c=cells[k];if(!c||c.classList.contains('sp')||c.classList.contains('punct'))return;c.classList.remove('ok','no');c.classList.add(got[k]===ch?'ok':'no');});}
+  if(got===want){fb.textContent='정확하게 썼어요!';}
+  else if(got.replace(/\s/g,'')===want.replace(/\s/g,'')){fb.textContent='글자는 모두 맞아요. 띄어쓰기를 다시 살펴봐요.';}
+  else if(got.replace(/[.\s]/g,'')===want.replace(/[.\s]/g,'')){fb.textContent='거의 다 맞아요. 문장 끝의 마침표를 살펴봐요.';}
+  else fb.textContent=cells?'색이 바뀐 칸을 다시 들어 보고 고쳐 써요.':'한 번 더 들어 보고, 틀린 곳을 찾아 고쳐 써요.';}
+function listenBtns(i){return `<button type="button" class="listen" data-i="${i}">🔊 듣기</button><button type="button" class="listen slow" data-i="${i}" data-slow="1">🐢 천천히</button>`;}
+/* 0단계: 초성 칸 + 입력 */
+$('picture-d0').innerHTML='<div class="level-print">0단계 · 초성 받아쓰기</div><p class="dict-guide">잘 듣고, 칸 안의 초성을 보며 문장을 써요.</p>'+DICT.map((t,i)=>`<div class="dict-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
+  <div class="cells">${[...t].map(ch=>ch===' '?'<span class="cell sp"></span>':/[.!?]/.test(ch)?`<span class="cell punct">${ch}</span>`:`<span class="cell"><span class="cho">${cho(ch)}</span><span class="typed"></span></span>`).join('')}</div>
+  <input class="dict-input" type="text" autocomplete="off" spellcheck="false" aria-label="${i+1}번 문장 받아쓰기" placeholder="여기에 써요" data-track="input">
+  <div class="dict-actions"><button type="button" class="check">확인</button></div><div class="feedback" role="status"></div></div>`).join('')+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
+$('picture-d0').querySelectorAll('.dict-row').forEach(row=>{const i=+row.dataset.i,cells=[...row.querySelectorAll('.cell')],inp=row.querySelector('.dict-input');
+  inp.addEventListener('input',()=>{const v=inp.value;cells.forEach((c,k)=>{c.classList.remove('ok','no');const tp=c.querySelector('.typed');if(tp)tp.textContent=(v[k]&&v[k]!==' ')?v[k]:'';});row.querySelector('.feedback').textContent='';});
+  row.querySelector('.check').onclick=()=>dictCheck(row,i,inp.value,cells);});
+/* 1단계: 힌트 없이 넓은 줄에 받아쓰기 */
+$('picture-d1').innerHTML='<div class="level-print">1단계 · 받아쓰기</div><p class="dict-guide">잘 듣고, 문장을 그대로 써요.</p>'+DICT.map((t,i)=>`<div class="dict-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
+  <div class="dict-line"><textarea rows="1" aria-label="${i+1}번 문장 받아쓰기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div>
+  <div class="dict-actions"><button type="button" class="check">확인</button></div><div class="feedback" role="status"></div></div>`).join('')+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
+$('picture-d1').querySelectorAll('.dict-row').forEach(row=>{const i=+row.dataset.i,ta=row.querySelector('textarea');
+  ta.addEventListener('input',()=>{ta.nextElementSibling.textContent=ta.value;row.querySelector('.feedback').textContent='';});
+  ta.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();dictCheck(row,i,ta.value,null);}});
+  row.querySelector('.check').onclick=()=>dictCheck(row,i,ta.value,null);});
+document.getElementById('activity4').addEventListener('click',e=>{const b=e.target.closest('.listen');if(b)play(b,+b.dataset.i,!!b.dataset.slow);});
+document.querySelectorAll('[data-picture-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-picture-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['d0','d1','easy','hard'].forEach(l=>$('picture-'+l).hidden=l!==b.dataset.pictureLevel);});
 $('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'해설 숨기기':'해설 보기';};
 function syncPrint(){document.querySelectorAll('.gap,textarea').forEach(x=>x.nextElementSibling.textContent=x.value);}
 window.addEventListener('beforeprint',syncPrint);window.addEventListener('afterprint',()=>document.body.classList.remove('print-blank'));
