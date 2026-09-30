@@ -7,59 +7,328 @@
 <title>바른 문장 쓰기 — 질문부터 그림 설명까지</title>
 <style>
 @font-face{font-family:Pretendard;src:url('assets/review-pretendard.woff2') format('woff2');font-weight:100 900;font-display:swap}
-:root{--oc-violet-800:#4b24a5;--oc-violet-100:#eee9fb;--oc-cyan:#4bc9dc;--oc-paper:#fffefb;--oc-ink:#29243a;--oc-muted:#686476;--line:#dedbd3;--teal:#226d74;--ink:var(--oc-ink);--paper:var(--oc-paper);--violet:var(--oc-violet-800)}
-*{box-sizing:border-box}html{background:#eeefec;scroll-behavior:smooth;scroll-padding-top:92px}body{margin:0;color:var(--ink);font:16px/1.65 Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif;word-break:keep-all}button,input,textarea{font:inherit}button,a,input,textarea{touch-action:manipulation}button{cursor:pointer}button,a{ -webkit-tap-highlight-color:transparent}button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid #26858f;outline-offset:3px}[hidden]{display:none!important}
-.toolbar{position:sticky;top:0;z-index:10;background:#eeefecf5;border-bottom:1px solid var(--line);padding:10px 18px;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center}.toolbar a,.toolbar button,.variant button,.check,.add,.pager a{min-height:42px;display:inline-flex;align-items:center;justify-content:center;border:1px solid var(--line);border-radius:9px;background:white;color:var(--ink);padding:7px 13px;text-decoration:none;font-size:13px;font-weight:700}.toolbar .main,.check{background:var(--violet);color:#fff;border-color:var(--violet)}.toolbar .spacer{width:12px}.toolbar button[aria-pressed=true]{color:var(--violet);border-color:var(--violet)}
-.sheet{width:210mm;min-height:297mm;margin:18px auto;padding:12mm 13mm 10mm;background:var(--paper);box-shadow:0 8px 26px #252d5114;display:flex;flex-direction:column;position:relative}.mast{display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--line);padding-bottom:10px;margin-bottom:18px}.series{font-size:14px;font-weight:800;letter-spacing:-.02em}.meta{font-size:12px;color:var(--oc-muted)}.brand{width:104px;max-height:42px;object-fit:contain;background:#35206f;border-radius:6px;padding:6px 9px}.title-row{display:flex;align-items:center;gap:12px}.number{font-size:18px;font-weight:850;color:var(--teal);border:1px solid #a9c8c6;border-radius:50%;width:38px;height:38px;display:grid;place-items:center;flex-shrink:0}h1,h2{font-size:28px;line-height:1.3;letter-spacing:-.035em;margin:0;font-weight:850}.intro{margin:10px 0 20px;color:#525565;font-size:15px}.top-note{font-size:13px;line-height:1.7;padding:10px 0 12px;border-bottom:1px solid var(--line);margin:0 0 18px}.top-note b{color:var(--teal)}.questions{display:grid;grid-template-columns:1fr 1fr;gap:15px 20px}.question{padding:0 0 14px;border-bottom:1px solid var(--line);break-inside:avoid}.question h3{font-size:17px;margin:0 0 9px;line-height:1.55}.qid{font-size:12px;color:var(--oc-muted);margin-right:8px}.sub{font-size:12px;font-weight:700;color:var(--oc-muted);margin:6px 0}.focus-group{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:6px}.option{display:flex;align-items:flex-start;gap:7px;padding:6px 8px;border:1px solid transparent;border-radius:8px;font-size:15px;cursor:pointer;line-height:1.5;min-height:38px}.focus-group .option{font-size:13px;background:#f0f5f3;padding:6px 8px}.option:has(input:checked){border-color:#9d88c9;background:var(--oc-violet-100)}.option input{position:absolute;opacity:0;width:1px;height:1px}.option:has(input:focus-visible){outline:3px solid #26858f;outline-offset:2px}.radio-mark{width:15px;height:15px;border:1.5px solid #9995a1;border-radius:50%;margin-top:4px;flex-shrink:0;display:inline-block}.option input:checked+.radio-mark{border:4.5px solid var(--violet)}.pt{border-bottom:2px solid #b7d6d2;font-weight:800}.check{margin-top:8px;font-size:12px;min-height:36px;padding:5px 13px}.feedback{font-size:13px;line-height:1.6;color:var(--teal);margin-top:8px}.feedback:empty{display:none}.key{display:none;margin:7px 0 0;font-size:12px;line-height:1.65;color:#584271}.show-key .key{display:block}.foot{margin-top:auto;padding-top:20px;display:flex;justify-content:space-between;gap:16px;align-items:center;color:var(--oc-muted);font-size:10px}.pager{display:flex;gap:6px}.pager a{font-size:12px;min-height:36px;padding:4px 9px}.flows{display:grid;gap:18px}.flow{border-bottom:1px solid var(--line);padding-bottom:15px;break-inside:avoid}.flow-head{font-size:12px;font-weight:750;color:var(--teal);margin-bottom:7px}.context{font-size:17px;line-height:1.7;margin:5px 0}.target{margin:8px 0;padding:8px 12px;background:#f1f5f3;border-left:3px solid #88b4ae;font-size:18px}.flow .answers{display:flex;gap:12px;flex-wrap:wrap}.variant{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin-bottom:17px}.variant button[aria-pressed=true]{border-color:var(--violet);background:var(--oc-violet-100);color:var(--violet)}.variant-info{font-size:12px;color:var(--oc-muted)}.level-print{display:none}.story-block{margin:18px 0 22px;break-inside:avoid}.story-block h3{font-size:17px;margin:0 0 8px}.story{font-size:20px;line-height:2.35;margin:0}.gap-wrap{white-space:nowrap}.gap{width:42px;height:36px;vertical-align:baseline;text-align:center;padding:0 2px;background:white;border:1.5px solid #aaa4b2;border-radius:5px;color:var(--ink);font-weight:700}.gap-num{font-size:10px;vertical-align:super;color:var(--oc-muted);margin-left:2px}.gap.good{border-color:#26816b;background:#f0f9f5}.gap.revisit{border-color:#9a6a30;background:#fff7e8}.gap-note{font-size:13px;color:var(--oc-muted);margin:16px 0}.answer-mirror{display:none}.story-key p{margin:5px 0}.self-check{margin-top:20px;border-top:1px solid var(--line);padding-top:12px;font-size:14px;display:flex;gap:12px;flex-wrap:wrap}.self-check label{display:flex;align-items:center;gap:6px}.self-check input{width:17px;height:17px;accent-color:var(--violet)}.picture{margin:0}.picture img{width:100%;height:350px;object-fit:contain;display:block;border-radius:10px;background:#f6f5ed}.picture figcaption{font-size:11px;color:var(--oc-muted);margin:5px 0 12px}.hints{font-size:13px;line-height:1.8;color:#525565;margin-bottom:12px}.hints b{color:var(--teal)}details{font-size:13px;margin:8px 0}summary{cursor:pointer;color:var(--teal);font-weight:700}.write-row{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:start;margin:6px 0}.write-row>span{color:var(--teal);font-size:12px;padding-top:12px}.write-row textarea{width:100%;resize:vertical;min-height:46px;height:46px;border:0;border-bottom:1px solid #a7a3ae;background:transparent;padding:8px 4px 5px;font-size:18px;line-height:1.6;overflow:hidden}.write-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:10px}.count{font-size:12px;color:var(--oc-muted)}.teacher-note{margin:20px 0 0;border-top:1px solid var(--line);padding-top:12px;font-size:12px;color:var(--oc-muted)}.print-name{display:none}.success{color:var(--teal)}
-@media(max-width:840px){.sheet{width:auto;min-height:0;margin:12px;padding:24px 20px}.toolbar{padding:8px;gap:5px}.toolbar a,.toolbar button{font-size:12px;padding:6px 9px}.toolbar .spacer{display:none}.foot{margin-top:22px}.picture img{height:auto;max-height:380px}}
-@media(max-width:540px){.questions{grid-template-columns:1fr;gap:18px}.sheet{padding:22px 17px}h1,h2{font-size:24px}.mast{gap:12px}.brand{width:88px}.intro{font-size:14px}.story{font-size:18px;line-height:2.4}.flow .answers{display:block}.foot{align-items:flex-end}.context{font-size:16px}.self-check{display:block}.self-check label{margin:8px 0}.picture img{border-radius:6px}}
+/* 온큐베이트 워크지 스타일 (1회 복습 워크지 원래 디자인) */
+:root{--ink:#27344e;--muted:#6f7789;--line:#e2ddd2;--paper:#fffdf7;--violet:#4b24a5;--violet-900:#35206f;--violet-soft:#eee9fb;
+  --cyan-soft:#e9f8fa;--cyan-line:#9fd9e3;--ok:#27866a;--ok-bg:#eef9f5;--no:#c2575d;--no-bg:#fff3f3;--mark:#fde9a6;--teal:#1f6f80}
+*{box-sizing:border-box}
+html{background:#eef0ec;scroll-behavior:smooth;scroll-padding-top:80px}
+body{margin:0;color:var(--ink);font:16px/1.6 Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all;line-break:strict;-webkit-print-color-adjust:exact;print-color-adjust:exact}
+button,input,textarea{font:inherit}button{cursor:pointer}[hidden]{display:none!important}
+button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(75,201,220,.6);outline-offset:3px}
+.pt{padding:0 1px;border-radius:3px;background:linear-gradient(transparent 50%,var(--mark) 50%);font-weight:900}
+
+/* 도구 막대 (화면 전용) */
+.toolbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:10px 12px;background:rgba(238,240,236,.94);border-bottom:1px solid var(--line)}
+.toolbar a,.toolbar button{min-height:40px;display:inline-flex;align-items:center;padding:0 14px;border:1px solid var(--line);border-radius:11px;background:#fff;color:var(--ink);text-decoration:none;font-size:13px;font-weight:850}
+.toolbar a:hover{border-color:var(--cyan-line)}
+.toolbar .spacer{width:10px}
+.toolbar .main{border:0;color:#fff;background:var(--violet)}
+.toolbar button[aria-pressed=true]{border-color:var(--ok);color:var(--ok);background:var(--ok-bg)}
+
+/* A4 종이 */
+.sheet{position:relative;display:flex;flex-direction:column;width:210mm;min-height:297mm;margin:16px auto;padding:12mm 13mm 10mm;background:var(--paper);box-shadow:0 10px 30px rgba(37,45,81,.12)}
+/* 1쪽 머리글 */
+.head{position:relative;display:grid;grid-template-columns:1fr auto;gap:12px;align-items:center;padding:12px 16px 12px 18px;border:1.5px solid #ddd3f3;border-radius:18px;
+  background:linear-gradient(120deg,#f6f2ff 0%,#fffdf7 55%,#eaf8fa 100%)}
+.head::before{content:"";position:absolute;left:0;top:14px;bottom:14px;width:5px;border-radius:0 5px 5px 0;background:linear-gradient(180deg,#4b24a5,#4bc9dc)}
+.series{display:flex;flex-wrap:wrap;align-items:baseline;gap:4px 10px}
+.series-name{font-size:27px;font-weight:900;letter-spacing:-.05em;color:var(--violet-900);background:linear-gradient(transparent 62%,var(--mark) 62%,var(--mark) 90%,transparent 90%);padding:0 2px}
+.series-sub{color:#566077;font-size:12.5px;font-weight:800}
+.lesson{display:flex;flex-wrap:wrap;align-items:center;gap:7px;margin-top:8px;font-size:15px;font-weight:850}
+.lesson-no{padding:3px 9px;border-radius:999px;color:#fff;background:var(--violet-900);font-size:12px;font-weight:900}
+.head>img{height:88px;margin:-6px 0 -8px}
+.print-name{display:none;gap:18px;margin-top:8px;font-size:13px;font-weight:800}
+.print-name span{flex:1;border-bottom:1px solid #9aa1ad;padding-bottom:2px}
+/* 2~4쪽 머리 줄 + 세종대왕 말풍선 */
+.mini{color:var(--muted);font-size:11.5px;font-weight:800}
+.mini b{color:var(--violet-900)}
+.king{position:absolute;top:9mm;right:13mm;display:flex;align-items:flex-end;gap:6px}
+.king img{height:72px}
+.king .say{margin-bottom:20px;padding:7px 12px;border:2px solid #2e2848;border-radius:14px 14px 4px 14px;background:#fff;font-size:13px;font-weight:850;line-height:1.4}
+.king .say b{color:var(--no)}
+.page-top{min-height:66px;padding-right:250px}
+/* 활동 제목 */
+.title-row{display:flex;align-items:center;gap:9px;margin-top:14px}
+.number{display:grid;place-items:center;flex-shrink:0;width:30px;height:30px;border-radius:9px;color:#fff;background:var(--ink);font-size:15px;font-weight:900}
+h1,h2{margin:0;font-size:21px;line-height:1.3;letter-spacing:-.03em;font-weight:900}
+.intro{margin:5px 0 10px;color:var(--muted);font-size:13.5px;font-weight:700}
+.top-note{margin:0 0 12px;padding:8px 12px;border:1px solid var(--cyan-line);border-radius:12px;background:var(--cyan-soft);font-size:12.5px;font-weight:750;line-height:1.6}
+.top-note b{color:var(--violet)}
+
+/* 1 질문에 답하기 */
+.questions{display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.question{padding:9px 11px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+.question h3{display:inline-block;margin:0 0 5px;padding:4px 12px;border:1.5px solid var(--cyan-line);border-radius:14px 14px 14px 4px;background:var(--cyan-soft);font-size:14.5px;font-weight:850;line-height:1.45}
+.qid{margin-right:6px;color:var(--muted);font-size:11px;font-weight:850}
+.sub{margin:5px 0 3px;color:var(--muted);font-size:11.5px;font-weight:800}
+.focus-group{display:flex;flex-wrap:wrap;gap:5px}
+.option{position:relative;display:flex;align-items:center;gap:6px;min-height:34px;margin-top:4px;padding:4px 11px;border:1.5px solid #cfc9bd;border-radius:10px;background:#fff;font-size:14.5px;font-weight:800;line-height:1.4;cursor:pointer}
+.focus-group .option{margin-top:0;min-height:30px;border-radius:999px;padding:2px 11px;font-size:12.5px}
+.option:hover{border-color:var(--cyan-line)}
+.option input{position:absolute;opacity:0;width:1px;height:1px}
+.radio-mark{flex-shrink:0;width:14px;height:14px;border:1.5px solid #9995a1;border-radius:50%}
+.option:has(input:checked){border-color:var(--violet);background:var(--violet-soft)}
+.option input:checked+.radio-mark{border:4.5px solid var(--violet)}
+.option:has(input:focus-visible){outline:3px solid rgba(75,201,220,.6);outline-offset:2px}
+.check{display:inline-flex;align-items:center;min-height:32px;margin-top:6px;padding:0 13px;border:0;border-radius:999px;color:#fff;background:var(--violet);font-size:12px;font-weight:850}
+.feedback{margin-top:5px;color:var(--ok);font-size:12.5px;font-weight:800;line-height:1.5}
+.feedback:empty{display:none}
+.key{display:none;margin:6px 0 0;padding:6px 9px;border-radius:9px;background:#f6f3fb;color:#4b3f73;font-size:12px;font-weight:750;line-height:1.6}
+.show-key .key{display:block}
+
+/* 2 흐름에 맞는 문장 */
+.flows{display:grid;gap:9px}
+.flow{padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+.flow-head{display:inline-block;margin-bottom:5px;padding:2px 10px;border-radius:999px;color:#1f5f8f;background:#e3f1fb;font-size:11.5px;font-weight:900}
+.context{margin:3px 0;color:#465269;font-size:15px;font-weight:700;line-height:1.6}
+.target{margin:6px 0;padding:8px 12px;border-radius:11px;background:linear-gradient(155deg,#fff,#f8f6fd 55%,var(--cyan-soft));border:1px solid #e4def3;font-size:17px;font-weight:900}
+.flow .answers{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+.flow .answers .option{margin-top:0}
+.teacher-note{margin:12px 0 0;padding:8px 12px;border:1px dashed #d4c9ee;border-radius:10px;color:var(--muted);font-size:11.5px;font-weight:700}
+
+/* 3 빈칸 채우기 */
+.variant{display:flex;flex-wrap:wrap;gap:6px;align-items:center;margin-bottom:10px}
+.variant button{min-height:34px;padding:0 12px;border:1px solid var(--line);border-radius:999px;background:#fff;color:var(--muted);font-size:12.5px;font-weight:850}
+.variant button[aria-pressed=true]{border-color:var(--violet);color:#fff;background:var(--violet)}
+.variant-info{color:var(--muted);font-size:11.5px;font-weight:700}
+.level-print{display:none}
+.story-block{margin:0 0 10px;padding:10px 14px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+.story-block h3{display:inline-block;margin:0 0 4px;padding:2px 10px;border-radius:999px;color:#fff;background:var(--violet-900);font-size:12.5px;font-weight:900}
+.story{margin:0;font-size:18px;font-weight:750;line-height:2.3}
+.gap-wrap{white-space:nowrap}
+.gap{width:40px;height:32px;margin-left:1px;padding:0 2px;border:1.5px solid #cfc9bd;border-radius:8px;background:#fff;color:var(--violet);text-align:center;font-weight:900;vertical-align:baseline}
+.gap:focus{outline:none;border-color:var(--violet);box-shadow:0 0 0 3px rgba(141,112,215,.18)}
+.gap-num{margin-left:1px;color:var(--muted);font-size:10px;font-weight:850;vertical-align:super}
+.gap.good{border-color:var(--ok);background:var(--ok-bg)}
+.gap.revisit{border-color:#d68a1f;background:#fff7e8}
+.gap-note{margin:8px 0;padding:7px 12px;border-radius:10px;background:#f6f3fb;color:#4b3f73;font-size:12.5px;font-weight:750}
+.answer-mirror{display:none}
+.story-key p{margin:3px 0}
+.self-check{display:flex;flex-wrap:wrap;gap:6px;margin-top:10px}
+.self-check label{display:flex;align-items:center;gap:6px;padding:5px 10px;border:1px solid var(--line);border-radius:999px;background:#fff;font-size:12.5px;font-weight:800}
+.self-check input{width:16px;height:16px;accent-color:var(--violet)}
+
+/* 4 그림 설명하기 */
+.picture{margin:0;padding:8px;border:1px solid var(--line);border-radius:14px;background:#fff}
+.picture img{display:block;width:100%;height:300px;object-fit:contain;border-radius:10px;background:#f6f5ed}
+.picture figcaption{margin:5px 2px 0;color:var(--muted);font-size:11px;font-weight:750}
+.hints{margin:8px 0 4px;padding:7px 12px;border-radius:10px;background:#f6f3fb;color:#4b3f73;font-size:12.5px;font-weight:750;line-height:1.7}
+.hints b{color:var(--violet)}
+details{margin:4px 0;font-size:12.5px}
+summary{color:var(--violet);font-weight:850;cursor:pointer}
+details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border:1px solid var(--line)}
+.writing{margin-top:4px}
+.write-row{display:grid;grid-template-columns:24px 1fr;gap:8px;align-items:end;margin:3px 0}
+.write-row>span{display:grid;place-items:center;width:22px;height:22px;margin-bottom:8px;border-radius:50%;color:#fff;background:var(--violet-900);font-size:11px;font-weight:900}
+.write-row textarea{width:100%;min-height:40px;height:40px;padding:7px 4px 4px;border:0;border-bottom:1.5px solid #9aa1ad;background:transparent;color:var(--ink);font-size:17px;font-weight:700;line-height:1.5;resize:vertical;overflow:hidden}
+.write-row textarea:focus{outline:none;border-bottom-color:var(--violet)}
+.write-actions{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:8px}
+.add{min-height:34px;padding:0 13px;border:1px solid #d9cff5;border-radius:999px;background:#fff;color:var(--violet);font-size:12.5px;font-weight:850}
+.count{color:var(--muted);font-size:12px;font-weight:700}
+#activity4 .flow-guide{display:inline-block;margin:8px 0 4px;padding:3px 12px;border-radius:999px;color:#1f5f8f;background:#e3f1fb;font-size:12px;font-weight:900}
+#activity4 .guided-row{margin:6px 0;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+#activity4 .guided-label{display:flex;align-items:baseline;gap:8px;font-size:14.5px;font-weight:850;line-height:1.45}
+#activity4 .guided-label .qid{flex-shrink:0;margin:0;padding:1px 9px;border-radius:999px;color:#fff;background:var(--violet-900);font-size:11px;font-weight:900}
+#activity4 .guided-row textarea{display:block;width:100%;min-height:40px;height:40px;padding:6px 4px 4px;border:0;border-bottom:1.5px solid #9aa1ad;background:transparent;color:var(--ink);font-size:16.5px;font-weight:700;line-height:1.5;resize:vertical;overflow:hidden}
+#activity4 .guided-row textarea:focus{outline:none;border-bottom-color:var(--violet)}
+#activity4 .assembled{margin-top:8px;padding:10px 14px;border:1.5px dashed #d4c9ee;border-radius:12px;background:#fbfaff;break-inside:avoid}
+#activity4 .assembled h3{margin:0 0 4px;color:var(--violet);font-size:13.5px;font-weight:900}
+#activity4 .story-output{margin:0;font-size:16.5px;font-weight:750;line-height:1.8;white-space:pre-wrap;overflow-wrap:anywhere}
+#activity4 .assembly-empty{margin:0;color:var(--muted);font-size:12.5px;font-weight:700}
+.success{color:var(--ok)}
+
+/* 쪽 아래 */
+.foot{display:flex;justify-content:space-between;align-items:center;gap:12px;margin-top:auto;padding-top:10px;border-top:1px solid var(--line);color:var(--muted);font-size:10px}
+.pager{display:flex;gap:6px}
+.pager a{display:inline-flex;align-items:center;min-height:32px;padding:0 10px;border:1px solid var(--line);border-radius:9px;background:#fff;color:var(--ink);text-decoration:none;font-size:12px;font-weight:800}
+
+@media(max-width:840px){.sheet{width:auto;min-height:0;margin:10px;padding:18px 14px}.king{position:static;justify-content:flex-end;margin-bottom:6px}.page-top{min-height:0;padding-right:0}.picture img{height:auto;max-height:360px}}
+@media(max-width:560px){.questions,.flow .answers{grid-template-columns:1fr}.series-name{font-size:23px}.head>img{height:64px}.story{font-size:16.5px}}
+
+/* ===== 실행기능: 시작 전 계획 · 학습 시간 · 돌아보기 ===== */
+.ef-clock{display:inline-flex;align-items:center;gap:6px;min-height:40px;padding:0 12px;border:1px solid var(--line);border-radius:11px;background:#fff;font-size:13px;font-weight:850}
+.ef-clock b{color:var(--violet);font-variant-numeric:tabular-nums}
+.ef-clock .away{color:#b06a1f}
+.ef-clock.paused{border-color:#e7c28a;background:#fff8ec}
+.toolbar .done-btn{border:0;color:#fff;background:var(--ok)}
+.ef-cover{position:fixed;inset:0;z-index:50;display:grid;place-items:center;padding:16px;background:rgba(39,52,78,.42)}
+.ef-card{width:min(560px,100%);max-height:calc(100vh - 32px);overflow:auto;padding:22px 22px 18px;border:1.5px solid #ddd3f3;border-radius:22px;background:var(--paper);box-shadow:0 20px 50px rgba(37,20,78,.25)}
+.ef-card-head{display:grid;grid-template-columns:1fr auto;gap:10px;align-items:center}
+.ef-card-head img{height:78px}
+.ef-card h2{font-size:22px}
+.ef-card .lead{margin:4px 0 0;color:var(--muted);font-size:13.5px;font-weight:750}
+.ef-list{display:grid;gap:6px;margin:12px 0;padding:0;list-style:none}
+.ef-list li{display:grid;grid-template-columns:28px 1fr auto;gap:10px;align-items:center;padding:8px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;font-size:14.5px;font-weight:800}
+.ef-list li i{display:grid;place-items:center;width:26px;height:26px;border-radius:8px;color:#fff;background:var(--ink);font-style:normal;font-size:13px;font-weight:900}
+.ef-list li small{color:var(--muted);font-size:12px;font-weight:750}
+.ef-q{margin:14px 0 6px;font-size:15.5px;font-weight:900}
+.ef-est{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.ef-est button{min-height:44px;border:1.5px solid #cfc9bd;border-radius:12px;background:#fff;color:var(--ink);font-size:14px;font-weight:900}
+.ef-est button[aria-pressed=true]{border-color:var(--violet);color:var(--violet);background:var(--violet-soft)}
+.ef-note{margin:10px 0 0;color:var(--muted);font-size:12px;font-weight:700}
+.ef-go{width:100%;min-height:48px;margin-top:12px;border:0;border-radius:14px;color:#fff;background:linear-gradient(135deg,#4b24a5,#8d70d7);font-size:16px;font-weight:900}
+.ef-go:disabled{opacity:.45;cursor:not-allowed}
+.ef-go.sub{margin-top:6px;border:1px solid var(--line);color:var(--ink);background:#fff;font-size:14px;min-height:42px}
+.ef-toast{position:fixed;z-index:60;left:50%;bottom:22px;max-width:min(520px,calc(100vw - 32px));padding:11px 16px;border-radius:13px;color:#fff;background:#403a46;font-size:13.5px;font-weight:800;transform:translate(-50%,20px);opacity:0;transition:.25s;pointer-events:none}
+.ef-toast.show{opacity:1;transform:translate(-50%,0)}
+/* 5쪽 돌아보기 */
+.time-card{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:6px 0 4px}
+.time-card div{padding:9px 10px;border:1px solid var(--line);border-radius:12px;background:#fff;text-align:center}
+.time-card span{display:block;color:var(--muted);font-size:11.5px;font-weight:800}
+.time-card b{display:block;margin-top:2px;color:var(--violet-900);font-size:19px;font-weight:900;font-variant-numeric:tabular-nums}
+.time-card .away b{color:#b06a1f}
+.time-compare{margin:6px 0 0;padding:8px 12px;border-radius:11px;background:var(--cyan-soft);border:1px solid var(--cyan-line);font-size:14px;font-weight:850}
+.time-paper{display:none}
+.time-paper .row{display:flex;flex-wrap:wrap;gap:10px 22px;margin:6px 0;font-size:15px;font-weight:850}
+.time-paper .blank{display:inline-block;min-width:54px;border-bottom:1.5px solid #9aa1ad;text-align:center;color:var(--violet)}
+.ref{margin-top:12px;padding:10px 12px;border:1px solid var(--line);border-radius:12px;background:#fff;break-inside:avoid}
+.ref h3{margin:0 0 6px;font-size:15px;font-weight:900}
+.ref h3 i{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:6px;border-radius:50%;color:#fff;background:var(--violet-900);font-style:normal;font-size:12px}
+.faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
+.face{display:grid;justify-items:center;gap:2px;padding:6px 4px;border:1.5px solid #cfc9bd;border-radius:12px;background:#fff;font-size:12px;font-weight:850;cursor:pointer}
+.face span{font-size:26px;line-height:1}
+.face input,.chip input{position:absolute;opacity:0;width:1px;height:1px}
+.face:has(input:checked){border-color:var(--violet);background:var(--violet-soft)}
+.chips{display:flex;flex-wrap:wrap;gap:6px}
+.chip{position:relative;display:inline-flex;align-items:center;min-height:32px;padding:3px 12px;border:1.5px solid #cfc9bd;border-radius:999px;background:#fff;font-size:13px;font-weight:800;cursor:pointer}
+.chip:has(input:checked){border-color:var(--violet);color:var(--violet);background:var(--violet-soft)}
+.chip:has(input:focus-visible),.face:has(input:focus-visible){outline:3px solid rgba(75,201,220,.6);outline-offset:2px}
+.write-toggle{margin-top:7px;min-height:30px;padding:0 11px;border:1px dashed #cfc3ec;border-radius:999px;background:#fff;color:var(--violet);font-size:12px;font-weight:850}
+.write-toggle[aria-expanded=true]{border-style:solid;background:var(--violet-soft)}
+.ref-write{display:block;margin-top:4px}
+.opt-label{display:block;color:var(--muted);font-size:11px;font-weight:800}
+.ref-write textarea{width:100%;min-height:38px;height:38px;padding:6px 4px 4px;border:0;border-bottom:1.5px solid #9aa1ad;background:transparent;color:var(--ink);font-size:15px;font-weight:700;line-height:1.5;resize:vertical;overflow:hidden}
+.ref-write textarea:focus{outline:none;border-bottom-color:var(--violet)}
+.ref-write .answer-mirror{display:none}
+.ref-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
+.ref-actions button{min-height:40px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:13.5px;font-weight:850}
+.ref-actions .save{border:0;color:#fff;background:var(--violet)}
+.ref-actions .msg{color:var(--ok);font-size:13px;font-weight:800}
 @page{size:A4;margin:0}
-@media print{html,body{background:white;-webkit-print-color-adjust:exact;print-color-adjust:exact;font-size:14px}.toolbar,.variant,.check,.feedback,.pager,.write-actions,details,.teacher-note{display:none!important}.sheet{width:210mm;min-height:297mm;margin:0;padding:12mm 13mm 10mm;box-shadow:none;break-after:page}.sheet:last-child{break-after:auto}.level-print{display:block;font-size:12px;color:var(--teal);margin-bottom:12px}.mast{margin-bottom:14px}.intro{margin-bottom:14px}.print-name{display:block;font-size:11px;margin-top:5px}.questions{grid-template-columns:1fr 1fr}.question{padding-bottom:13px}.option{min-height:35px}.foot{padding-top:13px}.story{font-size:19px}.picture img{height:335px}.answer-mirror{display:inline-block}.gap{display:none}.gap-wrap .answer-mirror{width:42px;height:32px;line-height:30px;vertical-align:baseline;text-align:center;border:1px solid #aaa4b2;border-radius:4px;font-weight:700}.write-row textarea{display:none}.write-row .answer-mirror{width:100%;min-height:45px;padding:8px 4px 5px;border-bottom:1px solid #a7a3ae;font-size:18px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}.print-blank .answer-mirror{color:transparent}.print-blank .option:has(input:checked){border-color:transparent;background:transparent}.print-blank .focus-group .option{background:#f0f5f3}.print-blank .option input:checked+.radio-mark{border:1.5px solid #9995a1}.print-blank .self-check input{appearance:none;border:1px solid #999;background:white}.print-blank .key{display:none!important}.show-key:not(.print-blank) .key{display:block}.self-check{margin-top:13px}.hints{margin-bottom:6px}}
+@media print{
+  html,body{background:#fff}
+  .ef-cover,.ef-toast,.ef-clock,.done-btn,.ref-actions,.time-screen{display:none!important}
+  .time-paper{display:block}
+  .write-toggle{display:none!important}
+  .ref .ref-write[hidden]{display:block!important}
+  .ref-write textarea{display:none}
+  .ref-write .answer-mirror{display:block;min-height:36px;padding:6px 4px 4px;border-bottom:1.5px solid #9aa1ad;font-size:15px;line-height:1.5;white-space:pre-wrap}
+  .print-blank .time-paper .blank{color:transparent}
+  .print-blank .face:has(input:checked),.print-blank .chip:has(input:checked){border-color:#cfc9bd;color:inherit;background:#fff}
+  .toolbar,.variant,.check,.feedback,.pager,.write-actions,details,.teacher-note{display:none!important}
+  .sheet{width:210mm;min-height:297mm;margin:0;padding:12mm 13mm 10mm;box-shadow:none;break-after:page}
+  .sheet:last-child{break-after:auto}
+  .print-name{display:flex}
+  .level-print{display:inline-block;margin-bottom:8px;padding:2px 10px;border-radius:999px;color:#fff;background:var(--violet-900);font-size:11.5px;font-weight:900}
+  .option:hover{border-color:#cfc9bd}
+  .answer-mirror{display:inline-block}
+  .gap{display:none}
+  .gap-wrap .answer-mirror{width:40px;height:30px;line-height:28px;margin-left:1px;border:1.5px solid #b9b3a8;border-radius:7px;text-align:center;font-weight:900;vertical-align:baseline}
+  .write-row textarea{display:none}
+  .write-row .answer-mirror{width:100%;min-height:40px;padding:7px 4px 4px;border-bottom:1.5px solid #9aa1ad;font-size:17px;line-height:1.5;white-space:pre-wrap;overflow-wrap:anywhere}
+  .picture img{height:300px}
+  #activity4 .guided-row{margin:5px 0;padding:6px 10px}
+  #activity4 .guided-row textarea{display:none}
+  #activity4 .guided-row .answer-mirror{display:block;width:100%;min-height:34px;padding:4px;border-bottom:1.5px solid #9aa1ad;font-size:15px;line-height:1.6;white-space:pre-wrap;overflow-wrap:anywhere}
+  #activity4 .story-output{font-size:14px;line-height:1.65}
+  .print-blank #activity4 .assembled{display:none!important}
+  .print-blank .answer-mirror{color:transparent}
+  .print-blank .option:has(input:checked){border-color:#cfc9bd;background:#fff}
+  .print-blank .option input:checked+.radio-mark{border:1.5px solid #9995a1}
+  .print-blank .self-check input{appearance:none;-webkit-appearance:none;border:1.5px solid #9aa1ad;border-radius:4px;background:#fff}
+  .print-blank .key{display:none!important}
+  .show-key:not(.print-blank) .key{display:block}
+}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
 </style>
 </head>
 <body>
 <nav class="toolbar" aria-label="워크지 도구">
-<a href="#activity1">1 질문</a><a href="#activity2">2 흐름</a><a href="#activity3">3 빈칸</a><a href="#activity4">4 그림</a><span class="spacer"></span>
+<a href="#activity1">1 질문</a><a href="#activity2">2 흐름</a><a href="#activity3">3 빈칸</a><a href="#activity4">4 그림</a><a href="#activity5">5 돌아보기</a><span class="spacer"></span><span class="ef-clock" id="efClock" hidden>⏱ 학습 <b id="efActive">0:00</b><span class="away">· 멈춤 <b id="efAway">0:00</b></span></span><button class="done-btn" id="efDone" hidden>다 했어요</button>
 <button id="keyBtn" aria-pressed="false">해설 보기</button><button id="blankPrint">빈 워크지 인쇄</button><button id="answerPrint" class="main">작성 내용 인쇄</button>
 </nav>
 <main>
 <section class="sheet" id="activity1" aria-labelledby="title1">
-<header class="mast"><div><div class="series">바른 문장 쓰기 · 1회 복습</div><div class="meta">문장의 뜻을 살피는 은/는 · 이/가</div><div class="print-name">이름 __________________　 날짜 __________________</div></div><img class="brand" src="assets/oncuvate-brand-logo.png" alt="온큐베이트"></header>
+<header class="head"><div><div class="series"><span class="series-name">바른 문장 쓰기</span><span class="series-sub">문해력이 자라는 문장구조·문법</span></div><div class="lesson"><span class="lesson-no">1회 복습</span>문장의 뜻을 살피는 은/는 · 이/가</div><div class="print-name"><span>이름</span><span>날짜</span></div></div><img src="assets/king-thumbs.webp" alt="세종대왕"></header>
 <div class="title-row"><span class="number">1</span><h1 id="title1">질문에 답하기</h1></div>
 <p class="intro">질문이 묻는 곳을 찾고, 그 물음에 어울리는 대답을 골라요.</p>
 <p class="top-note"><b>대상</b>은 ‘누가? 무엇이?’를, <b>서술</b>은 ‘무엇을 해요? 어떠해요?’를 살펴요.<br>두 대답 모두 쓸 수 있지만, 여기서는 질문의 초점에 더 잘 맞는 것을 골라요.</p>
 <div class="questions" id="questions"></div>
-<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 1 / 4</span><div class="pager"><a href="#activity2">다음: 흐름 →</a></div></footer>
+<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 1 / 5</span><div class="pager"><a href="#activity2">다음: 흐름 →</a></div></footer>
 </section>
 <section class="sheet" id="activity2" aria-labelledby="title2">
-<header class="mast"><span class="series">바른 문장 쓰기 · 1회 복습</span><span class="meta">앞뒤 문맥 살피기</span></header>
+<header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 앞뒤 문맥 살피기</div></header><div class="king"><div class="say">앞뒤 문장이<br><b>힌트</b>로다!</div><img src="assets/king-think.webp" alt="세종대왕"></div>
 <div class="title-row"><span class="number">2</span><h2 id="title2">흐름에 맞는 문장</h2></div>
 <p class="intro">앞 문장이나 뒷 문장을 단서로, 자연스럽게 이어지는 문장을 골라요.</p>
 <div class="flows" id="flows"></div>
 <p class="teacher-note">지도 메모: ‘이/가’와 ‘은/는’은 모두 문법적으로 가능한 자리가 많습니다. 문장 자체의 옳고 그름보다, 제시된 문맥에서 무엇을 두드러지게 말하는지 비교해 주세요.</p>
-<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 2 / 4</span><div class="pager"><a href="#activity1">← 이전</a><a href="#activity3">다음: 빈칸 →</a></div></footer>
+<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 2 / 5</span><div class="pager"><a href="#activity1">← 이전</a><a href="#activity3">다음: 빈칸 →</a></div></footer>
 </section>
 <section class="sheet" id="activity3" aria-labelledby="title3">
-<header class="mast"><span class="series">바른 문장 쓰기 · 1회 복습</span><span class="meta">짧은 글 속 조사 쓰기</span></header>
+<header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 짧은 글 속 조사 쓰기</div></header><div class="king"><div class="say">받침만 보지 말고<br><b>뜻</b>도 잘 보거라!</div><img src="assets/king-scold.webp" alt="세종대왕"></div>
 <div class="title-row"><span class="number">3</span><h2 id="title3">빈칸 채우기</h2></div>
 <p class="intro">글의 흐름을 생각하며 빈칸에 ‘은, 는, 이, 가’ 중 하나를 직접 써요.</p>
 <div class="variant" aria-label="빈칸 글 수준"><button data-story-level="3" aria-pressed="true">3학년 수준</button><button data-story-level="5" aria-pressed="false">5학년 수준</button><span class="variant-info">각 버전의 입력은 바꿔도 그대로 남아요.</span></div>
 <div id="story3" class="story-panel"></div><div id="story5" class="story-panel" hidden></div>
 <div class="self-check"><label><input type="checkbox">글 전체를 이어 읽었나요?</label><label><input type="checkbox">받침과 문맥을 함께 살폈나요?</label></div>
 <p class="teacher-note">지도 메모: 해설은 이 글의 초점에 잘 맞는 예시입니다. 다른 조사를 썼다면 강조하거나 대비하는 뜻이 달라지는지 함께 읽어 보세요. 받침에 맞는 다른 표현을 곧바로 오답으로 처리하지 않습니다.</p>
-<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 3 / 4</span><div class="pager"><a href="#activity2">← 이전</a><a href="#activity4">다음: 그림 →</a></div></footer>
+<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 3 / 5</span><div class="pager"><a href="#activity2">← 이전</a><a href="#activity4">다음: 그림 →</a></div></footer>
 </section>
 <section class="sheet" id="activity4" aria-labelledby="title4">
-<header class="mast"><span class="series">바른 문장 쓰기 · 1회 복습</span><span class="meta">내 말로 자유롭게 쓰기</span></header>
+<header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 질문을 따라 한 편의 글로</div></header><div class="king"><div class="say">질문을 따라 쓰면<br>멋진 글이 되느니라!</div><img src="assets/king-cheer.webp" alt="세종대왕"></div>
 <div class="title-row"><span class="number">4</span><h2 id="title4">그림 설명하기</h2></div>
-<p class="intro">그림을 보고 떠오르는 문장을 자유롭게 <b>3개 이상</b> 써요.</p>
-<div class="variant" aria-label="그림 난이도"><button data-picture-level="easy" aria-pressed="true">쉬운 버전</button><button data-picture-level="hard" aria-pressed="false">어려운 버전</button><span class="variant-info">빈칸 글과 따로 선택할 수 있어요.</span></div>
+<p class="intro">그림을 보고 네 질문에 <b>한 문장씩 짧게</b> 답해요. 답을 순서대로 이으면 글이 돼요.</p>
+<figure class="picture"><img src="assets/review-picture-apple-picnic.webp" alt="숲길에서 사과를 옮기던 토끼의 수레 바퀴가 돌에 걸려 사과가 쏟아졌다. 다람쥐가 떨어진 사과를 주워 바구니에 담고 있다. 길 끝에는 소풍 돗자리와 빈 접시가 있다."><figcaption>소풍길에 생긴 일 · 마지막 장면은 내가 상상해요.</figcaption></figure>
+<div class="variant" aria-label="그림 질문 수준"><button data-picture-level="easy" aria-pressed="true">기본 질문</button><button data-picture-level="hard" aria-pressed="false">생각을 넓히는 질문</button><span class="variant-info">같은 그림으로 질문만 바뀌어요.</span></div>
 <div id="picture-easy" class="picture-panel"></div><div id="picture-hard" class="picture-panel" hidden></div>
-<div class="self-check"><label><input type="checkbox">움직임이나 특징을 썼나요?</label><label><input type="checkbox">두 대상을 비교했나요?</label><label><input type="checkbox">문장을 끝까지 썼나요?</label></div>
-<footer class="foot"><span>Oncuvate · 그림 AI 생성 · 4 / 4</span><div class="pager"><a href="#activity3">← 이전</a><a href="#activity1">처음으로 ↑</a></div></footer>
+<div class="self-check"><label><input type="checkbox">답을 순서대로 이어 읽었나요?</label><label><input type="checkbox">상상한 일도 자연스럽게 이어지나요?</label></div>
+<footer class="foot"><span>Oncuvate · 자체 제작 장면·질문 · 그림 AI 생성 · 4 / 5</span><div class="pager"><a href="#activity3">← 이전</a><a href="#activity5">다음: 돌아보기 →</a></div></footer>
+</section>
+<section class="sheet" id="activity5" aria-labelledby="title5">
+<header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 나의 학습 돌아보기</div></header><div class="king"><div class="say">어떻게 공부했는지<br><b>돌아보는 것</b>도 실력이로다!</div><img src="assets/king-think.webp" alt="세종대왕"></div>
+<div class="title-row"><span class="number">5</span><h2 id="title5">학습 돌아보기</h2></div>
+<p class="intro">예상한 시간과 실제로 걸린 시간을 견주어 보고, 오늘 공부를 돌아봐요. 알맞은 것을 고르기만 해도 돼요.</p>
+<div class="time-screen" id="timeScreen">
+  <div class="time-card"><div><span>시작한 시각</span><b id="tStart">-</b></div><div><span>끝낸 시각</span><b id="tEnd">-</b></div><div><span>시작부터 끝까지</span><b id="tTotal">-</b></div>
+    <div><span>예상한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
+  <p class="time-compare" id="tCompare">「다 했어요」를 누르면 시간이 여기에 정리돼요.</p>
+</div>
+<div class="time-paper">
+  <div class="row"><span>예상한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
+  <div class="row"><span>예상보다 → &nbsp;○ 빨랐어요 &nbsp; ○ 비슷했어요 &nbsp; ○ 오래 걸렸어요</span></div>
+</div>
+<div class="ref"><h3><i>1</i>공부가 얼마나 술술 되었나요?</h3>
+  <div class="faces"><label class="face"><input type="radio" name="efSmooth" value="1" data-track="input"><span>😣</span>많이 막혔어요</label><label class="face"><input type="radio" name="efSmooth" value="2" data-track="input"><span>🙁</span>조금 막혔어요</label><label class="face"><input type="radio" name="efSmooth" value="3" data-track="input"><span>😐</span>보통이에요</label><label class="face"><input type="radio" name="efSmooth" value="4" data-track="input"><span>🙂</span>잘 됐어요</label><label class="face"><input type="radio" name="efSmooth" value="5" data-track="input"><span>😄</span>술술 됐어요</label></div></div>
+<div class="ref"><h3><i>2</i>왜 그랬다고 생각하나요?</h3>
+  <div class="chips"><label class="chip"><input type="checkbox" name="efWhy" value="집중이 잘 됐어요" data-track="input">집중이 잘 됐어요</label><label class="chip"><input type="checkbox" name="efWhy" value="규칙이 떠올랐어요" data-track="input">규칙이 떠올랐어요</label><label class="chip"><input type="checkbox" name="efWhy" value="문제가 쉬웠어요" data-track="input">문제가 쉬웠어요</label><label class="chip"><input type="checkbox" name="efWhy" value="어려운 문제가 있었어요" data-track="input">어려운 문제가 있었어요</label><label class="chip"><input type="checkbox" name="efWhy" value="중간에 딴생각이 났어요" data-track="input">중간에 딴생각이 났어요</label><label class="chip"><input type="checkbox" name="efWhy" value="주변이 시끄러웠어요" data-track="input">주변이 시끄러웠어요</label><label class="chip"><input type="checkbox" name="efWhy" value="예상보다 시간이 부족했어요" data-track="input">예상보다 시간이 부족했어요</label></div>
+  <button type="button" class="write-toggle" data-for="efWhyText">✏️ 직접 쓰기</button><label class="ref-write" hidden><span class="opt-label">쓰고 싶으면</span><textarea id="efWhyText" rows="1" aria-label="이유 직접 쓰기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></label></div>
+<div class="ref"><h3><i>3</i>다음에도 기억해 두고 쓸 방법은?</h3>
+  <div class="chips"><label class="chip"><input type="checkbox" name="efSkill" value="질문을 먼저 읽기" data-track="input">질문을 먼저 읽기</label><label class="chip"><input type="checkbox" name="efSkill" value="앞뒤 문장 살피기" data-track="input">앞뒤 문장 살피기</label><label class="chip"><input type="checkbox" name="efSkill" value="소리 내어 읽어 보기" data-track="input">소리 내어 읽어 보기</label><label class="chip"><input type="checkbox" name="efSkill" value="받침 확인하기" data-track="input">받침 확인하기</label><label class="chip"><input type="checkbox" name="efSkill" value="확인 버튼으로 점검하기" data-track="input">확인 버튼으로 점검하기</label><label class="chip"><input type="checkbox" name="efSkill" value="막히면 해설·낱말 도움 보기" data-track="input">막히면 해설·낱말 도움 보기</label></div>
+  <button type="button" class="write-toggle" data-for="efSkillText">✏️ 직접 쓰기</button><label class="ref-write" hidden><span class="opt-label">쓰고 싶으면</span><textarea id="efSkillText" rows="1" aria-label="기억할 방법 직접 쓰기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></label></div>
+<div class="ref"><h3><i>4</i>다음에는 무엇을 더 잘해 볼까요?</h3>
+  <div class="chips"><label class="chip"><input type="checkbox" name="efBetter" value="시작 전에 시간 계획 세우기" data-track="input">시작 전에 시간 계획 세우기</label><label class="chip"><input type="checkbox" name="efBetter" value="멈추면 바로 다시 돌아오기" data-track="input">멈추면 바로 다시 돌아오기</label><label class="chip"><input type="checkbox" name="efBetter" value="한 문제씩 끝까지 하기" data-track="input">한 문제씩 끝까지 하기</label><label class="chip"><input type="checkbox" name="efBetter" value="다 쓰고 다시 읽어 보기" data-track="input">다 쓰고 다시 읽어 보기</label><label class="chip"><input type="checkbox" name="efBetter" value="어려우면 도움 청하기" data-track="input">어려우면 도움 청하기</label></div>
+  <button type="button" class="write-toggle" data-for="efBetterText">✏️ 직접 쓰기</button><label class="ref-write" hidden><span class="opt-label">쓰고 싶으면</span><textarea id="efBetterText" rows="1" aria-label="더 잘할 점 직접 쓰기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></label></div>
+<div class="ref-actions"><button class="save" id="efSave">돌아보기 저장</button><button id="efResume" hidden>아직 안 끝났어요 · 이어 하기</button><span class="msg" id="efMsg" role="status"></span></div>
+<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 5 / 5</span><div class="pager"><a href="#activity4">← 이전</a><a href="#activity1">처음으로 ↑</a></div></footer>
 </section>
 </main>
+<div class="ef-cover" id="efStart" role="dialog" aria-modal="true" aria-labelledby="efTitle" hidden>
+  <div class="ef-card">
+    <div class="ef-card-head"><div><h2 id="efTitle">오늘의 복습 계획</h2><p class="lead">네 가지 활동을 하고, 마지막에 돌아보기를 해요.</p></div><img src="assets/king-thumbs.webp" alt=""></div>
+    <ol class="ef-list">
+      <li><i>1</i>질문에 답하기<small>6문제</small></li>
+      <li><i>2</i>흐름에 맞는 문장<small>4문제</small></li>
+      <li><i>3</i>빈칸 채우기<small>짧은 글 2편</small></li>
+      <li><i>4</i>그림 설명하기<small>3문장 이상</small></li>
+    </ol>
+    <p class="ef-q">다 하는 데 얼마나 걸릴 것 같아요?</p>
+    <div class="ef-est" id="efEst"><button type="button" data-min="10" aria-pressed="false">10분</button><button type="button" data-min="15" aria-pressed="false">15분</button><button type="button" data-min="20" aria-pressed="false">20분</button><button type="button" data-min="25" aria-pressed="false">25분</button><button type="button" data-min="30" aria-pressed="false">30분</button></div>
+    <p class="ef-note">3분 넘게 멈추거나 다른 화면으로 가면, 그 시간은 「멈춘 시간」으로 따로 적어 둘게요.</p>
+    <button class="ef-go" id="efGo" type="button" disabled>시작하기</button>
+    <button class="ef-go sub" id="efNew" type="button" hidden>처음부터 새로 시작</button>
+  </div>
+</div>
+<div class="ef-toast" id="efToast" role="status" aria-live="polite"></div>
 <script>
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
@@ -94,16 +363,106 @@ const stories={
 Object.entries(stories).forEach(([level,data])=>{let n=0;const answers=[];const panel=$('story'+level);panel.innerHTML=`<div class="level-print">${data.label}</div>`+data.blocks.map(block=>`<article class="story-block"><h3>${block.title}</h3><p class="story">${esc(block.text).replace(/\{([^|]+)\|([^|]+)\|([^|]+)\|([^}]+)\}/g,(_,word,preferred,alternative,why)=>{n++;const id='gap'+level+'-'+n;answers.push({id,word,preferred,alternative,why,n});return `<span class="gap-wrap">${word}<sup class="gap-num">${n}</sup><input class="gap" id="${id}" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="${level}학년 글 ${n}번 ${word} 뒤 조사" data-track="input"><span class="answer-mirror" aria-hidden="true"></span></span>`;})}</p></article>`).join('')+`<p class="gap-note">받침이 있으면 ‘은·이’, 받침이 없으면 ‘는·가’를 써요.<br>두 형태 중 어떤 것이 어울리는지는 앞뒤 문장의 뜻을 살펴요.</p><button class="check">입력한 조사 확인</button><div class="feedback" role="status"></div><div class="key story-key">${answers.map(a=>`<p>${a.n}. <b>${a.word}${a.preferred}</b> — ${a.why}</p>`).join('')}</div>`;
 const button=panel.querySelector('.check'),fb=panel.querySelector('.feedback');panel.addEventListener('input',e=>{if(!e.target.matches('.gap'))return;e.target.classList.remove('good','revisit');e.target.removeAttribute('aria-invalid');e.target.nextElementSibling.textContent=e.target.value;button.hidden=false;fb.textContent='';});button.onclick=()=>{let empty=[],invalid=[],alternatives=[];answers.forEach(a=>{const input=$(a.id),v=input.value.trim();input.classList.remove('good','revisit');input.removeAttribute('aria-invalid');if(!v){empty.push(a.n);return;}if(v!==a.preferred&&v!==a.alternative){invalid.push(a.n);input.classList.add('revisit');input.setAttribute('aria-invalid','true');return;}input.classList.add(v===a.preferred?'good':'revisit');if(v===a.alternative)alternatives.push(a.n);});if(empty.length||invalid.length){fb.textContent=[empty.length?`${empty.join(', ')}번에 조사를 직접 써 보세요.`:'',invalid.length?`${invalid.join(', ')}번은 은·는·이·가 한 글자와 받침을 확인해요.`:''].filter(Boolean).join(' ');return;}button.hidden=true;fb.textContent=alternatives.length?`모두 채웠어요. ${alternatives.join(', ')}번은 해설의 예시와 다른 표현이에요. 틀렸다고 정하기보다, 강조하거나 비교하는 뜻이 어떻게 달라지는지 함께 읽어 보세요.`:'글의 흐름에 맞게 모두 채웠어요. 완성한 글을 이어 읽어 보세요.';};
 });
-const pictures={"easy":{"label":"쉬운 버전 · 토끼와 거북이","src":"assets/review-picture-easy-rough.png","alt":"거친 색연필로 그린 뛰는 토끼와 걷는 거북이. 두 동물 사이에 큰 빨간 공과 작은 파란 공이 있다.","hint":"<b>움직임</b> 무엇을 하나요?　 <b>특징</b> 어떻게 생겼나요?　 <b>비교</b> 무엇이 다른가요?","words":"토끼 · 거북이 · 공 / 뛰어요 · 걸어요 / 귀 · 등딱지 / 커요 · 작아요","examples":"토끼가 뛰어요. / 거북이는 등딱지가 있어요. / 빨간 공은 크고, 파란 공은 작아요."},"hard":{"label":"어려운 버전 · 동물들의 하루","src":"assets/review-picture-hard-rough.png","alt":"풀밭에서 뛰는 토끼와 걷는 거북이, 하늘을 나는 새, 연못에서 헤엄치는 오리, 나무 아래에서 잠든 강아지를 거친 색연필로 그린 장면.","hint":"<b>움직임·특징</b> 누가 어디에서 무엇을 하나요?　 <b>비교</b> 두 동물의 행동이나 있는 곳은 어떻게 다른가요?","words":"토끼 · 거북이 · 새 · 오리 · 강아지 / 풀밭 · 하늘 · 연못 · 나무 아래 / 뛰어요 · 걸어요 · 날아요 · 헤엄쳐요 · 자요 / ~고 · ~지만","examples":"토끼가 풀밭에서 뛰어요. / 새는 날고, 오리는 헤엄쳐요. / 토끼는 뛰지만, 강아지는 나무 아래에서 자요."}};
-function addLine(panel,level,focus=false){const list=panel.querySelector('.writing'),n=list.children.length+1;const row=document.createElement('div');row.className='write-row';row.innerHTML=`<span>${n}</span><div><textarea aria-label="${level==='easy'?'쉬운':'어려운'} 그림 ${n}번째 문장" rows="1" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div>`;list.append(row);const input=row.querySelector('textarea');input.addEventListener('input',()=>{input.style.height='46px';input.style.height=input.scrollHeight+'px';input.nextElementSibling.textContent=input.value;updateCount(panel);});if(focus)input.focus();}
-function updateCount(panel){const count=[...panel.querySelectorAll('textarea')].filter(x=>x.value.trim()).length;panel.querySelector('.count').textContent=count<3?`쓴 칸 ${count}개 · 3문장 이상 써 보세요.`:`쓴 칸 ${count}개 · 각 문장이 끝까지 이어지는지 읽어 보세요.`;}
-Object.entries(pictures).forEach(([level,p])=>{const panel=$('picture-'+level);panel.innerHTML=`<div class="level-print">${p.label}</div><figure class="picture"><img src="${p.src}" alt="${p.alt}"><figcaption>${p.label}</figcaption></figure><div class="hints">${p.hint}</div><details><summary>낱말 도움이 필요해요</summary><p>${p.words}</p></details><div class="writing"></div><div class="write-actions"><button class="add">+ 문장 칸 추가</button><span class="count" role="status"></span></div><p class="key">예시일 뿐, 다르게 써도 좋아요.<br>${p.examples}</p>`;for(let i=0;i<5;i++)addLine(panel,level);panel.querySelector('.add').onclick=()=>addLine(panel,level,true);updateCount(panel);});
+const pictures={
+easy:{label:'기본 질문',flow:'시작 → 사건 → 도움 → 마무리',questions:[
+{step:'시작',q:'토끼는 어디에서 무엇을 옮기고 있나요?'},
+{step:'사건',q:'토끼의 수레에서 무엇이 쏟아졌나요?'},
+{step:'도움',q:'다람쥐는 무엇을 하고 있나요?'},
+{step:'마무리',q:'사과를 다 주운 뒤, 둘은 무엇을 하면 좋을까요?'}],words:'숲길 · 토끼 · 수레 · 사과 · 다람쥐 · 바구니 · 소풍 / 옮겨요 · 쏟아졌어요 · 주워요 · 함께 먹어요',example:'토끼는 숲길에서 사과를 옮기고 있어요. 수레에서 사과가 쏟아졌어요. 다람쥐는 사과를 줍고 있어요. 둘은 사과를 다 주운 뒤 함께 소풍을 즐기면 좋겠어요.'},
+hard:{label:'생각을 넓히는 질문',flow:'상황 → 원인 → 해결 → 마음',questions:[
+{step:'상황',q:'토끼에게 무슨 일이 생겼나요?'},
+{step:'원인',q:'사과는 왜 쏟아졌을까요? 그림 속 단서도 넣어 써요.'},
+{step:'해결',q:'토끼와 다람쥐는 어떻게 힘을 모으면 좋을까요?'},
+{step:'마음',q:'문제를 해결한 토끼는 어떤 마음일까요? 까닭도 써요.'}],words:'돌 · 바퀴 · 수레 · 사과 · 바구니 / 걸리다 · 기울다 · 줍다 · 옮기다 / 다행이다 · 고맙다 / ~해서 · ~고 · ~면',example:'토끼가 옮기던 사과가 수레에서 쏟아졌어요. 바퀴가 돌에 걸린 모습을 보니 수레가 기울어서 쏟아진 것 같아요. 토끼는 수레를 바로잡고 다람쥐는 사과를 주우면 좋겠어요. 토끼는 친구가 도와주어서 고마울 것 같아요.'}
+};
+function joinedAnswers(panel){return [...panel.querySelectorAll('textarea')].map(x=>x.value.trim()).filter(Boolean).map(s=>/[.!?。！？…][”’"']?$/.test(s)?s:s+'.').join(' ');}
+function updateWriting(panel){const n=[...panel.querySelectorAll('textarea')].filter(x=>x.value.trim()).length;panel.querySelector('.count').textContent='쓴 답 '+n+' / 4';const text=joinedAnswers(panel);panel.querySelector('.story-output').textContent=text;panel.querySelector('.assembly-empty').hidden=!!text;}
+Object.entries(pictures).forEach(([level,p])=>{const panel=$('picture-'+level);panel.innerHTML='<div class="level-print">'+esc(p.label)+'</div><p class="flow-guide">'+esc(p.flow)+'</p><div class="guided-writing">'+p.questions.map((q,i)=>'<div class="guided-row"><label class="guided-label" for="picture-'+level+'-answer-'+i+'"><span class="qid">'+(i+1)+' '+q.step+'</span><span>'+esc(q.q)+'</span></label><textarea id="picture-'+level+'-answer-'+i+'" rows="1" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div>').join('')+'</div><details><summary>낱말 도움이 필요해요</summary><p>'+esc(p.words)+'</p></details><div class="write-actions"><button type="button" class="add read-story" aria-expanded="false" aria-controls="assembled-'+level+'">내 답 이어 읽기</button><span class="count" role="status"></span></div><div class="assembled" id="assembled-'+level+'" hidden><h3>내 답으로 만든 글</h3><p class="story-output" aria-live="polite"></p><p class="assembly-empty">질문에 답하면 쓴 순서대로 여기에 모여요.</p></div><p class="key">예시일 뿐, 다른 이야기로 이어도 좋아요.<br>'+esc(p.example)+'</p>';
+panel.querySelectorAll('textarea').forEach(input=>input.addEventListener('input',()=>{input.style.height='42px';input.style.height=input.scrollHeight+'px';input.nextElementSibling.textContent=input.value;updateWriting(panel);}));panel.querySelector('.read-story').onclick=()=>{const button=panel.querySelector('.read-story'),area=panel.querySelector('.assembled'),show=area.hidden;area.hidden=!show;button.setAttribute('aria-expanded',show);button.textContent=show?'모은 글 접기':'내 답 이어 읽기';updateWriting(panel);};updateWriting(panel);
+});
 document.querySelectorAll('[data-story-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-story-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['3','5'].forEach(l=>$('story'+l).hidden=l!==b.dataset.storyLevel);});
 document.querySelectorAll('[data-picture-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-picture-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['easy','hard'].forEach(l=>$('picture-'+l).hidden=l!==b.dataset.pictureLevel);});
 $('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'해설 숨기기':'해설 보기';};
 function syncPrint(){document.querySelectorAll('.gap,textarea').forEach(x=>x.nextElementSibling.textContent=x.value);}
 window.addEventListener('beforeprint',syncPrint);window.addEventListener('afterprint',()=>document.body.classList.remove('print-blank'));
 $('blankPrint').onclick=()=>{syncPrint();document.body.classList.add('print-blank');window.print();};$('answerPrint').onclick=()=>{syncPrint();document.body.classList.remove('print-blank');window.print();};
+})();
+</script>
+<script>
+/* 실행기능: 시작 전 계획 → 학습 시간(3분 넘게 멈춤·다른 화면 = 멈춘 시간) → 돌아보기. 기기 저장만, 외부 전송 없음 */
+(()=>{'use strict';
+const $=id=>document.getElementById(id);
+const KEY='grammar-sentence-structure:review01:ef',IDLE=180000;
+let st={est:null,start:null,end:null,active:0,away:0,awayCount:0,savedAt:0,ref:{}};
+try{Object.assign(st,JSON.parse(localStorage.getItem(KEY)||'{}'));}catch(e){}
+let last=Date.now(),hiddenAt=null,idleShown=false;
+const running=()=>st.start&&!st.end;
+function save(){st.savedAt=Date.now();try{localStorage.setItem(KEY,JSON.stringify(st));}catch(e){}}
+const mmss=ms=>{const s=Math.max(0,Math.round(ms/1000));return Math.floor(s/60)+':'+String(s%60).padStart(2,'0');};
+const mins=ms=>Math.round(ms/60000);
+const hm=t=>{const d=new Date(t);return d.getHours()+':'+String(d.getMinutes()).padStart(2,'0');};
+function toast(m){const t=$('efToast');t.textContent=m;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(()=>t.classList.remove('show'),3200);}
+function emit(type,detail){try{window.dispatchEvent(new CustomEvent('oc:track',{detail:{type,page:'review01',...detail}}));}catch(e){}}
+/* 지난 조작부터 지금까지를 나눠 담기: 3분 미만이면 학습, 이상이면 멈춤 */
+function settle(now){const gap=now-last;if(gap<=0)return;if(gap>=IDLE){st.away+=gap;st.awayCount++;}else st.active+=gap;last=now;}
+function activity(){if(!running()||document.hidden)return;const now=Date.now();const wasIdle=now-last>=IDLE;settle(now);
+  if(wasIdle){toast('다시 왔네요! 멈춘 시간은 따로 적어 두었어요.');idleShown=false;}save();}
+['pointerdown','keydown','input','wheel','touchstart'].forEach(ev=>document.addEventListener(ev,activity,{passive:true,capture:true}));
+let scrollT=0;window.addEventListener('scroll',()=>{const n=Date.now();if(n-scrollT>1500){scrollT=n;activity();}},{passive:true});
+document.addEventListener('visibilitychange',()=>{if(!running())return;const now=Date.now();
+  if(document.hidden){settle(now);hiddenAt=now;save();}
+  else if(hiddenAt){st.away+=now-hiddenAt;st.awayCount++;last=now;hiddenAt=null;save();toast('다시 왔네요! 다른 화면에 있던 시간은 멈춘 시간으로 적었어요.');}});
+function tick(){if(!running())return;const now=Date.now(),gap=document.hidden?0:now-last,idle=gap>=IDLE;
+  $('efActive').textContent=mmss(st.active+(idle?0:gap));$('efAway').textContent=mmss(st.away+(idle?gap:0));
+  $('efClock').classList.toggle('paused',idle);if(idle&&!idleShown){idleShown=true;}}
+setInterval(tick,1000);setInterval(()=>{if(running()){save();}},10000);
+function showClock(on){$('efClock').hidden=!on;$('efDone').hidden=!on;}
+function fill(){
+  const total=st.end-st.start;
+  $('tStart').textContent=hm(st.start);$('tEnd').textContent=hm(st.end);$('tTotal').textContent=mins(total)+'분';
+  $('tEst').textContent=st.est?st.est+'분':'-';$('tActive').textContent=mins(st.active)+'분';$('tAway').textContent=mins(st.away)+'분'+(st.awayCount?` (${st.awayCount}번)`:'');
+  const real=mins(st.active);let cmp='';
+  if(st.est){const d=real-st.est;cmp=Math.abs(d)<=2?`예상(${st.est}분)과 실제 학습 시간(${real}분)이 거의 같아요. 계획을 잘 세웠어요!`:d<0?`예상(${st.est}분)보다 ${-d}분 빨리 끝냈어요.`:`예상(${st.est}분)보다 ${d}분 더 걸렸어요. 어디서 시간이 더 들었을까요?`;}
+  if(st.away>=60000)cmp+=` 중간에 ${mins(st.away)}분 멈췄어요.`;
+  $('tCompare').textContent=cmp||'시간을 정리했어요.';
+  /* 작성 내용 인쇄용 종이 칸 */
+  $('pEst').textContent=st.est||'';$('pStart').textContent=hm(st.start);$('pEnd').textContent=hm(st.end);$('pReal').textContent=mins(total);
+  $('efResume').hidden=false;}
+/* 시작 안내 */
+const cover=$('efStart');
+function openCover(){cover.hidden=false;const resumable=running();$('efNew').hidden=!resumable&&!st.end;
+  if(st.est)[...$('efEst').children].forEach(b=>b.setAttribute('aria-pressed',+b.dataset.min===st.est));
+  $('efGo').disabled=!st.est;$('efGo').textContent=resumable?'이어서 하기':st.end?'다시 풀어 보기':'시작하기';}
+$('efEst').onclick=e=>{const b=e.target.closest('button');if(!b)return;st.est=+b.dataset.min;[...$('efEst').children].forEach(x=>x.setAttribute('aria-pressed',x===b));$('efGo').disabled=false;};
+$('efGo').onclick=()=>{const now=Date.now();
+  if(running()){/* 창을 닫았다 다시 연 시간은 멈춘 시간 */if(st.savedAt&&now-st.savedAt>5000){st.away+=now-st.savedAt;st.awayCount++;}}
+  else{st.start=now;st.end=null;st.active=0;st.away=0;st.awayCount=0;emit('ef-start',{estimateMin:st.est});}
+  last=now;cover.hidden=true;showClock(true);save();};
+$('efNew').onclick=()=>{st={est:null,start:null,end:null,active:0,away:0,awayCount:0,savedAt:0,ref:{}};save();[...$('efEst').children].forEach(x=>x.setAttribute('aria-pressed','false'));restoreRef();$('efGo').disabled=true;$('efGo').textContent='시작하기';$('efNew').hidden=true;
+  ['tStart','tEnd','tTotal','tEst','tActive','tAway'].forEach(i=>$(i).textContent='-');$('tCompare').textContent='「다 했어요」를 누르면 시간이 여기에 정리돼요.';$('efResume').hidden=true;};
+/* 끝내기 */
+$('efDone').onclick=()=>{if(!running())return;const now=Date.now();settle(now);st.end=now;save();showClock(false);fill();
+  emit('ef-finish',{estimateMin:st.est,startedAt:st.start,endedAt:st.end,activeMs:st.active,awayMs:st.away,awayCount:st.awayCount});
+  location.hash='#activity5';toast('수고했어요! 마지막으로 돌아보기를 해요.');};
+$('efResume').onclick=()=>{if(!st.end)return;const now=Date.now();st.away+=now-st.end;st.awayCount++;st.end=null;last=now;save();showClock(true);$('efResume').hidden=true;toast('이어서 해요. 끝나면 「다 했어요」를 눌러요.');};
+/* 돌아보기 저장 */
+function collect(){const ch=n=>[...document.querySelectorAll(`input[name="${n}"]:checked`)].map(x=>x.value);
+  const sm=document.querySelector('input[name="efSmooth"]:checked');
+  return{smooth:sm?+sm.value:null,why:ch('efWhy'),whyText:$('efWhyText').value,skill:ch('efSkill'),skillText:$('efSkillText').value,better:ch('efBetter'),betterText:$('efBetterText').value};}
+function restoreRef(){const r=st.ref||{};document.querySelectorAll('input[name="efSmooth"]').forEach(x=>x.checked=+x.value===r.smooth);
+  [['efWhy','why'],['efSkill','skill'],['efBetter','better']].forEach(([n,k])=>document.querySelectorAll(`input[name="${n}"]`).forEach(x=>x.checked=(r[k]||[]).includes(x.value)));
+  [['efWhyText','whyText'],['efSkillText','skillText'],['efBetterText','betterText']].forEach(([id,k])=>{$(id).value=r[k]||'';$(id).nextElementSibling.textContent=$(id).value;});}
+document.getElementById('activity5').addEventListener('input',e=>{if(e.target.matches('.ref-write textarea')){e.target.style.height='38px';e.target.style.height=e.target.scrollHeight+'px';e.target.nextElementSibling.textContent=e.target.value;}
+  st.ref=collect();save();$('efMsg').textContent='';});
+$('efSave').onclick=()=>{st.ref=collect();save();const r=st.ref;
+  emit('ef-reflection',{...r,estimateMin:st.est,activeMs:st.active,awayMs:st.away});
+  window.ocReviewReflection={...r,time:{est:st.est,start:st.start,end:st.end,activeMs:st.active,awayMs:st.away,awayCount:st.awayCount}};
+  $('efMsg').textContent='저장했어요. 오늘 고른 방법을 다음 시간에도 써 봐요!';};
+document.querySelectorAll('.write-toggle').forEach(b=>{b.setAttribute('aria-expanded','false');b.onclick=()=>{const box=b.nextElementSibling,open=box.hidden;box.hidden=!open;b.setAttribute('aria-expanded',open);if(open)box.querySelector('textarea').focus();};});
+restoreRef();
+document.querySelectorAll('.ref-write textarea').forEach(t=>{if(t.value.trim()){t.parentElement.hidden=false;t.parentElement.previousElementSibling.setAttribute('aria-expanded','true');}});
+if(st.end)fill();
+if(running()){openCover();}else if(!st.end)openCover();
 })();
 </script>
 </body></html>
