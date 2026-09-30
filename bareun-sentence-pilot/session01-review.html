@@ -123,6 +123,17 @@ section:nth-last-of-type(1) .box{padding-bottom:6px}
 .opt.ox{display:grid;place-items:center;width:38px;height:38px;min-height:0;padding:0;border-radius:50%;font-size:22px;line-height:1}
 .opt.ox .o{color:#2479c9;font-weight:950}
 .opt.ox .x{color:#d2454c;font-weight:950}
+.bubble{position:relative;display:inline-block;margin-bottom:4px;padding:5px 12px;border:1.5px solid #9fd9e3;border-radius:14px 14px 14px 4px;background:#eaf6fa;font-size:14.5px;font-weight:850}
+.bubble .n{margin-right:6px}
+.story{font-size:17px;font-weight:800;line-height:2.25}
+.blankw{white-space:nowrap}
+.opts.inl{display:inline-flex;gap:3px;margin:0 3px 0 2px;vertical-align:middle}
+.opts.inl .opt{min-height:28px;padding:0 9px;font-size:15px}
+.story .fb{display:none}
+.picwrite .scene{position:relative;height:132px;margin-bottom:8px;overflow:hidden;border:1px solid var(--line);border-radius:12px;background:linear-gradient(180deg,#e9f5fb 0 58%,#e4f1dc 58% 100%)}
+.picwrite .scene span{position:absolute;line-height:1}
+.bank{margin-bottom:4px;padding:5px 10px;border-radius:9px;background:#f6f3fb;color:#4b3f73;font-size:12.5px;font-weight:750}
+.bank b{margin-right:6px;color:var(--violet)}
 /* ===== 인쇄: A4 빈 활동지 ===== */
 @page{size:A4;margin:0}
 @media print{
@@ -157,14 +168,17 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const mk=t=>esc(t).replace(/\[(.+?)\]/g,'<mark class="pt">$1</mark>');
 
-/* ---------- 문항 (수업과 같은 활동, 새 낱말) ---------- */
-const W1=[['가방','t'],['우산','s'],['나무','t'],['시계','s'],['연못','t'],['기차','s'],['호랑이','t'],['달걀','s']];
+/* ---------- 문항 (수업과 같은 활동, 새 낱말) — 받침보다 뜻으로 고르는 문항을 늘림 ---------- */
+const W1=[['가방','t'],['우산','s'],['기차','t'],['연못','s']];
 const hasB=w=>{const c=w.charCodeAt(w.length-1)-0xAC00;return c>=0&&c<11172&&c%28!==0;};
-const RUN=[
-  {s:'가방[이] 무거워요.',ok:true},{s:'우산[는] 파래요.',fix:'우산은'},
-  {s:'기차[가] 빨라요.',ok:true},{s:'나무[이] 커요.',fix:'나무가'},
-  {s:'우유[을] 마셔요.',fix:'우유를'},{s:'공[을] 던져요.',ok:true},
-  {s:'나[가] 할게요.',fix:'내가'},{s:'시계[는] 둥글어요.',ok:true}];
+/* 대화 속 대답: 두 보기 모두 받침은 맞고, 뜻만 다르다 (who=누가/무엇이 물음 → 이/가) */
+const TALK=[
+  {q:'누가 제일 먼저 왔어?',o:['지호[가] 먼저 왔어요.','지호[는] 먼저 왔어요.'],a:0,who:1},
+  {q:'지호는 뭐 좋아해?',o:['지호[가] 축구를 좋아해요.','지호[는] 축구를 좋아해요.'],a:1},
+  {q:'바구니에 뭐가 있어?',o:['사과[는] 있어요.','사과[가] 있어요.'],a:1,who:1},
+  {q:'사과는 무슨 맛이야?',o:['사과[는] 달아요.','사과[가] 달아요.'],a:0},
+  {q:'누가 울었어?',o:['아기[가] 울었어요.','아기[는] 울었어요.'],a:0,who:1},
+  {q:'코끼리는 어떻게 생겼어?',o:['코끼리[가] 코가 길어요.','코끼리[는] 코가 길어요.'],a:1}];
 const PAIR=[
   {ctx:'“누가 문을 열었어요?”',o:['아빠[가] 열었어요.','아빠[는] 열었어요.'],a:0},
   {ctx:'누나와 나를 비교해요.',o:['누나[가] 노래를 잘해요. 내[가] 춤을 잘해요.','누나[는] 노래를 잘해요. 나[는] 춤을 잘해요.'],a:1},
@@ -173,16 +187,11 @@ const QA=[
   {q:'무엇이 짖느냐?',o:['강아지[는] 짖어요.','강아지[가] 짖어요.'],a:1,link:'그런데 고양이는 안 짖어요.',pos:'뒤',la:0},
   {q:'달은 어떠하냐?',o:['달[은] 밝아요.','달[이] 밝아요.'],a:0,link:'와, 하늘을 봐요!',pos:'앞',la:1},
   {q:'누가 웃느냐?',o:['아기[가] 웃어요.','아기[는] 웃어요.'],a:0,link:'그런데 형은 울어요.',pos:'뒤',la:1}];
-const FILL=[
-  {t:'“누가 노래해?” “민지{_} 노래해.”',a:'가'},
-  {t:'나는 사과를 좋아해요. 동생{_} 포도를 좋아해요.',a:'은'},
-  {t:'옛날에 호랑이{_} 살았어요.',a:'가'},
-  {t:'그 호랑이{_} 욕심이 많았어요.',a:'는'},
-  {t:'책상 위에 연필{_} 있어요.',a:'이'}];
+/* 이야기 속 빈칸: {낱말|보기1|보기2|정답칸|이유} — 처음 나옴 → 이/가, 다시 말하기·견주기 → 은/는 */
+const STORY='우리 반에 새 {친구|가|는|0|처음 나온 친구예요} 왔어요. 그 {친구|가|는|1|앞에 나온 친구를 다시 말해요} 이름이 지우예요. {지우|가|는|1|지우를 다시 말해요} 축구를 좋아하고, {나|가|는|1|지우와 나를 견줘요} 야구를 좋아해요. 쉬는 시간에 {공|이|은|0|처음 나온 공이에요} 굴러왔어요.';
 const FIX=[
-  {toks:['우리','동생가','웃어요.'],bad:1,fixes:['동생이','동생를'],a:'동생이'},
   {ctx:'“누가 왔어?”',toks:['삼촌은','왔어요.'],bad:0,fixes:['삼촌을','삼촌이'],a:'삼촌이'},
-  {toks:['나는','빵를','먹어요.'],bad:1,fixes:['빵을','빵이'],a:'빵을'}];
+  {toks:['우리','동생가','웃어요.'],bad:1,fixes:['동생이','동생를'],a:'동생이'}];
 
 /* ---------- 채점 기록 ---------- */
 const done=new Set();let total=0;
@@ -211,16 +220,15 @@ function build(){
 
   /* 1 받침 살피기 */
   let s1=`<section><h2><span class="no">1</span>받침 살피기 <small>알맞은 것에 ○ 해요.</small></h2><div class="grid4">`;
-  W1.forEach(([w,t],k)=>{const f=t==='t'?[w+'은',w+'는']:[w+'이',w+'가'],r=t==='t'?(hasB(w)?0:1):(hasB(w)?0:1),id='w'+k;
+  W1.forEach(([w,t],k)=>{const f=t==='t'?[w+'은',w+'는']:[w+'이',w+'가'],r=hasB(w)?0:1,id='w'+k;
     handlers[id]={ok:`'${w.slice(-1)}'에 받침이 ${hasB(w)?'있어요':'없어요'}.`,no:'마지막 글자의 받침을 봐요.'};
     s1+=`<div class="box"><span class="big">${esc(w)}</span>${choice(id,f,r)}</div>`;});
   s1+='</div></section>';
 
-  /* 2 맞는 문장일까? (수업의 젤리런 복습) */
-  let s2=`<section><h2><span class="no">2</span>맞는 문장일까? <small>맞으면 ○, 틀리면 ✕ 하고 바르게 고쳐 써요.</small></h2><div class="grid2">`;
-  RUN.forEach((r,k)=>{const id='r'+k;handlers[id]={ok:r.ok?'맞는 문장이에요.':`틀린 문장! 바르게 고치면 <b>${esc(r.fix)}</b>`,no:'받침 규칙을 다시 봐요.'};
-    s2+=`<div class="box"><div class="ox-row"><span class="big"><span class="n">${k+1}</span>${mk(r.s)}</span>${choice(id,['<span class="o">○</span>','<span class="x">✕</span>'],r.ok?0:1,'ox')}</div>
-      <div class="fix">✕라면 고쳐 쓰기: <span class="wline">&nbsp;</span> <span class="key">${r.ok?'(맞는 문장)':esc(r.fix)}</span></div></div>`;});
+  /* 2 대화 속 대답 — 받침은 둘 다 맞아요, 뜻으로 골라요 */
+  let s2=`<section><h2><span class="no">2</span>대화 속 대답 <small>둘 다 받침은 맞아요! 물음에 어울리는 대답에 ○ 해요.</small></h2><div class="grid2">`;
+  TALK.forEach((t,k)=>{const id='t'+k;handlers[id]={ok:t.who?"'누가? 무엇이?'의 대답은 이/가!":'물음에 나온 말을 다시 말하니까 은/는!',no:'물음을 다시 읽어 봐요. 누가·무엇이를 묻나요?'};
+    s2+=`<div class="box"><div class="bubble"><span class="n">${k+1}</span>“${esc(t.q)}”</div>${choice(id,t.o.map((o,j)=>'ⓐⓑ'[j]+' '+mk(o)),t.a,'wide')}</div>`;});
   s2+='</div></section>';
 
   /* 3 짝 문장 */
@@ -240,37 +248,43 @@ function build(){
       <div><div class="lab">② 이 말이 ${q.pos}에 붙는 문장은?</div><span class="link">${esc(q.link)}</span>${choice(l,['ⓐ','ⓑ'],q.la)}</div></div>`;});
   s4+='</div></section>';
 
-  /* 5 빈칸 채우기 */
-  let s5=`<section><h2><span class="no">5</span>빈칸 채우기 <small>은 · 는 · 이 · 가 중에서 골라 써요.</small></h2><div style="display:grid;gap:6px">`;
-  FILL.forEach((f,k)=>{const id='f'+k,[x,y]=f.t.split('{_}'),r=['은','는','이','가'].indexOf(f.a);
-    handlers[id]={ok:'맞았어요!',no:'뜻 먼저(은/는? 이/가?), 받침 다음!'};
-    s5+=`<div class="box" style="display:grid;grid-template-columns:1fr auto;gap:8px;align-items:center"><span class="big"><span class="n">${k+1}</span>${esc(x)}<span style="display:inline-block;min-width:34px;border-bottom:2px solid var(--violet);text-align:center"><span class="key">${f.a}</span>&nbsp;</span>${esc(y)}</span>${choice(id,['은','는','이','가'],r)}</div>`;});
-  s5+='</div></section>';
+  /* 5 이야기 속 빈칸 — 처음 나옴? 다시 말하기·견주기? */
+  let sk=0;
+  const story=esc(STORY).replace(/\{(.+?)\|(.+?)\|(.+?)\|(\d)\|(.+?)\}/g,(m,w,a,b,r,why)=>{const id='s'+(sk++);handlers[id]={ok:why+'.',no:'처음 나왔는지, 다시 말하는지 생각해 봐요.'};
+    return `<span class="blankw">${w}<span class="opts inl" data-q="${id}">${[a,b].map((x,j)=>`<button type="button" class="opt" data-k="${j}" data-track="answer"${j==r?' data-right':''}>${x}</button>`).join('')}</span></span><span class="fb" id="fb-${id}"></span>`;});
+  total+=sk;
+  const s5=`<section><h2><span class="no">5</span>이야기 속 빈칸 <small>처음 나오면 이/가, 다시 말하거나 견줄 때는 은/는! 알맞은 것에 ○ 해요.</small></h2>
+    <div class="box story">${story}</div></section>`;
 
   /* 6 틀린 문장 고치기 */
-  let s6=`<section><h2><span class="no">6</span>틀린 문장 고치기 <small>틀린 낱말을 누르고(○ 하고) 바르게 고쳐요.</small></h2><div style="display:grid;gap:7px">`;
+  let s6=`<section><h2><span class="no">6</span>틀린 문장 고치기 <small>틀린 낱말을 누르고(○ 하고) 바르게 고쳐요.</small></h2><div class="grid2">`;
   FIX.forEach((x,k)=>{const id='x'+k;handlers[id]={ok:'고쳤어요!',no:'다시 소리 내어 읽어 봐요.'};total++;
     s6+=`<div class="box" data-fix="${k}">${x.ctx?`<span class="ctx">${esc(x.ctx)}</span>`:''}<span class="n">${k+1}</span>${x.toks.map((t,j)=>`<button type="button" class="token tap" data-j="${j}">${esc(t)}</button>`).join(' ')}
       <div class="fb" id="fbt-${k}"></div><div class="xfix" id="xf-${k}"></div>
-      <div class="fix">고쳐 쓰기: <span class="wline" style="min-width:260px">&nbsp;</span> <span class="key">${esc(x.a)}</span></div></div>`;});
+      <div class="fix">고쳐 쓰기: <span class="wline" style="min-width:150px">&nbsp;</span> <span class="key">${esc(x.a)}</span></div></div>`;});
   s6+='</div></section>';
 
-  /* 7 내 문장 쓰기 */
-  const s7=`<section><h2><span class="no">7</span>내 문장 쓰기 <small>주인공 · 은/는·이/가 · 끝 말 · 마침표!</small></h2>
-    <div class="box"><span class="ctx">가족 한 명과 나를 비교해요.</span>
-      <div class="write"><span>(가족)은/는</span><input aria-label="가족 문장"></div>
-      <div class="write"><span>나는</span><input aria-label="나 문장"></div>
-      <span class="ctx" style="margin-top:10px">질문에 대답해요: 우리 반에서 누가 제일 잘 달려요?</span>
-      <div class="write"><span>대답</span><input aria-label="대답 문장"></div>
-      <div class="checks"><label><input type="checkbox">주인공이 있나요?</label><label><input type="checkbox">은/는·이/가를 맞게 썼나요?</label><label><input type="checkbox">끝 말이 있나요?</label><label><input type="checkbox">마침표를 찍었나요?</label></div></div>
+  /* 7 그림 보고 쓰기 */
+  const s7=`<section><h2><span class="no">7</span>그림 보고 쓰기 <small>그림 속 친구들을 문장으로 써요.</small></h2>
+    <div class="box picwrite"><div class="scene" role="img" aria-label="공원 그림: 나무 위에서 자는 고양이, 연을 날리는 아이, 공을 쫓는 강아지, 하늘을 나는 새">
+        <span style="left:6%;bottom:16%;font-size:58px">🌳</span><span style="left:12%;bottom:58%;font-size:26px">🐈</span>
+        <span style="left:38%;bottom:12%;font-size:44px">🧒</span><span style="left:48%;bottom:52%;font-size:34px">🪁</span>
+        <span style="left:68%;bottom:10%;font-size:40px">🐕</span><span style="left:82%;bottom:10%;font-size:26px">⚽</span>
+        <span style="left:74%;bottom:66%;font-size:26px">🐦</span><span style="left:88%;bottom:74%;font-size:24px">☀️</span></div>
+      <div class="bank"><b>낱말 도움</b> 고양이 · 아이 · 강아지 · 새 · 연 · 공 · 자요 · 날려요 · 쫓아요 · 날아요</div>
+      <span class="ctx">① 누가 무엇을 하나요? 한 친구를 골라 써요.</span>
+      <div class="write"><span>(누가)이/가</span><input aria-label="누가 무엇을 하나요"></div>
+      <span class="ctx" style="margin-top:6px">② 두 친구를 견주어 써요.</span>
+      <div class="write"><span>(첫째)은/는</span><input aria-label="첫째 친구 문장"></div>
+      <div class="write"><span>(둘째)은/는</span><input aria-label="둘째 친구 문장"></div>
+      <div class="checks"><label><input type="checkbox">주인공이 있나요?</label><label><input type="checkbox">은/는·이/가를 뜻에 맞게 썼나요?</label><label><input type="checkbox">끝 말과 마침표가 있나요?</label></div></div>
   </section>`;
 
-  const foot=`<div class="foot">자체 제작 텍스트 · 활동 설계 © Oncuvate. All rights reserved.</div>`;
   const king=(img,txt)=>`<div class="king"><div class="say">${txt}</div><img src="assets/king-${img}.webp" alt="세종대왕"></div>`;
   const ft=n=>`<div class="foot">${n} / 3 · 자체 제작 텍스트 · 활동 설계 © Oncuvate. All rights reserved.</div>`;
-  $('app').innerHTML=`<div class="sheet">${head}${s1}${s2}${king('cheer','받침만 잘 봐도<br>반은 맞힌 것이로다!',1)}${ft(1)}</div>
-    <div class="sheet">${king('think','둘 다 맞는 문장일 땐<br><b>물음</b>을 잘 읽거라.',2)}${s3}${s4}${ft(2)}</div>
-    <div class="sheet">${king('scold','틀린 문장은 과인이<br>그냥 넘기지 않는다!',3)}${s5}${s6}${s7}
+  $('app').innerHTML=`<div class="sheet">${head}${s1}${s2}${king('scold','받침만 보지 말고<br><b>뜻</b>도 잘 보거라!')}${ft(1)}</div>
+    <div class="sheet">${king('think','둘 다 맞는 문장일 땐<br><b>물음</b>을 잘 읽거라.')}${s3}${s4}${ft(2)}</div>
+    <div class="sheet">${king('cheer','그림 속 친구들을<br>멋진 문장으로 써 보거라!')}${s5}${s6}${s7}
       <div class="done"><img src="assets/king-thumbs.webp" alt=""><div><b>참 잘했노라!</b><br>오늘 배운 은/는 · 이/가로 한 문장 더 말해 보거라.</div><span class="stamp">참<br>잘함</span></div>${ft(3)}</div>`;
 
   /* 6번: 낱말 누르기 → 고칠 말 고르기 */
