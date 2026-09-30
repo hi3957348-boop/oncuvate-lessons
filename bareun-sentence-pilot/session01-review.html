@@ -275,7 +275,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 </head>
 <body>
 <nav class="toolbar" aria-label="워크지 도구">
-<a href="#activity1">1 질문</a><a href="#activity2">2 흐름</a><a href="#activity3">3 빈칸</a><a href="#activity4">4 그림</a><a href="#activity5">5 돌아보기</a><span class="spacer"></span><button type="button" class="ef-clock" id="efClock" hidden aria-expanded="false" aria-label="학습 시간 보기"><span aria-hidden="true">⏱</span><span class="ef-times" hidden>학습 <b id="efActive">0:00</b><span class="away"> · 멈춤 <b id="efAway">0:00</b></span></span></button>
+<a href="#activity1">1 질문</a><a href="#activity2">2 잇기</a><a href="#activity3">3 빈칸</a><a href="#activity4">4 그림</a><a href="#activity5">5 돌아보기</a><span class="spacer"></span><button type="button" class="ef-clock" id="efClock" hidden aria-expanded="false" aria-label="학습 시간 보기"><span aria-hidden="true">⏱</span><span class="ef-times" hidden>학습 <b id="efActive">0:00</b><span class="away"> · 멈춤 <b id="efAway">0:00</b></span></span></button>
 <button id="keyBtn" aria-pressed="false">해설 보기</button><button id="blankPrint">빈 워크지 인쇄</button><button id="answerPrint" class="main">작성 내용 인쇄</button>
 </nav>
 <main>
@@ -285,7 +285,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 <p class="intro">질문이 묻는 곳을 찾고, 그 물음에 어울리는 대답을 골라요.</p>
 <p class="top-note"><b>대상</b>은 ‘누가? 무엇이?’를, <b>서술</b>은 ‘무엇을 해요? 어떠해요?’를 살펴요.<br>두 대답 모두 쓸 수 있지만, 여기서는 질문의 초점에 더 잘 맞는 것을 골라요.</p>
 <div class="questions" id="questions"></div>
-<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 1 / 5</span><div class="pager"><a href="#activity2">다음: 흐름 →</a></div></footer>
+<footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 1 / 5</span><div class="pager"><a href="#activity2">다음: 카드 잇기 →</a></div></footer>
 </section>
 <section class="sheet" id="activity2" aria-labelledby="title2">
 <header class="page-top"><div class="mini"><b>바른 문장 쓰기</b> · 1회 복습 · 앞뒤 문맥 살피기</div></header><div class="king"><div class="say">앞뒤 문장이<br><b>힌트</b>로다!</div><img src="assets/king-think.webp" alt="세종대왕"></div>
@@ -373,6 +373,9 @@ const talk=[
 {q:'누가 먼저 도착했나요?',focus:'대상',o:['민호[는] 먼저 도착했어요.','민호[가] 먼저 도착했어요.'],a:1,why:'먼저 도착한 사람이 누구인지 묻고 있어요. 그 사람을 ‘민호가’로 알려 줘요.'},
 {q:'민호는 어떤 음식을 좋아하나요?',focus:'서술',o:['민호[는] 김밥을 좋아해요.','민호[가] 김밥을 좋아해요.'],a:0,why:'민호에 관해 좋아하는 음식을 묻고 있어요. ‘민호는’ 뒤에서 좋아하는 것을 설명해요.'}
 ];
+function option(groupId,value,text){return `<label class="option"><input type="radio" name="${groupId}" value="${value}"><span class="radio-mark" aria-hidden="true"></span><span>${mark(text)}</span></label>`;}
+function wireChoice(el,q,id,hasFocus){const button=el.querySelector('.check'),fb=el.querySelector('.feedback');el.addEventListener('change',()=>{button.hidden=false;fb.textContent='';});button.onclick=()=>{const answer=el.querySelector(`input[name="${id}"]:checked`),focus=hasFocus?el.querySelector(`input[name="${id}-focus"]:checked`):null;if(!answer||(hasFocus&&!focus)){fb.textContent=hasFocus?'질문의 초점과 대답을 하나씩 골라요.':'이어질 문장을 하나 골라요.';return;}if(hasFocus&&focus.value!==q.focus){fb.textContent=q.focus==='대상'?'‘누가’ 또는 ‘무엇이’를 묻는지 다시 살펴요.':'이미 나온 대상이 무엇을 하는지, 어떤지 묻고 있어요.';return;}if(Number(answer.value)!==q.a){fb.textContent='이 표현도 쓸 수 있어요. '+q.why+' 질문이나 흐름에 더 잘 맞는 대답을 다시 골라요.';return;}fb.textContent='잘 살폈어요. '+q.why;button.hidden=true;};}
+talk.forEach((q,i)=>{const id='talk'+i,el=document.createElement('article');el.className='question';el.innerHTML=`<h3><span class="qid">${i+1}</span>${esc(q.q)}</h3><p class="sub">어디에 주목하나요?</p><div class="focus-group">${option(id+'-focus','대상','대상 · 누가, 무엇이')}${option(id+'-focus','서술','서술 · 행동, 특징')}</div><p class="sub">질문에 어울리는 대답</p>${q.o.map((s,j)=>option(id,j,s)).join('')}<button class="check">확인</button><div class="feedback" role="status"></div><p class="key">해설: ${q.focus} / ${mark(q.o[q.a])}<br>${q.why}</p>`;$('questions').append(el);wireChoice(el,q,id,true);});
 /* 2 문장 카드 잇기: 조사만 다른 두 카드(l)를 빈칸(___)이 있는 두 문맥(r)에 선으로 잇기. ans[i] = l[i]가 들어갈 r의 번호 */
 const links=[
 {tag:'물',l:['물[이] 차가워요.','물[은] 차가워요.'],r:['수영장에서 놀고 싶어요. 그런데 ___','___ 그런데 커피는 뜨거워요.'],ans:[0,1],why:['놀고 싶은데 새로 알게 된 걸림돌을 말해요. → 물이','물과 커피를 견주어 말해요. → 물은']},
