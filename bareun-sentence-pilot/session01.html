@@ -569,6 +569,8 @@ const topicOf=w=>w+(hasBatchim(w)?'은':'는');
 const subjOf=w=>w==='나'?'내가':w+(hasBatchim(w)?'이':'가');
 /* [은] 처럼 대괄호로 표시한 조사를 형광펜으로 */
 const mk=t=>esc(t).replace(/\[(.+?)\]/g,'<mark class="pt">$1</mark>');
+/* 한 칸에 문장이 여럿이면 한 문장씩 줄바꿈 */
+const br=h=>h.replace(/([.!?][”"]?) (?=\S)/g,'$1<br>');
 const strip=t=>t.replace(/[\[\]]/g,'');
 
 /* ---------- 기록: 첫 반응 · 도움 · 자기수정 ---------- */
@@ -827,7 +829,7 @@ const P2={i:0,tries:0,hintLv:0,
     $('area2').innerHTML=`<div class="card-head"><span class="prompt-label">짝 문장 비교</span><span style="display:flex;gap:6px;align-items:center">${soundBtn()}<span class="counter">${this.i+1} / ${n}</span></span></div>
       <p class="pair-ask">더 자연스러운 문장은 어느 쪽일까요?</p>
       <div class="situation"><span>상황</span><strong>${esc(it.ctx)}</strong></div>
-      <div class="pair-h" id="p2choices">${opts.map(([k,s],j)=>`<button type="button" data-k="${k}" data-track="answer"><span class="tag">${'AB'[j]}</span><span>${mk(s)}</span></button>`).join('')}</div>
+      <div class="pair-h" id="p2choices">${opts.map(([k,s],j)=>`<button type="button" data-k="${k}" data-track="answer"><span class="tag">${'AB'[j]}</span><span>${br(mk(s))}</span></button>`).join('')}</div>
       <div id="p2rule"></div>
       <div class="inline-feedback" id="p2fb" role="status" aria-live="polite">두 문장을 모두 소리 내어 읽어요.</div>
       <div class="card-foot"><button class="primary hidden" id="p2next" type="button">${this.i<n-1?'다음 짝 문장':'규칙 카드 만들기'}</button></div>`;
@@ -940,7 +942,7 @@ const P3={i:0,tries:0,hintLv:0,
     {t:'첫째 돼지{_} 짚으로 집을 지었어요. 둘째 돼지[는] 나무로 지었어요.',w:'돼지',a:'는',r:'R3'},
     {t:'내 아이스크림{_} 딸기 맛이야. 네 아이스크림[은] 무슨 맛이야?',w:'아이스크림',a:'은',r:'R3'},
     {t:'책상 위에 필통{_} 있어요.',w:'필통',a:'이',r:'R2'}],
-  sent(it,fill){const [a,b]=it.t.split('{_}');return mk(a)+(fill?`<span class="blank"><mark class="pt">${fill}</mark></span>`:'<span class="blank">&nbsp;</span>')+mk(b);},
+  sent(it,fill){const [a,b]=it.t.split('{_}');return br(mk(a)+(fill?`<span class="blank"><mark class="pt">${fill}</mark></span>`:'<span class="blank">&nbsp;</span>')+mk(b));},
   render(){
     const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;const key='p3-'+this.i;item(key);
     $('area3').innerHTML=`<div class="card-head"><span class="prompt-label">빈칸 채우기</span><span class="counter">${this.i+1} / ${n}</span></div>
