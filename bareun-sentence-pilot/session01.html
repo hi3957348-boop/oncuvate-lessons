@@ -224,7 +224,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 .sent-stage{display:grid;place-items:center;min-height:92px;padding:14px 16px;border:1px solid var(--warm-line);border-radius:16px;
   background:linear-gradient(155deg,#fff,var(--oc-violet-050) 55%,var(--oc-cyan-soft));text-align:center}
 .sent-stage p{margin:0;font-size:clamp(21px,2.2vw,27px);font-weight:850;line-height:1.55;letter-spacing:-.03em}
-.sent-stage .ctx{display:block;margin-bottom:4px;color:var(--oc-muted);font-size:13px;font-weight:750}
+.sent-stage .ctx{display:block;margin-bottom:6px;color:#35206f;font-size:19px;font-weight:900}
 .blank{display:inline-block;min-width:54px;margin:0 2px;border-bottom:3px solid var(--oc-violet-500);color:var(--oc-violet-800)}
 
 /* 선택 버튼 줄 */
@@ -792,10 +792,10 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
   },
   next(){if(this.i<OX_N-1){this.i++;this.show();}else this.end();},
   end(){
-    this.state='end';const n=OX_N,ok=this.win,kk=ok===n?'cheer':ok>=n-3?'thumbs':'cry';
-    if(kk==='cry')SFX.cry();else SFX.happy();
+    this.state='end';const n=OX_N,ok=this.win,kk=ok===n?'cheer':ok>=n-3?'thumbs':'sorry';
+    if(kk==='sorry')SFX.think();else SFX.happy();
     const box=document.createElement('div');box.className='ox-end';
-    box.innerHTML=`<div class="ox-end-head"><img src="assets/king-${kk}.webp" alt=""><div><h3>${ok===n?'모두 맞혔어요!':ok>=n-3?'잘했어요!':'끝까지 했어요!'}</h3><p>${n}문장 중 ${ok}문장 맞힘</p></div></div>
+    box.innerHTML=`<div class="ox-end-head"><img src="assets/king-${kk}.webp" alt="" onerror="this.onerror=null;this.src='assets/king-think.webp'"><div><h3>${ok===n?'모두 맞혔어요!':ok>=n-3?'잘했어요!':'에헴.. 조금 아쉽구나.<br>다음에는 더 집중해 보거라.'}</h3><p>${n}문장 중 ${ok}문장 맞힘</p></div></div>
       ${this.bumps.length?`<div class="ox-review">${this.bumps.map(b=>`<div><s>${esc(runWord(b,false))}</s> → <b>${esc(runWord(b,true))}</b> ${esc(b.p)}</div>`).join('')}</div>`:''}
       <button class="primary" type="button" id="oxAgain">↻ 다시 풀어보기</button>`;
     $('oxStage').appendChild(box);$('oxGo').classList.add('hidden');$('oxAgain').onclick=()=>this.start();
@@ -1194,10 +1194,11 @@ const P5={who:null,whoOk:false,q:null,ansWho:null,ansOk:false,part:0,
     const segs=['① 누구와 비교할까','② 다른 점 쓰기','③ 질문과 대답'].map((t,k)=>`<span class="${k===part?'on':k<part?'done':''}">${t}</span>`).join('');
     $('area5').innerHTML=`<div class="card-head"><span class="prompt-label">나와 가족 비교하기</span><button class="secondary" type="button" id="p5ex" style="min-height:34px;font-size:12px">예시 보기</button></div>
       <div class="seg">${segs}</div><div id="p5body"></div>
-      <div class="card-foot"><button class="secondary ${part?'':'hidden'}" id="p5prev" type="button">← 앞 단계</button><button class="primary ${part<2&&(part>0||this.whoOk)?'':'hidden'}" id="p5go" type="button">${part===0?'다른 점 쓰러 가기':'질문과 대답으로'}</button></div>`;
+      <div class="card-foot"><button class="secondary ${part?'':'hidden'}" id="p5prev" type="button">← 앞 단계</button><button class="primary ${part<2&&(part>0||this.whoOk)?'':'hidden'}" id="p5go" type="button">${part===0?'다른 점 쓰러 가기':'질문과 대답으로'}</button><button class="primary ${part===2?'':'hidden'}" id="p5done" type="button" style="background:linear-gradient(135deg,#27866a,#4bb58e)">완료 ✓</button></div>`;
     $('p5ex').onclick=()=>hint(5,'예시<br>아빠는 커피를 좋아해요. 나는 우유를 좋아해요.<br>우리 집에서 누가 제일 일찍 자요? 동생이 제일 일찍 자요.');
     $('p5prev').onclick=()=>{this.part--;this.render();};
     $('p5go').onclick=()=>{this.part++;this.render();};
+    $('p5done').onclick=()=>this.done();
     if(part===0)this.partWho();else if(part===1)this.partPairs();else this.partQA();
   },
   partWho(){
@@ -1245,6 +1246,9 @@ const P5={who:null,whoOk:false,q:null,ansWho:null,ansOk:false,part:0,
         say(5,aw==='나'?'맞아! \'나\' 뒤에 \'가\'가 오면 <b>내가</b>로 바뀌어.':'맞아! \'누가?\'의 대답에는 <b>이/가</b>!');}
       else{b.classList.add('wrong');b.disabled=true;miss(key);hint(5,aw==='나'?'"나가 제일 일찍 자요"라고 말하면 어색하지? 소리 내어 비교해 봐.':'\'누가?\'의 대답이니까 이/가를 써. 받침도 확인해!');}};
   },
+  done(){const n=this.sentences().length;
+    say(5,n?`<b>${n}문장</b>을 썼어! 멋져.<br><b>다음</b>을 눌러 점검과 정리로 가자.`:'아직 쓴 문장이 없어. 그래도 괜찮아, <b>다음</b>에서 함께 점검해 보자.');
+    ocToast('내 문장 쓰기를 마쳤어요.');},
   sentences(){
     const out=[];if(!this.who)return out;const t=topicOf(this.who);
     [0,1].forEach(k=>{const a=(this['a'+k]||'').trim(),b=(this['b'+k]||'').trim();if(a)out.push(this.who+'['+t.slice(this.who.length)+'] '+a);if(b)out.push('나[는] '+b);});
