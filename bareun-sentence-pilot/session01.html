@@ -410,6 +410,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 .qa-rules li{padding:10px 12px;border:1px solid var(--warm-line);border-radius:13px;background:#fff;font-size:15px;font-weight:780;line-height:1.5}
 
 /* 끝까지 다 푼 활동: 완료 표시 */
+.done-banner+.done-panel{min-height:0}
 .done-banner{display:flex;align-items:center;gap:8px;margin:0 0 10px;padding:8px 12px;border:1.5px solid #9dd8c1;border-radius:12px;background:var(--oc-success-bg);color:#1f6f53;font-size:14px;font-weight:900}
 .done-banner i{display:grid;place-items:center;width:24px;height:24px;border-radius:50%;color:#fff;background:#2f8a68;font-style:normal;font-size:13px}
 .step-link.done .step-no{color:#fff;border-color:#2f8a68;background:#2f8a68;font-size:0}
@@ -1286,6 +1287,7 @@ const PAGES=[P0,PR,P1,P2,QA,P3,P4,P5,P6];
 function markDone(k){const card=document.querySelectorAll('.page')[k].querySelector('.activity-card');
   if(card&&!card.querySelector('.done-banner'))card.insertAdjacentHTML('afterbegin','<div class="done-banner"><i>✓</i>끝까지 다 풀었어요! 다시 풀어 보고 싶으면 아래 「다시 풀어보기」를 눌러요.</div>');
   const sl=document.querySelectorAll('.step-link')[k],dt=document.querySelectorAll('.step-dots button')[k];
+  const againBtn=card&&card.querySelector('[id$="again"],[id$="Again"]');if(againBtn)setTimeout(()=>againBtn.scrollIntoView({block:'nearest',behavior:'smooth'}),60);
   if(sl){sl.classList.add('done');sl.setAttribute('aria-label',sl.textContent.trim()+' — 완료');}if(dt)dt.classList.add('done');}
 PAGES.forEach((P,k)=>{const fn=P===PR?'end':'done';if(typeof P[fn]!=='function')return;const orig=P[fn];P[fn]=function(){const r=orig.apply(this,arguments);markDone(k);return r;};});
 
