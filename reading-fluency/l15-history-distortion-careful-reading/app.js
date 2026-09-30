@@ -3,7 +3,7 @@ const data=window.LESSON_DATA,level=window.LESSON_LEVEL,pages=[...document.query
 const $=(s,r=document)=>r.querySelector(s),$$=(s,r=document)=>[...r.querySelectorAll(s)];
 const state={classification:shuffle(data.classification.slice()),counts:Object.fromEntries(Object.keys(data.stages).map(key=>[key,0])),reflection:"",reflectionStrategy:""};
 function shuffle(list){for(let i=list.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[list[i],list[j]]=[list[j],list[i]]}return list}
-function log(action,itemId,extra={}){const detail={lessonId:"history-distortion-careful-reading",lessonVersion:"1.1.0",level,action,itemId,timestamp:new Date().toISOString(),...extra};document.dispatchEvent(new CustomEvent("oncuvate:log",{detail}));window.parent?.postMessage({type:"ONCUVATE_LESSON_EVENT",...detail},"*")}
+function log(action,itemId,extra={}){const detail={lessonId:"history-distortion-careful-reading",lessonVersion:"1.1.1",level,action,itemId,timestamp:new Date().toISOString(),...extra};document.dispatchEvent(new CustomEvent("oncuvate:log",{detail}));window.parent?.postMessage({type:"ONCUVATE_LESSON_EVENT",...detail},"*")}
 function showToast(message){const el=$("#toast");el.textContent=message;el.classList.add("show");clearTimeout(toastTimer);toastTimer=setTimeout(()=>el.classList.remove("show"),2200)}
 function feedback(el,message,type){el.textContent=message;el.classList.remove("ok","bad");if(type)el.classList.add(type)}
 function normalize(v){return String(v||"").replace(/[\s.,!?·'\"“”‘’]/g,"")}
