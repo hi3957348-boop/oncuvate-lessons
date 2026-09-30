@@ -443,6 +443,49 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 .p0-done{display:inline-block;animation:tile-good .5s ease-out}
 .p0-go{display:flex;justify-content:center;margin-top:10px}
 .p0-go .primary{min-width:160px}
+
+/* 문장 기차: 끌어다 넣기 */
+.tr-h2{margin:6px 0 6px!important;font-size:19px!important}
+.tr-bank{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;min-height:48px;padding:6px;border:1.5px dashed #d9cff5;border-radius:14px;background:#fbfaff}
+.tr-card{min-height:40px;padding:0 16px;border:1.5px solid #b9a9ea;border-radius:12px;background:linear-gradient(160deg,#fff,#f3effd);color:var(--oc-ink);font-size:18px;font-weight:900;cursor:grab;touch-action:none;user-select:none;box-shadow:0 4px 0 #d9cff5}
+.tr-card.sel{border-color:var(--oc-violet-800);box-shadow:0 0 0 3px rgba(141,112,215,.3),0 4px 0 #b9a9ea}
+.tr-card.lift{opacity:.35}
+.tr-card.ghost{position:fixed;z-index:200;pointer-events:none;transform:rotate(-3deg) scale(1.05);box-shadow:0 12px 24px rgba(37,20,78,.25)}
+.tr-card.bad{animation:pc-shake .4s}
+.tr-rows{display:grid;gap:7px;margin-top:8px}
+.tr-row{display:flex;align-items:center}
+.tr-row .car .box{min-width:0;padding:6px 12px 10px;font-size:20px;display:flex;align-items:center;gap:1px}
+.tr-row .link{margin:0 2px 0}
+.ptog{min-width:30px;padding:0 4px;border:0;border-radius:6px;background:linear-gradient(transparent 45%,var(--sx-mark) 45%);color:var(--oc-violet-800);font:inherit;font-weight:900;cursor:pointer;box-shadow:inset 0 -2px 0 #e7c85a}
+.ptog:hover{background:linear-gradient(transparent 30%,#fbd970 30%)}
+.ptog.spin{animation:tile-flip .34s cubic-bezier(.3,1.4,.5,1)}
+.tr-slot{flex:1;display:grid;place-items:center;min-height:50px;padding:4px 10px;border:2px dashed #aecbe4;border-radius:14px;background:#f5f9fd;text-align:center;cursor:pointer;transition:background .15s,border-color .15s}
+.tr-ph{color:#7d97ad;font-size:13px;font-weight:850}
+.tr-slot.over{border-color:var(--oc-violet-500);background:var(--oc-violet-050)}
+.tr-slot.ok{border:2px solid var(--sx-pred);background:#fff;cursor:default}
+.tr-slot.ok span{font-size:19px;font-weight:900}
+.tr-slot.ok small{display:block;color:var(--oc-muted);font-size:11px;font-weight:800}
+.tr-slot.bad{animation:pc-shake .4s;border-color:#e89ea2}
+.tr-slot.ok span{text-underline-offset:4px}
+.tr-slot.ok small{margin-top:5px}
+.tr-bank:empty{display:none}
+.ptog{min-width:0!important;padding:0 2px!important}
+.tr-row .car .box{gap:0!important}
+
+
+/* 기차 디자인: 기관차(주인공) · 객차(끝 말) · 바퀴 · 연결고리 · 레일 */
+.car .box{border-radius:16px 12px 12px 16px!important;box-shadow:0 3px 0 rgba(0,0,0,.06)}
+.car.subject .box{border:2px solid #e58c8a!important;background:linear-gradient(180deg,#fff 0%,#fff1ef 100%)!important;box-shadow:0 3px 0 #f3c9c7}
+.car.pred .box{border:2px solid #7fb3dc!important;background:linear-gradient(180deg,#fff 0%,#eef6fd 100%)!important;box-shadow:0 3px 0 #c9def0}
+.car .box::before,.car .box::after{width:14px!important;height:14px!important;bottom:-9px!important;border:3px solid #56607a!important;background:radial-gradient(circle,#fff 0 28%,#c9cfdc 30% 100%)!important}
+.link{height:5px!important;width:18px!important;border-radius:5px!important;background:#aeb6c6!important}
+.tr-row{position:relative;padding-bottom:10px}
+.tr-row::after{content:"";position:absolute;left:0;right:0;bottom:0;height:4px;border-radius:4px;background:repeating-linear-gradient(90deg,#d8d2c6 0 10px,transparent 10px 16px),linear-gradient(#bfb7a8,#bfb7a8) 0 3px/100% 1px no-repeat;opacity:.8}
+.tr-slot{position:relative;border-radius:12px 16px 16px 12px}
+.tr-slot::before,.tr-slot::after{content:"";position:absolute;bottom:-9px;width:14px;height:14px;border:3px solid #9fb2c6;border-radius:50%;background:#fff}
+.tr-slot::before{left:18px}.tr-slot::after{right:18px}
+.tr-slot.ok{background:linear-gradient(180deg,#fff 0%,#eef6fd 100%)!important;border:2px solid #7fb3dc!important;box-shadow:0 3px 0 #c9def0}
+.tr-slot.ok::before,.tr-slot.ok::after{border-color:#56607a;background:radial-gradient(circle,#fff 0 28%,#c9cfdc 30% 100%)}
 /* ===== 젤리런: 문장 카드를 보고 멈춰서 O / X 고르기 ===== */
 .work.solo{grid-template-columns:minmax(0,1fr)}
 #areaR{position:relative}
@@ -531,7 +574,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
         </div>
       </section>
 
-      <section class="page fill" data-page="2" data-title="문장 기차" data-sub="주인공과 끝 말 찾기" data-activity-id="sentence-train" data-measure-id="predicateType">
+      <section class="page fill" data-page="2" data-title="문장 기차" data-sub="끝 말 끌어다 넣기" data-activity-id="sentence-train" data-measure-id="predicateType">
         <div class="work">
           <article class="activity-card" id="area1"></article>
           <aside class="coach" aria-label="젤리코치"><header class="coach-head"><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header><div class="coach-scroll" id="coach1"></div></aside>
@@ -767,57 +810,77 @@ document.addEventListener('keydown',e=>{if(PAGES[cur]!==PR)return;
   else if((e.key==='Enter'||e.key===' ')&&(PR.state==='pick'&&PR.pick||PR.state==='shown')&&!e.target.closest('button')){$('oxGo').click();e.preventDefault();}});
 
 /* ================= 2. 문장 기차 ================= */
-const TYPES={move:'움직이는 말',state:'상태나 느낌을 표현하는 말',what:'무엇인지 알려 주는 말'};
+const TYPES={move:'움직이는 말',state:'상태나 느낌을 나타내는 말',what:'무엇인지 알려 주는 말'};
+/* 문장 기차: 주인공 한 명 + 끝 칸 세 개(움직임·상태/느낌·무엇). 보기 카드를 끌어다(또는 눌러서) 넣기.
+   주인공 뒤 글자는 눌러서 이/가 ↔ 은/는으로 바꿔 보며 느낌 비교(채점 안 함) */
 const P1={i:0,tries:0,hintLv:0,
   items:[
-    {s:'강아지가',p:'뛰어요',t:'move',test:'지금 뛰고 있어요'},
-    {s:'꽃이',p:'예뻐요',t:'state',test:'지금 예쁘고 있어요'},
-    {s:'동생이',p:'먹어요',t:'move',test:'지금 먹고 있어요'},
-    {s:'나는',p:'기뻐요',t:'state',test:'지금 기쁘고 있어요'},
-    {s:'나는',p:'초등학생이에요',t:'what'},
-    {s:'날씨가',p:'추워요',t:'state',test:'지금 춥고 있어요'},
-    {s:'민지가',p:'읽어요',t:'move',test:'지금 읽고 있어요'}],
-  train(it,solved){
-    const s=it.s.replace(/(은|는|이|가)$/,'<mark class="pt">$1</mark>');
-    return `<div class="train" aria-label="문장 기차">
-      <div class="car subject"><div class="box"><span class="${solved?'subj':''}">${s}</span></div><small>문장의 주인공</small></div>
-      <i class="link" aria-hidden="true"></i>
-      <div class="car pred"><div class="box"><span class="${solved?'pred-'+it.t:''}">${esc(it.p)}.</span></div><small>${solved?TYPES[it.t]:'끝 말'}</small></div></div>`;
-  },
+    {w:'강아지',sub:'가',top:'는',p:{move:'뛰어가요',state:'귀여워요',what:'동물이에요'},test:'뛰어가고 있어요'},
+    {w:'꽃',sub:'이',top:'은',p:{move:'피어나요',state:'예뻐요',what:'식물이에요'},test:'피어나고 있어요'},
+    {w:'동생',sub:'이',top:'은',p:{move:'먹어요',state:'아파요',what:'운동선수예요'},test:'먹고 있어요'},
+    {w:'공',sub:'이',top:'은',p:{move:'굴러가요',state:'동그래요',what:'장난감이에요'},test:'굴러가고 있어요'}],
+  order:['move','state','what'],
   render(){
-    const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;const key='p1-'+this.i;item(key);
-    $('area1').innerHTML=`<div class="card-head"><span class="prompt-label">두 칸 문장 기차</span><span class="counter">${this.i+1} / ${n}</span></div>
-      <h2>끝 칸의 말은 어떤 말일까요?</h2>
-      <div id="p1train">${this.train(it,false)}</div>
-      <div class="chip-row" style="--n:3" id="p1choices">${Object.entries(TYPES).map(([k,v])=>`<button type="button" data-t="${k}" data-track="answer" style="font-size:14px">${v}</button>`).join('')}</div>
-      <div class="inline-feedback" id="p1fb" role="status" aria-live="polite">문장을 소리 내어 읽고 골라요.</div>
+    const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;this.placed={};this.pt={move:it.sub,state:it.sub,what:it.sub};
+    const key='p1-'+this.i;item(key);this.key=key;
+    const bank=this.order.slice().sort(()=>Math.random()-.5);
+    $('area1').innerHTML=`<div class="card-head"><span class="prompt-label">문장 기차</span><span class="counter">${this.i+1} / ${n}</span></div>
+      <h2 class="tr-h2">알맞은 끝 말을 끌어다 넣어요</h2>
+      <div class="tr-bank" id="p1bank">${bank.map(t=>`<button type="button" class="tr-card" data-t="${t}" data-track="answer">${esc(it.p[t])}.</button>`).join('')}</div>
+      <div class="tr-rows" id="p1rows">${this.order.map(t=>`<div class="tr-row" data-t="${t}">
+        <div class="car subject"><div class="box"><span class="tr-w">${esc(it.w)}</span><button type="button" class="ptog" data-t="${t}" aria-label="${esc(it.w)} 뒤 글자 바꾸기">${it.sub}</button></div></div>
+        <i class="link" aria-hidden="true"></i>
+        <div class="tr-slot" data-t="${t}"><span class="tr-ph">${TYPES[t]}</span></div></div>`).join('')}</div>
+      <div class="inline-feedback" id="p1fb" role="status" aria-live="polite">보기 카드를 끌어서 알맞은 빈칸에 넣어요.</div>
       <div class="card-foot"><button class="primary hidden" id="p1next" type="button">${this.i<n-1?'다음 기차':'문장 기차 끝'}</button></div>`;
-    $('p1choices').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
-      if(b.dataset.t===it.t){b.classList.add('correct');[...$('p1choices').children].forEach(x=>x.disabled=true);
-        $('p1train').innerHTML=this.train(it,true);
-        fb($('p1fb'),'success',it.t==='what'?`맞았어요! '${it.p}'는 주인공이 무엇인지 알려 줘요.`:`맞았어요! '${it.test}'${it.t==='move'?'는 자연스러워요. 움직이는 말이에요.':'는 어색해요. 상태나 느낌을 표현하는 말이에요.'}`);
-        finish(key);$('p1next').classList.remove('hidden');reveal($('p1next'));
-      }else{b.classList.add('wrong');b.disabled=true;miss(key);this.tries++;
-        fb($('p1fb'),'attention',this.tries===1?'다시 한번 읽어 볼까요?':(it.test?`'${it.test}'라고 말해 봐요. 자연스러운가요?`:`'~이에요'로 끝나는 말이에요.`));}
-    };
+    this.bind(it);
     $('p1next').onclick=()=>{if(this.i<n-1){this.i++;this.render();}else this.done();};
-    say(1,this.i===0?'문장에는 <b>주인공</b>과 <b>끝 말</b>이 있어.<br>끝 말이 어떤 말인지 골라 봐!':'다음 기차야. 끝 칸을 잘 봐.');
+    say(1,this.i===0?'끝 칸 세 개에 알맞은 말을 <b>끌어다</b> 넣어 봐.<br>주인공 뒤 글자를 <b>눌러 바꿔 보면</b> 느낌이 달라져!':'다음 기차야. 보기를 끌어다 넣어 봐.');
+  },
+  bind(it){
+    const area=$('area1');let sel=null,drag=null;
+    const clearSel=()=>{area.querySelectorAll('.tr-card.sel').forEach(x=>x.classList.remove('sel'));sel=null;};
+    const drop=(card,slot)=>{if(!card||!slot||slot.classList.contains('ok'))return;const t=card.dataset.t;
+      if(t===slot.dataset.t){slot.classList.add('ok');slot.innerHTML=`<span class="pred-${t}">${esc(it.p[t])}.</span><small>${TYPES[t]}</small>`;card.remove();this.placed[t]=1;
+        SFX.chomp();fb($('p1fb'),'success',t==='what'?`맞아요! '${it.p[t]}'는 주인공이 무엇인지 알려 줘요.`:t==='move'?`맞아요! '지금 ${it.test}'는 자연스러워요. 움직이는 말이에요.`:`맞아요! '${it.p[t]}'는 모습이나 느낌을 나타내요.`);
+        if(Object.keys(this.placed).length===3){finish(this.key);fb($('p1fb'),'success','기차 세 대가 모두 달려요! 주인공 뒤 글자를 눌러 바꿔 보고, 느낌이 어떻게 달라지는지 읽어 봐요.');$('p1next').classList.remove('hidden');reveal($('p1next'));}}
+      else{miss(this.key);this.tries++;slot.classList.remove('bad');void slot.offsetWidth;slot.classList.add('bad');card.classList.remove('bad');void card.offsetWidth;card.classList.add('bad');
+        fb($('p1fb'),'attention',this.tries===1?'다른 칸에 넣어 볼까요? 칸에 적힌 말을 읽어 봐요.':`'지금 ~고 있어요'를 붙여 봐요. 자연스러우면 움직이는 말, '~이에요'면 무엇인지 알려 주는 말이에요.`);}};
+    /* 끌기(마우스·터치) */
+    area.querySelectorAll('.tr-card').forEach(card=>{
+      card.onpointerdown=e=>{if(e.button>0)return;const r=card.getBoundingClientRect();drag={card,dx:e.clientX-r.left,dy:e.clientY-r.top,x0:e.clientX,y0:e.clientY,moved:false,ghost:null};card.setPointerCapture(e.pointerId);};
+      card.onpointermove=e=>{if(!drag||drag.card!==card)return;if(!drag.moved&&Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)<6)return;
+        if(!drag.moved){drag.moved=true;const g=card.cloneNode(true);g.classList.add('ghost');document.body.appendChild(g);drag.ghost=g;card.classList.add('lift');}
+        drag.ghost.style.left=(e.clientX-drag.dx)+'px';drag.ghost.style.top=(e.clientY-drag.dy)+'px';
+        area.querySelectorAll('.tr-slot').forEach(sl=>sl.classList.remove('over'));drag.ghost.style.display='none';const el=document.elementFromPoint(e.clientX,e.clientY);drag.ghost.style.display='';
+        const sl=el&&el.closest('.tr-slot');if(sl&&!sl.classList.contains('ok'))sl.classList.add('over');};
+      card.onpointerup=e=>{if(!drag||drag.card!==card)return;const d=drag;drag=null;card.classList.remove('lift');area.querySelectorAll('.tr-slot').forEach(sl=>sl.classList.remove('over'));
+        if(d.moved){d.ghost.style.display='none';const el=document.elementFromPoint(e.clientX,e.clientY);d.ghost.remove();drop(card,el&&el.closest('.tr-slot'));clearSel();}
+        else{const was=card.classList.contains('sel');clearSel();if(!was){card.classList.add('sel');sel=card;}}};
+      card.onpointercancel=()=>{if(drag&&drag.ghost)drag.ghost.remove();drag=null;card.classList.remove('lift');};});
+    /* 눌러서 넣기(카드 → 칸) */
+    area.querySelectorAll('.tr-slot').forEach(sl=>sl.onclick=()=>{if(sel){const c=sel;clearSel();drop(c,sl);}});
+    /* 주인공 뒤 글자 바꾸기 */
+    area.querySelectorAll('.ptog').forEach(b=>b.onclick=()=>{const t=b.dataset.t;this.pt[t]=this.pt[t]===it.sub?it.top:it.sub;b.textContent=this.pt[t];
+      b.classList.remove('spin');void b.offsetWidth;b.classList.add('spin');SFX.tone(this.pt[t]===it.sub?620:520,0,.08,'triangle',.07);
+      const pred=this.placed[t]?it.p[t]+'.':'…';
+      say(1,this.pt[t]===it.top?`<b>'${esc(it.w)}${it.top} ${esc(pred)}'</b><br>${esc(it.w)}에 대해 <b>설명하거나 다른 것과 견주는</b> 느낌이야.`:`<b>'${esc(it.w)}${it.sub} ${esc(pred)}'</b><br><b>누가(무엇이)</b> 그런지 새로 알려 주는 느낌이야.`);});
   },
   done(){
     $('area1').innerHTML=`<div class="card-head"><span class="prompt-label">문장 기차 완성</span></div>
       <h2>문장의 뼈대는 두 칸이에요</h2>
-      ${this.train({s:'강아지가',p:'뛰어요',t:'move'},true)}
+      <div class="train" aria-label="문장 기차"><div class="car subject"><div class="box"><span class="subj">강아지<mark class="pt">가</mark></span></div><small>문장의 주인공</small></div><i class="link" aria-hidden="true"></i><div class="car pred"><div class="box"><span class="pred-move">뛰어가요.</span></div><small>움직이는 말</small></div></div>
       <ul class="rule-card" style="margin-top:14px">
         <li><span style="background:var(--sx-subject)">주</span><div><b>문장의 주인공</b>: 누가? 무엇이? — 빨간 동그라미</div></li>
-        <li><span style="background:var(--sx-pred)">끝</span><div><b>끝 말</b>: 움직이는 말 · 상태나 느낌을 표현하는 말 · 무엇인지 알려 주는 말 — 파란 밑줄</div></li>
+        <li><span style="background:var(--sx-pred)">끝</span><div><b>끝 말</b>: 움직이는 말 · 상태나 느낌을 나타내는 말 · 무엇인지 알려 주는 말 — 파란 밑줄</div></li>
         <li><span style="background:#caa431">은</span><div>주인공 뒤에 오는 <mark class="pt">은/는 · 이/가</mark>를 오늘 공부해요</div></li></ul>
       <div class="card-foot"><button class="secondary" type="button" id="p1again">↻ 다시 풀어보기</button></div>`;
     $('p1again').onclick=()=>{this.i=0;this.render();};
     say(1,'기차 완성! 주인공 뒤에 붙은 <b>은/는·이/가</b>를 더 알아보자.');
   },
-  help(){const it=this.items[this.i];if(!it)return;hinted('p1-'+this.i);this.hintLv++;
-    if(this.hintLv===1)hint(1,'<b>"지금 ~고 있어요"</b>를 붙여서 말해 봐.<br>자연스러우면 움직이는 말, 어색하면 상태나 느낌을 표현하는 말이야.');
-    else hint(1,it.test?`'<b>${it.test}</b>' — 소리 내어 말해 봐. ${it.t==='move'?'자연스럽지?':'조금 어색하지?'}`:'\'~이에요\'로 끝나면 무엇인지 알려 주는 말이야.');}
+  help(){const it=this.items[this.i];if(!it)return;hinted(this.key);this.hintLv++;
+    if(this.hintLv===1)hint(1,'<b>"지금 ~고 있어요"</b>를 붙여서 말해 봐.<br>자연스러우면 움직이는 말이야. <b>~이에요</b>로 끝나면 무엇인지 알려 주는 말!');
+    else hint(1,`'<b>지금 ${it.test}</b>' — 자연스럽지? <b>${esc(it.p.move)}</b>는 움직이는 말, <b>${esc(it.p.what)}</b>는 무엇인지 알려 주는 말이야.`);}
 };
 
 /* 효과음: 파일 없이 브라우저에서 합성(외부 전송 없음) */
