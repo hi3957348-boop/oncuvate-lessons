@@ -263,7 +263,20 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .dict-line textarea:focus{outline:none;border-bottom-color:var(--violet)}
 .dict-line .answer-mirror{display:none}
 .dict-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
-#activity4:has(#picture-d0:not([hidden])) .self-check,#activity4:has(#picture-d1:not([hidden])) .self-check{display:none}
+#activity4:has(#picture-ord:not([hidden])) .self-check,#activity4:has(#picture-d0:not([hidden])) .self-check,#activity4:has(#picture-d1:not([hidden])) .self-check{display:none}
+
+/* 4 쓰기 0단계: 듣고 낱말 순서 맞추기 */
+.prt-only{display:none}
+.ord-cards{display:flex;flex-wrap:wrap;gap:10px 8px;margin:4px 0 2px}
+.ord-card{position:relative;display:grid;justify-items:center;gap:4px;min-height:44px;padding:8px 14px;border:1.5px solid #b9a9ea;border-radius:12px;background:linear-gradient(160deg,#fff,#f3effd);color:var(--ink);font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #d9cff5}
+.ord-card:disabled{opacity:.3;cursor:default;box-shadow:none}
+.ord-card .ord-num{display:none;width:30px;height:26px;border:1.5px solid #9aa1ad;border-radius:6px;background:#fff}
+.ord-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:52px;margin-top:8px;padding:6px 10px;border:2px dashed #d4c9ee;border-radius:12px;background:#fbfaff}
+.ord-line:empty::before{content:"낱말 카드를 들은 순서대로 눌러요";color:#a49cb6;font-size:13px;font-weight:800}
+.ord-line button{min-height:38px;padding:0 12px;border:1.5px solid var(--violet);border-radius:10px;background:#fff;color:var(--violet);font-size:18px;font-weight:900;cursor:pointer}
+.ord-row.ord-ok .ord-line{border:2px solid var(--ok);background:var(--ok-bg)}
+.ord-row.ord-ok .ord-line button{border-color:var(--ok);color:var(--ok);cursor:default}
+.ord-line button.ord-bad{border-color:#d68a1f;color:#a35f12;background:#fff7e8}
 @page{size:A4;margin:0}
 @media print{
   html,body{background:#fff}
@@ -297,9 +310,16 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
   .print-blank .option input:checked+.radio-mark{border:1.5px solid #9995a1}
   .print-blank .self-check input{appearance:none;-webkit-appearance:none;border:1.5px solid #9aa1ad;border-radius:4px;background:#fff}
   .print-blank .key{display:none!important}
+  .ord-card{box-shadow:none;background:#fff}
+  .ord-card .ord-num{display:block}
+  .scr-only{display:none}.prt-only{display:inline}
+  .ord-row{display:flex;align-items:center;gap:12px;padding:6px 10px}
+  .ord-row .dict-top{margin:0}.ord-row .ord-cards{margin:0}
+  .print-blank .ord-line{display:none}
+  .print-blank .ord-card:disabled{opacity:1}
   .listen,.dict-input,.dict-actions{display:none!important}
   .cells{gap:3px;row-gap:8px}.cell{width:33px;height:48px}.cell .typed{font-size:21px}.cell.sp{width:12px}.cell.punct{width:14px}
-  #activity4:has(#picture-d0:not([hidden])) .picture img,#activity4:has(#picture-d1:not([hidden])) .picture img{height:215px}
+  #activity4:has(#picture-ord:not([hidden])) .picture img,#activity4:has(#picture-d0:not([hidden])) .picture img,#activity4:has(#picture-d1:not([hidden])) .picture img{height:215px}
   #activity4:has(#picture-d0:not([hidden])) .intro,#activity4:has(#picture-d1:not([hidden])) .intro{margin-bottom:6px}
   .dict-row{margin:8px 0;padding:8px 10px 10px}
   .dict-line textarea{display:none}
@@ -353,8 +373,8 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 <div class="title-row"><span class="number">4</span><h2 id="title4">그림 보고 쓰기</h2></div>
 <p class="intro">그림을 보고, 알맞은 단계를 골라 써요.</p>
 <figure class="picture"><img src="assets/review-picture-apple-help.webp" alt="숲길에서 사과가 쏟아진 수레 곁에 토끼와 다람쥐가 있다. 다람쥐가 주운 사과를 토끼에게 건네고, 토끼는 사과를 쏟아 당황한 표정으로 다람쥐가 건네는 사과를 받으려 한다. 수레 바퀴 앞에는 돌이 있고, 길 끝에는 소풍 돗자리와 빈 접시가 있다."><figcaption>소풍길에 생긴 일 · 마지막 장면은 내가 상상해요.</figcaption></figure>
-<div class="variant" aria-label="쓰기 단계"><button data-picture-level="d0" aria-pressed="true">0단계 · 초성 받아쓰기</button><button data-picture-level="d1" aria-pressed="false">1단계 · 받아쓰기</button><button data-picture-level="easy" aria-pressed="false">2단계 · 기본 질문</button><button data-picture-level="hard" aria-pressed="false">3단계 · 생각을 넓히는 질문</button></div>
-<div id="picture-d0" class="picture-panel"></div><div id="picture-d1" class="picture-panel" hidden></div><div id="picture-easy" class="picture-panel" hidden></div><div id="picture-hard" class="picture-panel" hidden></div>
+<div class="variant" aria-label="쓰기 단계"><button data-picture-level="ord" aria-pressed="true">0단계 · 듣고 순서 맞추기</button><button data-picture-level="d0" aria-pressed="false">1단계 · 초성 받아쓰기</button><button data-picture-level="d1" aria-pressed="false">2단계 · 받아쓰기</button><button data-picture-level="easy" aria-pressed="false">3단계 · 기본 질문</button><button data-picture-level="hard" aria-pressed="false">4단계 · 생각을 넓히는 질문</button></div>
+<div id="picture-ord" class="picture-panel"></div><div id="picture-d0" class="picture-panel" hidden></div><div id="picture-d1" class="picture-panel" hidden></div><div id="picture-easy" class="picture-panel" hidden></div><div id="picture-hard" class="picture-panel" hidden></div>
 <div class="self-check"><label><input type="checkbox">답을 순서대로 이어 읽었나요?</label><label><input type="checkbox">상상한 일도 자연스럽게 이어지나요?</label></div>
 <footer class="foot"><span>Oncuvate · 자체 제작 장면·질문 · 그림 AI 생성 · 4 / 5</span><div class="pager"><a href="#activity3">← 이전</a><button type="button" class="finish-btn" id="efDone">다 했어요 ✓</button></div></footer>
 </section>
@@ -475,12 +495,12 @@ Object.entries(stories).forEach(([level,data])=>{let n=0;const answers=[];const 
 const button=panel.querySelector('.check'),fb=panel.querySelector('.feedback');panel.addEventListener('input',e=>{if(!e.target.matches('.gap'))return;e.target.classList.remove('good','revisit');e.target.removeAttribute('aria-invalid');e.target.nextElementSibling.textContent=e.target.value;button.hidden=false;fb.textContent='';});button.onclick=()=>{let empty=[],invalid=[],alternatives=[];answers.forEach(a=>{const input=$(a.id),v=input.value.trim();input.classList.remove('good','revisit');input.removeAttribute('aria-invalid');if(!v){empty.push(a.n);return;}if(v!==a.preferred&&v!==a.alternative){invalid.push(a.n);input.classList.add('revisit');input.setAttribute('aria-invalid','true');return;}input.classList.add(v===a.preferred?'good':'revisit');if(v===a.alternative)alternatives.push(a.n);});if(empty.length||invalid.length){fb.textContent=[empty.length?`${empty.join(', ')}번에 조사를 직접 써 보세요.`:'',invalid.length?`${invalid.join(', ')}번은 은·는·이·가 한 글자와 받침을 확인해요.`:''].filter(Boolean).join(' ');return;}button.hidden=true;fb.textContent=alternatives.length?`모두 채웠어요. ${alternatives.join(', ')}번은 해설의 예시와 다른 표현이에요. 틀렸다고 정하기보다, 강조하거나 비교하는 뜻이 어떻게 달라지는지 함께 읽어 보세요.`:'글의 흐름에 맞게 모두 채웠어요. 완성한 글을 이어 읽어 보세요.';};
 });
 const pictures={
-easy:{label:'2단계 · 기본 질문',flow:'시작 → 사건 → 도움 → 마무리',questions:[
+easy:{label:'3단계 · 기본 질문',flow:'시작 → 사건 → 도움 → 마무리',questions:[
 {step:'시작',q:'누가 수레를 옮기고 있나요?'},
 {step:'사건',q:'수레를 옮기다가 무슨 일이 생겼나요?'},
 {step:'도움',q:'다람쥐는 무엇을 하고 있나요?'},
 {step:'마무리',q:'다음에는 어떻게 될까요?'}],words:'숲길 · 토끼 · 수레 · 사과 · 다람쥐 · 돌 · 돗자리 / 옮겨요 · 쏟아졌어요 · 주워요 · 함께 먹어요',example:'토끼가 수레를 옮기고 있어요. 수레를 옮기다가 사과가 쏟아졌어요. 다람쥐는 사과를 줍고 있어요. 둘은 사과를 다 주워서 함께 소풍을 즐길 거예요.'},
-hard:{label:'3단계 · 생각을 넓히는 질문',flow:'상황 → 원인 → 해결 → 마음',questions:[
+hard:{label:'4단계 · 생각을 넓히는 질문',flow:'상황 → 원인 → 해결 → 마음',questions:[
 {step:'상황',q:'토끼에게 무슨 일이 생겼나요?'},
 {step:'원인',q:'사과는 왜 쏟아졌을까요? 그림 속 단서도 넣어 써요.'},
 {step:'해결',q:'토끼와 다람쥐는 어떻게 힘을 모으면 좋을까요?'},
@@ -510,7 +530,7 @@ function dictCheck(row,i,value,cells){const want=DICT[i],got=norm(value);const f
   else fb.textContent=cells?'색이 바뀐 칸을 다시 들어 보고 고쳐 써요.':'한 번 더 들어 보고, 틀린 곳을 찾아 고쳐 써요.';}
 function listenBtns(i){return `<button type="button" class="listen" data-i="${i}">🔊 듣기</button><button type="button" class="listen slow" data-i="${i}" data-slow="1">🐢 천천히</button>`;}
 /* 0단계: 초성 칸 + 입력 */
-$('picture-d0').innerHTML='<div class="level-print">0단계 · 초성 받아쓰기</div><p class="dict-guide">잘 듣고, 칸 안의 초성을 보며 문장을 써요.</p>'+DICT.map((t,i)=>`<div class="dict-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
+$('picture-d0').innerHTML='<div class="level-print">1단계 · 초성 받아쓰기</div><p class="dict-guide">잘 듣고, 칸 안의 초성을 보며 문장을 써요.</p>'+DICT.map((t,i)=>`<div class="dict-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
   <div class="cells">${[...t].map(ch=>ch===' '?'<span class="cell sp"></span>':/[.!?]/.test(ch)?`<span class="cell punct">${ch}</span>`:`<span class="cell"><span class="cho">${cho(ch)}</span><span class="typed"></span></span>`).join('')}</div>
   <input class="dict-input" type="text" autocomplete="off" spellcheck="false" aria-label="${i+1}번 문장 받아쓰기" placeholder="여기에 써요" data-track="input">
   <div class="dict-actions"><button type="button" class="check">확인</button></div><div class="feedback" role="status"></div></div>`).join('')+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
@@ -518,7 +538,7 @@ $('picture-d0').querySelectorAll('.dict-row').forEach(row=>{const i=+row.dataset
   inp.addEventListener('input',()=>{const v=inp.value;cells.forEach((c,k)=>{c.classList.remove('ok','no');const tp=c.querySelector('.typed');if(tp)tp.textContent=(v[k]&&v[k]!==' ')?v[k]:'';});row.querySelector('.feedback').textContent='';});
   row.querySelector('.check').onclick=()=>dictCheck(row,i,inp.value,cells);});
 /* 1단계: 힌트 없이 넓은 줄에 받아쓰기 */
-$('picture-d1').innerHTML='<div class="level-print">1단계 · 받아쓰기</div><p class="dict-guide">잘 듣고, 문장을 그대로 써요.</p>'+DICT.map((t,i)=>`<div class="dict-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
+$('picture-d1').innerHTML='<div class="level-print">2단계 · 받아쓰기</div><p class="dict-guide">잘 듣고, 문장을 그대로 써요.</p>'+DICT.map((t,i)=>`<div class="dict-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
   <div class="dict-line"><textarea rows="1" aria-label="${i+1}번 문장 받아쓰기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div>
   <div class="dict-actions"><button type="button" class="check">확인</button></div><div class="feedback" role="status"></div></div>`).join('')+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
 $('picture-d1').querySelectorAll('.dict-row').forEach(row=>{const i=+row.dataset.i,ta=row.querySelector('textarea');
@@ -526,7 +546,27 @@ $('picture-d1').querySelectorAll('.dict-row').forEach(row=>{const i=+row.dataset
   ta.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();dictCheck(row,i,ta.value,null);}});
   row.querySelector('.check').onclick=()=>dictCheck(row,i,ta.value,null);});
 document.getElementById('activity4').addEventListener('click',e=>{const b=e.target.closest('.listen');if(b)play(b,+b.dataset.i,!!b.dataset.slow);});
-document.querySelectorAll('[data-picture-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-picture-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['d0','d1','easy','hard'].forEach(l=>$('picture-'+l).hidden=l!==b.dataset.pictureLevel);});
+/* 4 쓰기 0단계: 받아쓰기 네 문장을 듣고, 섞인 낱말 카드를 순서대로 놓기 (종이는 카드 밑에 순서 번호 쓰기) */
+(function(){const SH=[[1,2,0],[2,0,1],[2,0,1],[3,1,0,2]];
+  const html=DICT.map((t,i)=>{const w=t.replace(/[.!?]$/,'').split(' '),o=SH[i]&&SH[i].length===w.length?SH[i]:w.map((x,k)=>k).reverse();
+    return `<div class="dict-row ord-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
+      <div class="ord-cards">${o.map(k=>`<button type="button" class="ord-card" data-k="${k}" data-track="answer"><span>${esc(w[k])}</span><span class="ord-num" aria-hidden="true"></span></button>`).join('')}</div>
+      <div class="ord-line" aria-label="${i+1}번 문장 순서"></div>
+      <div class="dict-actions"><button type="button" class="check">확인</button><button type="button" class="add ord-reset">↻ 다시 놓기</button></div><div class="feedback" role="status"></div></div>`;}).join('');
+  $('picture-ord').innerHTML='<div class="level-print">0단계 · 듣고 순서 맞추기</div><p class="dict-guide"><span class="scr-only">잘 듣고, 낱말 카드를 들은 순서대로 눌러요.</span><span class="prt-only">잘 듣고, 카드 밑 네모에 들은 순서대로 번호를 써요.</span></p>'+html+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
+  $('picture-ord').querySelectorAll('.ord-row').forEach(row=>{const i=+row.dataset.i,w=DICT[i].replace(/[.!?]$/,'').split(' '),line=row.querySelector('.ord-line'),fb=row.querySelector('.feedback');
+    const placed=()=>[...line.children].map(b=>+b.dataset.k);
+    row.querySelector('.ord-cards').onclick=e=>{const c=e.target.closest('.ord-card');if(!c||c.disabled||row.classList.contains('ord-ok'))return;
+      c.disabled=true;const b=document.createElement('button');b.type='button';b.dataset.k=c.dataset.k;b.textContent=w[+c.dataset.k];line.appendChild(b);fb.textContent='';};
+    line.onclick=e=>{const b=e.target.closest('button');if(!b||row.classList.contains('ord-ok'))return;row.querySelector(`.ord-card[data-k="${b.dataset.k}"]`).disabled=false;b.remove();fb.textContent='';};
+    row.querySelector('.ord-reset').onclick=()=>{if(row.classList.contains('ord-ok'))return;line.innerHTML='';row.querySelectorAll('.ord-card').forEach(c=>c.disabled=false);fb.textContent='';};
+    row.querySelector('.check').onclick=()=>{const p=placed();line.querySelectorAll('button').forEach(b=>b.classList.remove('ord-bad'));
+      if(p.length<w.length){fb.className='feedback';fb.textContent='낱말 카드를 모두 놓아요.';return;}
+      const bad=p.findIndex((k,n)=>k!==n);
+      if(bad<0){row.classList.add('ord-ok');line.lastElementChild.textContent+='.';fb.className='feedback';fb.textContent='들은 순서대로 바르게 놓았어요! 소리 내어 읽어 봐요.';}
+      else{line.children[bad].classList.add('ord-bad');fb.className='feedback';fb.textContent=`${bad+1}번째 낱말부터 다시 들어 봐요.`;}};
+  });})();
+document.querySelectorAll('[data-picture-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-picture-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['ord','d0','d1','easy','hard'].forEach(l=>$('picture-'+l).hidden=l!==b.dataset.pictureLevel);});
 $('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'해설 숨기기':'해설 보기';};
 function syncPrint(){document.querySelectorAll('.gap,textarea').forEach(x=>x.nextElementSibling.textContent=x.value);}
 window.addEventListener('beforeprint',syncPrint);window.addEventListener('afterprint',()=>document.body.classList.remove('print-blank'));
@@ -597,7 +637,9 @@ function findMissing(){const out=[];
   if(sp){const g=[...sp.querySelectorAll('.gap')].map((x,i)=>x.value.trim()?null:{n:i+1,el:x}).filter(Boolean);
     if(g.length)out.push({page:'3쪽',text:'빈칸 채우기 '+(g.length>6?g.length+'칸':g.map(x=>x.n+'번').join(', ')),el:g[0].el});}
   const pp=document.querySelector('.picture-panel:not([hidden])');
-  if(pp){const w=[...pp.querySelectorAll('.dict-input,textarea')].map((x,i)=>x.value.trim()?null:{n:i+1,el:x}).filter(Boolean);
+  if(pp&&pp.id==='picture-ord'){const w=[...pp.querySelectorAll('.ord-row')].map((x,i)=>x.classList.contains('ord-ok')?null:{n:i+1,el:x}).filter(Boolean);
+    if(w.length)out.push({page:'4쪽',text:'듣고 순서 맞추기 '+w.map(x=>x.n+'번').join(', '),el:w[0].el});}
+  else if(pp){const w=[...pp.querySelectorAll('.dict-input,textarea')].map((x,i)=>x.value.trim()?null:{n:i+1,el:x}).filter(Boolean);
     if(w.length)out.push({page:'4쪽',text:'그림 보고 쓰기 '+w.map(x=>x.n+'번').join(', '),el:w[0].el});}
   return out;}
 let missFirst=null;
