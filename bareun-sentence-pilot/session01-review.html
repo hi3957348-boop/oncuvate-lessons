@@ -215,6 +215,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .ref-write .answer-mirror{display:none}
 .ref-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:12px}
 .ref-actions button{min-height:40px;padding:0 16px;border:1px solid var(--line);border-radius:12px;background:#fff;color:var(--ink);font-size:13.5px;font-weight:850}
+.ref-actions .img-save{border:0;color:#fff;background:linear-gradient(135deg,#2785c7,#4bc9dc)}
 .ref-actions .save{border:0;color:#fff;background:var(--violet)}
 .ref-actions .msg{color:var(--ok);font-size:13px;font-weight:800}
 
@@ -416,7 +417,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 <div class="ref"><h3><i>4</i>다음에는 무엇을 더 잘해 볼까요?</h3>
   <div class="chips"><label class="chip"><input type="checkbox" name="efBetter" value="시작 전에 시간 계획 세우기" data-track="input">시작 전에 시간 계획 세우기</label><label class="chip"><input type="checkbox" name="efBetter" value="멈추면 바로 다시 돌아오기" data-track="input">멈추면 바로 다시 돌아오기</label><label class="chip"><input type="checkbox" name="efBetter" value="한 문제씩 끝까지 하기" data-track="input">한 문제씩 끝까지 하기</label><label class="chip"><input type="checkbox" name="efBetter" value="다 쓰고 다시 읽어 보기" data-track="input">다 쓰고 다시 읽어 보기</label><label class="chip"><input type="checkbox" name="efBetter" value="어려우면 도움 청하기" data-track="input">어려우면 도움 청하기</label></div>
   <button type="button" class="write-toggle" data-for="efBetterText">✏️ 직접 쓰기</button><label class="ref-write" hidden><span class="opt-label">쓰고 싶으면</span><textarea id="efBetterText" rows="1" aria-label="더 잘할 점 직접 쓰기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></label></div>
-<div class="ref-actions"><button class="save" id="efSave">돌아보기 저장</button><button id="efResume" hidden>아직 안 끝났어요 · 이어 하기</button><span class="msg" id="efMsg" role="status"></span></div>
+<div class="ref-actions"><button class="save" id="efSave">돌아보기 저장</button><button id="efImg" type="button" class="img-save">🖼️ 결과표 이미지로 저장</button><button id="efResume" hidden>아직 안 끝났어요 · 이어 하기</button><span class="msg" id="efMsg" role="status"></span></div>
 <footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 5 / 5</span><div class="pager"><a href="#activity4">← 이전</a><a href="#activity1">처음으로 ↑</a></div></footer>
 </section>
 </main>
@@ -722,6 +723,59 @@ $('efSave').onclick=()=>{st.ref=collect();save();const r=st.ref;
   window.ocReviewReflection={...r,time:{est:st.est,start:st.start,end:st.end,activeMs:st.active,awayMs:st.away,awayCount:st.awayCount}};
   $('efMsg').textContent='저장했어요. 오늘 고른 방법을 다음 시간에도 써 봐요!';};
 document.querySelectorAll('.write-toggle').forEach(b=>{b.setAttribute('aria-expanded','false');b.onclick=()=>{const box=b.nextElementSibling,open=box.hidden;box.hidden=!open;b.setAttribute('aria-expanded',open);if(open)box.querySelector('textarea').focus();};});
+
+/* 결과표 이미지로 저장: 시간 기록 + 쪽별 활동 + 돌아보기를 그림(PNG) 한 장으로. 기기에만 저장, 전송 없음 */
+function pageStats(){
+  const q=[...document.querySelectorAll('#questions .question')],qOk=q.filter(x=>{const b=x.querySelector('.check');return b&&b.hidden;}).length;
+  const l=[...document.querySelectorAll('.link-set')],lOk=l.filter(x=>x.querySelectorAll('.link-card.ok').length===4).length;
+  const sp=document.querySelector('.story-panel:not([hidden])'),gaps=sp?[...sp.querySelectorAll('.gap')]:[],gFill=gaps.filter(x=>x.value.trim()).length,
+    sTitle=(document.querySelector('[data-story-level][aria-pressed="true"]')||{}).textContent||'';
+  const pp=document.querySelector('.picture-panel:not([hidden])'),lvName=(document.querySelector('[data-picture-level][aria-pressed="true"]')||{}).textContent||'';
+  let w='';if(pp&&pp.id==='picture-ord'){const r=pp.querySelectorAll('.ord-row');w=`${[...r].filter(x=>x.classList.contains('ord-ok')).length} / ${r.length}문장 순서 맞춤`;}
+  else if(pp){const f=[...pp.querySelectorAll('.dict-input,textarea')];w=`${f.filter(x=>x.value.trim()).length} / ${f.length}칸 씀`;}
+  return [['1쪽 질문에 답하기',`${qOk} / ${q.length}문항 확인`],['2쪽 문장 카드 잇기',`${lOk} / ${l.length}문제 완성`],
+    ['3쪽 빈칸 채우기',`${sTitle} — ${gFill} / ${gaps.length}칸`],['4쪽 그림 보고 쓰기',`${lvName} — ${w}`]];}
+function wrapText(c,t,x,y,maxW,lh){let line='',yy=y;for(const ch of [...t]){const tt=line+ch;if(c.measureText(tt).width>maxW&&line){c.fillText(line,x,yy);line=ch;yy+=lh;}else line=tt;}if(line)c.fillText(line,x,yy);return yy+lh;}
+async function saveResultImage(){
+  try{if(document.fonts&&document.fonts.ready)await document.fonts.ready;}catch(e){}
+  const r=collect(),W=1000,F='Pretendard,"Noto Sans KR","Malgun Gothic",sans-serif';
+  const cv=document.createElement('canvas'),c=cv.getContext('2d');cv.width=W*2;cv.height=1500*2;c.scale(2,2);
+  /* 배경·머리 */
+  c.fillStyle='#fffdf7';c.fillRect(0,0,W,1500);
+  const g=c.createLinearGradient(0,0,W,0);g.addColorStop(0,'#f3edff');g.addColorStop(1,'#e6f6f9');c.fillStyle=g;c.fillRect(0,0,W,120);
+  c.fillStyle='#35206f';c.font=`900 34px ${F}`;c.fillText('바른 문장 쓰기',40,58);
+  c.fillStyle='#566077';c.font=`800 18px ${F}`;c.fillText('1회 복습 결과표 · 문장의 뜻을 살피는 은/는 · 이/가',40,92);
+  const today=new Date(st.start||Date.now());c.textAlign='right';c.fillText(`${today.getFullYear()}. ${today.getMonth()+1}. ${today.getDate()}.`,W-40,58);c.textAlign='left';
+  let y=160;
+  const head=t=>{c.fillStyle='#27344e';c.font=`900 22px ${F}`;c.fillText(t,40,y);y+=14;c.fillStyle='#e2ddd2';c.fillRect(40,y,W-80,2);y+=30;};
+  const row=(k,v,col)=>{c.fillStyle='#6f7789';c.font=`800 17px ${F}`;c.fillText(k,56,y);c.fillStyle=col||'#27344e';c.font=`900 19px ${F}`;y=wrapText(c,v,330,y,W-380,26)+6;};
+  /* 시간 */
+  head('⏱ 학습 시간');
+  const mm=ms=>Math.round(ms/60000)+'분';
+  row('시작 ~ 끝',st.start&&st.end?`${hm(st.start)} ~ ${hm(st.end)}`:st.start?`${hm(st.start)} ~ (진행 중)`:'-');
+  row('예상한 시간',st.est?st.est+'분':'-');
+  row('실제 학습 시간',st.start?mm(st.active):'-','#35206f');
+  row('멈춘 시간',st.start?mm(st.away)+(st.awayCount?` (${st.awayCount}번)`:''):'-','#b06a1f');
+  if(st.est&&st.start){const d=Math.round(st.active/60000)-st.est;row('예상과 비교',Math.abs(d)<=2?'예상과 거의 같아요':d<0?`예상보다 ${-d}분 빨랐어요`:`예상보다 ${d}분 더 걸렸어요`);}
+  y+=10;
+  /* 쪽별 활동 */
+  head('📄 활동');pageStats().forEach(([k,v])=>row(k,v));
+  y+=10;
+  /* 돌아보기 */
+  head('💭 돌아보기');
+  const faces={1:'😣 많이 막혔어요',2:'🙁 조금 막혔어요',3:'😐 보통이에요',4:'🙂 잘 됐어요',5:'😄 술술 됐어요'};
+  row('얼마나 술술?',r.smooth?faces[r.smooth]:'-');
+  row('왜 그랬을까?',[...r.why,r.whyText].filter(Boolean).join(' · ')||'-');
+  row('기억할 방법',[...r.skill,r.skillText].filter(Boolean).join(' · ')||'-');
+  row('더 잘해 볼 점',[...r.better,r.betterText].filter(Boolean).join(' · ')||'-');
+  /* 아래 */
+  y+=20;c.fillStyle='#9aa1ad';c.font=`700 13px ${F}`;c.fillText('Oncuvate · 바른 문장 쓰기 1회 복습 워크지',40,y);
+  /* 높이 맞춰 자르기 */
+  const H=Math.ceil(y+30),out=document.createElement('canvas');out.width=W*2;out.height=H*2;out.getContext('2d').drawImage(cv,0,0);
+  const a=document.createElement('a');const d=new Date();a.download=`바른문장쓰기_1회_결과표_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.png`;
+  a.href=out.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();
+  emit('ef-result-image',{});$('efMsg').textContent='결과표 그림을 저장했어요.';}
+$('efImg').onclick=()=>{st.ref=collect();save();saveResultImage();};
 restoreRef();
 document.querySelectorAll('.ref-write textarea').forEach(t=>{if(t.value.trim()){t.parentElement.hidden=false;t.parentElement.previousElementSibling.setAttribute('aria-expanded','true');}});
 if(st.end)fill();
