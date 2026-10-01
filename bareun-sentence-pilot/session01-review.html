@@ -265,23 +265,18 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .dict-actions{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin-top:8px}
 #activity4:has(#picture-ord:not([hidden])) .self-check,#activity4:has(#picture-d0:not([hidden])) .self-check,#activity4:has(#picture-d1:not([hidden])) .self-check{display:none}
 
-/* 4 쓰기 0단계: 듣고 낱말 순서 맞추기 */
+/* 4 쓰기 0단계: 듣고 낱말 순서 맞추기(한 줄 안에서 끌어 옮기기) */
 .prt-only{display:none}
-.ord-cards{display:flex;flex-wrap:wrap;gap:10px 8px;margin:4px 0 2px}
-.ord-card{position:relative;display:grid;justify-items:center;gap:4px;min-height:44px;padding:8px 14px;border:1.5px solid #b9a9ea;border-radius:12px;background:linear-gradient(160deg,#fff,#f3effd);color:var(--ink);font-size:19px;font-weight:900;cursor:pointer;box-shadow:0 3px 0 #d9cff5}
-.ord-card:disabled{opacity:.3;cursor:default;box-shadow:none}
+.ord-cards{display:flex;flex-wrap:wrap;gap:10px 8px;min-height:58px;margin:4px 0 2px;padding:6px;border:1.5px dashed #d4c9ee;border-radius:14px;background:#fbfaff}
+.ord-card{position:relative;display:grid;justify-items:center;gap:4px;min-height:44px;padding:8px 14px;border:1.5px solid #b9a9ea;border-radius:12px;background:linear-gradient(160deg,#fff,#f3effd);color:var(--ink);font-size:19px;font-weight:900;cursor:grab;touch-action:none;user-select:none;-webkit-user-select:none;box-shadow:0 3px 0 #d9cff5}
+.ord-card.dragging{z-index:5;cursor:grabbing;box-shadow:0 10px 20px rgba(37,20,78,.25);transition:none!important}
+.ord-card.sel{border-color:var(--violet);box-shadow:0 0 0 3px rgba(141,112,215,.3),0 3px 0 #b9a9ea}
+.ord-card.ord-bad{border-color:#d68a1f;background:#fff7e8;color:#a35f12}
 .ord-card .ord-num{display:none;width:30px;height:26px;border:1.5px solid #9aa1ad;border-radius:6px;background:#fff}
-.ord-line{display:flex;flex-wrap:wrap;align-items:center;gap:6px;min-height:52px;margin-top:8px;padding:6px 10px;border:2px dashed #d4c9ee;border-radius:12px;background:#fbfaff}
-.ord-line:empty::before{content:"낱말 카드를 들은 순서대로 눌러요";color:#a49cb6;font-size:13px;font-weight:800}
-.ord-line button{min-height:38px;padding:0 12px;border:1.5px solid var(--violet);border-radius:10px;background:#fff;color:var(--violet);font-size:18px;font-weight:900;cursor:pointer}
-.ord-row.ord-ok .ord-line{border:2px solid var(--ok);background:var(--ok-bg)}
-.ord-row.ord-ok .ord-line button{border-color:var(--ok);color:var(--ok);cursor:default}
-.ord-line button.ord-bad{border-color:#d68a1f;color:#a35f12;background:#fff7e8}
-.story-audio{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 4px}
-.story-listen{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--cyan-line);border-radius:999px;background:var(--cyan-soft);color:#1f5f8f;font-size:12.5px;font-weight:900;cursor:pointer}
-.story-listen.slow{border-color:#e3dcf3;background:#f6f3fb;color:var(--violet)}
-.story-listen.playing{box-shadow:0 0 0 3px rgba(75,201,220,.3)}
-.story-audio-note{color:var(--muted);font-size:11.5px;font-weight:700}
+.ord-row.ord-ok .ord-cards{border:2px solid var(--ok);background:var(--ok-bg)}
+.ord-row.ord-ok .ord-card{border-color:var(--ok);color:var(--ok)}
+.ord-write{margin-top:6px}
+.ord-write textarea{min-height:48px;height:48px;font-size:20px}
 @page{size:A4;margin:0}
 @media print{
   html,body{background:#fff}
@@ -319,10 +314,14 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
   .ord-card{box-shadow:none;background:#fff}
   .ord-card .ord-num{display:block}
   .scr-only{display:none}.prt-only{display:inline}
-  .ord-row{display:flex;align-items:center;gap:12px;padding:6px 10px}
-  .ord-row .dict-top{margin:0}.ord-row .ord-cards{margin:0}
-  .print-blank .ord-line{display:none}
-  .print-blank .ord-card:disabled{opacity:1}
+  .ord-row{display:grid;grid-template-columns:auto 1fr;align-items:center;column-gap:12px;padding:6px 10px}
+  .ord-row .dict-top{margin:0}.ord-row .ord-cards{margin:0;border:0;background:none;padding:0;min-height:0}
+  .ord-row .ord-write{grid-column:1/-1;margin-top:2px}
+  .ord-row .ord-write .answer-mirror{min-height:34px;padding:6px 6px 2px}
+  #activity4:has(#picture-ord:not([hidden])) .picture img{height:165px!important}
+  #picture-ord .dict-row{margin:6px 0}
+  #picture-ord .ord-card{min-height:0;padding:5px 12px}
+
   .listen,.dict-input,.dict-actions{display:none!important}
   .cells{gap:3px;row-gap:8px}.cell{width:33px;height:48px}.cell .typed{font-size:21px}.cell.sp{width:12px}.cell.punct{width:14px}
   #activity4:has(#picture-ord:not([hidden])) .picture img,#activity4:has(#picture-d0:not([hidden])) .picture img,#activity4:has(#picture-d1:not([hidden])) .picture img{height:215px}
@@ -564,25 +563,48 @@ $('picture-d1').querySelectorAll('.dict-row').forEach(row=>{const i=+row.dataset
   ta.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();dictCheck(row,i,ta.value,null);}});
   row.querySelector('.check').onclick=()=>dictCheck(row,i,ta.value,null);});
 document.getElementById('activity4').addEventListener('click',e=>{const b=e.target.closest('.listen');if(b)play(b,+b.dataset.i,!!b.dataset.slow);});
-/* 4 쓰기 0단계: 받아쓰기 네 문장을 듣고, 섞인 낱말 카드를 순서대로 놓기 (종이는 카드 밑에 순서 번호 쓰기) */
+/* 4 쓰기 0단계: 받아쓰기 네 문장을 듣고, 한 줄 안의 낱말 카드를 끌어 옮겨 순서 맞추기(옮기면 나머지가 밀려남).
+   아래 줄은 문장을 써 보는 칸(선택). 종이는 카드 밑 네모에 순서 번호 */
 (function(){const SH=[[1,2,0],[2,0,1],[2,0,1],[3,1,0,2]];
-  const html=DICT.map((t,i)=>{const w=t.replace(/[.!?]$/,'').split(' '),o=SH[i]&&SH[i].length===w.length?SH[i]:w.map((x,k)=>k).reverse();
+  const words=i=>DICT[i].replace(/[.!?]$/,'').split(' ');
+  const html=DICT.map((t,i)=>{const w=words(i),o=SH[i]&&SH[i].length===w.length?SH[i]:w.map((x,k)=>k).reverse();
     return `<div class="dict-row ord-row" data-i="${i}"><div class="dict-top"><span class="dict-no">${i+1}</span>${listenBtns(i)}</div>
-      <div class="ord-cards">${o.map(k=>`<button type="button" class="ord-card" data-k="${k}" data-track="answer"><span>${esc(w[k])}</span><span class="ord-num" aria-hidden="true"></span></button>`).join('')}</div>
-      <div class="ord-line" aria-label="${i+1}번 문장 순서"></div>
-      <div class="dict-actions"><button type="button" class="check">확인</button><button type="button" class="add ord-reset">↻ 다시 놓기</button></div><div class="feedback" role="status"></div></div>`;}).join('');
-  $('picture-ord').innerHTML='<div class="level-print">0단계 · 듣고 순서 맞추기</div><p class="dict-guide"><span class="scr-only">잘 듣고, 낱말 카드를 들은 순서대로 눌러요.</span><span class="prt-only">잘 듣고, 카드 밑 네모에 들은 순서대로 번호를 써요.</span></p>'+html+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
-  $('picture-ord').querySelectorAll('.ord-row').forEach(row=>{const i=+row.dataset.i,w=DICT[i].replace(/[.!?]$/,'').split(' '),line=row.querySelector('.ord-line'),fb=row.querySelector('.feedback');
-    const placed=()=>[...line.children].map(b=>+b.dataset.k);
-    row.querySelector('.ord-cards').onclick=e=>{const c=e.target.closest('.ord-card');if(!c||c.disabled||row.classList.contains('ord-ok'))return;
-      c.disabled=true;const b=document.createElement('button');b.type='button';b.dataset.k=c.dataset.k;b.textContent=w[+c.dataset.k];line.appendChild(b);fb.textContent='';};
-    line.onclick=e=>{const b=e.target.closest('button');if(!b||row.classList.contains('ord-ok'))return;row.querySelector(`.ord-card[data-k="${b.dataset.k}"]`).disabled=false;b.remove();fb.textContent='';};
-    row.querySelector('.ord-reset').onclick=()=>{if(row.classList.contains('ord-ok'))return;line.innerHTML='';row.querySelectorAll('.ord-card').forEach(c=>c.disabled=false);fb.textContent='';};
-    row.querySelector('.check').onclick=()=>{const p=placed();line.querySelectorAll('button').forEach(b=>b.classList.remove('ord-bad'));
-      if(p.length<w.length){fb.className='feedback';fb.textContent='낱말 카드를 모두 놓아요.';return;}
-      const bad=p.findIndex((k,n)=>k!==n);
-      if(bad<0){row.classList.add('ord-ok');line.lastElementChild.textContent+='.';fb.className='feedback';fb.textContent='들은 순서대로 바르게 놓았어요! 소리 내어 읽어 봐요.';}
-      else{line.children[bad].classList.add('ord-bad');fb.className='feedback';fb.textContent=`${bad+1}번째 낱말부터 다시 들어 봐요.`;}};
+      <div class="ord-cards" aria-label="${i+1}번 문장 낱말 카드">${o.map(k=>`<button type="button" class="ord-card" data-k="${k}" data-track="answer"><span>${esc(w[k])}</span><span class="ord-num" aria-hidden="true"></span></button>`).join('')}</div>
+      <div class="dict-line ord-write"><textarea rows="1" aria-label="${i+1}번 문장 써 보기" placeholder="문장을 써 봐도 좋아요" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div>
+      <div class="dict-actions"><button type="button" class="check">확인</button></div><div class="feedback" role="status"></div></div>`;}).join('');
+  $('picture-ord').innerHTML='<div class="level-print">0단계 · 듣고 순서 맞추기</div><p class="dict-guide"><span class="scr-only">잘 듣고, 낱말 카드를 끌어서 들은 순서대로 옮겨요.</span><span class="prt-only">잘 듣고, 카드 밑 네모에 들은 순서대로 번호를 써요.</span></p>'+html+`<p class="key">${DICT.map((t,i)=>(i+1)+'. '+esc(t)).join('<br>')}</p>`;
+  /* 옮기기 전후 위치로 밀려나는 움직임 보여 주기(FLIP) */
+  const flip=(box,fn)=>{const cs=[...box.children],r0=new Map(cs.map(c=>[c,c.getBoundingClientRect()]));fn();
+    cs.forEach(c=>{if(c.classList.contains('dragging'))return;const r1=c.getBoundingClientRect(),o=r0.get(c);const dx=o.left-r1.left,dy=o.top-r1.top;if(!dx&&!dy)return;
+      c.style.transition='none';c.style.transform=`translate(${dx}px,${dy}px)`;requestAnimationFrame(()=>{c.style.transition='transform .18s ease';c.style.transform='';});});};
+  $('picture-ord').querySelectorAll('.ord-row').forEach(row=>{const i=+row.dataset.i,w=words(i),box=row.querySelector('.ord-cards'),fb=row.querySelector('.feedback'),ta=row.querySelector('textarea');
+    const order=()=>[...box.children].map(c=>+c.dataset.k);
+    const reset=()=>{fb.textContent='';box.querySelectorAll('.ord-card').forEach(c=>c.classList.remove('ord-bad'));row.classList.remove('ord-ok');};
+    let drag=null,sel=null;
+    box.addEventListener('pointerdown',e=>{const c=e.target.closest('.ord-card');if(!c||e.button>0)return;drag={c,x0:e.clientX,y0:e.clientY,moved:false};c.setPointerCapture(e.pointerId);});
+    box.addEventListener('pointermove',e=>{if(!drag)return;const c=drag.c;
+      if(!drag.moved){if(Math.hypot(e.clientX-drag.x0,e.clientY-drag.y0)<6)return;drag.moved=true;c.classList.add('dragging');if(sel){sel.classList.remove('sel');sel=null;}reset();}
+      c.style.transform=`translate(${e.clientX-drag.x0}px,${e.clientY-drag.y0}px)`;
+      const others=[...box.children].filter(x=>x!==c);let target=null;
+      for(const o of others){const r=o.getBoundingClientRect();if(e.clientY<r.bottom+6&&e.clientX<r.left+r.width/2){target=o;break;}}
+      const cur=c.nextElementSibling;if(target===cur||(!target&&c===box.lastElementChild))return;
+      const r0=c.getBoundingClientRect();flip(box,()=>{target?box.insertBefore(c,target):box.appendChild(c);});
+      const r1=c.getBoundingClientRect();drag.x0+=r1.left-r0.left;drag.y0+=r1.top-r0.top;c.style.transform=`translate(${e.clientX-drag.x0}px,${e.clientY-drag.y0}px)`;});
+    const end=()=>{if(!drag)return;const c=drag.c,moved=drag.moved;drag=null;c.classList.remove('dragging');c.style.transition='transform .15s ease';c.style.transform='';
+      if(moved)return;
+      /* 누르기: 하나를 누르고 다른 카드를 누르면 그 자리로 옮기고 나머지가 밀려남 */
+      if(!sel){sel=c;c.classList.add('sel');return;}
+      if(sel===c){c.classList.remove('sel');sel=null;return;}
+      const from=sel;sel.classList.remove('sel');sel=null;reset();
+      const kids=[...box.children];flip(box,()=>{kids.indexOf(from)<kids.indexOf(c)?box.insertBefore(from,c.nextElementSibling):box.insertBefore(from,c);});};
+    box.addEventListener('pointerup',end);box.addEventListener('pointercancel',end);
+    ta.addEventListener('input',()=>{ta.nextElementSibling.textContent=ta.value;});
+    row.querySelector('.check').onclick=()=>{const p=order();box.querySelectorAll('.ord-card').forEach(c=>c.classList.remove('ord-bad'));
+      const bad=p.findIndex((k,n)=>k!==n);fb.className='feedback';
+      if(bad<0){row.classList.add('ord-ok');
+        const want=DICT[i].replace(/\s+/g,''),got=ta.value.replace(/\s+/g,'');
+        fb.textContent='들은 순서대로 바르게 놓았어요!'+(!got?' 아래 칸에 문장을 써 봐도 좋아요.':got===want||got===want.replace(/[.!?]$/,'')?' 쓴 문장도 정확해요!':' 쓴 문장을 카드와 견주어 다시 살펴봐요.');}
+      else{box.children[bad].classList.add('ord-bad');fb.textContent=`${bad+1}번째 낱말부터 다시 들어 봐요.`;}};
   });})();
 document.querySelectorAll('[data-picture-level]').forEach(b=>b.onclick=()=>{document.querySelectorAll('[data-picture-level]').forEach(x=>x.setAttribute('aria-pressed',x===b));['ord','d0','d1','easy','hard'].forEach(l=>$('picture-'+l).hidden=l!==b.dataset.pictureLevel);});
 $('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'해설 숨기기':'해설 보기';};
