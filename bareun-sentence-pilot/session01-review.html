@@ -277,6 +277,15 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
 .ord-row.ord-ok .ord-card{border-color:var(--ok);color:var(--ok)}
 .ord-write{margin-top:6px}
 .ord-write textarea{min-height:48px;height:48px;font-size:20px}
+/* 3 빈칸 글 낭독 · 문장별 듣기 */
+.story-audio{display:flex;flex-wrap:wrap;align-items:center;gap:6px;margin:2px 0 4px}
+.story-listen{display:inline-flex;align-items:center;min-height:32px;padding:0 12px;border:1px solid var(--cyan-line);border-radius:999px;background:var(--cyan-soft);color:#1f5f8f;font-size:12.5px;font-weight:900;cursor:pointer}
+.story-listen.slow{border-color:#e3dcf3;background:#f6f3fb;color:var(--violet)}
+.story-listen.playing{box-shadow:0 0 0 3px rgba(75,201,220,.3)}
+.sent-play{display:none;width:30px;height:30px;margin-left:4px;padding:0;border:1px solid var(--cyan-line);border-radius:50%;background:var(--cyan-soft);font-size:14px;line-height:1;vertical-align:middle;cursor:pointer}
+.read-ready .sent-play{display:inline-grid;place-items:center;animation:sent-pop .35s ease-out}
+@keyframes sent-pop{from{transform:scale(.4);opacity:0}to{transform:none;opacity:1}}
+.sent.on{background:linear-gradient(transparent 55%,#d8f3f7 55%);border-radius:4px}
 @page{size:A4;margin:0}
 @media print{
   html,body{background:#fff}
@@ -310,7 +319,7 @@ details p{margin:4px 0;padding:6px 10px;border-radius:9px;background:#fff;border
   .print-blank .option input:checked+.radio-mark{border:1.5px solid #9995a1}
   .print-blank .self-check input{appearance:none;-webkit-appearance:none;border:1.5px solid #9aa1ad;border-radius:4px;background:#fff}
   .print-blank .key{display:none!important}
-  .story-audio{display:none!important}
+  .story-audio,.sent-play{display:none!important}
   .ord-card{box-shadow:none;background:#fff}
   .ord-card .ord-num{display:block}
   .scr-only{display:none}.prt-only{display:inline}
@@ -497,7 +506,7 @@ const stories={
 {title:'3. 애벌레의 한살이',text:'{애벌레|는|가|애벌레에 대해 설명하며 글을 시작해요.} 알에서 깨어납니다. 작은 {애벌레|가|는|지금 무엇을 하는지, 그 일을 하는 주인공을 보여 줘요.} 잎을 갉아 먹습니다. {애벌레|는|가|앞에 나온 애벌레를 다시 말하며 설명을 이어 가요.} 먹이를 먹으며 {몸|이|은|무엇이 자라는지 알려 줘요.} 자랍니다. {몸|이|은|무엇이 자라야 허물을 벗는지 알려 줘요.} 자라면 {애벌레|는|가|애벌레가 하는 일을 설명해요.} 여러 번 허물을 벗습니다. 다 자란 {애벌레|가|는|번데기가 되는 주인공을 알려 줘요.} 번데기가 됩니다. 번데기 안에서 {애벌레|가|는|번데기 안에서 무엇이 나비로 변하는지 알려 줘요.} 나비로 변하게 됩니다. 번데기에서 나온 {나비|는|가|번데기에서 나온 나비가 하는 일을 설명해요.} 새로운 한살이를 시작합니다.'}]}
 };
 Object.entries(stories).forEach(([level,data])=>{let n=0;const answers=[];const panel=$('story'+level);panel.innerHTML=`<div class="level-print">${data.label}</div>`+data.blocks.map(block=>`<article class="story-block"><h3>${block.title}</h3><p class="story">${esc(block.text).replace(/([.!?][”"]?) (?=[^}]*(\{|$))/g,'$1<br>').replace(/\{([^|]+)\|([^|]+)\|([^|]+)\|([^}]+)\}/g,(_,word,preferred,alternative,why)=>{n++;const id='gap'+level+'-'+n;answers.push({id,word,preferred,alternative,why,n});return `<span class="gap-wrap">${word}<sup class="gap-num">${n}</sup><input class="gap" id="${id}" type="text" inputmode="text" autocomplete="off" spellcheck="false" aria-label="${level}번 글 ${n}번 ${word} 뒤 조사" data-track="input"><span class="answer-mirror" aria-hidden="true"></span></span>`;})}</p></article>`).join('')+`<p class="gap-note">받침이 있으면 ‘은·이’, 받침이 없으면 ‘는·가’를 써요.<br>두 형태 중 어떤 것이 어울리는지는 앞뒤 문장의 뜻을 살펴요.</p><button class="check">입력한 조사 확인</button><div class="feedback" role="status"></div><div class="key story-key">${answers.map(a=>`<p>${a.n}. <b>${a.word}${a.preferred}</b> — ${a.why}</p>`).join('')}</div>`;
-const button=panel.querySelector('.check'),fb=panel.querySelector('.feedback');panel.addEventListener('input',e=>{if(!e.target.matches('.gap'))return;e.target.classList.remove('good','revisit');e.target.removeAttribute('aria-invalid');e.target.nextElementSibling.textContent=e.target.value;button.hidden=false;fb.textContent='';});button.onclick=()=>{let empty=[],invalid=[],alternatives=[];answers.forEach(a=>{const input=$(a.id),v=input.value.trim();input.classList.remove('good','revisit');input.removeAttribute('aria-invalid');if(!v){empty.push(a.n);return;}if(v!==a.preferred&&v!==a.alternative){invalid.push(a.n);input.classList.add('revisit');input.setAttribute('aria-invalid','true');return;}input.classList.add(v===a.preferred?'good':'revisit');if(v===a.alternative)alternatives.push(a.n);});if(empty.length||invalid.length){fb.textContent=[empty.length?`${empty.join(', ')}번에 조사를 직접 써 보세요.`:'',invalid.length?`${invalid.join(', ')}번은 은·는·이·가 한 글자와 받침을 확인해요.`:''].filter(Boolean).join(' ');return;}button.hidden=true;fb.textContent=alternatives.length?`모두 채웠어요. ${alternatives.join(', ')}번은 해설의 예시와 다른 표현이에요. 틀렸다고 정하기보다, 강조하거나 비교하는 뜻이 어떻게 달라지는지 함께 읽어 보세요.`:'글의 흐름에 맞게 모두 채웠어요. 완성한 글을 이어 읽어 보세요.';};
+const button=panel.querySelector('.check'),fb=panel.querySelector('.feedback');panel.addEventListener('input',e=>{if(!e.target.matches('.gap'))return;e.target.classList.remove('good','revisit');e.target.removeAttribute('aria-invalid');e.target.nextElementSibling.textContent=e.target.value;button.hidden=false;fb.textContent='';});button.onclick=()=>{let empty=[],invalid=[],alternatives=[];answers.forEach(a=>{const input=$(a.id),v=input.value.trim();input.classList.remove('good','revisit');input.removeAttribute('aria-invalid');if(!v){empty.push(a.n);return;}if(v!==a.preferred&&v!==a.alternative){invalid.push(a.n);input.classList.add('revisit');input.setAttribute('aria-invalid','true');return;}input.classList.add(v===a.preferred?'good':'revisit');if(v===a.alternative)alternatives.push(a.n);});if(empty.length||invalid.length){fb.textContent=[empty.length?`${empty.join(', ')}번에 조사를 직접 써 보세요.`:'',invalid.length?`${invalid.join(', ')}번은 은·는·이·가 한 글자와 받침을 확인해요.`:''].filter(Boolean).join(' ');return;}button.hidden=true;fb.textContent=alternatives.length?`🔊 문장마다 들어 볼 수 있어요. 모두 채웠어요. ${alternatives.join(', ')}번은 해설의 예시와 다른 표현이에요. 틀렸다고 정하기보다, 강조하거나 비교하는 뜻이 어떻게 달라지는지 함께 읽어 보세요.`:'글의 흐름에 맞게 모두 채웠어요. 🔊를 눌러 문장마다 들어 봐요.';};
 });
 const pictures={
 easy:{label:'3단계 · 기본 질문',flow:'시작 → 사건 → 도움 → 마무리',questions:[
@@ -522,8 +531,14 @@ panel.querySelectorAll('textarea').forEach(input=>input.addEventListener('input'
   ['1','2','3'].forEach(l=>{const blk=$('story'+l)&&$('story'+l).querySelector('.story-block');if(!blk)return;
     const bar=document.createElement('div');bar.className='story-audio';
     bar.innerHTML=`<button type="button" class="story-listen" data-l="${l}" data-label="🔊 글 듣기">🔊 글 듣기</button><button type="button" class="story-listen slow" data-l="${l}" data-slow="1" data-label="🐢 천천히">🐢 천천히</button>`;
-    blk.querySelector('h3').insertAdjacentElement('afterend',bar);});
-  document.getElementById('activity3').addEventListener('click',e=>{const b=e.target.closest('.story-listen');if(!b)return;
+    blk.querySelector('h3').insertAdjacentElement('afterend',bar);
+    /* 문장마다 듣기 단추(빈칸을 다 채우고 확인을 통과하면 나타남) — 조사까지 넣은 자연스러운 문장 */
+    const sp=blk.querySelector('.story');sp.innerHTML=sp.innerHTML.split('<br>').map((h,n)=>`<span class="sent">${h}<button type="button" class="sent-play" data-l="${l}" data-n="${n+1}" aria-label="${n+1}번째 문장 듣기">🔊</button></span>`).join('<br>');
+    const panel=$('story'+l),ck=panel.querySelector('.check');ck.addEventListener('click',()=>setTimeout(()=>{if(ck.hidden){panel.classList.add('read-ready');}},0));});
+  document.getElementById('activity3').addEventListener('click',e=>{const sb=e.target.closest('.sent-play');
+    if(sb){stop();document.querySelectorAll('.sent.on').forEach(x=>x.classList.remove('on'));const se=sb.closest('.sent');se.classList.add('on');
+      au=new Audio('assets/review01-story-'+sb.dataset.l+'-s'+sb.dataset.n+'.mp3');au.onended=au.onerror=()=>{se.classList.remove('on');au=null;};au.play().catch(()=>se.classList.remove('on'));return;}
+    const b=e.target.closest('.story-listen');if(!b)return;
     const again=b.classList.contains('playing');stop();if(again)return;
     au=new Audio('assets/review01-story-'+b.dataset.l+'.mp3');au.playbackRate=b.dataset.slow?0.85:1;b.classList.add('playing');b.textContent='⏸ 멈추기';
     au.onended=au.onerror=stop;au.play().catch(stop);});
