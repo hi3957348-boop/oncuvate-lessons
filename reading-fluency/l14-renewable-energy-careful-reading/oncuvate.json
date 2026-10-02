@@ -1,16 +1,33 @@
 {
+  "oncuvate": 2,
   "id": "l14-renewable-energy-careful-reading",
-  "title": "자연에서 얻고, 아껴 쓰는 에너지",
-  "version": "1.0.6",
-  "entry": "session01.html",
-  "audience": "초등 고학년",
-  "subject": "과학·사회 교과 연계 비문학 읽기",
-  "levels": [
-    {"key": "steady", "label": "차근차근 읽기", "difficulty": 75},
-    {"key": "deep", "label": "깊이 읽기", "difficulty": 100}
-  ],
-  "steps": ["예측하기", "꼼꼼하게 읽기", "단어 스파이", "에너지 분류", "꼼꼼하게 풀기", "새롭게 만나보기", "확인 기록"],
-  "axes": ["metacognitivePreview", "basicComprehension", "detailComparison", "relationshipClassification", "conditionVerification", "strategyGeneralization", "metacognitiveReflection"],
-  "contentSpec": "v1.28",
-  "theme": "official-oncuvate-default"
+  "version": "1.0.57",
+  "updatedAt": "2026-10-02",
+  "engine": "Oncuvate careful-reading studio v1 + coach sync v1",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "1.0.57",
+      "title": "자연에서 얻고, 아껴 쓰는 에너지 — 꼼꼼 읽기",
+      "order": 1,
+      "minDurationMin": 35,
+      "level": "L12",
+      "axes": [
+        "metacognitivePreview",
+        "basicComprehension",
+        "detailComparison",
+        "relationshipClassification",
+        "conditionVerification",
+        "strategyGeneralization",
+        "metacognitiveReflection"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse"
+      }
+    }
+  }
 }
