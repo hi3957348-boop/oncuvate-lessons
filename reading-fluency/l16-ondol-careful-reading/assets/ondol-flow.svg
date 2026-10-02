@@ -1,0 +1,55 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620" role="img" aria-labelledby="title desc">
+  <title id="title">온돌의 구조</title>
+  <desc id="desc">왼쪽 아궁이에서 시작한 뜨거운 공기와 연기가 방고래를 지나 구들장을 데운 뒤 오른쪽 굴뚝으로 빠져나가는 모습</desc>
+  <defs>
+    <linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#fffefa"/>
+      <stop offset="1" stop-color="#f4f1fb"/>
+    </linearGradient>
+    <linearGradient id="heat" x1="0" y1="0" x2="1" y2="0">
+      <stop offset="0" stop-color="#ef795e"/>
+      <stop offset=".48" stop-color="#e5a84d"/>
+      <stop offset="1" stop-color="#4bc9dc"/>
+    </linearGradient>
+    <marker id="arrow" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="8" markerHeight="8" orient="auto-start-reverse">
+      <path d="M 0 0 L 10 5 L 0 10 z" fill="#4b24a5"/>
+    </marker>
+    <filter id="soft" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="9" stdDeviation="10" flood-color="#35206f" flood-opacity=".12"/>
+    </filter>
+  </defs>
+  <rect x="22" y="22" width="856" height="576" rx="36" fill="url(#paper)" stroke="#d9cff5" stroke-width="3"/>
+  <g filter="url(#soft)">
+    <path d="M160 206h575v53H160z" fill="#ead8bd" stroke="#5d4b42" stroke-width="4"/>
+    <path d="M160 259h575v49H160z" fill="#c49a69" stroke="#5d4b42" stroke-width="4"/>
+    <g fill="#77727a" stroke="#443d47" stroke-width="4">
+      <path d="M177 308h132l12 50H169z"/>
+      <path d="M330 308h150l5 50H320z"/>
+      <path d="M492 308h148l11 50H484z"/>
+      <path d="M655 308h66l16 50h-86z"/>
+    </g>
+    <path d="M168 358h570v119H168z" fill="#efe0c8" stroke="#5d4b42" stroke-width="4"/>
+    <path d="M216 383c128-33 239-30 345-4s121 23 164 5v59c-58 14-111 6-170-8-116-28-217-31-339 4z" fill="none" stroke="url(#heat)" stroke-width="22" stroke-linecap="round" opacity=".88"/>
+    <path d="M210 411c136-31 247-24 347 1s125 21 166 3" fill="none" stroke="#4b24a5" stroke-width="5" stroke-linecap="round" marker-end="url(#arrow)"/>
+    <path d="M94 337h123v140H94z" fill="#8d5d45" stroke="#4b342c" stroke-width="5"/>
+    <path d="M122 385q34-43 68 0v92h-68z" fill="#392826" stroke="#261c1b" stroke-width="4"/>
+    <path d="M151 437c-29-20-20-48 1-60 1 17 18 21 18 40 0 14-8 22-19 20z" fill="#ef795e"/>
+    <path d="M153 432c-13-11-8-26 2-34 1 9 9 13 9 23 0 7-5 12-11 11z" fill="#ffd45c"/>
+    <path d="M711 189h77v288h-77z" fill="#b47d5e" stroke="#4b342c" stroke-width="5"/>
+    <path d="M695 169h109l-12 28h-84z" fill="#6d4b3e" stroke="#4b342c" stroke-width="5"/>
+    <path d="M722 150c-25-16-7-31 11-37-10-17 6-29 20-34 3 17 28 17 20 38-4 12-16 17-9 30" fill="none" stroke="#a8a5ab" stroke-width="12" stroke-linecap="round" opacity=".75"/>
+  </g>
+  <g font-family="Pretendard, Noto Sans KR, sans-serif" text-anchor="middle">
+    <g font-size="22" font-weight="800" fill="#29243a">
+      <text x="153" y="524">아궁이</text>
+      <text x="447" y="522">방고래</text>
+      <text x="447" y="337" fill="#fff">구들장</text>
+      <text x="447" y="244">방바닥</text>
+      <text x="750" y="524">굴뚝</text>
+    </g>
+    <path d="M152 496v-23M447 496v-48M447 315v-15M447 222v-23M750 496v-19" stroke="#4b24a5" stroke-width="3"/>
+    <rect x="268" y="63" width="364" height="76" rx="22" fill="#fff" stroke="#d9cff5" stroke-width="3"/>
+    <text x="450" y="96" font-size="24" font-weight="900" fill="#4b24a5">아궁이 → 방고래 → 굴뚝</text>
+    <text x="450" y="123" font-size="16" font-weight="700" fill="#777187">뜨거운 공기와 연기가 움직이는 길</text>
+  </g>
+</svg>
