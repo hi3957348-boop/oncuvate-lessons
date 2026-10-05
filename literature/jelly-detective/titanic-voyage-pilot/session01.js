@@ -235,7 +235,7 @@
     if (state.mindMapSolved) parts.push('인포그래픽 ✓'); else if (state.mindMapAttempts) parts.push(`인포그래픽 시도 ${state.mindMapAttempts}`);
     const vs = vaultStats();
     if (vs.memory + vs.detective) parts.push(`금고 ${gemIcons()}${vs.boss ? ' · 보스 ✓' : ''}`);
-    return { screen: state.screen, screenLabel: screenLabels[state.screen] || state.screen, summary: parts.join(' · '), notes: orderedNotes().join(' | '), retell: state.retell.slice(0, 240), done: state.screen === 'solved', sessionNo: 1, helpRequestedAt: state.helpRequestedAt || 0, helpRequests: state.helpRequests || 0,
+    return { screen: state.screen, screenLabel: screenLabels[state.screen] || state.screen, summary: parts.join(' · '), notes: orderedNotes().join(' | '), retell: state.retell.slice(0, 240), done: state.screen === 'solved', sessionNo: 1, stepNo: Math.max(0, screenOrder.indexOf(state.screen)), stepTotal: screenOrder.length - 1, helpRequestedAt: state.helpRequestedAt || 0, helpRequests: state.helpRequests || 0,
       vault: { memory: vs.memory, detective: vs.detective, boss: vs.boss, bare: vs.bare, combo: vs.bestCombo, peeks: vs.peeks, flips: vs.flips, diving: Boolean(diveTimer), stage: vaultStage() } };
   }
   function clueById(id) { return clues.find(clue => clue.id === id); }

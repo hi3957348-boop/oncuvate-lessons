@@ -54,7 +54,7 @@
     if(S.checkSolved)parts.push('증거 확인 ✓');else if(S.checkAttempts)parts.push('증거 확인 시도 '+S.checkAttempts);
     if(S.sentenceIndex)parts.push('정보글 '+Math.min(S.sentenceIndex,C.reading[S.readingLevel].length)+'/'+C.reading[S.readingLevel].length+(S.readingRereads?' · 다시 읽기 '+S.readingRereads:'')+(S.readingSelfCheck?' · '+({understood:'이해했어요',reread:'다시 볼래요',unsure:'잘 모르겠어요'})[S.readingSelfCheck]:''));
     if(S.organizeSolved)parts.push('정보 정리 ✓');else if(S.organizeAttempts)parts.push('정리 시도 '+S.organizeAttempts);
-    return{screen:S.screen,screenLabel:labels[S.screen]||S.screen,summary:parts.join(' · '),retell:String(S.retell||'').slice(0,240),done:S.screen==='solved',sessionNo:Number(C.id)||0,helpRequestedAt:S.helpRequestedAt||0,helpRequests:S.helpRequests||0,vault:C.mission?Object.assign(mgStats(),{stage:mgStage(),diving:Boolean(mgDiveTimer),tests:S.testsRun}):undefined};
+    return{screen:S.screen,screenLabel:labels[S.screen]||S.screen,summary:parts.join(' · '),retell:String(S.retell||'').slice(0,240),done:S.screen==='solved',sessionNo:Number(C.id)||0,stepNo:Math.max(0,order.indexOf(S.screen)),stepTotal:order.length-1,helpRequestedAt:S.helpRequestedAt||0,helpRequests:S.helpRequests||0,vault:C.mission?Object.assign(mgStats(),{stage:mgStage(),diving:Boolean(mgDiveTimer),tests:S.testsRun}):undefined};
   }
   function setWatermark(){const child=typeof runtime.child==='string'?runtime.child:runtime.child?.nickname||runtime.child?.name||runtime.child?.id;$('childWatermark').textContent=child?'ONCUVATE · '+child:'ONCUVATE · DEMO'}
   function unlocked(name){

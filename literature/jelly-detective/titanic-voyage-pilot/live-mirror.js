@@ -6,7 +6,7 @@
   'use strict';
   function esc(v){return String(v==null?'':v).replace(/[&<>'"]/g,function(ch){return({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[ch])})}
   var NOTE_PREFIX=(document.documentElement.getAttribute('data-lesson-id')||'lesson')+':coach-note:';
-  var drafts={},statusText={};
+  var drafts={},statusText={},openMemos={};
   var controlState={pageLocked:false,activityLocked:false,updatedAt:0};
   var controlUi=null,controlBanner=null;
   window.OncuvateClassroomControl=controlState;
@@ -90,12 +90,32 @@
     element.dataset.notesBound='1';
     element.addEventListener('input',function(e){var t=e.target.closest('[data-coach-note]');if(t)drafts[t.dataset.coachNote]=t.value});
     element.addEventListener('click',function(e){
+      var pz=e.target.closest('[data-praise-to]');
+      if(pz){if(praiseSender&&praiseSender(pz.dataset.praiseTo,pz.dataset.praiseText)){pz.classList.add('sent');var row=pz.closest('li');var st=row&&row.querySelector('.cm-sent');if(st){st.textContent='✓ '+pz.dataset.praiseText+' 보냄';st.hidden=false}setTimeout(function(){pz.classList.remove('sent')},1500)}return}
+      var mt=e.target.closest('[data-memo-toggle]');
+      if(mt){var box=element.querySelector('[data-memo-box="'+mt.dataset.memoToggle+'"]');if(box){box.hidden=!box.hidden;openMemos[mt.dataset.memoToggle]=!box.hidden;if(!box.hidden)box.querySelector('textarea')?.focus()}return}
       var b=e.target.closest('[data-coach-note-save]');if(!b)return;
       var child=b.dataset.coachNoteSave,box=element.querySelector('[data-coach-note="'+child+'"]'),st=element.querySelector('[data-coach-note-status="'+child+'"]');
       var text=box?box.value:'';b.disabled=true;if(st)st.textContent='저장 중…';
       saveNote(sessionNo,child,text,function(msg){statusText[child]=msg;if(st)st.textContent=msg;b.disabled=false;drafts[child]=text});
     });
     element.addEventListener('focusout',function(){if(element.dataset.pendingRender){var map=JSON.parse(element.dataset.pendingRender);delete element.dataset.pendingRender;setTimeout(function(){renderList(element,map,sessionNo)},50)}});
+  }
+  /* 코치 칭찬 보내기: 같은 control 경로 아래 praise 한 칸만 쓴다(새 외부 통로 없음). 아이 화면엔 젤리 말풍선으로 몇 초 뜬다. */
+  var praiseSender=null,lastPraiseId='';
+  var PRAISES=[['👏','잘했어!'],['🎯','집중 최고!'],['💪','끝까지 했어!'],['🌟','좋은 생각!']];
+  function showPraise(text){
+    var el=document.getElementById('coachPraiseToast');
+    if(!el){el=document.createElement('div');el.id='coachPraiseToast';el.className='coach-praise-toast';el.setAttribute('role','status');document.body.appendChild(el)}
+    el.innerHTML='<img src="assets/jelly-detective-cheer.png" alt=""><div><small>코치 선생님의 칭찬</small><strong>'+esc(text)+'</strong></div>';
+    el.classList.remove('show');void el.offsetWidth;el.classList.add('show');
+    clearTimeout(el._t);el._t=setTimeout(function(){el.classList.remove('show')},4500);
+  }
+  function receivePraise(v,child){
+    if(!v||typeof v!=='object'||v.to!==child||!v.id||v.id===lastPraiseId)return;
+    if(Date.now()-(Number(v.at)||0)>90000)return;
+    lastPraiseId=v.id;showPraise(String(v.text||'').slice(0,40));
+    try{window.dispatchEvent(new CustomEvent('oncuvate:log',{detail:{type:'coach-praise-received',schemaVersion:'0.2',contentId:document.documentElement.getAttribute('data-lesson-id')||'',childId:child,text:String(v.text||''),at:new Date().toISOString()}}))}catch(_){}
   }
   function ready(){return window._firebaseReady===true&&typeof window.pth==='function'&&typeof window._set==='function'&&typeof window._onValue==='function'}
   function create(options){
@@ -124,7 +144,8 @@
     }
     function setControl(key,on){var next=normalizeControl(controlState);next[key]=on===true;sendControl(next)}
     try{var savedControl=JSON.parse(localStorage.getItem(controlKey)||'null');if(savedControl)applyControl(savedControl,isCoach)}catch(_){}
-    try{channel=new BroadcastChannel(controlKey);channel.onmessage=function(event){if(!isCoach)applyControl(event.data,false)}}catch(_){}
+    try{channel=new BroadcastChannel(controlKey);channel.onmessage=function(event){if(isCoach)return;var d=event.data||{};if(d.type==='praise')receivePraise(d,child);else applyControl(d,false)}}catch(_){}
+    if(isCoach)praiseSender=function(to,text){var v={type:'praise',to:to,text:text,at:Date.now(),id:Date.now().toString(36)+Math.random().toString(36).slice(2,6)};try{if(channel)channel.postMessage(v)}catch(_){}if(room&&ready())try{Promise.resolve(window._set(window.pth(controlPath+'/praise'),v)).catch(function(){})}catch(_){}try{window.dispatchEvent(new CustomEvent('oncuvate:log',{detail:{type:'coach-praise',schemaVersion:'0.2',contentId:lessonId,sessionNo:sessionNo,childId:to,text:text,author:'coach',at:new Date().toISOString()}}))}catch(_){}return true};
     window.addEventListener('storage',function(event){if(event.key===controlKey&&!isCoach)try{applyControl(JSON.parse(event.newValue||'{}'),false)}catch(_){}});
     ensureBanner(isCoach);if(isCoach)ensureCoachControls(setControl);
     function status(text){try{onStatus(text)}catch(_){}}
@@ -155,6 +176,7 @@
         try{var d=window._onDisconnect&&window._onDisconnect(window.pth('prog/'+child));if(d&&d.remove)d.remove()}catch(_){}
         publish();
       }
+      if(!isCoach)window._onValue(window.pth(controlPath+'/praise'),function(s){var v=s&&typeof s.val==='function'?s.val():s;receivePraise(v,child)});
       window._onValue(window.pth(controlPath),function(s){
         var value=s&&typeof s.val==='function'?s.val():s;
         if(value&&typeof value==='object')applyControl(value,isCoach);
@@ -194,12 +216,17 @@
         var help=helpAge>=0&&helpAge<30?'<strong class="coach-help-flag">🙋 도움 요청 · '+(helpAge<1?'방금':helpAge+'분 전')+(p.helpRequests>1?' · '+p.helpRequests+'회':'')+'</strong>':'';
         var child=String(p.child||key);
         var draft=drafts[child]!==undefined?drafts[child]:loadNote(sessionNo,child);
-        var note='<div class="coach-note"><textarea data-coach-note="'+esc(child)+'" rows="2" placeholder="이 학생에 대한 코치 메모 (학습 기록과 함께 저장)">'+esc(draft)+'</textarea><div><button type="button" data-coach-note-save="'+esc(child)+'">메모 저장</button><i data-coach-note-status="'+esc(child)+'">'+esc(statusText[child]||(draft?'기기에 저장된 메모':''))+'</i></div></div>';
-        return '<li class="coach-participant'+(p.done?' done':'')+(help?' asking':'')+'"><b>'+esc(p.child||key)+'</b><span>'+esc(p.screenLabel||p.screen||'')+'</span>'+help
-          +(p.summary?'<small>'+esc(p.summary)+'</small>':'')
-          +(p.notes?'<small>'+esc(p.notes)+'</small>':'')
-          +(p.retell?'<em>'+esc(p.retell)+'</em>':'')
-          +'<i>'+esc(time)+(p.done?' · 완료':'')+'</i>'+note+'</li>';
+        var note='<div class="coach-note" data-memo-box="'+esc(child)+'"'+(openMemos[child]||draft?'':' hidden')+'><textarea data-coach-note="'+esc(child)+'" rows="2" placeholder="간단 메모 (이 학생 기록과 함께 저장)">'+esc(draft)+'</textarea><div><button type="button" data-coach-note-save="'+esc(child)+'">메모 저장</button><i data-coach-note-status="'+esc(child)+'">'+esc(statusText[child]||(draft?'기기에 저장된 메모':''))+'</i></div></div>';
+        var total=Number(p.stepTotal)||0,stepNo=Math.max(0,Math.min(total,Number(p.stepNo)||0)),pct=total?Math.round(stepNo/total*100):0;
+        var v=p.vault||{},gems=('💎'.repeat(Number(v.memory)||0))+('🔎'.repeat(Number(v.detective)||0));
+        var stageLabel={search:'🔍 찾는 중',diving:'🫧 잠수 중 · 말 걸지 않기',vault:'🔐 금고 여는 중',boss:'👾 판정 중','boss-cleared':'🏴‍☠️ 미션 완료'}[v.stage]||'';
+        var praise='<div class="cm-actions">'+PRAISES.map(function(x){return '<button type="button" data-praise-to="'+esc(child)+'" data-praise-text="'+esc(x[0]+' '+x[1])+'" title="'+esc(x[1])+'">'+x[0]+'</button>'}).join('')+'<button type="button" class="cm-memo" data-memo-toggle="'+esc(child)+'">📝 메모</button></div><small class="cm-sent" hidden></small>';
+        return '<li class="coach-participant cm-row'+(p.done?' done':'')+(help?' asking':'')+(v.diving?' diving':'')+'"><div class="cm-top"><b>'+esc(p.child||key)+'</b><span>'+esc(p.screenLabel||p.screen||'')+'</span><i>'+esc(time)+(p.done?' · 완료':'')+'</i></div>'
+          +(total?'<div class="cm-bar" aria-label="진행 '+stepNo+' / '+total+'"><span style="width:'+pct+'%"></span><em>'+stepNo+'/'+total+'</em></div>':'')
+          +((gems||stageLabel)?'<div class="cm-meta">'+(gems?'<span class="cm-gems">'+gems+'</span>':'')+(stageLabel?'<span>'+stageLabel+'</span>':'')+'</div>':'')
+          +help
+          +(p.summary?'<details class="cm-detail"><summary>활동 기록</summary><small>'+esc(p.summary)+'</small>'+(p.notes?'<small>'+esc(p.notes)+'</small>':'')+(p.retell?'<em>'+esc(p.retell)+'</em>':'')+'</details>':'')
+          +praise+note+'</li>';
       });
     element.innerHTML=rows.length?rows.join(''):'<li>아직 들어온 학생이 없습니다.</li>';
   }
