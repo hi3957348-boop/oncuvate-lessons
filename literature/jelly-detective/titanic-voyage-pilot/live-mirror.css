@@ -68,3 +68,25 @@ body.student-activity-locked .screen:not([hidden]) { filter: saturate(.75); }
 .coach-praise-toast small { display: block; font-size: 11px; font-weight: 800; opacity: .75; }
 .coach-praise-toast strong { display: block; font-size: 19px; }
 @media (prefers-reduced-motion: reduce) { .coach-praise-toast { transition: opacity .2s ease; } }
+
+/* ===== 낮은 화면에서 왼쪽 메뉴 압축(스크롤 없이) + 페이지 잠금 때 학생 메뉴 숨김 (2026-10-05) ===== */
+@media (max-height: 760px) {
+  .studio-header, .studio-sidebar .header { min-height: 0 !important; padding: 8px 12px !important; }
+  .studio-sidebar .brand-lockup img, .studio-sidebar .brand img { height: 26px !important; }
+  .studio-sidebar .brand-lockup div, .studio-sidebar .brand div { margin-top: 6px !important; padding-top: 6px !important; }
+  .studio-sidebar .brand-lockup small, .studio-sidebar .brand small { font-size: 9px !important; }
+  .studio-sidebar .brand-lockup strong, .studio-sidebar .brand strong { margin-top: 2px !important; font-size: 13px !important; }
+  .lesson-menu, .studio-sidebar .menu { gap: 4px !important; padding: 6px 8px !important; }
+  .lesson-menu-steps, .studio-sidebar .menu-steps { gap: 2px !important; }
+  .lesson-menu-steps button, .studio-sidebar .menu-steps button { min-height: 29px !important; padding: 2px 8px !important; font-size: 12px !important; }
+  .lesson-menu-steps button i, .studio-sidebar .menu-steps button b { width: 22px !important; height: 22px !important; flex-basis: 22px !important; font-size: 11px !important; }
+  .lesson-back, .studio-sidebar .nav-back { min-height: 32px !important; padding-top: 0 !important; padding-bottom: 0 !important; }
+  .focus-guide-replay { min-height: 32px !important; }
+  .lesson-menu-toggle, .studio-sidebar .menu-toggle { min-height: 30px !important; }
+}
+body.student-page-locked:not(.coach-role) .lesson-menu-steps,
+body.student-page-locked:not(.coach-role) .studio-sidebar .menu-steps,
+body.student-page-locked:not(.coach-role) .lesson-back,
+body.student-page-locked:not(.coach-role) .studio-sidebar .nav-back { display: none !important; }
+body.student-page-locked:not(.coach-role) .lesson-menu::before,
+body.student-page-locked:not(.coach-role) .studio-sidebar .menu::before { content: "🔒 코치 선생님과 같은 화면"; display: block; padding: 10px 8px; border-radius: 10px; color: #fff; background: rgba(255,255,255,.12); font-size: 12px; font-weight: 800; text-align: center; }
