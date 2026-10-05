@@ -2,19 +2,23 @@
 <html lang="ko"
       data-lesson-id="titanic-voyage"
       data-lesson-title="Jelly Sea Detectives 1 · The Mystery of the Unsinkable Claim"
-      data-lesson-version="0.1.2">
+      data-lesson-version="0.2.0">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="color-scheme" content="light">
   <title>Jelly Sea Detectives 1 · The Mystery of the Unsinkable Claim</title>
   <link rel="stylesheet" href="shared.css?v=14">
-  <link rel="stylesheet" href="focus-guide.css?v=2">
+  <link rel="stylesheet" href="focus-guide.css?v=3">
   <link rel="stylesheet" href="case-vocab.css?v=2">
   <link rel="stylesheet" href="search.css?v=5">
   <link rel="stylesheet" href="word-hunt.css?v=1">
+  <link rel="stylesheet" href="infographic.css?v=2">
+  <link rel="stylesheet" href="sound-hunt.css?v=1">
   <link rel="stylesheet" href="self-check.css?v=1">
   <link rel="stylesheet" href="live-mirror.css?v=3">
+  <link rel="stylesheet" href="vault-game.css?v=9">
+  <link rel="stylesheet" href="jelly-run.css?v=7">
 </head>
 <body>
   <script src="pilot-bootstrap.js"></script>
@@ -41,12 +45,12 @@
       <div class="lesson-menu-steps">
         <button type="button" data-menu-screen="case"><i>1</i><span>사건 파일</span></button>
         <button type="button" data-menu-screen="goal"><i>2</i><span>목표</span></button>
-        <button type="button" data-menu-screen="search"><i>3</i><span>단서 수색</span></button>
-        <button type="button" data-menu-screen="deduction"><i>4</i><span>기록 판별</span></button>
+        <button type="button" data-menu-screen="search"><i>3</i><span>기억 금고</span></button>
+        <button type="button" data-menu-screen="deduction"><i>4</i><span>가짜 기록 잡기</span></button>
         <button type="button" data-menu-screen="reading"><i>5</i><span>정보글</span></button>
         <button type="button" data-menu-screen="wordhunt"><i>6</i><span>소리 닮은 말</span></button>
         <button type="button" data-menu-screen="spelling"><i>7</i><span>진짜 낱말 찾기</span></button>
-        <button type="button" data-menu-screen="mindmap"><i>8</i><span>마인드맵</span></button>
+        <button type="button" data-menu-screen="mindmap"><i>8</i><span>인포그래픽</span></button>
         <button type="button" data-menu-screen="retell"><i>9</i><span>다시 말하기</span></button>
       </div>
       <button class="focus-guide-replay" id="focusGuideReplay" type="button" hidden data-track="hint" data-help-level="A1" data-help-type="guide-replay">? GUIDE</button>
@@ -107,9 +111,10 @@
       </section>
 
       <section class="screen search-screen" id="searchScreen" data-screen="search" hidden>
+        <div class="vault-hud" data-vault-hud aria-label="기억 금고 작전 진행"></div>
         <div class="search-map-phase" id="searchMapPhase" data-activity-id="clue-search" data-measure-id="case.clue-search">
           <div class="search-heading">
-            <div><small>SEARCH THE SHIPYARD OFFICE</small><h2>수상한 문서 세 개를 찾아요.</h2></div>
+            <div><small>MISSION 1 · FIND THE VAULT CLUES</small><h2>숨은 문서를 찾아 금고를 열어요.</h2></div>
             <strong id="searchCounter">0 / 3 단서</strong>
           </div>
           <div class="hidden-object-map" id="hiddenObjectMap">
@@ -130,33 +135,42 @@
         <div class="clue-sheet-phase" id="clueSheetPhase" hidden data-activity-id="clue-notes" data-measure-id="case.clue-note" data-trend-group-id="trend.working-memory" data-working-memory-load="primary">
           <section class="memory-sheet" aria-labelledby="memorySheetTitle">
             <header>
-              <div><small>DEDUCTION SHEET</small><h2 id="memorySheetTitle">방금 읽은 중요한 정보를 체크해요.</h2></div>
+              <div><small>MEMORY VAULT</small><h2 id="memorySheetTitle">기억을 붙들고 금고 다이얼을 맞춰요.</h2></div>
               <strong id="sheetCounter">1 / 3</strong>
             </header>
             <div class="memory-progress" id="memoryProgress" aria-label="단서 기록 진행"></div>
             <div class="memory-rows" id="memoryRows"></div>
-            <p class="sheet-feedback" id="sheetFeedback" role="status">단서 문장을 떠올리며 핵심 정보 하나를 고르세요.</p>
+            <p class="sheet-feedback" id="sheetFeedback" role="status">잠그기 전에 본 문장을 떠올리며 하나를 골라요.</p>
             <div class="sheet-actions">
-              <button class="quiet-button" id="reviewActiveClueButton" type="button" data-track="hint" data-help-level="A3" data-help-type="clue-review">단서 다시 보기</button>
-              <button class="primary-action" id="sheetNextButton" type="button" hidden>다음 단서 찾기</button>
+              <button class="quiet-button" id="reviewActiveClueButton" type="button" data-track="hint" data-help-level="A3" data-help-type="clue-review">🔭 살짝 다시 보기</button>
+              <button class="primary-action" id="sheetNextButton" type="button" hidden>다음 금고 찾기</button>
             </div>
           </section>
         </div>
       </section>
 
       <section class="screen deduction-screen" id="deductionScreen" data-screen="deduction" hidden>
-        <div class="focus-card deduction-card" data-activity-id="deduction" data-measure-id="case.deduction" data-trend-group-id="trend.comprehension">
-          <div class="section-marker"><span>4</span> MATCH THE THREE CLUES</div>
-          <h2>Which record should be removed from the case file?</h2>
-          <p class="support-copy">Choose the one record that does not match all three facts you marked.</p>
-          <div class="mini-evidence-board" id="miniEvidenceBoard"></div>
-          <div class="record-choices" id="recordChoices">
-            <button type="button" data-record="old" data-item-id="record" data-track="answer" data-correct="true"><span>ARCHIVE A</span><strong>The Titanic cannot sink, so nobody on board will ever need a lifeboat.</strong></button>
-            <button type="button" data-record="compartment" data-item-id="record" data-track="answer" data-correct="false"><span>ARCHIVE B</span><strong>The Titanic had 16 compartments designed to limit flooding.</strong></button>
-            <button type="button" data-record="sailing" data-item-id="record" data-track="answer" data-correct="false"><span>ARCHIVE C</span><strong>The Titanic sailed from Southampton on April 10, 1912.</strong></button>
+        <div class="focus-card deduction-card boss-card" data-activity-id="deduction" data-measure-id="case.deduction" data-trend-group-id="trend.comprehension">
+          <div class="vault-hud" data-vault-hud aria-label="기억 금고 작전 진행"></div>
+          <div class="section-marker"><span>4</span> BOSS · TRUE OR FAKE?</div>
+          <div class="gem-peek" id="gemPeekRow" aria-label="모은 보석 (누르면 단서를 잠깐 봐요)"></div>
+          <p class="gem-peek-bubble" id="gemPeekBubble" role="status" hidden></p>
+          <div class="boss-stage">
+            <article class="record-slide" id="recordSlide">
+              <i class="record-tape" aria-hidden="true"></i>
+              <small id="recordCounter">SHIPYARD ARCHIVE · No. 1 / 3</small>
+              <strong id="recordText"></strong>
+              <span class="record-seal" aria-hidden="true">1912</span>
+            </article>
+            <div class="judge-row" id="judgeRow">
+              <button type="button" class="game-btn" data-judge="true" data-track="answer" data-item-id="record-compartment" data-correct="true"><span class="game-btn-icon" aria-hidden="true">✓</span><span class="game-btn-label">TRUE<em>진짜 기록</em></span><kbd>T</kbd></button>
+              <button type="button" class="game-btn" data-judge="fake" data-track="answer" data-item-id="record-compartment" data-correct="false"><span class="game-btn-icon" aria-hidden="true">✗</span><span class="game-btn-label">FAKE<em>가짜 기록</em></span><kbd>F</kbd></button>
+            </div>
           </div>
-          <p class="feedback-line" id="deductionFeedback" role="status">Choose a record, then compare it with the three facts.</p>
-          <button class="primary-action" id="deductionContinueButton" type="button" disabled data-track="activity-complete" data-activity-id="deduction">Read the corrected record</button>
+          <p class="feedback-line" id="deductionFeedback" role="status">Is this record TRUE or FAKE?</p>
+          <div class="record-nav"><div class="record-dots" id="recordDots" aria-hidden="true"></div><button class="primary-action" id="recordNextButton" type="button" hidden>다음 기록 ▶</button></div>
+          <div class="boss-summary" id="bossSummary" role="status" hidden></div>
+          <button class="primary-action" id="deductionContinueButton" type="button" disabled data-track="activity-complete" data-activity-id="deduction" hidden>Read the corrected record</button>
         </div>
       </section>
 
@@ -179,16 +193,20 @@
       <section class="screen wordhunt-screen" id="wordhuntScreen" data-screen="wordhunt" hidden>
         <div class="focus-card wordhunt-card" data-activity-id="sound-alike-words" data-measure-id="case.sound-alike-word" data-trend-group-id="trend.vocabulary">
           <div class="wordhunt-head">
-            <div><div class="section-marker"><span>6</span> FIND THE SOUND-ALIKE MISTAKE</div><h2 id="wordhuntTitle">One word sounds right but is wrong.</h2></div>
+            <div><div class="section-marker"><span>6</span> LISTEN AND FIND THE MISTAKE</div><h2 id="wordhuntTitle">Listen. One word is written wrong.</h2></div>
             <strong id="wordhuntCounter">1 / 6</strong>
           </div>
-          <p class="support-copy" id="wordhuntLead">문장에서 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.</p>
+          <div class="soundhunt-listen" id="soundhuntListen">
+            <button class="soundhunt-play" id="soundhuntPlayButton" type="button" aria-label="문장 듣기"><span aria-hidden="true">▶</span> <b id="soundhuntPlayLabel">듣기</b></button>
+            <button class="quiet-button soundhunt-slow" id="soundhuntSlowButton" type="button" data-track="hint" data-help-level="A1" data-help-type="slow-audio">천천히 듣기</button>
+            <p class="support-copy" id="wordhuntLead">소리를 듣고, 다르게 적힌 낱말을 눌러요.</p>
+          </div>
           <div class="wordhunt-sentence" id="wordhuntSentence" aria-live="polite"></div>
           <p class="wordhunt-meaning" id="wordhuntMeaning" hidden></p>
           <div class="goal-choices wordhunt-fix" id="wordhuntChoices" hidden></div>
-          <p class="feedback-line" id="wordhuntFeedback" role="status">소리가 닮은 말에 속지 않게 천천히 읽어요.</p>
+          <p class="feedback-line" id="wordhuntFeedback" role="status"></p>
           <div class="wordhunt-actions">
-            <div class="wordhunt-tools"><button class="quiet-button" id="wordhuntRereadButton" type="button" data-track="hint" data-help-level="A1" data-help-type="reread-pace">문장 다시 읽기</button><button class="quiet-button" id="wordhuntHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices">두 낱말로 좁히기</button></div>
+            <div class="wordhunt-tools"><button class="quiet-button" id="wordhuntHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices">두 낱말로 좁히기</button></div>
             <button class="primary-action" id="wordhuntNextButton" type="button" hidden>다음 문장</button>
             <button class="primary-action" id="wordhuntContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="sound-alike-words">Spot the real word</button>
           </div>
@@ -198,12 +216,33 @@
       <section class="screen spelling-screen" id="spellingScreen" data-screen="spelling" hidden>
         <div class="focus-card wordhunt-card" data-activity-id="spot-the-word" data-measure-id="case.spelling" data-trend-group-id="trend.vocabulary">
           <div class="wordhunt-head">
-            <div><div class="section-marker"><span>7</span> SPOT THE REAL WORD</div><h2 id="spellingTitle">Which one is the real word?</h2></div>
-            <strong id="spellingCounter">1 / 6</strong>
+            <div><div class="section-marker"><span>7</span> JELLY RUN · SPOT THE REAL WORD</div><h2 id="spellingTitle">Which one is the real word?</h2></div>
+            <strong id="spellingCounter">⭐ 0 / 16</strong>
           </div>
           <p class="support-copy" id="spellingLead">뜻을 읽고, 바르게 쓴 낱말 하나를 골라요. 글자를 하나씩 꼼꼼히 봐요.</p>
-          <div class="wordhunt-sentence is-note" id="spellingMeaning" aria-live="polite"></div>
-          <div class="goal-choices wordhunt-fix" id="spellingChoices"></div>
+          <div class="wordhunt-sentence is-note jr-meaning" id="spellingMeaning" aria-live="polite"></div>
+          <div class="jr-track" id="spellingTrack">
+            <svg class="jr-road" viewBox="0 0 300 100" preserveAspectRatio="none" aria-hidden="true" focusable="false">
+              <polygon points="120,22 180,22 300,100 0,100" fill="#f4efe4"/>
+              <line x1="140" y1="22" x2="100" y2="100" stroke="#d8ccb6" stroke-width="2" stroke-dasharray="5 6" vector-effect="non-scaling-stroke"/>
+              <line x1="160" y1="22" x2="200" y2="100" stroke="#d8ccb6" stroke-width="2" stroke-dasharray="5 6" vector-effect="non-scaling-stroke"/>
+              <line x1="120" y1="22" x2="0" y2="100" stroke="#a99d88" stroke-width="3" vector-effect="non-scaling-stroke"/>
+              <line x1="180" y1="22" x2="300" y2="100" stroke="#a99d88" stroke-width="3" vector-effect="non-scaling-stroke"/>
+            </svg>
+            <i class="jr-cloud c1" aria-hidden="true"></i><i class="jr-cloud c2" aria-hidden="true"></i>
+            <div class="jr-ticks" aria-hidden="true"></div>
+            <span class="jr-prop l" aria-hidden="true"><svg viewBox="0 0 64 78"><path d="M32 74 L32 46" stroke="#6b5140" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="30" r="22" fill="#9fd49a" stroke="#2e4a33" stroke-width="3"/></svg></span>
+            <span class="jr-prop l d2" aria-hidden="true"><svg viewBox="0 0 64 78"><path d="M8 74 Q6 52 22 54 Q26 40 40 48 Q56 46 56 74 Z" fill="#b6dca6" stroke="#3d5a3a" stroke-width="3"/></svg></span>
+            <span class="jr-prop r" aria-hidden="true"><svg viewBox="0 0 64 78"><path d="M8 74 Q6 52 22 54 Q26 40 40 48 Q56 46 56 74 Z" fill="#b6dca6" stroke="#3d5a3a" stroke-width="3"/></svg></span>
+            <span class="jr-prop r d2" aria-hidden="true"><svg viewBox="0 0 64 78"><path d="M32 74 L32 46" stroke="#6b5140" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="30" r="22" fill="#9fd49a" stroke="#2e4a33" stroke-width="3"/></svg></span>
+            <span class="jr-prop l rest" aria-hidden="true"><svg viewBox="0 0 64 78"><path d="M32 74 L32 46" stroke="#6b5140" stroke-width="6" stroke-linecap="round"/><circle cx="32" cy="30" r="22" fill="#9fd49a" stroke="#2e4a33" stroke-width="3"/></svg></span>
+            <span class="jr-prop r rest" aria-hidden="true"><svg viewBox="0 0 64 78"><path d="M32 76 L32 50" stroke="#4f7a4a" stroke-width="3"/><circle cx="32" cy="44" r="9" fill="#f6c7d9" stroke="#6b3a52" stroke-width="2.5"/><circle cx="32" cy="44" r="3.5" fill="#f3d36b"/></svg></span>
+            <span class="jr-pill" id="spellingStarPill" aria-label="찾은 낱말 별">⭐ <b id="spellingStars">0</b></span>
+            <span class="jr-pill jr-timer" id="spellingTimer" aria-label="남은 시간">⏱ <b>2:00</b></span>
+            <button class="jr-item" id="spellingItemButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices" aria-label="힌트 아이템: 두 개로 좁히기"><span aria-hidden="true">🔍</span><small>둘로 좁히기</small><b id="spellingItemCount">3</b></button>
+            <div class="goal-choices wordhunt-fix jr-cards" id="spellingChoices"></div>
+            <div class="jr-jelly" id="spellingJelly" aria-hidden="true"><img src="assets/jelly-coach-square.png" alt=""></div>
+          </div>
           <p class="feedback-line" id="spellingFeedback" role="status">소리는 비슷해도 글자가 다른 장난꾸러기 낱말이 섞여 있어요.</p>
           <div class="wordhunt-actions">
             <div class="wordhunt-tools"><button class="quiet-button" id="spellingHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="narrow-choices">두 개로 좁히기</button></div>
@@ -214,31 +253,47 @@
       </section>
 
       <section class="screen mindmap-screen" id="mindmapScreen" data-screen="mindmap" hidden>
-        <div class="mindmap-shell" data-activity-id="information-mindmap" data-measure-id="case.organize">
-          <header class="mindmap-head">
-            <div><div class="section-marker"><span>8</span> ORGANIZE THE INFORMATION</div><h2>Complete and connect the cards.</h2><p>Type one missing word. Then choose the card and place it on the matching branch.</p></div>
-            <strong id="mindmapCounter">0 / 4 words · 0 / 4 placed</strong>
-          </header>
-          <div class="mindmap-workspace">
-            <section class="mindmap-board" id="mindmapBoard" aria-label="증거 마인드맵">
-              <svg class="mindmap-lines" viewBox="0 0 720 560" preserveAspectRatio="none" aria-hidden="true"><path d="M360 280 L360 90 M360 280 L135 280 M360 280 L585 280 M360 280 L360 475"></path></svg>
-              <div class="mindmap-center"><small>BIG QUESTION</small><strong>Did the evidence support the unsinkable claim?</strong></div>
-              <article class="mindmap-slot slot-old" data-map-slot="old" data-tap="answer"><small>OLD CLAIM</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
-              <article class="mindmap-slot slot-jupiter" data-map-slot="compartment" data-tap="answer"><small>COMPARTMENT EVIDENCE</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
-              <article class="mindmap-slot slot-venus" data-map-slot="lifeboat" data-tap="answer"><small>LIFEBOAT EVIDENCE</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
-              <article class="mindmap-slot slot-new" data-map-slot="new" data-tap="answer"><small>NEW UNDERSTANDING</small><span>Place a card</span><i class="mindmap-status" aria-hidden="true"></i><button class="slot-return" type="button" data-map-remove hidden>Return card</button></article>
-            </section>
-            <aside class="mindmap-bank">
-              <small>INFORMATION CARDS</small>
-              <h3>Finish each card.</h3>
-              <button class="quiet-button mindmap-hint-button" id="mindmapHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="word-hint" aria-haspopup="dialog">Show a word hint</button>
-              <p><b>1</b> Type the missing word. <b>2</b> Choose the card. <b>3</b> Tap its branch.</p>
-              <div id="mindmapCards"></div>
-              <button class="quiet-button" id="mindmapResetButton" type="button">Reset words and cards</button>
-            </aside>
+        <div class="ig-shell" data-activity-id="information-mindmap" data-measure-id="case.organize">
+          <div class="ig-poster" id="igPoster" aria-label="증거 인포그래픽">
+            <header class="ig-band"><small>ANATOMY OF A CLAIM</small><strong>WHY "UNSINKABLE" FAILED</strong></header>
+            <svg class="ig-art" viewBox="0 0 400 220" aria-hidden="true" focusable="false">
+              <path d="M0 150 Q50 138 100 150 T200 150 T300 150 T400 150 V220 H0 Z" fill="#7fc4d6"/>
+              <path d="M0 165 Q50 155 100 165 T200 165 T300 165 T400 165 V220 H0 Z" fill="#5aaec4"/>
+              <polygon points="292,152 318,92 334,108 350,84 372,152" fill="#ffffff" stroke="#9fd1df" stroke-width="2"/>
+              <polygon points="300,152 372,152 360,196 312,192" fill="#cfe9f1" opacity="0.85"/>
+              <g transform="rotate(-7 170 140)">
+                <path d="M78 128 L262 128 L248 158 L96 158 Z" fill="#1d3557"/>
+                <path d="M92 150 L252 150 L248 158 L96 158 Z" fill="#c0392b"/>
+                <rect x="100" y="112" width="148" height="16" fill="#f6efe2" stroke="#1d3557" stroke-width="2"/>
+                <rect x="122" y="84" width="16" height="30" fill="#e9a23b" stroke="#1d3557" stroke-width="2"/>
+                <rect x="152" y="84" width="16" height="30" fill="#e9a23b" stroke="#1d3557" stroke-width="2"/>
+                <rect x="182" y="84" width="16" height="30" fill="#e9a23b" stroke="#1d3557" stroke-width="2"/>
+                <rect x="212" y="84" width="16" height="30" fill="#e9a23b" stroke="#1d3557" stroke-width="2"/>
+                <rect x="122" y="84" width="16" height="7" fill="#1d3557"/>
+                <rect x="152" y="84" width="16" height="7" fill="#1d3557"/>
+                <rect x="182" y="84" width="16" height="7" fill="#1d3557"/>
+                <rect x="212" y="84" width="16" height="7" fill="#1d3557"/>
+              </g>
+            </svg>
+            <button class="ig-spot spot-old" type="button" data-map-slot="old" data-tap="answer"><i aria-hidden="true">📜</i><small>OLD CLAIM</small><b></b></button>
+            <button class="ig-spot spot-compartment" type="button" data-map-slot="compartment" data-tap="answer"><i aria-hidden="true">🧱</i><small>COMPARTMENTS</small><b></b></button>
+            <button class="ig-spot spot-lifeboat" type="button" data-map-slot="lifeboat" data-tap="answer"><i aria-hidden="true">🛟</i><small>LIFEBOATS</small><b></b></button>
+            <button class="ig-spot spot-new" type="button" data-map-slot="new" data-tap="answer"><i aria-hidden="true">🔍</i><small>NEW UNDERSTANDING</small><b></b></button>
           </div>
-          <p class="mindmap-feedback" id="mindmapFeedback" role="status">Complete the four cards and connect them to the map.</p>
-          <div class="mindmap-actions"><button class="primary-action" id="mindmapCheckButton" type="button" disabled data-track="answer" data-item-id="map-check" data-correct="false">Check my map</button><button class="primary-action" id="mindmapContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="information-mindmap">Explain the case in my own words</button></div>
+          <aside class="ig-desk">
+            <div class="ig-desk-head"><div class="section-marker"><span>8</span> BUILD THE INFOGRAPHIC</div><div class="ig-dots" id="mindmapCounter" aria-label="카드 진행"></div></div>
+            <article class="ig-card" id="igCard">
+              <small id="igCardStep">CARD 1 / 4</small>
+              <p class="ig-sentence" id="igSentence"></p>
+              <div class="ig-actions" id="igActions"></div>
+            </article>
+            <div class="ig-hint" id="igHintChips" hidden></div>
+            <p class="mindmap-feedback" id="mindmapFeedback" role="status"></p>
+            <div class="ig-foot">
+              <button class="quiet-button" id="mindmapHintButton" type="button" data-track="hint" data-help-level="A2" data-help-type="word-hint">💡 낱말 힌트</button>
+              <button class="primary-action" id="mindmapContinueButton" type="button" hidden data-track="activity-complete" data-activity-id="information-mindmap">Explain the case in my own words</button>
+            </div>
+          </aside>
         </div>
       </section>
 
@@ -283,26 +338,36 @@
     <section><small>현재 화면</small><strong id="coachCurrentScreen">시작</strong><p id="coachCurrentGoal">사건 파일을 열어요</p></section>
     <section><small>학생 기록</small><ul id="coachEvidenceList"><li>아직 체크한 정보가 없습니다.</li></ul></section>
     <section><small>이해 점검 · 발견 / 수정 / 단서</small><ul id="coachMonitoringList"><li>아직 시작하지 않았습니다.</li></ul></section>
-    <section><small>관찰 포인트</small><p>단서를 읽은 뒤 문장을 계속 보지 않고 핵심 정보(구획 16개와 침수 제한 목적·구명보트 절반·출항일)를 골라 남기는지 관찰합니다. 「가라앉을 수 없다」를 사실이 아니라 주장으로 구분해 말하는지도 봅니다. 다시 보기는 요청할 때만 사용합니다.</p></section>
-    <section class="coach-answer-key"><small>정답 기준</small><p>제거할 기록: <b>ARCHIVE A</b>(가라앉을 수 없으니 구명보트가 필요 없다) · 단서 메모: 구획 16개와 침수 제한 목적 / 구명보트는 절반 정원 / 1912년 4월 10일 출항 · 마인드맵 낱말: sink · sixteen · half · evidence</p></section>
+    <section class="crew-board"><small>크루 보드 · 기억 금고 작전 (화면 공유용)</small><div id="crewTeam" class="crew-team"><p>수업방이 열리면 학생별 보석이 여기 모여요.</p></div><ul id="crewRows" class="crew-rows"></ul></section>
+    <section class="group-tips"><small>그룹 진행 (4명 안팎)</small><ol>
+      <li><b>동시 출발</b> 페이지 잠금으로 모두 3번 화면에 모은 뒤 해제하고 「작전 시작!」.</li>
+      <li><b>잠수 규칙</b> 🫧 잠수 중인 친구에겐 말 걸지 않기(입 지퍼). 크루 보드에 「잠수 중」으로 보여요.</li>
+      <li><b>크루 도우미</b> 금고 세 개를 먼저 연 아이는 답 대신 「숫자를 떠올려 봐」 같은 힌트만 건네요.</li>
+      <li><b>보스는 다 같이</b> 모두 4번에 오면 활동 잠금 → 기록 한 장마다 「셋 하면 엄지 위(TRUE)·아래(FAKE)!」 → 해제 후 각자 누르기.</li>
+      <li><b>팀 보물</b> 순위 없이 합계만 봐요. 🔎 탐정 보석도 똑같이 한 칸이에요.</li>
+    </ol></section>
+    <section><small>관찰 포인트</small><p>🔒 잠근 뒤 잠수(3·4·5초) 동안 문장 없이 핵심 정보(구획 16개와 침수 제한 목적·구명보트 절반·출항일)를 붙들고 고르는지 봅니다. 「살짝 다시 보기」는 막힐 때 쓰는 도움이며, 쓰면 🔎 탐정 보석(점수 차감 없음)이 됩니다. 보스(기록 한 장씩 TRUE/FAKE)에서 보석 아이콘을 눌러 단서를 몇 번 확인하는지가 세 정보를 동시에 붙드는 정도를 보여 줍니다. 「가라앉을 수 없다」를 사실이 아니라 주장으로 구분해 말하는지도 봅니다.</p></section>
+    <section class="coach-answer-key"><small>정답 기준</small><p><b>TRUE·FAKE 판정</b>: 구획 16개 = TRUE / 가라앉지 않으니 구명보트 필요 없다 = <b>FAKE</b> / 4월 10일 출항 = TRUE(가라앉을 수 없으니 구명보트가 필요 없다) · 단서 메모: 구획 16개와 침수 제한 목적 / 구명보트는 절반 정원 / 1912년 4월 10일 출항 · 마인드맵 낱말: sink · sixteen · half · evidence</p></section>
     <section><small>화면 바로가기</small><div class="coach-nav" id="coachNav"></div></section>
   </aside>
 
   <dialog class="clue-dialog search-brief-dialog" id="searchBriefDialog" aria-labelledby="searchBriefTitle">
     <div class="clue-dialog-shell">
-      <header><small>SEARCH MISSION · FIRST STEP</small><strong id="searchBriefTitle">단서를 찾아 핵심을 기록해요</strong></header>
+      <header><small>MISSION BRIEFING · 기억 금고 작전</small><strong id="searchBriefTitle">단서를 기억해 금고 세 개를 열어요</strong></header>
       <div class="clue-dialog-body search-brief-body">
         <img src="assets/jelly-detective-magnifier.png" alt="돋보기를 든 젤리 디텍티브">
         <div>
-          <p>Find each safety clue, remember it, and mark the key fact on your sheet.</p>
-          <ol>
-            <li>사무실에 숨은 문서 하나를 찾아요.</li>
-            <li>큰 문장을 읽고 잠시 기억해요.</li>
-            <li>시트에서 중요한 정보만 체크해요.</li>
+          <p>Find a clue. Lock it in your memory. Dive. Open the vault!</p>
+          <ol class="mission-steps">
+            <li><b>🔍 찾기</b> 사무실에 숨은 문서 하나를 찾아요.</li>
+            <li><b>🔒 잠그기</b> 문장을 읽고 핵심을 외운 뒤 잠가요.</li>
+            <li><b>🫧 잠수</b> 문장이 사라져도 머릿속에 꼭 붙들어요.</li>
+            <li><b>🔐 금고</b> 기억한 정보를 골라 보석을 받아요.</li>
+            <li><b>👾 보스</b> 보석 세 개로 가짜 기록을 잡아요.</li>
           </ol>
         </div>
       </div>
-      <button class="primary-action" id="startSearchButton" type="button">수색 시작하기</button>
+      <button class="primary-action" id="startSearchButton" type="button">작전 시작!</button>
     </div>
   </dialog>
 
@@ -312,9 +377,9 @@
       <div class="clue-dialog-body">
         <div class="clue-symbol" id="clueDialogSymbol" aria-hidden="true"></div>
         <p id="clueDialogText"></p>
-        <span>잠시 기억한 뒤 중요한 정보만 시트에 체크해요.</span>
+        <span id="clueDialogTip">숫자 하나, 핵심 낱말 하나를 속으로 두 번 말해요. 다 외웠으면 금고를 잠가요.</span>
       </div>
-      <button class="primary-action" id="clueDialogAction" type="button">기억하고 시트 작성하기</button>
+      <button class="primary-action" id="clueDialogAction" type="button">🔒 기억 잠그기</button>
     </div>
   </dialog>
 
@@ -335,11 +400,11 @@
   </dialog>
 
   <script src="studio-frame.js?v=1"></script>
-  <script src="focus-guide.js?v=1"></script>
+  <script src="focus-guide.js?v=3"></script>
   <script src="case-vocab.js?v=7"></script>
   <script src="case-signals.js?v=1"></script>
   <script src="live-mirror.js?v=3"></script>
-  <script src="session01.js?v=28"></script>
+  <script src="session01.js?v=45"></script>
   <script src="pilot-config.js"></script>
   <script src="pilot-log-relay.js"></script>
 </body>

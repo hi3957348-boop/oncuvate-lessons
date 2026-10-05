@@ -14,23 +14,34 @@ window.CASE_SESSION={
   words:[["Carpathia", "the ship that came to pick up the people in the lifeboats · 카르파티아호 : 구명보트에 탄 사람들을 구하러 온 배의 이름", "The Carpathia came to pick up the people in the lifeboats.", ["Carpathia"], "Car·pa·thi·a"], ["disaster", "a terrible event that hurts many people · 재난 : 많은 사람이 다치는 큰 사고", "After the disaster, new laws were passed.", ["disaster"], "dis·as·ter"], ["rescue", "to save someone from danger · 구조하다 : 위험에서 구해 내다", "The Carpathia rescued 706 people.", ["rescue", "rescued"], "res·cue"], ["survivor", "a person who lived through a disaster · 생존자 : 사고에서 살아남은 사람", "The Carpathia carried the survivors to New York.", ["survivor", "survivors"], "sur·vi·vor"], ["hearing", "an official meeting to find out what happened · 청문회 : 무슨 일이 있었는지 묻는 공식 모임", "Governments held hearings after the disaster.", ["hearing", "hearings"], "hear·ing"], ["government", "the people who make the laws of a country · 정부 : 나라의 법을 만드는 사람들", "Governments passed new laws for ships.", ["government", "governments"], "gov·ern·ment"], ["distress", "great danger or trouble · 조난 : 배가 큰 위험에 빠진 상태", "Ships must hear every distress call.", ["distress"], "dis·tress"], ["budget", "the amount you are allowed to spend · 예산 : 쓸 수 있다고 정해 둔 양", "Stay inside the budget of 11 credits.", ["budget"], "budg·et"], ["credit", "a point you can spend · 크레딧 : 쓸 수 있는 점수", "Each rule costs credits.", ["credit", "credits"], "cred·it"], ["design", "a plan for how to build something · 설계 : 무엇을 어떻게 만들지 정한 계획", "Test the design and revise it.", ["design", "designs"], "de·sign"], ["revise", "to change something to make it better · 고치다 : 더 낫게 바꾸다", "Revise the design when a need is missing.", ["revise"], "re·vise"], ["require", "to need something by rule · 요구하다 : 반드시 하도록 정하다", "New laws required enough lifeboats for everyone.", ["require", "required"], "re·quire"], ["drill", "a practice session for an emergency · 훈련 : 위험할 때 할 일을 미리 연습하는 것", "Ships now hold lifeboat drills.", ["drill", "drills"], "drill"], ["practice", "to do something again to learn it · 연습하다", "Passengers and crew practice what to do.", ["practice"], "prac·tice"], ["patrol", "a group that travels around to watch for danger · 순찰대 : 돌아다니며 위험을 살피는 무리", "The ice patrol warns ships of danger.", ["patrol", "patrols"], "pa·trol"], ["wireless", "a radio machine that sent messages without wires · 무선 전신", "New laws required a wireless watch that never stops.", ["wireless"], "wire·less"], ["refuse", "to say no · 거절하다 : 하지 않겠다고 하다", "Many women refused to leave their husbands.", ["refuse", "refused"], "re·fuse"], ["husband", "the man a woman is married to · 남편", "Many women refused to leave their husbands.", ["husband", "husbands"], "hus·band"], ["accident", "something bad that happens by chance · 사고 : 뜻하지 않게 일어난 나쁜 일", "Practice what to do in case of an accident.", ["accident"], "ac·ci·dent"], ["steam", "to travel by a steam engine · 증기로 달리다 : 여기서는 「증기선으로 가다」", "The Carpathia steamed nearly 60 miles through the ice.", ["steam", "steamed"], "steam"], ["scientist", "a person who studies how things work · 과학자", "In 1985 a scientist found the wreck.", ["scientist"], "sci·en·tist"], ["wreck", "what is left of a broken ship · 잔해 : 부서진 배의 남은 부분", "Robert Ballard found the wreck of the Titanic.", ["wreck"], "wreck"]],
   strategy:{labels:['필요 확인','설계 시험','한 가지 수정'],game:'필요와 예산을 보며 안전 규칙을 설계해요',check:'실패한 시험 하나를 보고 설계를 바꿔요'},
   guide:{game:[
-    {en:'Choose rules within 11 credits.',ko:'11 크레딧 안에서 규칙을 골라요.'},
-    {en:'Run the safety tests.',ko:'안전 시험을 실행해요.'},
-    {en:'If a test fails, change only one rule.',ko:'시험이 실패하면 규칙 하나만 바꿔요.'}
+    {en:'Lock the five needs in your memory.',ko:'꼭 필요한 다섯 가지를 기억에 잠가요.'},{en:'Swipe through the rule cards and load what is needed.',ko:'규칙 카드를 넘겨 보며 필요한 것을 실어요.'}
+  ],check:[{en:'Read one record at a time.',ko:'기록을 한 장씩 읽어요.'},{en:'Does it match your notes? TRUE or FAKE.',ko:'내 기록과 맞나요? TRUE 또는 FAKE.'}],organize:[{en:'Place one card at a time on the poster.',ko:'카드를 한 장씩 포스터에 붙여요.'}]},
+  mission:{title:'모든 배에 꼭 필요한 다섯 가지',diveSeconds:5,needs:[
+    ['seats','🛟','SEATS','모두의 자리'],['signal','📡','SIGNAL','구조 신호 듣기'],['ice','🧊','ICE','빙산 위치 알기'],['practice','🔔','PRACTICE','사고 대비 연습'],['watch','👀','WATCH','일찍 발견하기']
+  ],groupTips:[
+    '<b>동시 출발</b> 페이지 잠금으로 모두 3번 화면에 모은 뒤 해제해요.',
+    '<b>잠수 규칙</b> 🫧 잠수 중인 친구에겐 말 걸지 않기. 크루 보드에 「잠수 중」으로 보여요.',
+    '<b>크루 도우미</b> 먼저 끝낸 아이는 답 대신 「핵심 낱말을 떠올려 봐」 같은 힌트만 건네요.',
+    '<b>판정은 다 같이</b> 모두 4번에 오면 활동 잠금 → 기록 한 장마다 「셋 하면 엄지 위(TRUE)·아래(FAKE)!」 → 해제 후 각자 누르기.',
+    '<b>팀 보물</b> 순위 없이 합계만 봐요. 🔎 탐정 보석도 똑같이 한 칸이에요.'
   ]},
   game:{type:'base',title:'Design safety rules for every ship.',eyebrow:'SAFETY RULE DESIGNER',intro:'Choose rules up to 11 credits. Run the tests, then change only what is needed.',budget:11,modules:[
-    {id:'boats',name:'LIFEBOATS FOR ALL',cost:3,need:'seats',detail:'carries enough lifeboat seats for more than the number of people on board'},
-    {id:'radio',name:'24-HOUR WIRELESS WATCH',cost:2,need:'signal',detail:'keeps the radio on at all times to hear distress calls'},
-    {id:'patrol',name:'ICE PATROL',cost:2,need:'ice',detail:'looks for icebergs and warns ships of danger'},
-    {id:'drill',name:'LIFEBOAT DRILLS',cost:2,need:'practice',detail:'passengers and crew practice what to do in an accident'},
-    {id:'lookout',name:'MORE LOOKOUTS · BINOCULARS',cost:2,need:'watch',detail:'extra eyes and binoculars to spot ice early'},
-    {id:'band',name:'DECK ORCHESTRA',cost:4,need:'music',detail:'music helps passengers stay calm; comforting but not required for this test'}
+    {id:'boats',icon:'🚣',name:'LIFEBOATS FOR ALL',cost:3,need:'seats',detail:'carries enough lifeboat seats for more than the number of people on board'},
+    {id:'radio',icon:'📻',name:'24-HOUR WIRELESS WATCH',cost:2,need:'signal',detail:'keeps the radio on at all times to hear distress calls'},
+    {id:'patrol',icon:'🛩️',name:'ICE PATROL',cost:2,need:'ice',detail:'looks for icebergs and warns ships of danger'},
+    {id:'drill',icon:'📣',name:'LIFEBOAT DRILLS',cost:2,need:'practice',detail:'passengers and crew practice what to do in an accident'},
+    {id:'lookout',icon:'🔭',name:'MORE LOOKOUTS · BINOCULARS',cost:2,need:'watch',detail:'extra eyes and binoculars to spot ice early'},
+    {id:'band',icon:'🎻',name:'DECK ORCHESTRA',cost:4,need:'music',detail:'music helps passengers stay calm; comforting but not required for this test'}
   ],required:['seats','signal','ice','practice','watch'],tests:[
     {name:'LIFEBOAT TEST',needs:['seats','practice']},{name:'SIGNAL TEST',needs:['signal']},{name:'ICE TEST',needs:['ice','watch']}
   ]},
   check:{title:'What should a designer do when a safety test fails?',lead:'Use the test result to decide what to change.',correct:'revise',choices:[
     ['all','Take every rule, even if the budget is broken.'],['guess','Keep the first design even when a need is missing.'],['revise','Use the test result to replace one rule and test again.']
-  ],success:'Correct. Testing showed exactly which need the design was missing.'},
+  ],success:'Correct. Testing showed exactly which need the design was missing.',judge:{title:'TRUE or FAKE?',prompt:'Is this a good rule when a safety test fails? 통하는 규칙이면 TRUE, 아니면 FAKE.',cards:[
+    ['all','Take every rule, even if the budget is broken.',false,'FAKE! 예산을 넘으면 그 설계는 쓸 수 없어요.'],
+    ['revise','Use the test result to replace one rule and test again.',true,'TRUE ✓ 시험 결과가 다음에 바꿀 규칙을 알려 줬어요.'],
+    ['guess','Keep the first design even when a need is missing.',false,'FAKE! 필요가 하나라도 빠지면 배가 안전하지 않아요.']
+  ]}},
   reading:{title:'Lessons from the Titanic',context:'Your safety rules passed the tests. Now read which rules were really changed after the Titanic, so you can explain why each rule was needed.',easy:[
     'The Titanic had lifeboats for only about half of the people on board.','At first, some passengers hesitated because they did not understand how serious the danger was.','Some of the first lifeboats left the ship less than half full.','After the disaster, new laws required enough lifeboats for everyone on board.','Ships now hold lifeboat drills to practice what to do in an accident.'
   ],challenge:[
@@ -41,7 +52,7 @@ window.CASE_SESSION={
   ],blank:['Build,','and revise.'],answer:'test',hint:'Look at strategy step 2: 설계 시험. The rule is Build, ____, and revise. The word starts with t and means 시험하다.'},
   retell:{title:'Why will your safety rules work?',prompt:'Write 2–4 English sentences. Name at least three needs and explain one rule you chose.',placeholder:'My rules give every person a seat... I chose... because...',frame:'Every ship needs ____. I chose ____ because ____. After the test, I changed ____.'},
   solved:{eyebrow:'CASE 04 · RULES APPROVED',title:'시험하고 고쳐서<br>모두를 위한 안전 규칙을 만들었어요!',text:'첫 설계가 완벽하지 않아도 괜찮습니다. 시험 결과에서 빠진 필요 하나를 찾고, 그 규칙만 바꾸면 더 안전한 배가 됩니다.'},
-  coach:{watch:'무작정 모든 규칙을 고르기보다 필요 목록과 예산을 대조하고, 실패 후 한 항목만 바꾸어 재시험하는지 관찰합니다.',answer:'11크레딧 통과 조합: boats+radio+patrol+drill+lookout (DECK ORCHESTRA 제외). 정리 빈칸: test.'}
+  coach:{watch:'무작정 모든 규칙을 고르기보다 필요 목록과 예산을 대조하고, 실패 후 한 항목만 바꾸어 재시험하는지 관찰합니다. 〔게임화〕 보고를 🔒 잠근 뒤 잠수 동안 문장 없이 붙드는지, 「살짝 다시 보기」(🔎 탐정 보석·감점 없음)를 몇 번 쓰는지, 4번에서 보석을 눌러 기록을 몇 번 다시 보는지 관찰합니다.',answer:'11크레딧 통과 조합: boats+radio+patrol+drill+lookout (DECK ORCHESTRA 제외). 정리 빈칸: test. 〔판정〕 TRUE는 revise 하나, 나머지는 FAKE.'}
 };
 window.CASE_SESSION.words = window.CASE_SESSION.words.map(entry => {
   if (entry[0] === 'rescue') return ['rescue', 'to save someone from danger · 구조하다 : 위험에서 구해 내다', 'The Carpathia rescued more than 700 people.', entry[3], entry[4]];

@@ -12,18 +12,18 @@
   const screenActivity = { goal: 'goal', search: 'clue-notes', deduction: 'deduction', reading: 'information-reading', wordhunt: 'sound-alike-words', spelling: 'spot-the-word', mindmap: 'information-mindmap', retell: 'retell' };
   const screenLabels = {
     start: '준비', case: '사건파일', goal: '목표 찾기', search: '단서 수색',
-    deduction: '기록 판별', reading: '정보글 읽기', wordhunt: '소리 닮은 말', spelling: '진짜 낱말 찾기', mindmap: '마인드맵', retell: '다시 설명하기', solved: '사건 해결'
+    deduction: '기록 판별', reading: '정보글 읽기', wordhunt: '소리 닮은 말', spelling: '진짜 낱말 찾기', mindmap: '인포그래픽', retell: '다시 설명하기', solved: '사건 해결'
   };
   const screenGoals = {
     start: '사건 파일을 열어요',
     case: '사건 정보를 한 문장씩 확인해요',
     goal: '오늘 해결할 문제 하나를 골라요',
-    search: '숨은 단서를 찾고 중요한 정보만 남겨요',
-    deduction: '세 정보와 기록을 다시 맞춰 봐요',
+    search: '단서를 찾아 기억을 잠그고 금고를 열어요',
+    deduction: '보석과 맞지 않는 가짜 기록을 잡아요',
     reading: '증거가 주장을 검증한 과정을 읽어요',
-    wordhunt: '소리가 비슷한 틀린 낱말을 찾아 고쳐요',
-    spelling: '뜻을 보고 바르게 쓴 낱말을 골라요',
-    mindmap: '정보의 관계를 마인드맵으로 연결해요',
+    wordhunt: '문장 소리를 듣고 틀리게 적힌 낱말을 찾아 고쳐요',
+    spelling: '2분 동안 진짜 낱말을 최대한 많이 냠!',
+    mindmap: '문장 카드를 하나씩 완성해 포스터에 붙여요',
     retell: '증거를 사용해 내 말로 설명해요',
     solved: '오늘 사용한 방법을 기억해요'
   };
@@ -114,7 +114,7 @@
     { id: 'wh5', words: ['Captain', 'Smith', 'commanded', 'a', 'crow', 'of', 'more', 'than', '800', 'people.'], wrong: 4, decoy: 2, answer: 'crew', choices: ['crew', 'crow', 'crown'], ko: '스미스 선장은 800명이 넘는 승무원을 지휘했어요.' },
     { id: 'wh6', words: ['Stokers', 'shoveled', 'coal', 'into', 'the', 'boilers', 'to', 'make', 'stem.'], wrong: 8, decoy: 5, answer: 'steam', choices: ['steam', 'stem', 'stream'], ko: '화부들은 증기를 만들려고 보일러에 석탄을 퍼 넣었어요.' }
   ];
-  const spellingItems = [{"id": "sp1", "word": "unsinkable", "choices": [{"w": "unsinkable", "ok": true}, {"w": "unstinkable", "joke": "stink(냄새)! 배에서 냄새가 안 난다는 뜻이 돼요 🐟"}, {"w": "unsinkabel", "joke": "끝은 -able이에요."}]}, {"id": "sp2", "word": "compartment", "choices": [{"w": "compartment", "ok": true}, {"w": "compartmint", "joke": "mint(박하)가 들어갔어요 🍬"}, {"w": "compartmen", "joke": "t가 하나 빠졌어요."}]}, {"id": "sp3", "word": "passenger", "choices": [{"w": "passenger", "ok": true}, {"w": "passenjer", "joke": "g가 j로 바뀌었어요. 소리는 같아도 글자가 달라요."}, {"w": "passengerbil", "joke": "gerbil(햄스터 친구)이 숨었어요 🐹"}]}, {"id": "sp4", "word": "voyage", "choices": [{"w": "voyage", "ok": true}, {"w": "voyoge", "joke": "a가 o로 바뀌었어요."}, {"w": "royage", "joke": "royal(왕)이 들어갔나요? 👑 v를 찾아요."}]}, {"id": "sp5", "word": "shipyard", "choices": [{"w": "shipyard", "ok": true}, {"w": "sheepyard", "joke": "sheep(양) 마당이 됐어요 🐑"}, {"w": "shipyerd", "joke": "a가 e로 바뀌었어요."}]}, {"id": "sp6", "word": "captain", "choices": [{"w": "captain", "ok": true}, {"w": "captin", "joke": "a가 하나 빠졌어요."}, {"w": "capetain", "joke": "cape(망토)를 두른 선장? 🦸 e가 하나 더 있어요."}]}];
+  const spellingItems = [{"id": "sp1", "word": "unsinkable", "choices": [{"w": "unsinkable", "ok": true}, {"w": "unstinkable", "joke": "stink(냄새)! 배에서 냄새가 안 난다는 뜻이 돼요 🐟"}, {"w": "unsinkabel", "joke": "끝은 -able이에요."}]}, {"id": "sp2", "word": "compartment", "choices": [{"w": "compartment", "ok": true}, {"w": "compartmint", "joke": "mint(박하)가 들어갔어요 🍬"}, {"w": "compartmen", "joke": "t가 하나 빠졌어요."}]}, {"id": "sp3", "word": "passenger", "choices": [{"w": "passenger", "ok": true}, {"w": "passenjer", "joke": "g가 j로 바뀌었어요. 소리는 같아도 글자가 달라요."}, {"w": "passengerbil", "joke": "gerbil(햄스터 친구)이 숨었어요 🐹"}]}, {"id": "sp4", "word": "voyage", "choices": [{"w": "voyage", "ok": true}, {"w": "voyoge", "joke": "a가 o로 바뀌었어요."}, {"w": "royage", "joke": "royal(왕)이 들어갔나요? 👑 v를 찾아요."}]}, {"id": "sp5", "word": "shipyard", "choices": [{"w": "shipyard", "ok": true}, {"w": "sheepyard", "joke": "sheep(양) 마당이 됐어요 🐑"}, {"w": "shipyerd", "joke": "a가 e로 바뀌었어요."}]}, {"id": "sp6", "word": "captain", "choices": [{"w": "captain", "ok": true}, {"w": "captin", "joke": "a가 하나 빠졌어요."}, {"w": "capetain", "joke": "cape(망토)를 두른 선장? 🦸 e가 하나 더 있어요."}]}, {"id": "sp7", "word": "evidence", "choices": [{"w": "evidence", "ok": true}, {"w": "evidense", "joke": "c 자리에 s가 들어갔어요. 소리는 같아도 글자가 달라요."}, {"w": "evidance", "joke": "가운데 e가 a로 바뀌었어요."}]}, {"id": "sp8", "word": "believe", "choices": [{"w": "believe", "ok": true}, {"w": "beleive", "joke": "i와 e의 순서가 뒤바뀌었어요. believe는 i 다음 e!"}, {"w": "bee-lieve", "joke": "벌(bee)이 날아왔어요 🐝"}]}, {"id": "sp9", "word": "mistaken", "choices": [{"w": "mistaken", "ok": true}, {"w": "misteaken", "joke": "tea(차)가 숨었어요 ☕"}, {"w": "mistakin", "joke": "끝은 -en이에요."}]}, {"id": "sp10", "word": "design", "choices": [{"w": "design", "ok": true}, {"w": "desine", "joke": "소리 안 나는 g가 빠졌어요."}, {"w": "dessign", "joke": "s가 하나 더 들어갔어요."}]}, {"id": "sp11", "word": "divide", "choices": [{"w": "divide", "ok": true}, {"w": "devide", "joke": "첫 모음이 i예요."}, {"w": "divid", "joke": "끝의 e가 빠졌어요."}]}, {"id": "sp12", "word": "afloat", "choices": [{"w": "afloat", "ok": true}, {"w": "afloot", "joke": "oa가 oo로 바뀌었어요."}, {"w": "aflote", "joke": "소리는 같아도 oa로 써요."}]}, {"id": "sp13", "word": "flood", "choices": [{"w": "flood", "ok": true}, {"w": "flud", "joke": "소리 나는 대로 썼어요. flood는 oo!"}, {"w": "fload", "joke": "load(짐)가 숨었어요 📦"}]}, {"id": "sp14", "word": "record", "choices": [{"w": "record", "ok": true}, {"w": "rekord", "joke": "c 자리에 k가 들어갔어요."}, {"w": "recorde", "joke": "끝에 e가 하나 더 붙었어요."}]}, {"id": "sp15", "word": "claim", "choices": [{"w": "claim", "ok": true}, {"w": "clam", "joke": "clam은 조개예요 🦪 i가 빠졌어요."}, {"w": "clame", "joke": "소리는 같아도 ai로 써요."}]}, {"id": "sp16", "word": "crew", "choices": [{"w": "crew", "ok": true}, {"w": "crue", "joke": "소리는 같아도 ew로 써요."}, {"w": "krew", "joke": "c 자리에 k가 들어갔어요."}]}];
   const WORD_HUNT_BLOCK = 3;
   const wordHuntActivity = 'sound-alike-words';
   const wordHuntMeasure = 'case.sound-alike-word';
@@ -131,10 +131,18 @@
     selectedRecord: '', deductionAttempts: 0, readingLevel: 'easy', sentenceIndex: 0,
     mindMapPlacements: {}, mindMapAnswers: {}, selectedMindMapCard: '', mindMapSolved: false, mindMapAttempts: 0,
     retell: '', retellHint: false, unlockedWords: 1, openedWords: [], startedAt: 0,
-    goalAttempts: 0, wordHunt: null, readingRereads: 0, readingSupport: false, readingSelfCheck: '', helpRequestedAt: 0, helpRequests: 0, spelling: null
+    goalAttempts: 0, wordHunt: null, readingRereads: 0, readingSupport: false, readingSelfCheck: '', helpRequestedAt: 0, helpRequests: 0, spelling: null,
+    vault: null
   };
+  /* 기억 금고 작전 — 3번(단서→잠그기→잠수→금고 다이얼)과 4번(가짜 기록 보스)을 한 미션으로 묶는 게임 층.
+     점수는 쌓이기만 한다(오답·다시 보기로 깎이지 않음). 다시 보기 없이 연 금고 = 기억 보석, 다시 보고 연 금고 = 탐정 보석. */
+  const vaultDefault = () => ({ gems: {}, peeks: {}, flips: [], cleared: [], diveMs: {}, judged: {}, judgeAttempts: {}, slide: 0 });
+  const DIVE_SECONDS = [3, 4, 5];
+  const REDIVE_SECONDS = 2;
+  const DIVE_DEPTH = ['10m', '20m', '30m'];
+  let diveTimer = 0, diveEndsAt = 0, diveStartedAt = 0, diveTotal = 0, diveKind = '';
   const spellingDefault = () => ({ index: 0, attempts: {}, hinted: {}, narrowed: {}, revealed: {}, done: {}, order: {}, complete: false });
-  const wordHuntDefault = () => ({ index: 0, phase: 'find', attempts: {}, fixAttempts: {}, hinted: {}, meaningShown: {}, revealed: {}, done: {}, rereads: {}, detectMs: {}, findAccuracy: {}, fixAccuracy: {}, complete: false, breakSeen: false });
+  const wordHuntDefault = () => ({ index: 0, phase: 'find', attempts: {}, fixAttempts: {}, hinted: {}, meaningShown: {}, revealed: {}, done: {}, rereads: {}, detectMs: {}, findAccuracy: {}, fixAccuracy: {}, listens: {}, slowListens: {}, complete: false, breakSeen: false });
 
   const byId = id => document.getElementById(id);
   const saved = readSavedState();
@@ -147,9 +155,12 @@
   state.mindMapAnswers = saved?.mindMapAnswers && typeof saved.mindMapAnswers === 'object' ? saved.mindMapAnswers : {};
   state.openedWords = Array.isArray(saved?.openedWords) ? saved.openedWords : [];
   state.wordHunt = Object.assign(wordHuntDefault(), saved?.wordHunt && typeof saved.wordHunt === 'object' ? saved.wordHunt : {});
-  ['attempts', 'fixAttempts', 'hinted', 'meaningShown', 'revealed', 'done', 'rereads', 'detectMs', 'findAccuracy', 'fixAccuracy'].forEach(key => { if (!state.wordHunt[key] || typeof state.wordHunt[key] !== 'object') state.wordHunt[key] = {}; });
+  ['attempts', 'fixAttempts', 'hinted', 'meaningShown', 'revealed', 'done', 'rereads', 'detectMs', 'findAccuracy', 'fixAccuracy', 'listens', 'slowListens'].forEach(key => { if (!state.wordHunt[key] || typeof state.wordHunt[key] !== 'object') state.wordHunt[key] = {}; });
   state.spelling = Object.assign(spellingDefault(), saved?.spelling && typeof saved.spelling === 'object' ? saved.spelling : {});
   ['attempts', 'hinted', 'narrowed', 'revealed', 'done', 'order'].forEach(key => { if (!state.spelling[key] || typeof state.spelling[key] !== 'object') state.spelling[key] = {}; });
+  state.vault = Object.assign(vaultDefault(), saved?.vault && typeof saved.vault === 'object' ? saved.vault : {});
+  ['gems', 'peeks', 'diveMs', 'judged', 'judgeAttempts'].forEach(key => { if (!state.vault[key] || typeof state.vault[key] !== 'object') state.vault[key] = {}; });
+  ['flips', 'cleared'].forEach(key => { if (!Array.isArray(state.vault[key])) state.vault[key] = []; });
   if (!saved?.mindMapAnswers) {
     state.mindMapPlacements = {};
     state.selectedMindMapCard = '';
@@ -176,20 +187,20 @@
       case: [{ en: 'Read one incident record at a time.', ko: '사건 기록을 한 번에 한 문장씩 읽어요.' }],
       goal: [{ en: 'Choose the one question this case must solve.', ko: '이 사건에서 꼭 해결할 질문 하나를 골라요.' }],
       deduction: [
-        { en: 'Compare all three clue notes.', ko: '세 단서의 메모를 모두 비교해요.' },
-        { en: 'Choose the record that does not fit the evidence.', ko: '증거와 맞지 않는 기록 하나를 골라요.' }
+        { en: 'Remember your three gems first.', ko: '먼저 머릿속 보석 세 개를 떠올려요.' },
+        { en: 'Read one record at a time. TRUE or FAKE?', ko: '기록을 한 장씩 읽고 TRUE인지 FAKE인지 판정해요.' }
       ],
       reading: [{ en: 'Read one sentence at a time. Watch how the evidence tests an old claim.', ko: '한 문장씩 읽으며 증거가 옛 주장을 어떻게 검증하는지 살펴봐요.' }],
       wordhunt: [
-        { en: 'Read the whole sentence first.', ko: '문장을 끝까지 먼저 읽어요.' },
-        { en: 'Tap the one word that sounds right but is wrong.', ko: '소리는 맞는 것 같지만 뜻이 틀린 낱말 하나를 눌러요.' }
+        { en: 'Listen to the sentence first.', ko: '먼저 문장을 들어요.' },
+        { en: 'Tap the one word that is written differently.', ko: '들은 소리와 다르게 적힌 낱말 하나를 눌러요.' }
       ],
       spelling: [
         { en: 'Read the meaning, then look at every letter.', ko: '뜻을 읽고, 글자를 하나씩 봐요.' },
         { en: 'Only one word is spelled correctly.', ko: '바르게 쓴 낱말은 하나뿐이에요.' }
       ],
       mindmap: [
-        { en: 'Complete one card, then place it on the matching branch.', ko: '카드 하나의 빈칸을 채운 뒤 알맞은 가지에 놓아요.' },
+        { en: 'Fill in one missing word, then tap its place on the poster.', ko: '빈칸 낱말 하나를 쓰고, 포스터에서 그 카드의 자리를 눌러요.' },
         { en: 'Work with one card at a time.', ko: '한 번에는 카드 하나만 다뤄요.' }
       ],
       retell: [
@@ -221,8 +232,11 @@
     const spDone = state.spelling ? Object.keys(state.spelling.done).length : 0;
     if (spDone) parts.push(`진짜 낱말 ${spDone}/${spellingItems.length}`);
     if (whDone || Object.keys(wh.attempts).length) parts.push(`소리 닮은 말 ${whDone}/6 · 단서 없이 ${counts.spontaneousDetections} · 답 제시 ${Object.keys(wh.revealed).length}`);
-    if (state.mindMapSolved) parts.push('마인드맵 ✓'); else if (state.mindMapAttempts) parts.push(`마인드맵 시도 ${state.mindMapAttempts}`);
-    return { screen: state.screen, screenLabel: screenLabels[state.screen] || state.screen, summary: parts.join(' · '), notes: orderedNotes().join(' | '), retell: state.retell.slice(0, 240), done: state.screen === 'solved', sessionNo: 1, helpRequestedAt: state.helpRequestedAt || 0, helpRequests: state.helpRequests || 0 };
+    if (state.mindMapSolved) parts.push('인포그래픽 ✓'); else if (state.mindMapAttempts) parts.push(`인포그래픽 시도 ${state.mindMapAttempts}`);
+    const vs = vaultStats();
+    if (vs.memory + vs.detective) parts.push(`금고 ${gemIcons()}${vs.boss ? ' · 보스 ✓' : ''}`);
+    return { screen: state.screen, screenLabel: screenLabels[state.screen] || state.screen, summary: parts.join(' · '), notes: orderedNotes().join(' | '), retell: state.retell.slice(0, 240), done: state.screen === 'solved', sessionNo: 1, helpRequestedAt: state.helpRequestedAt || 0, helpRequests: state.helpRequests || 0,
+      vault: { memory: vs.memory, detective: vs.detective, boss: vs.boss, bare: vs.bare, combo: vs.bestCombo, peeks: vs.peeks, flips: vs.flips, diving: Boolean(diveTimer), stage: vaultStage() } };
   }
   function clueById(id) { return clues.find(clue => clue.id === id); }
   function escapeHtml(value) {
@@ -384,6 +398,46 @@
     saveState();
   }
 
+  /* ---------- 기억 금고 작전: 공용 계산 ---------- */
+  function vaultStats() {
+    const v = state.vault || vaultDefault();
+    let memory = 0, detective = 0, combo = 0, bestCombo = 0;
+    state.discoveryOrder.forEach(id => {
+      const gem = v.gems[id];
+      if (gem === 'memory') { memory += 1; combo += 1; bestCombo = Math.max(bestCombo, combo); }
+      else if (gem === 'detective') { detective += 1; combo = 0; }
+    });
+    const peeks = Object.values(v.peeks).reduce((sum, n) => sum + (Number(n) || 0), 0);
+    const boss = state.selectedRecord === 'old' && Object.keys(v.judged || {}).length >= 3;
+    return { memory, detective, combo, bestCombo, peeks, flips: v.flips.length, boss, bare: boss && v.flips.length === 0 };
+  }
+  function gemIcons() {
+    return state.discoveryOrder.map(id => state.vault.gems[id] === 'memory' ? '💎' : state.vault.gems[id] === 'detective' ? '🔎' : '').join('');
+  }
+  function vaultStage() {
+    if (state.selectedRecord === 'old' && Object.keys(state.vault.judged || {}).length >= 3) return 'boss-cleared';
+    if (Object.keys(state.notes).length === 3) return 'boss';
+    if (diveTimer) return 'diving';
+    if (state.searchPhase === 'sheet' && state.activeClue) return 'vault';
+    return 'search';
+  }
+  function renderVaultHud() {
+    const vs = vaultStats();
+    const noted = Object.keys(state.notes).length;
+    const steps = [0, 1, 2].map(index => {
+      const id = state.discoveryOrder[index];
+      const gem = id ? state.vault.gems[id] : '';
+      const current = !gem && (index === noted);
+      const icon = gem === 'memory' ? '💎' : gem === 'detective' ? '🔎' : '🔒';
+      return `<li class="${gem ? 'done' : current ? 'current' : ''}"><span aria-hidden="true">${icon}</span>금고 ${index + 1}</li>`;
+    }).join('');
+    const bossClass = vs.boss ? 'done' : noted === 3 ? 'current' : '';
+    const combo = vs.combo >= 2 && !vs.boss ? `<span class="hud-combo">🔥 연속 기억 ×${vs.combo}</span>` : '';
+    const html = `<span class="hud-title"><b>MISSION</b>기억 금고 작전</span><ol class="hud-steps">${steps}<li class="boss ${bossClass}"><span aria-hidden="true">${vs.boss ? '🏴‍☠️' : '👾'}</span>가짜 기록</li></ol>${combo}<span class="hud-gems" aria-label="모은 보석">💎 ${vs.memory} <i>·</i> 🔎 ${vs.detective}</span>`;
+    document.querySelectorAll('[data-vault-hud]').forEach(el => { el.innerHTML = html; });
+  }
+
+  /* ---------- 3. 단서 수색 → 잠그기 → 잠수 → 금고 ---------- */
   function renderSearch() {
     const sheetMode = state.searchPhase === 'sheet' && state.activeClue;
     byId('searchMapPhase').hidden = sheetMode;
@@ -395,9 +449,10 @@
       button.setAttribute('aria-label', found ? '찾은 단서 다시 보기' : button.getAttribute('aria-label'));
     });
     byId('mapStatus').textContent = state.found.length === 0
-      ? '그림 속에 보호색 단서 세 개가 숨어 있어요.'
-      : state.found.length === 3 ? '단서 세 개를 모두 찾았어요.' : `찾았다! 아직 ${3 - state.found.length}개가 숨어 있어요.`;
+      ? '그림 속에 보호색 단서 세 개가 숨어 있어요. 찾으면 금고가 하나씩 열려요.'
+      : state.found.length === 3 ? '단서 세 개를 모두 찾았어요.' : `찾았다! 아직 금고 ${3 - state.found.length}개가 기다려요.`;
     if (sheetMode) renderMemorySheet();
+    renderVaultHud();
     updateStrategyDock();
     updateCoachPanel();
   }
@@ -416,64 +471,145 @@
     updateWordBank();
     openClueDialog(id, false);
   }
+  let clueShownAt = 0;
   function openClueDialog(id, review) {
     const clue = clueById(id);
     if (!clue) return;
     const discoveryNumber = state.discoveryOrder.indexOf(id) + 1;
-    byId('clueDialog').dataset.clueId = id;
-    byId('clueDialog').dataset.review = String(review);
-    byId('clueDialogKicker').textContent = review ? 'CLUE REVIEW' : `CLUE FOUND · ${discoveryNumber} OF 3`;
+    const dialog = byId('clueDialog');
+    dialog.dataset.clueId = id;
+    dialog.dataset.review = String(review);
+    dialog.classList.toggle('is-review', review);
+    byId('clueDialogKicker').textContent = review ? 'PEEK · 살짝 다시 보기' : `VAULT ${discoveryNumber} OF 3 · 잠수 깊이 ${DIVE_DEPTH[discoveryNumber - 1] || '30m'}`;
     byId('clueDialogTitle').textContent = clue.title;
     if (caseVocab) caseVocab.render(byId('clueDialogText'), clue.sentence); else byId('clueDialogText').textContent = clue.sentence;
     byId('clueDialogSymbol').className = `clue-symbol ${clue.symbol}`;
-    byId('clueDialogAction').textContent = review ? (state.searchPhase === 'sheet' ? '시트로 돌아가기' : '탐색으로 돌아가기') : '기억하고 시트 작성하기';
-    byId('clueDialog').showModal();
+    byId('clueDialogTip').textContent = review
+      ? '다시 꼭 붙들어요. 닫으면 금고까지 한 번 더 짧게 잠수해요.'
+      : '숫자 하나, 핵심 낱말 하나를 속으로 두 번 말해요. 다 외웠으면 금고를 잠가요.';
+    const pendingSheet = state.searchPhase === 'sheet' && state.activeClue && !state.notes[state.activeClue];
+    byId('clueDialogAction').textContent = review ? (pendingSheet ? '🔒 다시 잠그고 잠수하기' : state.searchPhase === 'sheet' ? '금고로 돌아가기' : '탐색으로 돌아가기') : '🔒 기억 잠그기';
+    clueShownAt = performance.now();
+    dialog.showModal();
   }
   function closeClueDialog() {
     const dialog = byId('clueDialog');
     const review = dialog.dataset.review === 'true';
+    const readMs = Math.round(performance.now() - clueShownAt);
     dialog.close();
-    if (review) return;
+    if (review) {
+      if (state.searchPhase === 'sheet' && state.activeClue && !state.notes[state.activeClue]) startDive('redive', REDIVE_SECONDS);
+      return;
+    }
+    signals.log('memory-lock', { activityId: 'clue-notes', itemId: 'note-' + dialog.dataset.clueId, readMs });
     state.searchPhase = 'sheet';
-    renderSearch();
+    const index = Math.max(0, state.discoveryOrder.indexOf(state.activeClue));
+    startDive('dive', DIVE_SECONDS[index] || 3);
     saveState();
   }
-
+  function startDive(kind, seconds) {
+    clearInterval(diveTimer);
+    diveKind = kind;
+    diveTotal = seconds;
+    diveStartedAt = Date.now();
+    diveEndsAt = diveStartedAt + seconds * 1000;
+    diveTimer = setInterval(tickDive, 200);
+    renderSearch();
+    liveMirror?.publishSoon(100);
+  }
+  function tickDive() {
+    const left = Math.max(0, Math.ceil((diveEndsAt - Date.now()) / 1000));
+    const count = byId('diveCount');
+    if (count) count.textContent = String(left);
+    const gauge = byId('diveGauge');
+    if (gauge) gauge.style.height = `${Math.min(100, ((Date.now() - diveStartedAt) / (diveTotal * 1000)) * 100)}%`;
+    if (Date.now() < diveEndsAt) return;
+    clearInterval(diveTimer);
+    diveTimer = 0;
+    const id = state.activeClue;
+    state.vault.diveMs[id] = (state.vault.diveMs[id] || 0) + diveTotal * 1000;
+    signals.log('memory-hold', { activityId: 'clue-notes', itemId: 'note-' + id, holdMs: diveTotal * 1000, kind: diveKind });
+    saveState();
+    renderSearch();
+    byId('memoryRows').querySelector('.memory-row.active')?.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+  }
+  function diveMarkup(active) {
+    const index = Math.max(0, state.discoveryOrder.indexOf(active.id));
+    const depth = diveKind === 'redive' ? '다시 잠수' : `깊이 ${DIVE_DEPTH[index] || '30m'}`;
+    const bubbles = Array.from({ length: 6 }, (_, i) => `<button type="button" class="dive-bubble b${i + 1}" data-bubble aria-label="방울 터뜨리기" tabindex="-1"></button>`).join('');
+    return `<article class="memory-row active dive-row" aria-live="polite">
+      <div class="dive-panel">
+        <div class="dive-sonar" aria-hidden="true"><i class="dive-gauge" id="diveGauge"></i><b id="diveCount">${diveTotal}</b></div>
+        <div class="dive-copy"><small>DIVE · ${depth}</small><h3>기억을 꼭 붙들고 금고까지 내려가요</h3><p>잠그기 전에 본 문장을 속으로 되뇌어요. 🫧 방울은 톡톡 터뜨려도 괜찮아요.</p></div>
+      </div>
+      <div class="dive-sea" aria-hidden="true">${bubbles}</div>
+    </article>`;
+  }
   function renderMemorySheet() {
     const active = clueById(state.activeClue);
     if (!active) return;
-    byId('sheetCounter').textContent = `${Object.keys(state.notes).length} / 3 기록`;
-    byId('memoryProgress').innerHTML = clues.map((clue, index) => {
-      const found = state.found.includes(clue.id);
-      const noted = Boolean(state.notes[clue.id]);
-      const current = clue.id === state.activeClue;
-      return `<div class="${noted ? 'done' : current ? 'current' : found ? 'found' : ''}"><i>${index + 1}</i><span>${noted ? '기록 완료' : current ? '체크 중' : found ? '발견' : '숨은 단서'}</span></div>`;
+    byId('sheetCounter').textContent = `${Object.keys(state.notes).length} / 3 금고`;
+    byId('memoryProgress').innerHTML = state.discoveryOrder.concat(clues.map(c => c.id).filter(id => !state.discoveryOrder.includes(id))).map((id, index) => {
+      const found = state.found.includes(id);
+      const noted = Boolean(state.notes[id]);
+      const current = id === state.activeClue;
+      const gem = state.vault.gems[id];
+      return `<div class="${noted ? 'done' : current ? 'current' : found ? 'found' : ''}"><i>${noted ? (gem === 'memory' ? '💎' : '🔎') : index + 1}</i><span>${noted ? (gem === 'memory' ? '기억 보석' : '탐정 보석') : current ? (diveTimer ? '잠수 중' : '다이얼 맞추는 중') : found ? '발견' : '잠긴 금고'}</span></div>`;
     }).join('');
 
     const completed = state.discoveryOrder.filter(id => state.notes[id] && id !== state.activeClue).map(id => {
-      const clue = clueById(id);
-      return `<article class="memory-row complete"><div><small>CHECKED FACT</small><strong>${escapeHtml(state.notes[id])}</strong></div><button type="button" data-review-clue="${id}" data-track="hint">단서 다시 보기</button></article>`;
+      const gem = state.vault.gems[id];
+      return `<article class="memory-row complete"><div><small>${gem === 'memory' ? '💎 MEMORY GEM' : '🔎 DETECTIVE GEM'}</small><strong>${escapeHtml(state.notes[id])}</strong></div><button type="button" data-review-clue="${id}" data-track="hint">살짝 다시 보기</button></article>`;
     }).join('');
-    const choices = active.options.map(option => {
+    const diving = Boolean(diveTimer);
+    const solved = Boolean(state.notes[active.id]);
+    byId('reviewActiveClueButton').hidden = diving || solved;
+    if (diving) {
+      byId('memoryRows').innerHTML = completed + diveMarkup(active);
+      byId('sheetFeedback').textContent = '잠수하는 동안 문장은 보이지 않아요. 머릿속에서 꼭 붙들어요.';
+      byId('sheetFeedback').className = 'sheet-feedback';
+      byId('sheetNextButton').hidden = true;
+      return;
+    }
+    const choices = active.options.filter(option => !state.notes[active.id] || option === state.notes[active.id]).map(option => {
       const selected = state.notes[active.id] === option;
       return `<button type="button" data-memory-note="${escapeHtml(option)}" data-item-id="note-${active.id}" data-correct="${option === active.correct}" data-track="answer" class="${selected ? 'selected correct' : ''}"><i aria-hidden="true"></i><span>${escapeHtml(option)}</span></button>`;
     }).join('');
-    byId('memoryRows').innerHTML = `${completed}<article class="memory-row active"><div class="memory-question"><small>CLUE ${state.discoveryOrder.indexOf(active.id) + 1}</small><h3>${escapeHtml(active.reviewPrompt)}</h3><p>단서 문장은 보이지 않아요. 기억나는 핵심 정보에 체크하세요.</p></div><div class="memory-options">${choices}</div></article>`;
-    const solved = Boolean(state.notes[active.id]);
+    const gem = state.vault.gems[active.id];
+    const vs = vaultStats();
+    const reward = solved
+      ? `<div class="vault-reward ${gem}" role="status"><span class="reward-gem" aria-hidden="true">${gem === 'memory' ? '💎' : '🔎'}</span><div><strong>${gem === 'memory' ? '기억 보석 획득!' : '탐정 보석 획득!'}</strong><small>${gem === 'memory' ? '다시 보지 않고 기억만으로 금고를 열었어요.' : '다시 보고 확인해서 정확하게 열었어요. 이것도 탐정의 방법이에요.'}${gem === 'memory' && vs.combo >= 2 ? ` 🔥 연속 기억 ×${vs.combo}` : ''}</small></div></div>`
+      : '';
+    const attempts = state.noteAttempts[active.id] || 0;
+    byId('memoryRows').innerHTML = `${completed}<article class="memory-row active vault-row${solved ? ' is-open' : ''}${attempts && !solved ? ' is-retry' : ''}"><div class="memory-question"><small>🔐 VAULT ${state.discoveryOrder.indexOf(active.id) + 1} · 다이얼 맞추기</small><h3>${escapeHtml(active.reviewPrompt)}</h3><p>${solved ? '금고가 열렸어요!' : '기억해 둔 핵심 정보가 금고의 비밀번호예요. 하나를 골라요.'}</p></div>${reward}<div class="memory-options">${choices}</div></article>`;
     signals.decorate(byId('memoryRows').querySelectorAll('[data-memory-note]'), 'clue-notes', 'note-' + active.id, button => button.dataset.memoryNote === active.correct);
-    if (!solved) signals.ready('clue-notes', 'note-' + active.id, { textNode: byId('memoryRows'), attempts: state.noteAttempts[active.id] || 0, measureId: 'case.clue-note' });
+    if (!solved) signals.ready('clue-notes', 'note-' + active.id, { textNode: byId('memoryRows'), attempts, measureId: 'case.clue-note' });
     const nextButton = byId('sheetNextButton');
     if (Object.keys(state.notes).length === 3) { nextButton.dataset.track = 'activity-complete'; nextButton.dataset.activityId = 'clue-notes'; }
     else { delete nextButton.dataset.track; delete nextButton.dataset.activityId; }
-    byId('sheetFeedback').textContent = solved ? '중요한 정보를 남겼어요. 이제 다음 단서를 찾을 수 있어요.' : '단서 문장을 떠올리며 핵심 정보 하나를 고르세요.';
+    byId('sheetFeedback').textContent = solved ? (Object.keys(state.notes).length === 3 ? '금고 세 개가 모두 열렸어요. 이제 가짜 기록을 잡으러 가요!' : '보석을 챙겼어요. 다음 금고를 찾으러 가요.') : attempts >= 2 ? '다이얼이 잘 안 맞으면 「살짝 다시 보기」를 써도 괜찮아요. 보고 나서 한 번 더 잠수해요.' : '잠그기 전에 본 문장을 떠올리며 하나를 골라요.';
     byId('sheetFeedback').className = `sheet-feedback${solved ? ' success' : ''}`;
-    byId('sheetNextButton').hidden = !solved;
-    byId('sheetNextButton').textContent = Object.keys(state.notes).length === 3 ? '세 기록 맞춰 보기' : '다음 단서 찾기';
-    byId('reviewActiveClueButton').hidden = false;
+    byId('reviewActiveClueButton').classList.toggle('is-suggested', attempts >= 2 && !solved);
+    nextButton.hidden = !solved;
+    nextButton.textContent = Object.keys(state.notes).length === 3 ? '👾 가짜 기록 잡으러 가기' : '다음 금고 찾기';
+  }
+  function peekClue(id, source) {
+    const activeId = state.activeClue;
+    if (activeId && !state.notes[activeId]) state.vault.peeks[activeId] = (state.vault.peeks[activeId] || 0) + 1;
+    signals.hint('clue-notes', 'note-' + activeId, { helpLevel: 'A3', helpType: 'clue-review', reviewedClue: id, trigger: source });
+    signals.decorateLater(byId('memoryRows').querySelectorAll('[data-memory-note]'), 'clue-notes', 'note-' + activeId, b => b.dataset.memoryNote === clueById(activeId).correct);
+    saveState();
+    openClueDialog(id, true);
   }
   function handleMemorySheet(event) {
+    if (event.target.closest('[data-bubble]')) {
+      const bubble = event.target.closest('[data-bubble]');
+      bubble.classList.remove('popped'); void bubble.offsetWidth; bubble.classList.add('popped');
+      return;
+    }
+    if (diveTimer) return;
     const review = event.target.closest('[data-review-clue]');
-    if (review) { signals.hint('clue-notes', 'note-' + state.activeClue, { helpLevel: 'A3', helpType: 'clue-review', reviewedClue: review.dataset.reviewClue }); signals.decorateLater(byId('memoryRows').querySelectorAll('[data-memory-note]'), 'clue-notes', 'note-' + state.activeClue, b => b.dataset.memoryNote === clueById(state.activeClue).correct); openClueDialog(review.dataset.reviewClue, true); return; }
+    if (review) { peekClue(review.dataset.reviewClue, 'other-clue'); return; }
     const button = event.target.closest('[data-memory-note]');
     if (!button || !state.activeClue) return;
     const clue = clueById(state.activeClue);
@@ -485,16 +621,22 @@
     button.classList.add('selected');
     if (button.dataset.memoryNote !== clue.correct) {
       button.classList.add('incorrect');
-      byId('sheetFeedback').textContent = '아직 핵심 정보가 달라요. 잠시 떠올리거나 단서를 다시 보세요.';
+      const row = button.closest('.vault-row');
+      if (row) { row.classList.remove('dial-miss'); void row.offsetWidth; row.classList.add('dial-miss'); }
+      byId('sheetFeedback').textContent = state.noteAttempts[clue.id] >= 2
+        ? '딸깍, 아직 안 맞아요. 「살짝 다시 보기」로 문장을 확인해도 보석은 그대로 받아요.'
+        : '딸깍, 다이얼이 아직 안 맞아요. 숫자나 핵심 낱말을 다시 떠올려 봐요.';
       byId('sheetFeedback').className = 'sheet-feedback attention';
+      byId('reviewActiveClueButton').classList.toggle('is-suggested', state.noteAttempts[clue.id] >= 2);
       saveState();
       return;
     }
     state.notes[clue.id] = clue.correct;
-    button.classList.add('correct');
-    renderMemorySheet();
-    updateCoachPanel();
+    state.vault.gems[clue.id] = state.vault.peeks[clue.id] ? 'detective' : 'memory';
+    signals.log('vault-open', { activityId: 'clue-notes', itemId: 'note-' + clue.id, gem: state.vault.gems[clue.id], attempts: state.noteAttempts[clue.id], peeks: state.vault.peeks[clue.id] || 0 });
+    renderSearch();
     saveState();
+    setTimeout(() => byId('sheetNextButton').scrollIntoView({ block: 'nearest', behavior: 'smooth' }), 600);
   }
   function nextSearchStep() {
     if (!state.notes[state.activeClue]) return;
@@ -505,39 +647,139 @@
     saveState();
   }
 
+  /* ---------- 4. 보스: 가짜 기록 잡기 ---------- */
   function orderedNotes() { return clues.map(clue => state.notes[clue.id]).filter(Boolean); }
-  function renderDeduction() {
-    byId('miniEvidenceBoard').innerHTML = orderedNotes().map(note => `<div>${escapeHtml(note)}</div>`).join('');
-    document.querySelectorAll('[data-record]').forEach(button => {
-      button.classList.remove('selected', 'correct', 'incorrect');
-      if (button.dataset.record === state.selectedRecord) button.classList.add('selected', state.selectedRecord === 'old' ? 'correct' : 'incorrect');
-    });
-    byId('deductionContinueButton').disabled = state.selectedRecord !== 'old';
-    signals.decorate(document.querySelectorAll('[data-record]'), 'deduction', 'record', button => button.dataset.record === 'old');
-    if (state.selectedRecord !== 'old') signals.ready('deduction', 'record', { textNode: byId('deductionScreen'), attempts: state.deductionAttempts, measureId: 'case.deduction' });
+  /* 4번 보스: 기록을 한 장씩 넘기며 TRUE / FAKE 판정. 한 화면엔 기록 한 문장만 둔다.
+     보석 아이콘(💎/🔎)을 누르면 그 단서 문장 하나가 잠깐 보인다(도움 A1, 뒤집기로 기록). */
+  const archiveRecords = [
+    { id: 'compartment', text: 'The Titanic had 16 compartments designed to limit flooding.', fake: false, ok: 'TRUE ✓ 보석과 맞아요. 구획은 16개였어요.' },
+    { id: 'old', text: 'The Titanic cannot sink, so nobody on board will ever need a lifeboat.', fake: true, ok: 'FAKE! 구명보트는 절반만 탈 수 있었어요. 가짜 기록을 잡았어요!' },
+    { id: 'sailing', text: 'The Titanic sailed from Southampton on April 10, 1912.', fake: false, ok: 'TRUE ✓ 보석과 맞아요. 4월 10일에 출항했어요.' }
+  ];
+  let gemPeekTimer = 0;
+  function bossIndex() {
+    const i = archiveRecords.findIndex(r => !state.vault.judged[r.id]);
+    return i < 0 ? archiveRecords.length : i;
   }
-  function handleRecord(event) {
-    const button = event.target.closest('[data-record]');
+  function renderDeduction() {
+    if (state.selectedRecord === 'old' && !archiveRecords.every(r => state.vault.judged[r.id])) state.selectedRecord = '';  /* 이전 판(기록 고르기)에서 남은 완료 표시 정리 */
+    const solved = state.selectedRecord === 'old';
+    const index = Math.min(state.vault.slide || 0, archiveRecords.length - 1);
+    const record = archiveRecords[index];
+    const judged = state.vault.judged[record.id];
+    document.querySelector('#deductionScreen .boss-card').classList.toggle('is-cleared', solved);
+    byId('gemPeekRow').innerHTML = `<small>MY GEMS</small>` + clues.filter(clue => state.notes[clue.id]).map((clue, i) => {
+      const gem = state.vault.gems[clue.id] === 'memory' ? '💎' : '🔎';
+      return `<button type="button" data-gem-peek="${clue.id}" data-track="hint" data-help-level="A1" data-help-type="evidence-flip" aria-label="보석 ${i + 1}의 단서 잠깐 보기">${gem}<i>${i + 1}</i></button>`;
+    }).join('');
+    byId('recordDots').innerHTML = archiveRecords.map((r, i) => `<i class="${state.vault.judged[r.id] ? (r.fake ? 'fake' : 'true') : ''}${i === index ? ' now' : ''}"></i>`).join('');
+    byId('recordCounter').textContent = `SHIPYARD ARCHIVE · No. ${index + 1} / ${archiveRecords.length}`;
+    byId('recordText').textContent = record.text;
+    const slide = byId('recordSlide');
+    slide.classList.toggle('is-true', judged === 'true');
+    slide.classList.toggle('is-fake', judged === 'fake');
+    document.querySelectorAll('[data-judge]').forEach(button => {
+      button.dataset.itemId = 'record-' + record.id;
+      button.dataset.correct = String((button.dataset.judge === 'fake') === record.fake);
+      button.disabled = Boolean(judged);
+      button.classList.remove('incorrect');
+    });
+    byId('judgeRow').hidden = Boolean(judged);
+    const last = index >= archiveRecords.length - 1;
+    byId('recordNextButton').hidden = !judged || last;
+    byId('deductionContinueButton').hidden = !solved;
+    byId('deductionContinueButton').disabled = !solved;
+    if (judged) { byId('deductionFeedback').textContent = record.ok; byId('deductionFeedback').className = 'feedback-line success'; }
+    else if (!byId('deductionFeedback').classList.contains('attention')) { byId('deductionFeedback').textContent = 'Is this record TRUE or FAKE? 보석과 맞으면 TRUE, 맞지 않으면 FAKE.'; byId('deductionFeedback').className = 'feedback-line'; }
+    renderBossSummary();
+    renderVaultHud();
+    signals.decorate(document.querySelectorAll('[data-judge]'), 'deduction', 'record-' + record.id, button => (button.dataset.judge === 'fake') === record.fake);
+    if (!judged) signals.ready('deduction', 'record-' + record.id, { textNode: byId('recordSlide'), attempts: (state.vault.judgeAttempts || {})[record.id] || 0, measureId: 'case.deduction' });
+  }
+  function renderBossSummary() {
+    const box = byId('bossSummary');
+    if (!box) return;
+    const vs = vaultStats();
+    box.hidden = !vs.boss;
+    if (!vs.boss) return;
+    const badges = [
+      `<li><b>🔐</b>3/3</li>`,
+      `<li><b>${gemIcons()}</b></li>`,
+      vs.bestCombo >= 2 ? `<li><b>🔥</b>×${vs.bestCombo}</li>` : '',
+      vs.bare ? `<li class="gold"><b>🏆</b>맨기억 보너스</li>` : ''
+    ].join('');
+    box.innerHTML = `<strong>MISSION CLEAR!</strong><ul>${badges}</ul>`;
+  }
+  function handleGemPeek(event) {
+    const button = event.target.closest('[data-gem-peek]');
     if (!button) return;
-    if (state.selectedRecord === 'old') return;
-    state.deductionAttempts += 1;
-    signals.respond('deduction', 'record', { correct: button.dataset.record === 'old', value: button.dataset.record, expected: 'old', visibleTextLen: signals.textLength(byId('deductionScreen')), measureId: 'case.deduction' });
-    signals.decorateLater(document.querySelectorAll('[data-record]'), 'deduction', 'record', b => b.dataset.record === 'old');
-    state.selectedRecord = button.dataset.record;
-    document.querySelectorAll('[data-record]').forEach(choice => choice.classList.remove('selected', 'correct', 'incorrect'));
-    button.classList.add('selected');
+    const id = button.dataset.gemPeek;
+    const record = archiveRecords[Math.min(state.vault.slide || 0, archiveRecords.length - 1)];
     if (state.selectedRecord !== 'old') {
-      button.classList.add('incorrect');
-      byId('deductionFeedback').textContent = 'Compare this record with each of the three facts again.';
-      byId('deductionFeedback').className = 'feedback-line attention';
-      byId('deductionContinueButton').disabled = true;
-    } else {
-      button.classList.add('correct');
-      byId('deductionFeedback').textContent = 'Correct. This record does not match the three safety clues.';
-      byId('deductionFeedback').className = 'feedback-line success';
-      byId('deductionContinueButton').disabled = false;
+      if (!state.vault.flips.includes(id)) state.vault.flips.push(id);
+      signals.hint('deduction', 'record-' + record.id, { helpLevel: 'A1', helpType: 'evidence-flip', reviewedClue: id });
+      signals.decorateLater(document.querySelectorAll('[data-judge]'), 'deduction', 'record-' + record.id, b => (b.dataset.judge === 'fake') === record.fake);
+      saveState();
     }
+    const bubble = byId('gemPeekBubble');
+    bubble.textContent = state.notes[id] || '';
+    bubble.hidden = false;
+    document.querySelectorAll('[data-gem-peek]').forEach(b => b.classList.toggle('on', b === button));
+    clearTimeout(gemPeekTimer);
+    gemPeekTimer = setTimeout(() => { bubble.hidden = true; document.querySelectorAll('[data-gem-peek]').forEach(b => b.classList.remove('on')); }, 3500);
+    renderVaultHud();
+  }
+  function handleJudge(event) {
+    const button = event.target.closest('[data-judge]');
+    if (!button || button.disabled) return;
+    const index = Math.min(state.vault.slide || 0, archiveRecords.length - 1);
+    const record = archiveRecords[index];
+    if (state.vault.judged[record.id]) return;
+    const pickFake = button.dataset.judge === 'fake';
+    const correct = pickFake === record.fake;
+    state.vault.judgeAttempts = state.vault.judgeAttempts || {};
+    state.vault.judgeAttempts[record.id] = (state.vault.judgeAttempts[record.id] || 0) + 1;
+    state.deductionAttempts += 1;
+    signals.respond('deduction', 'record-' + record.id, { correct, value: button.dataset.judge, expected: record.fake ? 'fake' : 'true', visibleTextLen: signals.textLength(byId('recordSlide')), measureId: 'case.deduction' });
+    signals.decorateLater(document.querySelectorAll('[data-judge]'), 'deduction', 'record-' + record.id, b => (b.dataset.judge === 'fake') === record.fake);
+    if (!correct) {
+      button.classList.add('incorrect');
+      const slide = byId('recordSlide');
+      slide.classList.remove('dial-miss'); void slide.offsetWidth; slide.classList.add('dial-miss');
+      byId('deductionFeedback').textContent = state.vault.judgeAttempts[record.id] >= 2
+        ? '보석 아이콘을 눌러 단서를 잠깐 확인해 봐요.'
+        : '음, 보석과 한 번 더 맞춰 봐요.';
+      byId('deductionFeedback').className = 'feedback-line attention';
+      byId('gemPeekRow').classList.toggle('is-suggested', state.vault.judgeAttempts[record.id] >= 2);
+      saveState();
+      return;
+    }
+    state.vault.judged[record.id] = record.fake ? 'fake' : 'true';
+    byId('gemPeekRow').classList.remove('is-suggested');
+    if (archiveRecords.every(r => state.vault.judged[r.id])) {
+      state.selectedRecord = 'old';
+      signals.log('boss-cleared', { activityId: 'deduction', flips: state.vault.flips.length, attempts: state.deductionAttempts });
+    }
+    renderDeduction();
     saveState();
+  }
+  function nextRecord() {
+    const index = state.vault.slide || 0;
+    if (!state.vault.judged[archiveRecords[index].id] || index >= archiveRecords.length - 1) return;
+    state.vault.slide = index + 1;
+    byId('deductionFeedback').className = 'feedback-line';
+    renderDeduction();
+    const slide = byId('recordSlide');
+    slide.classList.remove('slide-in'); void slide.offsetWidth; slide.classList.add('slide-in');
+    saveState();
+  }
+  function deductionKeys(event) {
+    if (state.screen !== 'deduction' || document.querySelector('dialog[open]')) return;
+    if (event.target.closest && event.target.closest('input, textarea, select')) return;
+    const key = event.key.toLowerCase();
+    if (key === 't' || key === '1') { byId('judgeRow').querySelector('[data-judge="true"]')?.click(); event.preventDefault(); }
+    else if (key === 'f' || key === '2') { byId('judgeRow').querySelector('[data-judge="fake"]')?.click(); event.preventDefault(); }
+    else if ((key === 'arrowright' || key === 'enter') && !byId('recordNextButton').hidden) { nextRecord(); event.preventDefault(); }
   }
 
   let sentenceShownAt = 0;
@@ -616,24 +858,32 @@
     const choices = byId('wordhuntChoices');
     const meaning = byId('wordhuntMeaning');
     const hintButton = byId('wordhuntHintButton');
-    const rereadButton = byId('wordhuntRereadButton');
+    const listenBar = byId('soundhuntListen');
+    const slowButton = byId('soundhuntSlowButton');
     const nextButton = byId('wordhuntNextButton');
     const continueButton = byId('wordhuntContinueButton');
     updateCoachPanel();
+    stopSoundHunt();
     sentence.classList.remove('is-note');
     choices.hidden = true; choices.replaceChildren();
     meaning.hidden = true; meaning.textContent = '';
-    hintButton.hidden = true; rereadButton.hidden = true; nextButton.hidden = true; continueButton.hidden = true;
+    hintButton.hidden = true; nextButton.hidden = true; continueButton.hidden = true;
+    listenBar.classList.remove('is-quiet');
+    byId('soundhuntPlayButton').hidden = false; slowButton.hidden = false;
     byId('wordhuntCounter').textContent = `${Math.min(wh.index + 1, wordHuntItems.length)} / ${wordHuntItems.length}`;
     if (wh.complete) {
+      listenBar.classList.add('is-quiet');
+      byId('soundhuntPlayButton').hidden = true; slowButton.hidden = true;
       sentence.classList.add('is-note');
-      sentence.innerHTML = `<span>여섯 문장의 소리 닮은 말을 모두 고쳤어요!</span><small>소리가 비슷해도 뜻을 보면 가려낼 수 있어요.</small>`;
-      byId('wordhuntLead').textContent = '이제 정리한 정보로 마인드맵을 만들어요.';
-      wordHuntFeedback('소리가 닮은 말은 문장의 뜻으로 확인해요.', 'success');
+      sentence.innerHTML = `<span>여섯 문장을 모두 고쳤어요!</span><small>귀로 듣고 글자를 맞춰 보면 가려낼 수 있어요.</small>`;
+      byId('wordhuntLead').textContent = '';
+      wordHuntFeedback('소리와 글자를 함께 확인했어요.', 'success');
       continueButton.hidden = false;
       return;
     }
     if (wh.phase === 'break') {
+      listenBar.classList.add('is-quiet');
+      byId('soundhuntPlayButton').hidden = true; slowButton.hidden = true;
       sentence.classList.add('is-note');
       sentence.innerHTML = `<span>${WORD_HUNT_BLOCK}개 문장을 고쳤어요. 잠깐 숨을 고르고 이어가요.</span><small>남은 문장 ${wordHuntItems.length - wh.index}개</small>`;
       byId('wordhuntLead').textContent = '준비되면 다음 문장으로 넘어가요.';
@@ -662,62 +912,108 @@
       chip.setAttribute('aria-label', isWrong && done ? `${item.answer} · 고친 낱말` : `${parts.core} 낱말`);
       sentence.append(chip);
     });
+    updateSoundHuntPlayButton();
     if (done) {
-      byId('wordhuntLead').textContent = '문장이 바르게 되었어요.';
+      byId('wordhuntLead').textContent = '바르게 고친 문장을 들어 봐요.';
+      slowButton.hidden = true;
       meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
-      wordHuntFeedback(`맞는 낱말: "${item.answer}". 소리가 닮은 말은 뜻으로 가려요.`, 'success');
+      wordHuntFeedback(`맞는 낱말: "${item.answer}"`, 'success');
       nextButton.hidden = false;
       const nextIndex = wh.index + 1;
       nextButton.textContent = nextIndex >= wordHuntItems.length ? '모두 고쳤어요' : (nextIndex % WORD_HUNT_BLOCK === 0 ? '잠깐 쉬기' : '다음 문장');
       return;
     }
     if (fixing) {
-      byId('wordhuntLead').textContent = '이 자리에 맞는 낱말을 골라요.';
-      rereadButton.hidden = false;
-      meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
+      byId('wordhuntLead').textContent = '들은 낱말을 골라요.';
+      if (wh.meaningShown[item.id]) { meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`; }
       choices.hidden = false;
       const label = document.createElement('p');
       label.className = 'wordhunt-fix-label';
-      label.textContent = 'WHICH WORD BELONGS HERE?';
+      label.textContent = 'WHICH WORD DID YOU HEAR?';
       choices.append(label);
       item.choices.forEach(choice => {
         const button = document.createElement('button');
         button.type = 'button';
         button.dataset.word = choice;
-        button.textContent = choice;
+        button.className = 'soundhunt-card';
+        button.innerHTML = `<span aria-hidden="true">🔊</span>${escapeHtml(choice)}`;
+        button.setAttribute('aria-label', choice);
         choices.append(button);
       });
       signals.decorate(choices.querySelectorAll('[data-word]'), wordHuntActivity, item.id + '-fix', button => button.dataset.word === item.answer);
       signals.ready(wordHuntActivity, item.id + '-fix', { textNode: choices, attempts: wh.fixAttempts[item.id] || 0, measureId: wordHuntMeasure, step: 'fix', discourseType: 'expository', inconsistencyType: 'lexical' });
-      if (!byId('wordhuntFeedback').textContent) wordHuntFeedback('세 낱말은 소리가 비슷해요. 문장의 뜻에 맞는 것을 골라요.');
       return;
     }
-    byId('wordhuntLead').textContent = '문장의 뜻을 보고, 소리는 비슷하지만 뜻이 맞지 않는 낱말 하나를 눌러요.';
-    meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
+    byId('wordhuntLead').textContent = wh.listens[item.id] ? '다르게 적힌 낱말을 눌러요.' : '먼저 ▶ 듣기를 눌러요.';
     hintButton.hidden = false;
-    rereadButton.hidden = false;
     hintButton.disabled = hinted;
     hintButton.textContent = hinted ? '두 낱말로 좁혔어요' : '두 낱말로 좁히기';
     signals.decorate(sentence.querySelectorAll('.wordhunt-word'), wordHuntActivity, item.id, chip => Number(chip.dataset.wordIndex) === item.wrong);
     signals.ready(wordHuntActivity, item.id, { textNode: sentence, attempts: wh.attempts[item.id] || 0, measureId: wordHuntMeasure, step: 'find', discourseType: 'expository', inconsistencyType: 'lexical' });
   }
-  function paceWords() {
-    const chips = [...byId('wordhuntSentence').querySelectorAll('.wordhunt-word')];
-    const reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-    chips.forEach((chip, index) => {
-      chip.classList.remove('pace');
-      if (reduce) return;
-      setTimeout(() => chip.classList.add('pace'), index * 320);
-      setTimeout(() => chip.classList.remove('pace'), index * 320 + 300);
-    });
+  /* 소리 듣기 — 로컬 mp3만 재생(assets/audio). 첫 듣기는 과제 제시, 그 뒤 다시 듣기·천천히 듣기는 A1 도움으로 기록. */
+  const soundHuntAudio = new Audio();
+  soundHuntAudio.preload = 'auto';
+  let soundHuntPaceTimers = [];
+  function clearSoundHuntPace() {
+    soundHuntPaceTimers.forEach(clearTimeout); soundHuntPaceTimers = [];
+    byId('wordhuntSentence').querySelectorAll('.wordhunt-word.pace').forEach(chip => chip.classList.remove('pace'));
   }
-  function wordHuntReread() {
+  function stopSoundHunt() {
+    try { soundHuntAudio.pause(); } catch (_) { /* ignore */ }
+    clearSoundHuntPace();
+    byId('soundhuntListen')?.classList.remove('is-playing');
+  }
+  function playSoundHunt(src, paceChips) {
+    stopSoundHunt();
+    soundHuntAudio.src = src;
+    soundHuntAudio.currentTime = 0;
+    byId('soundhuntListen').classList.add('is-playing');
+    if (paceChips && !window.matchMedia('(prefers-reduced-motion: reduce)').matches) {
+      soundHuntAudio.onplaying = () => {
+        soundHuntAudio.onplaying = null;
+        const chips = [...byId('wordhuntSentence').querySelectorAll('.wordhunt-word')];
+        const total = (Number.isFinite(soundHuntAudio.duration) ? soundHuntAudio.duration : 3.5) * 1000 * 0.9;
+        const step = total / Math.max(chips.length, 1);
+        chips.forEach((chip, index) => {
+          soundHuntPaceTimers.push(setTimeout(() => chip.classList.add('pace'), index * step));
+          soundHuntPaceTimers.push(setTimeout(() => chip.classList.remove('pace'), index * step + step * 0.95));
+        });
+      };
+    } else soundHuntAudio.onplaying = null;
+    soundHuntAudio.onended = () => { clearSoundHuntPace(); byId('soundhuntListen').classList.remove('is-playing'); };
+    const played = soundHuntAudio.play();
+    if (played && played.catch) played.catch(() => byId('soundhuntListen').classList.remove('is-playing'));
+  }
+  function updateSoundHuntPlayButton() {
     const wh = state.wordHunt;
-    if (wh.complete || wh.phase === 'break' || wh.phase === 'done') return;
+    const button = byId('soundhuntPlayButton');
+    if (wh.complete || wh.phase === 'break') return;
     const item = wordHuntItem();
-    wh.rereads[item.id] = (wh.rereads[item.id] || 0) + 1;
-    signals.hint(wordHuntActivity, wh.phase === 'fix' ? item.id + '-fix' : item.id, { helpLevel: 'A1', helpType: 'reread-pace', cueStage: 1, rereadCount: wh.rereads[item.id], trigger: 'child-request' });
-    paceWords();
+    const replay = Boolean(wh.listens[item.id]) && !wh.done[item.id];
+    byId('soundhuntPlayLabel').textContent = replay ? '한 번 더 듣기' : '듣기';
+    if (replay) {
+      button.dataset.track = 'hint'; button.dataset.helpLevel = 'A1'; button.dataset.helpType = 'replay-audio';
+    } else {
+      delete button.dataset.track; delete button.dataset.helpLevel; delete button.dataset.helpType;
+    }
+  }
+  function soundHuntListen(slow) {
+    const wh = state.wordHunt;
+    if (wh.complete || wh.phase === 'break') return;
+    const item = wordHuntItem();
+    const src = `assets/audio/${item.id}-sentence${slow ? '-slow' : ''}.mp3`;
+    if (wh.done[item.id]) { playSoundHunt(src, true); return; }
+    const first = !wh.listens[item.id];
+    wh.listens[item.id] = (wh.listens[item.id] || 0) + 1;
+    if (slow) wh.slowListens[item.id] = (wh.slowListens[item.id] || 0) + 1;
+    if (!first || slow) {
+      wh.rereads[item.id] = (wh.rereads[item.id] || 0) + 1;
+      signals.hint(wordHuntActivity, wh.phase === 'fix' ? item.id + '-fix' : item.id, { helpLevel: 'A1', helpType: slow ? 'slow-audio' : 'replay-audio', cueStage: 1, rereadCount: wh.rereads[item.id], trigger: 'child-request' });
+    }
+    playSoundHunt(src, true);
+    if (first && wh.phase === 'find') byId('wordhuntLead').textContent = '다르게 적힌 낱말을 눌러요.';
+    updateSoundHuntPlayButton();
     saveState(); updateCoachPanel();
   }
   function logMonitoringItem(item) {
@@ -762,21 +1058,21 @@
       wh.detectMs[item.id] = result.responseTimeMs;
       wh.findAccuracy[item.id] = result.accuracy || 'accurate';
       wh.phase = 'fix';
-      wordHuntFeedback(`찾았어요! 소리는 비슷하지만 뜻이 안 맞는 낱말: "${splitWord(item.words[item.wrong]).core}". 이제 맞는 낱말을 골라요.`, 'success');
+      wordHuntFeedback(`찾았어요! "${splitWord(item.words[item.wrong]).core}"는 다르게 적혔어요.`, 'success');
       saveState(); renderWordHunt();
       return;
     }
     byId('wordhuntSentence').querySelectorAll('.wordhunt-word').forEach(other => other.classList.remove('incorrect'));
     chip.classList.add('incorrect');
     if (attempt === 1) {
-      wordHuntFeedback('이 낱말은 문장에 잘 맞아요. 소리는 비슷한데 뜻이 이상한 낱말을 찾아 문장을 끝까지 다시 읽어요.', 'attention');
+      wordHuntFeedback('이 낱말은 소리와 같아요. 한 번 더 들으며 글자를 따라가 봐요.', 'attention');
       signals.decorateLater(byId('wordhuntSentence').querySelectorAll('.wordhunt-word'), wordHuntActivity, item.id, c => Number(c.dataset.wordIndex) === item.wrong);
     } else if (attempt === 2) {
       if (!wh.hinted[item.id]) {
         wh.hinted[item.id] = 'auto';
         signals.hint(wordHuntActivity, item.id, { helpLevel: 'A2', helpType: 'auto-narrow', cueStage: 2, trigger: 'second-miss' });
       }
-      wordHuntFeedback('두 낱말 중 하나예요. 어느 쪽이 문장의 뜻과 맞지 않나요?', 'attention');
+      wordHuntFeedback('두 낱말 중 하나예요. 어느 쪽이 들은 소리와 다른가요?', 'attention');
       setTimeout(renderWordHunt, 0);
     } else {
       wh.revealed[item.id] = true;
@@ -784,7 +1080,7 @@
       signals.hint(wordHuntActivity, item.id, { helpLevel: 'A4', helpType: 'reveal-answer', cueStage: 5, trigger: 'third-miss' });
       signals.close(wordHuntActivity, item.id, { resolution: 'revealed', measureId: wordHuntMeasure });
       wh.phase = 'fix';
-      wordHuntFeedback(`함께 볼게요. 뜻에 맞지 않는 낱말: "${splitWord(item.words[item.wrong]).core}". 이제 맞는 낱말을 골라요.`, 'attention');
+      wordHuntFeedback(`함께 볼게요. 다르게 적힌 낱말: "${splitWord(item.words[item.wrong]).core}"`, 'attention');
       setTimeout(renderWordHunt, 0);
     }
     saveState();
@@ -801,6 +1097,7 @@
     const result = signals.respond(wordHuntActivity, item.id + '-fix', { correct, value: button.dataset.word, expected: item.answer, step: 'fix', measureId: wordHuntMeasure, discourseType: 'expository', inconsistencyType: 'lexical', corrected: correct, rereadCount: wh.rereads[item.id] || 0 });
     byId('wordhuntChoices').querySelectorAll('[data-word]').forEach(other => other.classList.remove('selected', 'correct', 'incorrect'));
     button.classList.add('selected');
+    const wordSrc = `assets/audio/word-${button.dataset.word.toLowerCase()}.mp3`;
     if (correct) {
       button.classList.add('correct');
       wh.fixAccuracy[item.id] = result.accuracy || 'accurate';
@@ -809,16 +1106,21 @@
       logMonitoringItem(item);
       byId('wordhuntFeedback').textContent = '';
       saveState(); renderWordHunt();
+      playSoundHunt(wordSrc, false);
       return;
     }
     button.classList.add('incorrect');
+    playSoundHunt(wordSrc, false);
     if (attempt === 1) {
-      wordHuntFeedback('소리는 닮았지만 뜻이 달라요. 문장 전체의 뜻을 떠올리며 다시 골라요.', 'attention');
+      wordHuntFeedback('소리를 비교해 봐요. 문장을 한 번 더 듣고 다시 골라요.', 'attention');
       signals.decorateLater(byId('wordhuntChoices').querySelectorAll('[data-word]'), wordHuntActivity, item.id + '-fix', b => b.dataset.word === item.answer);
     } else if (attempt === 2) {
-      signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A1', helpType: 'reread-meaning', cueStage: 1, trigger: 'second-miss' });
-      wordHuntFeedback('위의 뜻을 한 번 더 읽고, 그 뜻에 맞는 낱말을 골라요.', 'attention');
-      setTimeout(renderWordHunt, 0);
+      wh.meaningShown[item.id] = true;
+      signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A2', helpType: 'show-meaning', cueStage: 4, trigger: 'second-miss' });
+      const meaning = byId('wordhuntMeaning');
+      meaning.hidden = false; meaning.textContent = `뜻: ${item.ko}`;
+      wordHuntFeedback('뜻을 보고, 그 뜻에 맞는 낱말을 골라요.', 'attention');
+      signals.decorateLater(byId('wordhuntChoices').querySelectorAll('[data-word]'), wordHuntActivity, item.id + '-fix', b => b.dataset.word === item.answer);
     } else {
       signals.hint(wordHuntActivity, item.id + '-fix', { helpLevel: 'A4', helpType: 'reveal-answer', cueStage: 5, trigger: 'third-miss' });
       signals.close(wordHuntActivity, item.id + '-fix', { resolution: 'revealed', measureId: wordHuntMeasure });
@@ -829,7 +1131,8 @@
       logMonitoringItem(item);
       byId('wordhuntFeedback').textContent = '';
       saveState(); renderWordHunt();
-      wordHuntFeedback(`함께 볼게요. 맞는 낱말: "${item.answer}".`, 'attention');
+      wordHuntFeedback(`함께 볼게요. 맞는 낱말: "${item.answer}"`, 'attention');
+      playSoundHunt(`assets/audio/word-${item.answer.toLowerCase()}.mp3`, false);
       return;
     }
     saveState();
@@ -841,7 +1144,7 @@
     if (wh.hinted[item.id]) return;
     wh.hinted[item.id] = 'manual';
     signals.hint(wordHuntActivity, item.id, { helpLevel: 'A2', helpType: 'narrow-choices', cueStage: 2, trigger: 'child-request' });
-    wordHuntFeedback('두 낱말로 좁혔어요. 어느 쪽이 문장의 뜻과 맞지 않나요?');
+    wordHuntFeedback('두 낱말로 좁혔어요. 어느 쪽이 들은 소리와 다른가요?');
     saveState(); renderWordHunt();
   }
   function wordHuntNext() {
@@ -865,7 +1168,30 @@
 
   const spellingActivity = 'spot-the-word';
   const spellingMeasure = 'case.spelling';
-  function spellingItem() { return spellingItems[Math.min(state.spelling.index, spellingItems.length - 1)]; }
+  /* 7번 젤리 달리기 · 2분 타임 플레이(2026-10-01)
+     - 낱말 풀(spellingItems)을 섞어 차례로 달려온다. 맞히면 바로 다음 낱말, 틀린 낱말은 두 개 뒤에 다시 온다.
+     - 2번째로 틀리면 저절로 둘로 좁혀지고(A2), 3번째부터는 진짜 낱말을 알려 준 뒤(A4) 다시 오게 한다. 맞혀야 끝난다.
+     - 🔍 아이템은 처음엔 없다. 가끔 길 위에 나타나는 🔍을 먹으면 모이고(최대 3), H나 버튼으로 둘로 좁힌다(A2, 기존 기록과 같음).
+     - 시간은 달리는 동안만 줄어든다(멈춤·코치 활동잠금·화면 이동 때는 멈춤). */
+  const JR_TIME = 120, JR_ITEM_MAX = 3, JR_PICKUP_EVERY = 3, JR_PICKUP_SECONDS = 2.6;
+  function spShuffle(list) { const a = list.slice(); for (let i = a.length - 1; i > 0; i -= 1) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; }
+  function spInit() {
+    const sp = state.spelling;
+    if (!Array.isArray(sp.queue)) sp.queue = [];
+    if (typeof sp.timeLeft !== 'number') sp.timeLeft = JR_TIME;
+    if (typeof sp.items !== 'number') sp.items = 0;
+    if (typeof sp.waves !== 'number') sp.waves = 0;
+    if (typeof sp.collected !== 'number') sp.collected = 0;
+    if (!sp.complete && (!sp.current || sp.done[sp.current] || !spellingItems.some(i => i.id === sp.current))) spAdvance();
+  }
+  function spAdvance() {
+    const sp = state.spelling, prev = sp.current;
+    sp.queue = sp.queue.filter((id, i, a) => !sp.done[id] && a.indexOf(id) === i && spellingItems.some(item => item.id === id));
+    if (!sp.queue.length) sp.queue = spShuffle(spellingItems.filter(i => !sp.done[i.id]).map(i => i.id));
+    sp.current = sp.queue.shift() || '';
+    if (sp.current && sp.current === prev && sp.queue.length) { const next = sp.queue.shift(); sp.queue.unshift(sp.current); sp.current = next; }
+  }
+  function spellingItem() { const sp = state.spelling; return spellingItems.find(i => i.id === sp.current) || spellingItems[0]; }
   function spellingDoneCount() { return spellingItems.filter(item => state.spelling.done[item.id]).length; }
   function spellingOrder(item) {
     const sp = state.spelling;
@@ -880,54 +1206,350 @@
     byId('spellingFeedback').textContent = text;
     byId('spellingFeedback').className = `feedback-line${tone ? ' ' + tone : ''}`;
   }
+  const JR_SPEED = { slow: 11, mid: 8 };          /* 카드가 지평선에서 젤리까지 오는 초 */
+  const JR_F0 = 0.06, JR_FHIT = 0.76, JR_FEND = 1.08;
+  const jellyRun = { state: 'cover', speed: 'slow', lane: 1, f: JR_F0, waveId: '', resolved: false, raf: 0, last: 0, gas: 0, mult: 1, timer: 0, stars: -1, started: false, dash: false, pickup: null, phase: 'cards', shownSec: -1 };
+  function jellyReduced() { return Boolean(window.matchMedia && window.matchMedia('(prefers-reduced-motion: reduce)').matches); }
+  function jellyLane(lane) {
+    jellyRun.lane = Math.max(0, Math.min(2, lane));
+    const track = byId('spellingTrack');
+    if (track) track.style.setProperty('--jr-lane', String(jellyRun.lane));
+  }
+  function jellyReact(cls) {
+    const jelly = byId('spellingJelly');
+    if (!jelly) return;
+    jelly.classList.remove('chomp', 'ouch');
+    void jelly.offsetWidth;
+    jelly.classList.add(cls);
+  }
+  function jellyPop(text, tone, lane) {
+    const track = byId('spellingTrack');
+    if (!track) return;
+    const pop = document.createElement('div');
+    pop.className = `jr-pop ${tone}`;
+    pop.textContent = text;
+    pop.style.setProperty('--jr-lane', String(lane));
+    pop.setAttribute('aria-hidden', 'true');
+    track.append(pop);
+    setTimeout(() => pop.remove(), 820);
+  }
+  function jellyProject(f, lane) {
+    const track = byId('spellingTrack');
+    const W = track.clientWidth, H = track.clientHeight, hz = H * 0.22;
+    return { x: W / 2 + (lane - 1) * W * (0.2 + 0.8 * f) / 3, y: hz + (H - hz) * Math.min(f, 1.2), scale: Math.min(1.08, 0.35 + 0.65 * (f / JR_FHIT)) };
+  }
+  function jellyPlace() {
+    const track = byId('spellingTrack');
+    if (!track) return;
+    const f = jellyRun.f;
+    byId('spellingChoices').querySelectorAll('[data-word]').forEach(button => {
+      if (button.classList.contains('eaten')) return;
+      const p = jellyProject(f, Number(button.dataset.lane) || 0);
+      const w = button.offsetWidth, h = button.offsetHeight;
+      button.style.transform = `translate(${(p.x - w / 2).toFixed(1)}px, ${(p.y - h).toFixed(1)}px) scale(${p.scale.toFixed(3)})`;
+      const fadeIn = Math.min(1, (f - JR_F0) / 0.06 + 0.15);
+      const fadeOut = jellyRun.resolved ? Math.max(0, (JR_FEND - f) / (JR_FEND - JR_FHIT)) : 1;
+      button.style.opacity = Math.max(0, Math.min(fadeIn, fadeOut)).toFixed(2);
+      button.style.zIndex = String(Math.round(f * 100));
+    });
+    byId('spellingChoices').classList.toggle('jr-hold', jellyRun.phase === 'pickup');
+    const pk = jellyRun.pickup, el = byId('jrPickup');
+    if (pk && el) {
+      const fp = pk.f;
+      const p = jellyProject(fp, pk.lane);
+      el.style.transform = `translate(${(p.x - 26).toFixed(1)}px, ${(p.y - 52).toFixed(1)}px) scale(${p.scale.toFixed(3)})`;
+      el.style.opacity = pk.taken ? '0' : String(Math.max(0, Math.min(1, (fp - JR_F0) / 0.06, (JR_FEND - fp) / 0.2)));
+      el.style.zIndex = String(Math.round(fp * 100));
+    }
+  }
+  function jellyTimerText() {
+    const t = Math.max(0, Math.ceil(state.spelling.timeLeft));
+    return `${Math.floor(t / 60)}:${String(t % 60).padStart(2, '0')}`;
+  }
+  function jellyTimerSync() {
+    const el = byId('spellingTimer'); if (!el) return;
+    el.querySelector('b').textContent = jellyTimerText();
+    el.classList.toggle('hurry', state.spelling.timeLeft <= 15 && !state.spelling.complete);
+  }
+  function jellyCover(kind) {
+    const track = byId('spellingTrack');
+    if (!track) return;
+    let cover = byId('spellingCover');
+    if (!cover) { cover = document.createElement('div'); cover.id = 'spellingCover'; cover.className = 'jr-cover'; track.append(cover); }
+    if (!kind) { cover.hidden = true; return; }
+    const speeds = [['slow', '느리게'], ['mid', '보통']].map(([k, label]) => `<button type="button" data-jr-speed="${k}" class="${jellyRun.speed === k ? 'on' : ''}">${label}</button>`).join('');
+    cover.innerHTML = `<strong>${kind === 'start' ? '⏱ 2분 젤리 달리기' : '잠깐 쉬어요 · ⏱ ' + jellyTimerText()}</strong>
+      <p>진짜 낱말 쪽으로 줄을 바꿔 <b>냠!</b> 길 위의 🔍을 먹으면 둘로 좁힐 수 있어요.</p>
+      <p class="jr-keys"><kbd>←</kbd><kbd>→</kbd> 줄 · <kbd>스페이스</kbd> 냠! · <kbd>H</kbd> 🔍 쓰기 · <kbd>Esc</kbd> 멈춤</p>
+      <div class="jr-speed">${speeds}</div>
+      <button type="button" class="primary-action" data-jr-go>${kind === 'start' ? '출발!' : '다시 달리기'} <small>Enter</small></button>`;
+    cover.hidden = false;
+  }
+  function jellyStop() { cancelAnimationFrame(jellyRun.raf); jellyRun.raf = 0; byId('spellingTrack')?.classList.remove('is-running', 'boost', 'slowdown'); }
+  function jellyGo() {
+    if (state.spelling.complete) return;
+    jellyCover(null);
+    if (document.activeElement && document.activeElement.blur) document.activeElement.blur();
+    if (!jellyRun.started) signals.log('jelly-run-start', { activityId: spellingActivity, speed: jellyRun.speed, timeLeft: Math.round(state.spelling.timeLeft) });
+    jellyRun.started = true;
+    jellyRun.state = jellyRun.resolved ? 'wait' : 'run';
+    if (jellyRun.state === 'wait' && !jellyRun.timer) jellyRun.timer = setTimeout(spNextWave, 300);
+    jellyRun.last = performance.now();
+    jellyStop();
+    byId('spellingTrack')?.classList.add('is-running');
+    jellyLoop();
+  }
+  function jellyPause() {
+    if (jellyRun.state !== 'run' && jellyRun.state !== 'wait') return;
+    jellyRun.gas = 0;
+    jellyStop();
+    jellyRun.state = 'pause';
+    saveState();
+    jellyCover('pause');
+  }
+  function jellyNewWave(itemId) {
+    const sp = state.spelling;
+    jellyRun.waveId = itemId;
+    jellyRun.f = JR_F0;
+    jellyRun.resolved = false;
+    jellyRun.dash = false;
+    byId('spellingTrack')?.classList.remove('dash');
+    byId('jrPickup')?.remove();
+    jellyRun.pickup = null;
+    jellyRun.phase = 'cards';
+    sp.waves += 1;
+    if (sp.waves % JR_PICKUP_EVERY === 0 && sp.items < JR_ITEM_MAX && !sp.complete) {
+      jellyRun.pickup = { lane: Math.floor(Math.random() * 3), taken: false, passed: false, f: JR_F0 };
+      jellyRun.phase = 'pickup';
+      const el = document.createElement('div');
+      el.id = 'jrPickup'; el.className = 'jr-pickup'; el.textContent = '🔍'; el.setAttribute('aria-hidden', 'true');
+      byId('spellingTrack').append(el);
+    }
+    jellyPlace();
+    jellyItemSync();
+  }
+  function jellyCheckPickup() {
+    const pk = jellyRun.pickup;
+    if (!pk || pk.taken || pk.passed || pk.f < JR_FHIT) return;
+    const sp = state.spelling;
+    if (pk.lane === jellyRun.lane && sp.items < JR_ITEM_MAX) {
+      pk.taken = true; sp.items += 1; sp.collected += 1;
+      jellyPop('🔍 +1', 'item', pk.lane);
+      signals.log('item-pickup', { activityId: spellingActivity, itemId: spellingItem().id, items: sp.items });
+      const btn = byId('spellingItemButton'); if (btn) { btn.classList.remove('used'); void btn.offsetWidth; btn.classList.add('used'); }
+      jellyItemSync(); saveState();
+    } else pk.passed = true;
+  }
+  function jellyResolve() {
+    jellyRun.resolved = true;
+    jellyRun.dash = false;
+    byId('spellingTrack')?.classList.remove('dash');
+    const hit = Array.from(byId('spellingChoices').querySelectorAll('[data-word]')).find(b => Number(b.dataset.lane) === jellyRun.lane && !b.disabled);
+    jellyRun.state = 'wait';
+    if (!hit) {
+      jellyPop('휙! 다시 와요', 'dodge', jellyRun.lane);
+      spellingFeedback('빈 길로 지나갔어요. 낱말이 다시 달려와요.', '');
+      jellyRun.timer = setTimeout(() => spNextWave(true), 650);
+      return;
+    }
+    const correct = handleSpellingChoice({ target: hit });
+    jellyItemSync();
+    jellyRun.timer = setTimeout(spNextWave, correct ? 450 : 900);
+  }
+  function spNextWave(sameItem) {
+    clearTimeout(jellyRun.timer); jellyRun.timer = 0;
+    const sp = state.spelling;
+    if (sp.complete || state.screen !== 'spelling') return;
+    if (!sameItem) spAdvance();
+    if (!sp.current) { spFinish('all-found'); return; }
+    jellyRun.waveId = '';
+    if (jellyRun.state === 'wait') jellyRun.state = 'run';
+    saveState();
+    renderSpelling();
+  }
+  function spFinish(reason) {
+    const sp = state.spelling;
+    if (sp.complete) return;
+    clearTimeout(jellyRun.timer); jellyRun.timer = 0;
+    sp.complete = true;
+    if (reason === 'time') sp.timeLeft = 0;
+    const tried = Object.keys(sp.attempts).length;
+    signals.activityComplete(spellingActivity, { reason, found: spellingDoneCount(), tried, poolSize: spellingItems.length, itemsRevealed: Object.keys(sp.revealed).length, hintsUsed: Object.values(sp.hinted).filter(v => v === 'manual').length, itemsCollected: sp.collected, secondsUsed: Math.round(JR_TIME - sp.timeLeft) });
+    saveState();
+    renderSpelling();
+    updateCoachPanel();
+  }
+  function jellyLoop() {
+    jellyRun.raf = requestAnimationFrame(t => {
+      if (jellyRun.state !== 'run' && jellyRun.state !== 'wait') return;
+      if (state.screen !== 'spelling') { jellyPause(); return; }
+      const dt = Math.min(0.05, (t - jellyRun.last) / 1000);
+      jellyRun.last = t;
+      const locked = window.OncuvateClassroomControl?.activityLocked === true && !isCoach;
+      const want = jellyRun.gas > 0 ? 1.8 : jellyRun.gas < 0 ? 0.45 : 1;
+      jellyRun.mult += (want - jellyRun.mult) * Math.min(1, dt * 6);
+      const track = byId('spellingTrack');
+      track.classList.toggle('boost', jellyRun.mult > 1.3);
+      track.classList.toggle('slowdown', jellyRun.mult < 0.7);
+      track.classList.toggle('is-running', !locked);
+      if (!locked) {
+        const sp = state.spelling;
+        sp.timeLeft = Math.max(0, sp.timeLeft - dt);
+        const sec = Math.ceil(sp.timeLeft);
+        if (sec !== jellyRun.shownSec) { jellyRun.shownSec = sec; jellyTimerSync(); if (sec % 5 === 0) saveState(); }
+        if (sp.timeLeft <= 0) { jellyStop(); jellyRun.state = 'idle'; spFinish('time'); return; }
+        if (jellyRun.phase === 'pickup' && jellyRun.pickup) {
+          /* 🔍 아이템이 혼자 지나가는 구간: 낱말 카드는 아직 나오지 않는다 */
+          const pk = jellyRun.pickup;
+          pk.f += dt * jellyRun.mult * (JR_FHIT - JR_F0) / JR_PICKUP_SECONDS;
+          jellyCheckPickup();
+          if (pk.f >= JR_FHIT + 0.14) {
+            jellyRun.phase = 'cards'; jellyRun.f = JR_F0; byId('jrPickup')?.remove(); jellyRun.pickup = null;
+            const it = spellingItem();
+            signals.ready(spellingActivity, it.id, { textNode: byId('spellingScreen'), attempts: state.spelling.attempts[it.id] || 0, measureId: spellingMeasure, step: 'spell' });
+          }
+        } else {
+          jellyRun.f += jellyRun.dash && !jellyRun.resolved ? dt * 2.4 : dt * jellyRun.mult * (JR_FHIT - JR_F0) / JR_SPEED[jellyRun.speed];
+        }
+        if (jellyRun.state === 'run' && jellyRun.phase !== 'pickup' && !jellyRun.resolved && jellyRun.f >= JR_FHIT) jellyResolve();
+        jellyPlace();
+      }
+      jellyLoop();
+    });
+  }
+  function jellyRunSync(item) {
+    const track = byId('spellingTrack');
+    if (!track) return;
+    jellyItemSync();
+    jellyTimerSync();
+    const stars = spellingDoneCount();
+    byId('spellingStars').textContent = String(stars);
+    if (jellyRun.stars >= 0 && stars > jellyRun.stars) {
+      const pill = byId('spellingStarPill');
+      pill.classList.remove('bump'); void pill.offsetWidth; pill.classList.add('bump');
+    }
+    jellyRun.stars = stars;
+    track.classList.toggle('is-complete', !item);
+    const old = track.querySelector('.jr-done');
+    if (old) old.remove();
+    if (!item) {
+      clearTimeout(jellyRun.timer);
+      jellyStop();
+      jellyRun.state = 'idle';
+      jellyCover(null);
+      byId('jrPickup')?.remove();
+      jellyLane(1);
+      const done = document.createElement('div');
+      done.className = 'jr-done';
+      done.innerHTML = `<small>${state.spelling.timeLeft <= 0 ? '⏱ TIME UP' : 'ALL FOUND'}</small>⭐ ${stars}개 냠!`;
+      track.append(done);
+      return;
+    }
+    if (jellyRun.waveId !== item.id) jellyNewWave(item.id);
+    else jellyPlace();
+    if (!jellyRun.started) { jellyRun.state = 'cover'; jellyCover('start'); }
+    else if (jellyRun.state === 'pause' || (jellyRun.state === 'run' && !jellyRun.raf)) { jellyRun.state = 'pause'; jellyCover('pause'); }
+  }
+  function jellyItemSync() {
+    const btn = byId('spellingItemButton'); if (!btn) return;
+    const sp = state.spelling, item = spellingItem();
+    byId('spellingItemCount').textContent = String(sp.items || 0);
+    btn.disabled = !sp.items || sp.complete || Boolean(sp.hinted[item.id]) || jellyRun.resolved;
+    btn.classList.toggle('empty', !sp.items);
+  }
+  function jellyUseItem() {
+    const btn = byId('spellingItemButton');
+    const sp = state.spelling;
+    if (!btn || btn.disabled || !sp.items) return;
+    const item = spellingItem();
+    if (sp.hinted[item.id]) return;
+    sp.items -= 1;
+    spellingNarrow(item, 'narrow-choices', 'child-request');
+    spellingFeedback('🔍 둘로 좁혔어요. 글자를 하나씩 견주어 봐요.');
+    saveState(); renderSpelling();
+    jellyPop('🔍 둘로 좁혔어!', 'item', jellyRun.lane);
+    btn.classList.remove('used'); void btn.offsetWidth; btn.classList.add('used');
+  }
+  function jellySteer(event) {
+    if (event.target.closest('#spellingItemButton')) { jellyUseItem(); return; }
+    const cover = event.target.closest('#spellingCover');
+    if (cover) {
+      const speed = event.target.closest('[data-jr-speed]');
+      if (speed) { jellyRun.speed = speed.dataset.jrSpeed; cover.querySelectorAll('[data-jr-speed]').forEach(b => b.classList.toggle('on', b === speed)); return; }
+      if (event.target.closest('[data-jr-go]')) jellyGo();
+      return;
+    }
+    if (jellyRun.state !== 'run') return;
+    const card = event.target.closest('[data-word]');
+    if (card) { const lane = Number(card.dataset.lane) || 0; if (lane === jellyRun.lane) jellyDash(); else jellyLane(lane); return; }
+    const rect = byId('spellingTrack').getBoundingClientRect();
+    const jellyX = rect.width * (0.18667 + jellyRun.lane * 0.31333);
+    jellyLane(jellyRun.lane + (event.clientX - rect.left < jellyX ? -1 : 1));
+  }
+  function jellyKeys(event) {
+    if (state.screen !== 'spelling' || document.querySelector('dialog[open]')) return;
+    if (event.target.closest && event.target.closest('input, textarea, select')) return;
+    const key = event.key;
+    if (jellyRun.state === 'cover' || jellyRun.state === 'pause') {
+      if (key === 'Enter' || key === ' ') { event.preventDefault(); jellyGo(); }
+      return;
+    }
+    if (jellyRun.state !== 'run' && jellyRun.state !== 'wait') return;
+    if (key === 'ArrowLeft' || key === 'a' || key === 'A') { jellyLane(jellyRun.lane - 1); event.preventDefault(); }
+    else if (key === 'ArrowRight' || key === 'd' || key === 'D') { jellyLane(jellyRun.lane + 1); event.preventDefault(); }
+    else if (key === 'ArrowUp' || key === 'w' || key === 'W') { jellyRun.gas = 1; event.preventDefault(); }
+    else if (key === 'ArrowDown' || key === 's' || key === 'S') { jellyRun.gas = -1; event.preventDefault(); }
+    else if (key === ' ') { jellyDash(); event.preventDefault(); }
+    else if (key === 'h' || key === 'H') { jellyUseItem(); event.preventDefault(); }
+    else if (key === 'Escape' || key === 'p' || key === 'P') { jellyPause(); event.preventDefault(); }
+  }
+  /* 스페이스(또는 지금 줄의 카드를 한 번 더 누르기) = 이 줄로 결정, 카드가 빠르게 다가와 바로 냠/앗 판정 */
+  function jellyDash() {
+    if (jellyRun.state !== 'run' || jellyRun.resolved || jellyRun.dash || jellyRun.phase === 'pickup') return;
+    jellyRun.dash = true;
+    signals.log('jelly-dash', { activityId: spellingActivity, itemId: spellingItem().id, lane: jellyRun.lane, depth: Math.round(jellyRun.f * 100) / 100 });
+    byId('spellingTrack')?.classList.add('dash');
+  }
+  function jellyKeysUp(event) {
+    if (['ArrowUp', 'w', 'W', 'ArrowDown', 's', 'S'].includes(event.key)) jellyRun.gas = 0;
+  }
   function renderSpelling() {
+    spInit();
     const sp = state.spelling;
     const meaning = byId('spellingMeaning');
     const choices = byId('spellingChoices');
-    const hintButton = byId('spellingHintButton');
-    const nextButton = byId('spellingNextButton');
     const continueButton = byId('spellingContinueButton');
     choices.replaceChildren();
-    hintButton.hidden = true; nextButton.hidden = true; continueButton.hidden = true;
-    byId('spellingCounter').textContent = `${Math.min(sp.index + 1, spellingItems.length)} / ${spellingItems.length}`;
+    byId('spellingHintButton').hidden = true; byId('spellingNextButton').hidden = true; continueButton.hidden = !sp.complete;
+    byId('spellingCounter').textContent = `⭐ ${spellingDoneCount()} / ${spellingItems.length}`;
     if (sp.complete) {
-      meaning.innerHTML = '<span>여섯 낱말을 모두 찾았어요!</span><small>장난꾸러기 낱말은 글자 하나로 뜻이 달라져요.</small>';
-      byId('spellingLead').textContent = '이제 정리한 정보로 마인드맵을 만들어요.';
+      meaning.innerHTML = `<span>${sp.timeLeft <= 0 ? '⏱ 2분 끝!' : '모두 찾았어요!'} 진짜 낱말 ${spellingDoneCount()}개를 냠!</span><small>장난꾸러기 낱말은 글자 하나로 뜻이 달라져요.</small>`;
+      byId('spellingLead').textContent = '이제 정리한 정보로 인포그래픽을 만들어요.';
       spellingFeedback('글자를 하나씩 보는 눈이 진짜 낱말을 찾아요.', 'success');
-      continueButton.hidden = false;
+      jellyRunSync(null);
       return;
     }
     const item = spellingItem();
-    const entry = words.find(w => w.word === item.word) || { meaning: item.word, read: '' };
-    const parts = String(entry.meaning || '').split('·');
+    const entry = words.find(w => w.word === item.word) || { meaning: item.meaning || item.word, read: '' };
+    const parts = String(item.meaning || entry.meaning || '').split('·');
     const en = parts.length > 1 ? parts.slice(0, -1).join('·').trim() : '';
     const ko = (parts[parts.length - 1] || '').trim();
     meaning.innerHTML = `<span>${escapeHtml(ko)}</span>${en ? `<small>${escapeHtml(en)}</small>` : ''}`;
-    const done = Boolean(sp.done[item.id]);
     const hidden = sp.narrowed[item.id];
-    spellingOrder(item).forEach(choice => {
-      if (!done && hidden && choice.w === hidden) return;
+    spellingOrder(item).forEach((choice, lane) => {
+      if (hidden && choice.w === hidden) return;
       const button = document.createElement('button');
       button.type = 'button';
       button.dataset.word = choice.w;
+      button.dataset.lane = String(lane);
+      button.style.setProperty('--jr-col', String(lane + 1));
       button.textContent = choice.w;
-      if (done && choice.ok) button.classList.add('correct');
-      if (done && !choice.ok) button.disabled = true;
       choices.append(button);
     });
-    if (done) {
-      byId('spellingLead').textContent = '바르게 쓴 낱말을 찾았어요.';
-      spellingFeedback(`맞아요! ${item.word}${entry.read ? ' · ' + entry.read : ''}`, 'success');
-      nextButton.hidden = false;
-      nextButton.textContent = sp.index + 1 >= spellingItems.length ? '모두 찾았어요' : '다음 낱말';
-      return;
-    }
-    byId('spellingLead').textContent = '뜻을 읽고, 바르게 쓴 낱말 하나를 골라요. 글자를 하나씩 꼼꼼히 봐요.';
-    hintButton.hidden = false;
-    hintButton.disabled = Boolean(sp.hinted[item.id]);
-    hintButton.textContent = sp.hinted[item.id] ? '두 개로 좁혔어요' : '두 개로 좁히기';
+    byId('spellingLead').textContent = '뜻을 읽고, 바르게 쓴 낱말 쪽으로 달려요.';
     signals.decorate(choices.querySelectorAll('[data-word]'), spellingActivity, item.id, button => button.dataset.word === item.word);
     signals.ready(spellingActivity, item.id, { textNode: byId('spellingScreen'), attempts: sp.attempts[item.id] || 0, measureId: spellingMeasure, step: 'spell' });
+    jellyRunSync(item);
     updateCoachPanel();
   }
   function spellingNarrow(item, helpType, trigger) {
@@ -938,242 +1560,193 @@
     sp.narrowed[item.id] = wrong[Math.floor(Math.random() * wrong.length)].w;
     signals.hint(spellingActivity, item.id, { helpLevel: 'A2', helpType, cueStage: 2, trigger });
   }
+  /* 부딪힌 카드 하나를 채점한다. 맞으면 true. 다음 낱말로 넘기는 일은 jellyResolve → spNextWave가 한다. */
   function handleSpellingChoice(event) {
     const button = event.target.closest('[data-word]');
-    if (!button || button.disabled) return;
+    if (!button || button.disabled) return false;
     const sp = state.spelling;
-    if (sp.complete) return;
+    if (sp.complete) return false;
     const item = spellingItem();
-    if (sp.done[item.id]) return;
+    if (sp.done[item.id]) return false;
     const choice = item.choices.find(c => c.w === button.dataset.word);
     const correct = Boolean(choice && choice.ok);
     sp.attempts[item.id] = (sp.attempts[item.id] || 0) + 1;
     const attempt = sp.attempts[item.id];
     signals.respond(spellingActivity, item.id, { correct, value: button.dataset.word, expected: item.word, step: 'spell', measureId: spellingMeasure, distractorKind: choice && !choice.ok ? 'funny' : undefined });
-    byId('spellingChoices').querySelectorAll('[data-word]').forEach(other => other.classList.remove('selected', 'correct', 'incorrect'));
-    button.classList.add('selected');
+    const lane = Number(button.dataset.lane) || 0;
     if (correct) {
       sp.done[item.id] = true;
-      saveState(); renderSpelling();
-      return;
-    }
-    button.classList.add('incorrect');
-    if (attempt === 1) {
-      spellingFeedback(`${choice ? choice.joke : '뜻과 맞지 않아요.'} 글자를 하나씩 다시 봐요.`, 'attention');
-      signals.decorateLater(byId('spellingChoices').querySelectorAll('[data-word]'), spellingActivity, item.id, b => b.dataset.word === item.word);
+      button.classList.add('correct', 'eaten');
+      jellyReact('chomp'); jellyPop('냠! ⭐', 'good', lane);
+      const entry = words.find(w => w.word === item.word);
+      spellingFeedback(`맞아요! ${item.word}${entry && entry.read ? ' · ' + entry.read : ''}`, 'success');
+      jellyRunSync(item);
+      byId('spellingCounter').textContent = `⭐ ${spellingDoneCount()} / ${spellingItems.length}`;
       saveState();
-    } else if (attempt === 2) {
-      spellingNarrow(item, 'auto-narrow', 'second-miss');
-      spellingFeedback(`${choice ? choice.joke : ''} 두 개만 남겼어요. 어느 쪽이 진짜 낱말일까요?`, 'attention');
-      saveState(); setTimeout(renderSpelling, 0);
-    } else {
+      return true;
+    }
+    button.classList.add('incorrect', 'bumped');
+    jellyReact('ouch'); jellyPop('앗!', 'bad', lane);
+    signals.decorateLater(byId('spellingChoices').querySelectorAll('[data-word]'), spellingActivity, item.id, b => b.dataset.word === item.word);
+    if (attempt >= 2) spellingNarrow(item, 'auto-narrow', 'second-miss');
+    if (attempt >= 3 && !sp.revealed[item.id]) {
       sp.revealed[item.id] = true;
       signals.hint(spellingActivity, item.id, { helpLevel: 'A4', helpType: 'reveal-answer', cueStage: 5, trigger: 'third-miss' });
-      signals.close(spellingActivity, item.id, { resolution: 'revealed', measureId: spellingMeasure });
-      sp.done[item.id] = true;
-      saveState(); renderSpelling();
-      spellingFeedback(`함께 볼게요. 진짜 낱말: ${item.word}`, 'attention');
     }
+    spellingFeedback(attempt >= 3 ? `진짜 낱말은 ${item.word}! 다시 올 때 냠 해요.` : `${choice ? choice.joke : '뜻과 맞지 않아요.'} 이 낱말은 조금 뒤에 다시 와요.`, 'attention');
+    sp.queue = sp.queue.filter(id => id !== item.id);
+    sp.queue.splice(Math.min(2, sp.queue.length), 0, item.id);
+    saveState();
+    return false;
   }
-  function spellingHint() {
-    const sp = state.spelling;
-    if (sp.complete) return;
-    const item = spellingItem();
-    if (sp.done[item.id] || sp.hinted[item.id]) return;
-    spellingNarrow(item, 'narrow-choices', 'child-request');
-    spellingFeedback('두 개로 좁혔어요. 글자를 하나씩 견주어 봐요.');
-    saveState(); renderSpelling();
-  }
-  function spellingNext() {
-    const sp = state.spelling;
-    if (sp.complete) return;
-    if (!sp.done[spellingItem().id]) return;
-    if (sp.index + 1 >= spellingItems.length) {
-      sp.complete = true;
-      signals.activityComplete(spellingActivity, { itemsRevealed: Object.keys(sp.revealed).length, hintsUsed: Object.keys(sp.hinted).length });
-    } else {
-      sp.index += 1;
-    }
-    byId('spellingFeedback').textContent = '';
-    saveState(); renderSpelling();
-  }
+  function spellingHint() { jellyUseItem(); }
+  function spellingNext() { spNextWave(); }
   function normalizeMindMapWord(value) {
     return String(value || '').trim().toLowerCase().replace(/[.,!?]+$/g, '');
   }
-  function buildMindMapLine(container, card) {
-    container.replaceChildren();
-    container.append(document.createTextNode(card.before));
-    const input = document.createElement('input');
-    input.type = 'text';
-    input.className = 'mindmap-cloze';
-    input.dataset.mapInput = card.id;
-    input.value = state.mindMapAnswers[card.id] || '';
-    input.maxLength = 12;
-    input.size = Math.max(5, card.answer.length + 1);
-    input.autocomplete = 'off';
-    input.spellcheck = false;
-    input.setAttribute('aria-label', `${card.id} missing word`);
-    container.append(input, document.createTextNode(card.after));
-  }
-  function updateMindMapProgress() {
-    const wordCount = mindMapCards.filter(card => normalizeMindMapWord(state.mindMapAnswers[card.id])).length;
-    const placedCount = Object.keys(state.mindMapPlacements).length;
-    byId('mindmapCounter').textContent = `${wordCount} / 4 words · ${placedCount} / 4 placed`;
-    signals.decorateLater([byId('mindmapCheckButton')], 'information-mindmap', 'map-check', () => mindMapAllCorrect());
-    byId('mindmapCheckButton').disabled = wordCount < 4 || placedCount < 4 || state.mindMapSolved;
-    byId('mindmapCheckButton').hidden = state.mindMapSolved;
-    byId('mindmapContinueButton').hidden = !state.mindMapSolved;
-    return { wordCount, placedCount };
-  }
+  /* 8번 인포그래픽: 문장 카드 한 장씩 — ① 빈칸 낱말 쓰기 → ② 포스터에서 붙일 자리 고르기 → 자리에 핵심 낱말이 켜짐. */
+  const igSpots = {
+    old: { pre: 'could never', post: '' },
+    compartment: { pre: '', post: 'compartments' },
+    lifeboat: { pre: 'room for', post: 'of people' },
+    new: { pre: 'not supported by', post: '' }
+  };
+  const igMiss = {};
   function mindMapCardCorrect(slotId) {
     const card = mindMapCards.find(item => item.id === state.mindMapPlacements[slotId]);
     return Boolean(card && card.target === slotId && normalizeMindMapWord(state.mindMapAnswers[card.id]) === card.answer.toLowerCase());
   }
   function mindMapAllCorrect() { return mindMapCards.every(card => mindMapCardCorrect(card.target)); }
+  function igCurrentCard() { return mindMapCards.find(card => state.mindMapPlacements[card.target] !== card.id) || null; }
+  function igWordDone(card) { return Boolean((state.mindMapConfirmed || {})[card.id] || state.mindMapPlacements[card.target] === card.id) && normalizeMindMapWord(state.mindMapAnswers[card.id]) === card.answer.toLowerCase(); }
+  function igRespond(correct, step, card, value) {
+    state.mindMapAttempts += 1;
+    signals.respond('information-mindmap', 'map-check', { correct, step, card: card ? card.id : '', value, cardOld: mindMapCardCorrect('old'), cardCompartment: mindMapCardCorrect('compartment'), cardLifeboat: mindMapCardCorrect('lifeboat'), cardNew: mindMapCardCorrect('new'), measureId: 'case.organize' });
+  }
+  function igFeedback(text, tone) { byId('mindmapFeedback').textContent = text; byId('mindmapFeedback').className = `mindmap-feedback${tone ? ' ' + tone : ''}`; }
   function renderMindMap() {
-    if (!state.mindMapSolved) signals.ready('information-mindmap', 'map-check', { textNode: byId('mindmapScreen'), attempts: state.mindMapAttempts, measureId: 'case.organize' });
-    const placements = state.mindMapPlacements;
-    const usedCards = new Set(Object.values(placements));
-    const availableCards = mindMapCards.filter(card => !usedCards.has(card.id));
-    const cardBank = byId('mindmapCards');
-    cardBank.replaceChildren();
-    availableCards.slice(0, 1).forEach(card => {
-      const article = document.createElement('article');
-      article.className = 'mindmap-card';
-      article.classList.toggle('selected', state.selectedMindMapCard === card.id);
-      const line = document.createElement('p');
-      buildMindMapLine(line, card);
-      const choose = document.createElement('button');
-      choose.type = 'button';
-      choose.className = 'mindmap-card-pick';
-      choose.dataset.mapPick = card.id;
-      choose.dataset.tap = 'answer';
-      choose.setAttribute('aria-pressed', String(state.selectedMindMapCard === card.id));
-      choose.textContent = state.selectedMindMapCard === card.id ? 'Selected — tap a branch' : 'Choose this card';
-      article.append(line, choose);
-      cardBank.append(article);
+    if (!state.mindMapSolved) signals.ready('information-mindmap', 'map-check', { textNode: byId('igCard'), attempts: state.mindMapAttempts, measureId: 'case.organize' });
+    const card = igCurrentCard();
+    const doneCount = mindMapCards.filter(c => state.mindMapPlacements[c.target] === c.id).length;
+    byId('mindmapCounter').innerHTML = mindMapCards.map((c, i) => `<i class="${state.mindMapPlacements[c.target] === c.id ? 'on' : ''}${card && c.id === card.id ? ' now' : ''}"></i>`).join('');
+    document.querySelectorAll('[data-map-slot]').forEach(spot => {
+      const slotId = spot.dataset.mapSlot;
+      const placed = mindMapCards.find(c => c.target === slotId && state.mindMapPlacements[slotId] === c.id);
+      spot.classList.toggle('filled', Boolean(placed));
+      spot.classList.toggle('ready', Boolean(card && igWordDone(card) && !placed));
+      const sp = igSpots[slotId];
+      spot.querySelector('b').innerHTML = placed ? `${sp.pre ? '<em>' + sp.pre + '</em>' : ''}${placed.answer.toUpperCase()}${sp.post ? '<em>' + sp.post + '</em>' : ''}` : '';
+      spot.setAttribute('aria-label', `${spot.querySelector('small').textContent}${placed ? ': ' + [sp.pre, placed.answer, sp.post].filter(Boolean).join(' ') : ''}`);
     });
-    if (!availableCards.length) {
-      const empty = document.createElement('p');
-      empty.className = 'mindmap-bank-empty';
-      empty.textContent = 'All cards are on the map. You can still edit each word there.';
-      cardBank.append(empty);
+    const sentence = byId('igSentence'), actions = byId('igActions'), cardEl = byId('igCard');
+    sentence.replaceChildren(); actions.replaceChildren();
+    if (!card) {
+      state.mindMapSolved = true;
+      byId('igCardStep').textContent = 'INFOGRAPHIC COMPLETE';
+      sentence.textContent = 'All four facts are on the poster.';
+      cardEl.className = 'ig-card done';
+      byId('mindmapHintButton').hidden = true;
+      byId('igHintChips').hidden = true;
+      byId('mindmapContinueButton').hidden = false;
+      igFeedback('포스터 완성! 이 그림을 보며 사건을 설명해요.', 'success');
+      return;
     }
-    document.querySelectorAll('[data-map-slot]').forEach(slot => {
-      const cardId = placements[slot.dataset.mapSlot];
-      const card = mindMapCards.find(item => item.id === cardId);
-      const status = slot.querySelector('.mindmap-status');
-      const returnButton = slot.querySelector('[data-map-remove]');
-      slot.classList.remove('filled', 'ready', 'correct', 'incorrect');
-      slot.classList.toggle('filled', Boolean(card));
-      slot.classList.toggle('ready', Boolean(state.selectedMindMapCard) && !card);
-      slot.classList.toggle('correct', state.mindMapSolved && Boolean(card));
-      if (card) buildMindMapLine(slot.querySelector('span'), card);
-      else slot.querySelector('span').textContent = 'Place a card';
-      status.textContent = state.mindMapSolved && card ? '✓' : '';
-      returnButton.hidden = !card || state.mindMapSolved;
-      slot.setAttribute('aria-label', card ? `${slot.querySelector('small').textContent}: card placed` : `${slot.querySelector('small').textContent}: empty branch`);
-    });
-    const progress = updateMindMapProgress();
-    const feedback = byId('mindmapFeedback');
-    feedback.textContent = state.mindMapSolved
-      ? 'The words and connections are correct. Use this map when you explain the case.'
-      : progress.wordCount < 4
-        ? 'Type one missing word in each card.'
-        : progress.placedCount < 4
-          ? 'Now choose each card and place it on a matching branch.'
-          : 'All cards are complete and placed. Check your map.';
-    feedback.className = state.mindMapSolved ? 'mindmap-feedback success' : 'mindmap-feedback';
+    byId('mindmapContinueButton').hidden = true;
+    byId('mindmapHintButton').hidden = false;
+    byId('igCardStep').textContent = `CARD ${doneCount + 1} / ${mindMapCards.length}`;
+    const wordDone = igWordDone(card);
+    cardEl.className = 'ig-card' + (wordDone ? ' word-done' : '');
+    sentence.append(document.createTextNode(card.before));
+    if (wordDone) {
+      const mark = document.createElement('mark'); mark.textContent = card.answer; sentence.append(mark);
+    } else {
+      const input = document.createElement('input');
+      input.type = 'text'; input.className = 'mindmap-cloze'; input.dataset.mapInput = card.id;
+      input.value = state.mindMapAnswers[card.id] || ''; input.maxLength = 12; input.size = Math.max(5, card.answer.length + 1);
+      input.autocomplete = 'off'; input.spellcheck = false; input.setAttribute('aria-label', 'missing word');
+      sentence.append(input);
+    }
+    sentence.append(document.createTextNode(card.after));
+    if (!wordDone) {
+      const ok = document.createElement('button');
+      ok.type = 'button'; ok.className = 'primary-action ig-ok'; ok.id = 'igWordCheck'; ok.textContent = '✓ 확인';
+      actions.append(ok);
+      igFeedback(igMiss[card.id + ':word'] ? '글자를 하나씩 다시 봐요.' : '빈칸에 들어갈 낱말 하나를 써요.', igMiss[card.id + ':word'] ? 'attention' : '');
+    } else {
+      const pick = document.createElement('p'); pick.className = 'ig-pick'; pick.textContent = '👉 포스터에서 이 카드를 붙일 자리를 눌러요.';
+      actions.append(pick);
+      igFeedback(igMiss[card.id + ':place'] ? '그 자리는 다른 정보예요. 카드를 한 번 더 읽어 봐요.' : '', igMiss[card.id + ':place'] ? 'attention' : '');
+    }
+    signals.decorate([byId('igWordCheck')].filter(Boolean), 'information-mindmap', 'map-check', () => igWordDone(card) || normalizeMindMapWord(state.mindMapAnswers[card.id]) === card.answer.toLowerCase());
   }
   function handleMindMapInput(event) {
     const input = event.target.closest('[data-map-input]');
     if (!input) return;
     state.mindMapAnswers[input.dataset.mapInput] = input.value;
-    state.mindMapSolved = false;
-    const holder = input.closest('.mindmap-slot, .mindmap-card');
-    if (holder) holder.classList.remove('correct', 'incorrect');
-    if (holder?.querySelector('.mindmap-status')) holder.querySelector('.mindmap-status').textContent = '';
-    updateMindMapProgress();
-    byId('mindmapFeedback').textContent = 'Keep going. Complete the words and connect all four cards.';
-    byId('mindmapFeedback').className = 'mindmap-feedback';
-    updateHeader();
+    if (state.mindMapConfirmed) delete state.mindMapConfirmed[input.dataset.mapInput];
     saveState();
   }
-  function handleMindMapCard(event) {
-    const button = event.target.closest('[data-map-pick]');
-    if (!button) return;
-    state.selectedMindMapCard = state.selectedMindMapCard === button.dataset.mapPick ? '' : button.dataset.mapPick;
-    state.mindMapSolved = false;
-    renderMindMap();
-    saveState();
+  function igCheckWord() {
+    const card = igCurrentCard();
+    if (!card || igWordDone(card)) return;
+    state.mindMapConfirmed = state.mindMapConfirmed || {};
+    const value = normalizeMindMapWord(state.mindMapAnswers[card.id]);
+    if (!value) { byId('igSentence').querySelector('input')?.focus(); return; }
+    const correct = value === card.answer.toLowerCase();
+    igRespond(correct, 'word', card, value);
+    if (!correct) {
+      igMiss[card.id + ':word'] = (igMiss[card.id + ':word'] || 0) + 1;
+      const c = byId('igCard'); c.classList.remove('miss'); void c.offsetWidth; c.classList.add('miss');
+      igFeedback(igMiss[card.id + ':word'] >= 2 ? '「💡 낱말 힌트」를 눌러 봐도 좋아요.' : '글자를 하나씩 다시 봐요.', 'attention');
+      saveState();
+      return;
+    }
+    state.mindMapConfirmed[card.id] = true;
+    renderMindMap(); updateHeader(); saveState();
   }
   function handleMindMapSlot(event) {
-    if (event.target.closest('[data-map-input]')) return;
-    const slot = event.target.closest('[data-map-slot]');
-    if (!slot) return;
-    const slotId = slot.dataset.mapSlot;
-    const existing = state.mindMapPlacements[slotId];
-    if (event.target.closest('[data-map-remove]') && existing) {
-      delete state.mindMapPlacements[slotId];
-      state.selectedMindMapCard = existing;
-      state.mindMapSolved = false;
-    } else if (!existing && state.selectedMindMapCard) {
-      state.mindMapPlacements[slotId] = state.selectedMindMapCard;
-      state.selectedMindMapCard = '';
-      state.mindMapSolved = false;
-    } else if (!existing) {
-      byId('mindmapFeedback').textContent = 'Choose an information card first.';
-      byId('mindmapFeedback').className = 'mindmap-feedback attention';
-      return;
-    } else {
+    const spot = event.target.closest('[data-map-slot]');
+    if (!spot) return;
+    const slotId = spot.dataset.mapSlot;
+    const card = igCurrentCard();
+    const placed = mindMapCards.find(c => c.target === slotId && state.mindMapPlacements[slotId] === c.id);
+    if (placed) { igFeedback(`${placed.before}${placed.answer}${placed.after}`, ''); return; }
+    if (!card) return;
+    if (!igWordDone(card)) { igFeedback('먼저 빈칸 낱말을 써요.', 'attention'); return; }
+    const correct = card.target === slotId;
+    igRespond(correct, 'place', card, slotId);
+    if (!correct) {
+      igMiss[card.id + ':place'] = (igMiss[card.id + ':place'] || 0) + 1;
+      spot.classList.remove('miss'); void spot.offsetWidth; spot.classList.add('miss');
+      igFeedback('그 자리는 다른 정보예요. 카드를 한 번 더 읽어 봐요.', 'attention');
+      saveState();
       return;
     }
-    renderMindMap();
-    updateHeader();
-    saveState();
+    state.mindMapPlacements[slotId] = card.id;
+    spot.classList.add('pop');
+    setTimeout(() => spot.classList.remove('pop'), 600);
+    if (!igCurrentCard()) { state.mindMapSolved = true; signals.log('map-complete', { activityId: 'information-mindmap', itemId: 'map-check', attempts: state.mindMapAttempts }); }
+    renderMindMap(); updateHeader(); saveState();
+    if (!state.mindMapSolved) setTimeout(() => byId('igSentence').querySelector('input')?.focus(), 50);
   }
-  function checkMindMap() {
-    if (Object.keys(state.mindMapPlacements).length < mindMapCards.length) return;
-    state.mindMapAttempts += 1;
-    signals.respond('information-mindmap', 'map-check', { correct: mindMapAllCorrect(), value: mindMapCards.map(card => `${card.target}:${state.mindMapPlacements[card.target] || '-'}/${normalizeMindMapWord(state.mindMapAnswers[state.mindMapPlacements[card.target]] || '')}`).join(' '), cardOld: mindMapCardCorrect('old'), cardCompartment: mindMapCardCorrect('compartment'), cardLifeboat: mindMapCardCorrect('lifeboat'), cardNew: mindMapCardCorrect('new'), measureId: 'case.organize' });
-    signals.decorateLater([byId('mindmapCheckButton')], 'information-mindmap', 'map-check', () => mindMapAllCorrect());
-    let wrongCount = 0;
-    document.querySelectorAll('[data-map-slot]').forEach(slot => {
-      const cardId = state.mindMapPlacements[slot.dataset.mapSlot];
-      const card = mindMapCards.find(item => item.id === cardId);
-      const wordIsCorrect = card && normalizeMindMapWord(state.mindMapAnswers[card.id]) === card.answer.toLowerCase();
-      const branchIsCorrect = card && card.target === slot.dataset.mapSlot;
-      const isCorrect = Boolean(wordIsCorrect && branchIsCorrect);
-      slot.classList.toggle('correct', isCorrect);
-      slot.classList.toggle('incorrect', !isCorrect);
-      slot.querySelector('.mindmap-status').textContent = isCorrect ? '✓' : '!';
-      if (!isCorrect) wrongCount += 1;
-    });
-    if (wrongCount) {
-      state.mindMapSolved = false;
-      byId('mindmapFeedback').textContent = `Check the ${wrongCount} branch${wrongCount === 1 ? '' : 'es'} marked !. Edit a word there, or return the card to move it.`;
-      byId('mindmapFeedback').className = 'mindmap-feedback attention';
-    } else {
-      state.mindMapSolved = true;
-      updateMindMapProgress();
-      byId('mindmapFeedback').textContent = 'The words and connections are correct. Use this map when you explain the case.';
-      byId('mindmapFeedback').className = 'mindmap-feedback success';
-      document.querySelectorAll('[data-map-remove]').forEach(button => { button.hidden = true; });
-      updateHeader();
-    }
-    saveState();
+  function igShowHint() {
+    signals.hint('information-mindmap', 'map-check', { helpLevel: 'A2', helpType: 'word-hint', trigger: 'child-request' });
+    const box = byId('igHintChips');
+    box.innerHTML = mindMapCards.map(c => `<span class="${state.mindMapPlacements[c.target] === c.id ? 'used' : ''}">${c.answer}</span>`).join('');
+    box.hidden = false;
   }
   function resetMindMap() {
     signals.log('reset', { activityId: 'information-mindmap', itemId: 'map-check', attemptsSoFar: state.mindMapAttempts });
     state.mindMapPlacements = {};
     state.mindMapAnswers = {};
+    state.mindMapConfirmed = {};
     state.selectedMindMapCard = '';
     state.mindMapSolved = false;
     renderMindMap();
     updateHeader();
     saveState();
-    byId('mindmapCards').querySelector('[data-map-input]')?.focus();
   }
+
 
   function renderRetell() {
     signals.ready('retell', 'retell', { textNode: byId('retellScreen'), measureId: 'case.retell' });
@@ -1181,7 +1754,10 @@
     byId('retellCount').textContent = `${state.retell.length} / 360`;
     byId('retellSupport').hidden = !state.retellHint;
     byId('finishButton').disabled = state.retell.trim().length < 24;
-    byId('retellEvidence').innerHTML = orderedNotes().map(note => `<div>${escapeHtml(note)}</div>`).join('');
+    const notes = orderedNotes();
+    const keys = mindMapCards.filter(c => state.mindMapPlacements[c.target] === c.id).map(c => c.answer.toUpperCase());
+    byId('retellEvidence').innerHTML = (notes.length ? notes.map(note => `<div>${escapeHtml(note)}</div>`).join('') : '<p class="evidence-empty">3번 기억 금고를 열면 여기에 노트가 모여요.</p>')
+      + (keys.length ? `<small class="evidence-keys-label">INFOGRAPHIC KEY WORDS</small><div class="evidence-keys">${keys.map(k => `<span>${escapeHtml(k)}</span>`).join('')}</div>` : '');
   }
   function handleRetellInput() {
     const wasEmpty = !state.retell.trim();
@@ -1219,7 +1795,33 @@
       : '<article class="locked"><strong>NO WORDS YET</strong><span>사건 파일에서 파란 단어를 누르면 여기에 저장됩니다.</span></article>';
   }
 
-  function renderCoachParticipants(map) { window.OncuvateLiveMirror?.renderList(byId('coachParticipants'), map, 1); }
+  function renderCoachParticipants(map) { window.OncuvateLiveMirror?.renderList(byId('coachParticipants'), map, 1); renderCrewBoard(map); }
+  /* 그룹 수업(코치 1 + 아이 4명 안팎): 각자 기기에서 푼 금고 보석을 코치 화면의 「크루 보드」에 모아 팀 보물로 보여 준다.
+     순위는 매기지 않는다 — 합계가 배 게이지를 채우는 협동형. 화면 공유로 아이들에게 그대로 보여 줘도 된다. */
+  function renderCrewBoard(map) {
+    const rowsEl = byId('crewRows'), teamEl = byId('crewTeam');
+    if (!rowsEl || !teamEl) return;
+    const crew = Object.keys(map || {}).map(key => [key, map[key]]).filter(pair => pair[1] && typeof pair[1] === 'object')
+      .sort((a, b) => String(a[1].child || a[0]).localeCompare(String(b[1].child || b[0])));
+    if (!crew.length) { teamEl.innerHTML = '<p>수업방이 열리면 학생별 보석이 여기 모여요.</p>'; rowsEl.innerHTML = ''; return; }
+    const stageLabel = { search: '🔍 단서 찾는 중', diving: '🫧 잠수 중 (말 걸지 않기)', vault: '🔐 다이얼 맞추는 중', boss: '👾 가짜 기록 추적 중', 'boss-cleared': '🏴‍☠️ 미션 완료' };
+    let gems = 0, memory = 0, bosses = 0;
+    rowsEl.innerHTML = crew.map(([key, p]) => {
+      const v = p.vault || {};
+      const m = Number(v.memory) || 0, d = Number(v.detective) || 0;
+      gems += m + d; memory += m; if (v.boss) bosses += 1;
+      const slots = '💎'.repeat(m) + '🔎'.repeat(d) + '<i>🔒</i>'.repeat(Math.max(0, 3 - m - d));
+      const extra = [v.combo >= 2 ? `🔥×${v.combo}` : '', v.bare ? '🏆 맨기억' : '', v.peeks ? `살짝 보기 ${v.peeks}` : '', v.flips ? `카드 뒤집기 ${v.flips}` : ''].filter(Boolean).join(' · ');
+      return `<li class="${v.boss ? 'done' : ''}${v.diving ? ' diving' : ''}"><b>${escapeHtml(p.child || key)}</b><span class="crew-gems">${slots}${v.boss ? ' 🏴‍☠️' : ''}</span><small>${stageLabel[v.stage] || escapeHtml(p.screenLabel || '')}${extra ? ' · ' + extra : ''}</small></li>`;
+    }).join('');
+    const goal = crew.length * 3;
+    const pct = Math.round((gems / goal) * 100);
+    const cheer = bosses === crew.length ? '🎉 모든 크루가 가짜 기록을 잡았어요! 선장 칭호 획득'
+      : gems === goal ? '⚓ 팀 금고 전부 열림! 이제 다 같이 가짜 기록을 잡아요'
+      : gems >= Math.ceil(goal / 2) ? '🚢 절반 넘게 모았어요. 배가 출항 준비를 해요'
+      : '🧭 크루 모두의 보석이 배를 움직여요';
+    teamEl.innerHTML = `<div class="crew-ship"><span style="width:${pct}%"></span><em aria-hidden="true" style="left:${Math.min(94, pct)}%">🚢</em></div><p><b>팀 보물 ${gems} / ${goal}</b> · 기억 보석 ${memory} · 보스 ${bosses}/${crew.length}</p><p class="crew-cheer">${cheer}</p>`;
+  }
   function updateCoachPanel() {
     if (!isCoach) return;
     byId('coachCurrentScreen').textContent = screenLabels[state.screen];
@@ -1238,7 +1840,8 @@
         if (wh.hinted[item.id]) parts.push(wh.hinted[item.id] === 'manual' ? '좁히기 요청' : '좁히기 자동');
         if (wh.meaningShown[item.id]) parts.push('뜻 제시');
         if (wh.fixAccuracy[item.id]) parts.push(fixLabels[wh.fixAccuracy[item.id]]);
-        if (wh.rereads[item.id]) parts.push(`다시 읽기 ${wh.rereads[item.id]}`);
+        if (wh.listens[item.id]) parts.push(`듣기 ${wh.listens[item.id]}${wh.slowListens[item.id] ? ` (천천히 ${wh.slowListens[item.id]})` : ''}`);
+        else if (wh.attempts[item.id]) parts.push('듣지 않고 누름');
         return `<li><b>${index + 1}</b> ${parts.join(' · ')}</li>`;
       }).filter(Boolean);
       const counts = monitoringCounts();
@@ -1317,36 +1920,38 @@
   byId('clueDialog').addEventListener('cancel', event => event.preventDefault());
   byId('memoryRows').addEventListener('click', handleMemorySheet);
   byId('reviewActiveClueButton').addEventListener('click', () => {
-    if (!state.activeClue) return;
-    const clue = clueById(state.activeClue);
-    signals.hint('clue-notes', 'note-' + clue.id, { helpLevel: 'A3', helpType: 'clue-review' });
-    signals.decorateLater(byId('memoryRows').querySelectorAll('[data-memory-note]'), 'clue-notes', 'note-' + clue.id, b => b.dataset.memoryNote === clue.correct);
-    openClueDialog(state.activeClue, true);
+    if (!state.activeClue || diveTimer) return;
+    peekClue(state.activeClue, 'active-clue');
   });
   byId('sheetNextButton').addEventListener('click', nextSearchStep);
-  byId('recordChoices').addEventListener('click', handleRecord);
+  byId('judgeRow').addEventListener('click', handleJudge);
+  byId('gemPeekRow').addEventListener('click', handleGemPeek);
+  byId('recordNextButton').addEventListener('click', nextRecord);
+  document.addEventListener('keydown', deductionKeys);
   byId('deductionContinueButton').addEventListener('click', () => { signals.activityComplete('deduction'); showScreen('reading'); });
   byId('sentenceNextButton').addEventListener('click', nextSentence);
   byId('readingLevelButton').addEventListener('click', toggleReadingLevel);
   byId('readingContinueButton').addEventListener('click', () => { signals.activityComplete('information-reading', { level: state.readingLevel, rereadCount: state.readingRereads, selfCheck: state.readingSelfCheck || undefined, discourseType: 'expository' }); showScreen('wordhunt'); });
   byId('readingSelfCheck').addEventListener('click', handleReadingSelfCheck);
-  byId('wordhuntRereadButton').addEventListener('click', wordHuntReread);
+  byId('soundhuntPlayButton').addEventListener('click', () => soundHuntListen(false));
+  byId('soundhuntSlowButton').addEventListener('click', () => soundHuntListen(true));
   byId('wordhuntSentence').addEventListener('click', handleWordHuntWord);
   byId('wordhuntChoices').addEventListener('click', handleWordHuntChoice);
   byId('wordhuntHintButton').addEventListener('click', wordHuntHint);
   byId('wordhuntNextButton').addEventListener('click', wordHuntNext);
   byId('wordhuntContinueButton').addEventListener('click', () => showScreen('spelling'));
-  byId('spellingChoices').addEventListener('click', handleSpellingChoice);
+  byId('spellingTrack').addEventListener('click', jellySteer);
+  document.addEventListener('keydown', jellyKeys);
+  document.addEventListener('keyup', jellyKeysUp);
+  document.addEventListener('visibilitychange', () => { if (document.hidden) jellyPause(); });
   byId('spellingHintButton').addEventListener('click', spellingHint);
   byId('spellingNextButton').addEventListener('click', spellingNext);
   byId('spellingContinueButton').addEventListener('click', () => showScreen('mindmap'));
-  byId('mindmapCards').addEventListener('input', handleMindMapInput);
-  byId('mindmapCards').addEventListener('click', handleMindMapCard);
-  byId('mindmapBoard').addEventListener('input', handleMindMapInput);
-  byId('mindmapBoard').addEventListener('click', handleMindMapSlot);
-  byId('mindmapCheckButton').addEventListener('click', checkMindMap);
-  byId('mindmapResetButton').addEventListener('click', resetMindMap);
-  byId('mindmapHintButton').addEventListener('click', () => { signals.hint('information-mindmap', 'map-check', { helpLevel: 'A2', helpType: 'word-hint', trigger: 'child-request' }); signals.decorateLater([byId('mindmapCheckButton')], 'information-mindmap', 'map-check', () => mindMapAllCorrect()); byId('mindmapHintDialog').showModal(); });
+  byId('igCard').addEventListener('input', handleMindMapInput);
+  byId('igCard').addEventListener('click', event => { if (event.target.closest('#igWordCheck')) igCheckWord(); });
+  byId('igCard').addEventListener('keydown', event => { if (event.key === 'Enter' && event.target.closest('[data-map-input]')) { event.preventDefault(); igCheckWord(); } });
+  byId('igPoster').addEventListener('click', handleMindMapSlot);
+  byId('mindmapHintButton').addEventListener('click', igShowHint);
   byId('mindmapHintClose').addEventListener('click', () => byId('mindmapHintDialog').close());
   byId('mindmapContinueButton').addEventListener('click', () => { signals.activityComplete('information-mindmap', { attempts: state.mindMapAttempts }); showScreen('retell'); });
   byId('retellInput').addEventListener('input', handleRetellInput);

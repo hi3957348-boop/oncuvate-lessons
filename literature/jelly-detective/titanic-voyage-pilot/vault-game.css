@@ -1,0 +1,302 @@
+/* 기억 금고 작전 — 3번(단서→잠그기→잠수→금고)·4번(가짜 기록 보스) 게임 층 */
+
+/* 미션 HUD */
+.vault-hud { margin: 0 0 10px; padding: 7px 10px; display: flex; flex-wrap: wrap; align-items: center; gap: 8px 12px; border-radius: 14px; color: #eaffff; background: linear-gradient(135deg, #1f1447, #2f1f6b); box-shadow: 0 6px 18px rgba(13,7,37,.18); font-size: 12px; font-weight: 800; }
+.vault-hud:empty { display: none; }
+.hud-title { display: flex; align-items: center; gap: 7px; }
+.hud-title b { padding: 3px 7px; border-radius: 6px; color: #1f1447; background: #4bc9dc; font-size: 10px; letter-spacing: .12em; }
+.hud-steps { margin: 0; padding: 0; display: flex; gap: 5px; list-style: none; flex-wrap: wrap; }
+.hud-steps li { padding: 4px 9px; display: flex; align-items: center; gap: 4px; border: 1px dashed rgba(234,255,255,.3); border-radius: 999px; color: rgba(234,255,255,.62); }
+.hud-steps li.current { border-style: solid; border-color: #4bc9dc; color: #fff; background: rgba(75,201,220,.18); animation: hud-pulse 1.6s ease-in-out infinite; }
+.hud-steps li.done { border-style: solid; border-color: #7fd9b0; color: #fff; background: rgba(127,217,176,.2); }
+.hud-steps li.boss.current { border-color: #ff9d7a; background: rgba(255,157,122,.2); }
+.hud-combo { padding: 4px 9px; border-radius: 999px; color: #1f1447; background: #ffd66b; animation: pop-in .35s ease-out; }
+.hud-gems { margin-left: auto; padding: 4px 11px; border-radius: 999px; background: rgba(255,255,255,.12); font-size: 13px; }
+.hud-gems i { font-style: normal; opacity: .5; }
+.deduction-card .vault-hud { margin-bottom: 14px; }
+
+/* 브리핑 단계 */
+.mission-steps { list-style: none; padding-left: 0 !important; }
+.mission-steps li b { display: inline-block; min-width: 76px; color: #3d2a86; }
+
+/* 단서 카드(잠그기) */
+.clue-dialog.is-review header { background: linear-gradient(135deg, #1d5a68, #2a7f91); }
+#clueDialogAction { font-size: 17px; }
+
+/* 잠수 */
+.dive-row { position: relative; overflow: hidden; min-height: 190px; padding: 0 !important; border-color: #2a7f91 !important; background: linear-gradient(180deg, #d9f6fb 0%, #6fc3d4 55%, #1f5f79 100%) !important; }
+.dive-panel { position: relative; z-index: 2; padding: 20px 22px; display: grid; grid-template-columns: 96px 1fr; align-items: center; gap: 20px; }
+.dive-sonar { position: relative; width: 92px; height: 92px; overflow: hidden; display: grid; place-items: center; border: 4px solid #fff; border-radius: 50%; background: #1f4f6b; box-shadow: 0 0 0 0 rgba(255,255,255,.6); animation: sonar 1s ease-out infinite; }
+.dive-gauge { position: absolute; left: 0; right: 0; bottom: 0; height: 0; background: #4bc9dc; transition: height .2s linear; }
+.dive-sonar b { position: relative; color: #fff; font-size: 40px; line-height: 1; }
+.dive-copy small { color: #0d3b4f; font-size: 11px; font-weight: 900; letter-spacing: .14em; }
+.dive-copy h3 { margin: 4px 0 6px; color: #0d2a3a; font-size: clamp(20px, 2.6vw, 26px); line-height: 1.3; }
+.dive-copy p { margin: 0; color: #12384b; font-size: 14px; font-weight: 650; line-height: 1.5; }
+.dive-sea { position: absolute; inset: 0; z-index: 1; }
+.dive-bubble { position: absolute; bottom: -40px; width: 30px; height: 30px; padding: 0; border: 2px solid rgba(255,255,255,.85); border-radius: 50%; background: radial-gradient(circle at 35% 35%, rgba(255,255,255,.9), rgba(255,255,255,.15) 45%, rgba(255,255,255,.05)); cursor: pointer; animation: bubble-up 3.4s linear infinite; }
+.dive-bubble.b1 { left: 62%; animation-delay: 0s; }
+.dive-bubble.b2 { left: 72%; width: 22px; height: 22px; animation-delay: .6s; }
+.dive-bubble.b3 { left: 82%; animation-delay: 1.2s; }
+.dive-bubble.b4 { left: 90%; width: 24px; height: 24px; animation-delay: 1.8s; }
+.dive-bubble.b5 { left: 67%; width: 18px; height: 18px; animation-delay: 2.4s; }
+.dive-bubble.b6 { left: 86%; animation-delay: 3s; }
+.dive-bubble.popped { animation: bubble-pop .3s ease-out forwards; }
+
+/* 금고 */
+.vault-row { position: relative; }
+.vault-row .memory-question small { color: #3d2a86; }
+.vault-row.dial-miss .memory-options { animation: dial-shake .4s ease; }
+.vault-row.is-open { border-color: #7fd9b0 !important; }
+.vault-reward { margin: 0 0 12px; padding: 11px 14px; display: flex; align-items: center; gap: 12px; border-radius: 14px; animation: pop-in .45s ease-out; }
+.vault-reward.memory { color: #1d4d7a; background: linear-gradient(135deg, #e6f4ff, #f3e9ff); border: 2px solid #9fc8f5; }
+.vault-reward.detective { color: #5a4312; background: linear-gradient(135deg, #fff5d8, #fdebd0); border: 2px solid #f0cf82; }
+.reward-gem { font-size: 34px; animation: gem-spin .8s ease-out; }
+.vault-reward strong, .vault-reward small { display: block; }
+.vault-reward strong { font-size: 17px; }
+.vault-reward small { margin-top: 2px; font-size: 13px; font-weight: 650; line-height: 1.45; }
+.memory-progress div i { font-size: 13px; }
+#reviewActiveClueButton.is-suggested { border-color: #4bc9dc; color: #1d5a68; background: #e5fafd; animation: hud-pulse 1.6s ease-in-out infinite; }
+
+/* 보스 */
+.boss-card .support-copy b { color: #3d2a86; }
+.boss-card .mini-evidence-board { margin: 16px 0; }
+.evidence-flip { position: relative; min-height: 86px; padding: 0; border: 0; background: transparent; perspective: 700px; cursor: pointer; font: inherit; }
+.evidence-flip > span { position: absolute; inset: 0; padding: 10px 12px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 3px; border-radius: 13px; backface-visibility: hidden; transition: transform .45s ease; font-size: 13px; font-weight: 800; line-height: 1.35; text-align: center; }
+.flip-front { color: #fff; background: linear-gradient(135deg, #2f1f6b, #4a36a0); box-shadow: 0 4px 12px rgba(31,20,71,.25); }
+.flip-front b { font-size: 22px; }
+.flip-front small { color: #b9ecf5; font-size: 10px; font-weight: 700; }
+.flip-back { color: #2f1f6b; background: #efeaff; border: 2px solid #c9bdf5; transform: rotateY(180deg); }
+.evidence-flip.is-flipped .flip-front { transform: rotateY(-180deg); }
+.evidence-flip.is-flipped .flip-back { transform: rotateY(0); }
+.evidence-flip:disabled { cursor: default; }
+.record-choices button { position: relative; overflow: hidden; }
+.record-choices button.cleared { opacity: .55; border-color: #7fd9b0; background: #eefaf4; cursor: default; }
+.record-choices button.cleared::after, .record-choices button.busted::after { position: absolute; right: 14px; top: 50%; padding: 4px 12px; border: 3px solid; border-radius: 8px; font-size: 18px; font-weight: 900; letter-spacing: .08em; transform: translateY(-50%) rotate(-10deg); animation: stamp .35s ease-out; }
+.record-choices button.cleared::after { content: "TRUE ✓"; color: #247354; }
+.record-choices button.busted::after { content: "FAKE!"; color: #c2413b; background: rgba(255,255,255,.85); }
+.boss-summary { margin: 12px 0 0; padding: 12px 16px; border-radius: 14px; color: #fff; background: linear-gradient(135deg, #2f1f6b, #1d5a68); animation: pop-in .45s ease-out; }
+.boss-summary strong { display: block; font-size: 15px; letter-spacing: .04em; }
+.boss-summary ul { margin: 8px 0 0; padding: 0; display: flex; flex-wrap: wrap; gap: 8px; list-style: none; }
+.boss-summary li { padding: 6px 11px; border-radius: 10px; background: rgba(255,255,255,.14); font-size: 12px; font-weight: 700; }
+.boss-summary li b { margin-right: 6px; font-size: 15px; }
+.boss-summary li.gold { color: #3b2a00; background: #ffd66b; }
+
+/* 코치: 크루 보드 */
+.crew-team p { margin: 6px 0 0; font-size: 13px; }
+.crew-cheer { color: #3d2a86; font-weight: 800; }
+.crew-ship { position: relative; height: 18px; margin-top: 8px; border-radius: 999px; background: #dfe9f2; }
+.crew-ship span { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: linear-gradient(90deg, #4bc9dc, #7f6ae0); transition: width .4s ease; }
+.crew-ship em { position: absolute; top: -5px; font-style: normal; font-size: 20px; transform: translateX(-50%); transition: left .4s ease; }
+.crew-rows { margin: 8px 0 0; padding: 0; display: grid; gap: 6px; list-style: none; }
+.crew-rows li { padding: 7px 9px; display: grid; grid-template-columns: auto 1fr; gap: 2px 8px; border: 1px solid #e3def5; border-radius: 10px; background: #fff; }
+.crew-rows li.done { border-color: #7fd9b0; background: #eefaf4; }
+.crew-rows li.diving { border-color: #4bc9dc; background: #e5fafd; }
+.crew-rows .crew-gems { font-size: 16px; letter-spacing: 2px; }
+.crew-rows .crew-gems i { font-style: normal; opacity: .35; }
+.crew-rows small { grid-column: 1 / -1; color: #6b6488; font-size: 11px; }
+.group-tips ol { margin: 6px 0 0; padding-left: 18px; font-size: 12px; line-height: 1.55; }
+.group-tips b { color: #3d2a86; }
+
+@keyframes hud-pulse { 0%, 100% { box-shadow: 0 0 0 0 rgba(75,201,220,0); } 50% { box-shadow: 0 0 0 4px rgba(75,201,220,.28); } }
+@keyframes pop-in { from { opacity: 0; transform: scale(.85); } to { opacity: 1; transform: none; } }
+@keyframes gem-spin { from { transform: scale(.3) rotate(-160deg); } to { transform: none; } }
+@keyframes sonar { 0% { box-shadow: 0 0 0 0 rgba(255,255,255,.55); } 100% { box-shadow: 0 0 0 18px rgba(255,255,255,0); } }
+@keyframes bubble-up { from { transform: translateY(0); opacity: .9; } to { transform: translateY(-260px); opacity: .2; } }
+@keyframes bubble-pop { to { transform: scale(1.8); opacity: 0; } }
+@keyframes dial-shake { 0%, 100% { transform: none; } 25% { transform: translateX(-7px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+@keyframes stamp { from { opacity: 0; transform: translateY(-50%) rotate(-10deg) scale(2); } to { opacity: 1; transform: translateY(-50%) rotate(-10deg) scale(1); } }
+
+/* 클래스인 하한(987×521) 같은 낮은 화면: 금고 시트를 압축해 다이얼이 스크롤 없이 닿게 */
+@media (max-height: 700px) {
+  .vault-hud { margin-bottom: 6px; padding: 5px 9px; }
+  .search-screen .memory-sheet > header { min-height: 0; padding: 10px 18px; }
+  .search-screen .memory-sheet > header h2 { font-size: 20px; }
+  .search-screen .memory-progress { display: none; }
+  .search-screen .memory-rows { padding: 10px 14px 0; gap: 6px; }
+  .search-screen .memory-row.complete { min-height: 0; padding: 6px 10px 6px 14px; }
+  .search-screen .memory-row.complete strong { font-size: 13px; }
+  .search-screen .memory-row.complete button { min-height: 34px; }
+  .search-screen .memory-row.active { padding: 12px 16px; }
+  .search-screen .memory-question h3 { margin: 3px 0 8px; font-size: 20px; }
+  .search-screen .memory-question p { display: none; }
+  .search-screen .memory-options { gap: 6px; }
+  .search-screen .memory-options button { min-height: 46px; padding: 7px 14px; font-size: 16px; }
+  .search-screen .vault-reward { margin-bottom: 8px; padding: 7px 12px; }
+  .search-screen .reward-gem { font-size: 26px; }
+  .search-screen .sheet-feedback { min-height: 0; margin: 8px 14px 0; padding: 7px 12px; font-size: 13px; }
+  .search-screen .sheet-actions { padding: 8px 14px 12px; }
+  .dive-row { min-height: 150px; }
+  .dive-panel { padding: 14px 18px; }
+  .clue-dialog-body { min-height: 0; padding: 22px 30px; }
+  .clue-dialog-body p { font-size: 26px; line-height: 1.45; }
+  .clue-dialog header { padding: 12px 22px; }
+  .clue-dialog .primary-action { margin-bottom: 16px; }
+  .boss-card .mini-evidence-board { margin: 10px 0; }
+  .evidence-flip { min-height: 70px; }
+}
+
+@media (max-width: 620px) {
+  .hud-gems { margin-left: 0; }
+  .dive-panel { grid-template-columns: 70px 1fr; gap: 12px; padding: 16px; }
+  .dive-sonar { width: 68px; height: 68px; }
+  .dive-sonar b { font-size: 30px; }
+  .boss-card .mini-evidence-board { grid-template-columns: 1fr; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hud-steps li.current, .hud-combo, .vault-reward, .reward-gem, .dive-sonar, .dive-bubble, .vault-row.dial-miss .memory-options, .boss-summary, #reviewActiveClueButton.is-suggested, .record-choices button::after { animation: none !important; }
+  .dive-bubble { bottom: 30%; }
+  .evidence-flip > span { transition: none; }
+}
+
+/* 보스 v2: 기록 한 장씩 TRUE / FAKE (2026-09-29) */
+.gem-peek { margin: 12px 0 6px; display: flex; align-items: center; gap: 8px; }
+.gem-peek small { color: #6b6488; font-size: 10px; font-weight: 900; letter-spacing: .14em; }
+.gem-peek button { position: relative; width: 48px; height: 48px; border: 2px solid #d9d2f2; border-radius: 14px; background: #fff; font-size: 22px; cursor: pointer; }
+.gem-peek button i { position: absolute; right: 3px; bottom: 1px; color: #6b6488; font-size: 10px; font-style: normal; font-weight: 900; }
+.gem-peek button:hover, .gem-peek button.on { border-color: #4bc9dc; background: #e5fafd; }
+.gem-peek.is-suggested button { animation: hud-pulse 1.6s ease-in-out infinite; border-color: #4bc9dc; }
+.gem-peek-bubble { margin: 0 0 8px; padding: 8px 12px; border-radius: 10px; color: #1d5a68; background: #e5fafd; font-size: 14px; font-weight: 750; animation: pop-in .25s ease-out; }
+.record-slide { position: relative; min-height: 120px; padding: 18px 24px; display: flex; flex-direction: column; justify-content: center; gap: 8px; overflow: hidden; border: 2px solid #d9d2f2; border-radius: 18px; background: #fff; box-shadow: 0 8px 20px rgba(31,20,71,.08); }
+.record-slide small { color: #5b45b5; font-size: 11px; font-weight: 900; letter-spacing: .14em; }
+.record-slide strong { padding-right: 90px; color: #1f1447; font-size: clamp(21px, 2.8vw, 28px); line-height: 1.35; }
+.record-slide.slide-in { animation: slide-in .35s ease-out; }
+.record-slide.dial-miss { animation: dial-shake .4s ease; }
+.record-slide.is-true { border-color: #7fd9b0; background: #eefaf4; }
+.record-slide.is-fake { border-color: #e8a19c; background: #fff4f2; }
+.record-slide.is-true::after, .record-slide.is-fake::after { position: absolute; right: 18px; top: 50%; padding: 4px 12px; border: 3px solid; border-radius: 8px; font-size: 20px; font-weight: 900; letter-spacing: .08em; transform: translateY(-50%) rotate(-10deg); animation: stamp .35s ease-out; }
+.record-slide.is-true::after { content: "TRUE ✓"; color: #247354; }
+.record-slide.is-fake::after { content: "FAKE!"; color: #c2413b; background: rgba(255,255,255,.85); }
+.judge-row { margin-top: 12px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+.judge-row[hidden] { display: none; }
+.judge-row button { min-height: 56px; border: 2px solid; border-radius: 16px; font-weight: 900; font-size: 20px; line-height: 1; font-family: inherit; letter-spacing: .04em; cursor: pointer; transition: transform .12s ease; }
+.judge-row button small { margin-left: 6px; padding: 1px 6px; border: 1px solid currentColor; border-radius: 5px; font-size: 11px; opacity: .6; }
+.judge-row [data-judge="true"] { border-color: #7fd9b0; color: #247354; background: #eefaf4; }
+.judge-row [data-judge="fake"] { border-color: #e8a19c; color: #b33a35; background: #fff4f2; }
+.judge-row button:hover:not(:disabled) { transform: translateY(-2px); }
+.judge-row button.incorrect { opacity: .45; }
+.record-nav { margin-top: 10px; display: flex; align-items: center; justify-content: space-between; gap: 12px; min-height: 48px; }
+.record-dots { display: flex; gap: 7px; }
+.record-dots i { width: 12px; height: 12px; border-radius: 50%; background: #e3def5; }
+.record-dots i.now { outline: 2px solid #5b45b5; outline-offset: 2px; }
+.record-dots i.true { background: #2f8a68; }
+.record-dots i.fake { background: #c2413b; }
+#deductionScreen .feedback-line { margin: 10px 0 0; }
+@keyframes slide-in { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+@media (max-height: 700px) {
+  .gem-peek { margin: 6px 0 4px; }
+  .gem-peek button { width: 40px; height: 40px; font-size: 19px; }
+  .record-slide { min-height: 92px; padding: 12px 18px; }
+  .record-slide strong { font-size: 21px; }
+  .judge-row { margin-top: 8px; }
+  .judge-row button { min-height: 46px; font-size: 18px; }
+  .record-nav { margin-top: 6px; min-height: 42px; }
+  #deductionScreen .section-marker { margin-bottom: 0; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .record-slide, .record-slide::after, .gem-peek button, .gem-peek-bubble { animation: none !important; }
+}
+.boss-card.is-cleared .gem-peek, .boss-card.is-cleared .gem-peek-bubble, .boss-card.is-cleared .record-nav { display: none; }
+.boss-card.is-cleared .boss-summary { margin-top: 8px; }
+.boss-card.is-cleared #deductionContinueButton { margin-top: 10px; }
+
+/* 보스 v3: 옛 문서 카드 + 오른편 입체 게임 버튼 (2026-09-29) */
+.boss-stage { margin-top: 6px; display: grid; grid-template-columns: minmax(0, 1fr) 230px; gap: 18px; align-items: stretch; }
+.boss-stage:has(.judge-row[hidden]) { grid-template-columns: minmax(0, 1fr); }
+.record-slide {
+  min-height: 170px; padding: 30px 34px 26px; border: 0; border-radius: 4px;
+  color: #3b2a1a;
+  background:
+    radial-gradient(ellipse at 18% 12%, rgba(255,255,255,.55), transparent 42%),
+    radial-gradient(ellipse at 88% 90%, rgba(150,104,52,.22), transparent 48%),
+    radial-gradient(circle at 70% 30%, rgba(160,120,60,.10) 0 18px, transparent 19px),
+    repeating-linear-gradient(0deg, transparent 0 33px, rgba(120,86,48,.10) 33px 34px),
+    linear-gradient(160deg, #f7ecd0 0%, #efdcb2 55%, #e4c894 100%);
+  box-shadow: inset 0 0 36px rgba(120,80,30,.35), inset 0 0 4px rgba(90,60,20,.4);
+  filter: drop-shadow(0 8px 10px rgba(60,40,15,.25));
+  transform: rotate(-.6deg);
+  clip-path: polygon(0 1%, 4% 0, 12% 1.2%, 22% .2%, 33% 1%, 46% 0, 58% 1.1%, 71% .1%, 83% 1%, 94% 0, 100% 1.2%, 99.4% 22%, 100% 48%, 99.3% 76%, 100% 99%, 91% 100%, 79% 98.8%, 66% 100%, 52% 99%, 38% 100%, 25% 98.9%, 12% 100%, 3% 99.2%, 0 100%, .6% 70%, 0 44%, .5% 20%);
+}
+.record-slide small { color: #7a4f24; font-family: "Courier New", Courier, monospace; font-size: 12px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.record-slide strong { padding-right: 70px; color: #2f2012; font-family: Georgia, "Times New Roman", serif; font-size: clamp(22px, 2.7vw, 29px); font-weight: 700; line-height: 1.4; }
+.record-tape { position: absolute; left: 50%; top: 0; width: 110px; height: 20px; background: rgba(250,244,226,.8); box-shadow: 0 1px 3px rgba(80,60,30,.25); transform: translateX(-50%) rotate(-2deg); }
+.record-seal { position: absolute; right: 22px; bottom: 16px; width: 58px; height: 58px; display: grid; place-items: center; border: 3px double rgba(139,58,42,.55); border-radius: 50%; color: rgba(139,58,42,.6); font: 700 13px/1 Georgia, serif; letter-spacing: .08em; transform: rotate(-14deg); }
+.record-slide.is-true, .record-slide.is-fake { border: 0; }
+.record-slide.is-true .record-seal, .record-slide.is-fake .record-seal { opacity: 0; }
+.record-slide.is-true::after, .record-slide.is-fake::after { right: 22px; font-family: "Courier New", monospace; font-size: 26px; border-width: 4px; }
+.record-slide.is-true::after { color: #1f7a52; background: rgba(247,236,208,.6); }
+.record-slide.is-fake::after { color: #b3261e; background: rgba(247,236,208,.6); }
+.record-slide.dial-miss { animation: doc-shake .4s ease; }
+@keyframes doc-shake { 0%, 100% { transform: rotate(-.6deg); } 25% { transform: rotate(-.6deg) translateX(-8px); } 50% { transform: rotate(-.6deg) translateX(7px); } 75% { transform: rotate(-.6deg) translateX(-3px); } }
+.record-slide.slide-in { animation: doc-in .4s ease-out; }
+@keyframes doc-in { from { opacity: 0; transform: translateX(46px) rotate(3deg); } to { opacity: 1; transform: rotate(-.6deg); } }
+
+.judge-row { margin: 0; grid-template-columns: 1fr; grid-template-rows: 1fr 1fr; gap: 14px; }
+.judge-row .game-btn {
+  position: relative; min-height: 0; padding: 10px 16px 14px; display: grid; grid-template-columns: 46px 1fr auto; align-items: center; gap: 12px;
+  border: 3px solid; border-radius: 18px; color: #fff; text-align: left;
+  font-weight: 900; font-size: 24px; line-height: 1; font-family: inherit; letter-spacing: .06em; text-shadow: 0 2px 0 rgba(0,0,0,.25);
+  cursor: pointer; overflow: hidden;
+  transition: transform .08s ease, box-shadow .08s ease, filter .15s ease;
+}
+.judge-row .game-btn::before { content: ""; position: absolute; left: 8px; right: 8px; top: 5px; height: 42%; border-radius: 12px 12px 30px 30px; background: linear-gradient(180deg, rgba(255,255,255,.45), rgba(255,255,255,0)); pointer-events: none; }
+.game-btn-icon { width: 46px; height: 46px; display: grid; place-items: center; border-radius: 50%; background: rgba(255,255,255,.95); font-size: 26px; text-shadow: none; box-shadow: inset 0 -3px 0 rgba(0,0,0,.12), 0 2px 4px rgba(0,0,0,.2); }
+.game-btn-label em { display: block; margin-top: 5px; font-style: normal; font-size: 12px; font-weight: 800; letter-spacing: 0; opacity: .92; }
+.judge-row .game-btn kbd { padding: 3px 7px; border: 2px solid rgba(255,255,255,.6); border-radius: 7px; background: rgba(0,0,0,.14); font-weight: 900; font-size: 12px; line-height: 1; font-family: inherit; text-shadow: none; }
+.judge-row [data-judge="true"].game-btn { border-color: #17603f; color: #fff; background: linear-gradient(180deg, #6ee0a6 0%, #34b77a 48%, #248d5c 100%); box-shadow: 0 7px 0 #17603f, 0 12px 20px rgba(23,96,63,.35); }
+.judge-row [data-judge="true"] .game-btn-icon { color: #248d5c; }
+.judge-row [data-judge="fake"].game-btn { border-color: #8e1f19; color: #fff; background: linear-gradient(180deg, #ff9a86 0%, #f0584a 48%, #cc3328 100%); box-shadow: 0 7px 0 #8e1f19, 0 12px 20px rgba(142,31,25,.35); }
+.judge-row [data-judge="fake"] .game-btn-icon { color: #cc3328; }
+.judge-row .game-btn:hover:not(:disabled) { transform: translateY(-2px); filter: brightness(1.06) saturate(1.1); }
+.judge-row [data-judge="true"].game-btn:active:not(:disabled) { transform: translateY(6px); box-shadow: 0 1px 0 #17603f, 0 3px 8px rgba(23,96,63,.3); }
+.judge-row [data-judge="fake"].game-btn:active:not(:disabled) { transform: translateY(6px); box-shadow: 0 1px 0 #8e1f19, 0 3px 8px rgba(142,31,25,.3); }
+.judge-row .game-btn:focus-visible { outline: 3px solid #4bc9dc; outline-offset: 3px; }
+.judge-row .game-btn.incorrect { opacity: .5; filter: grayscale(.4); }
+
+@media (max-height: 700px) {
+  .boss-stage { gap: 14px; }
+  .record-slide { min-height: 142px; padding: 24px 28px 20px; }
+  .record-slide strong { font-size: 22px; }
+  .record-seal { width: 48px; height: 48px; font-size: 11px; }
+  .judge-row { gap: 12px; }
+  .judge-row .game-btn { padding: 8px 14px 11px; font-size: 21px; }
+  .game-btn-icon { width: 40px; height: 40px; font-size: 22px; }
+}
+@media (max-width: 760px) {
+  .boss-stage { grid-template-columns: minmax(0, 1fr); }
+  .judge-row { grid-template-columns: 1fr 1fr; grid-template-rows: auto; }
+  .judge-row .game-btn { min-height: 70px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .judge-row .game-btn { transition: none; }
+}
+
+/* 사건 해결 화면: 활동 영역(987×521) 안에 들어오게 — 왼쪽 젤리, 오른쪽 글 (2026-10-01) */
+.solved-card { width: min(920px, 100%); padding: clamp(20px, 3.5vw, 40px); display: grid; grid-template-columns: minmax(140px, 30%) minmax(0, 1fr); column-gap: clamp(18px, 3vw, 36px); align-items: center; text-align: left; }
+.solved-card > img { grid-column: 1; grid-row: 1 / span 5; width: 100%; max-height: 260px; justify-self: center; }
+.solved-card > * { grid-column: 2; }
+.solved-card .eyebrow { margin: 0; }
+.solved-card h2 { margin: 8px 0; font-size: clamp(26px, 3.4vw, 40px); }
+.solved-card > p:not(.eyebrow) { margin: 6px 0 0; font-size: 16px; line-height: 1.6; }
+.solved-card .solved-strategy { margin-top: 16px; justify-content: flex-start; }
+.solved-card .single-action-row { justify-content: flex-start !important; margin-top: 14px !important; }
+@media (max-height: 700px) {
+  .solved-card { padding: 20px 28px; }
+  .solved-card > img { max-height: 200px; }
+  .solved-card h2 { font-size: clamp(24px, 3vw, 32px); }
+  .solved-card > p:not(.eyebrow) { font-size: 14px; }
+  .solved-card .solved-strategy { margin-top: 10px; }
+  .solved-card .single-action-row { margin-top: 10px !important; }
+}
+@media (max-width: 620px) {
+  .solved-card { grid-template-columns: minmax(0, 1fr); text-align: center; }
+  .solved-card > img { grid-column: 1; grid-row: auto; width: min(180px, 50%); }
+  .solved-card > * { grid-column: 1; }
+  .solved-card .solved-strategy, .solved-card .single-action-row { justify-content: center !important; }
+}
+.solved-card h2, .solved-card > p { word-break: keep-all; }
+
+/* 다시 설명하기 노트: 빈 상태 · 인포그래픽 핵심 낱말 */
+.retell-evidence .evidence-empty { margin: 10px 0 0; padding: 12px; border: 1px dashed rgba(255,255,255,.35); border-radius: 11px; color: #cfc6f0; font-size: 13px; line-height: 1.5; }
+.retell-evidence .evidence-keys-label { display: block; margin-top: 14px; color: #8fd3e4; font-size: 10px; font-weight: 900; letter-spacing: .14em; }
+.retell-evidence .evidence-keys { margin-top: 6px; display: flex; flex-wrap: wrap; gap: 6px; }
+.retell-evidence .evidence-keys span { padding: 4px 10px; border-radius: 999px; color: #fff; background: #e4572e; font-size: 13px; font-weight: 900; letter-spacing: .04em; }

@@ -1,0 +1,47 @@
+/* 6번 소리 듣고 틀리게 적힌 낱말 찾기 — word-hunt.css 위에 얹는 층(듣기 막대·낱말 카드). Chromium 109 문법만. */
+.soundhunt-listen {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 12px;
+  margin: 12px 0 0;
+}
+.soundhunt-listen .support-copy { margin: 0; flex: 1 1 200px; }
+.soundhunt-listen.is-quiet .support-copy { flex-basis: 100%; }
+.soundhunt-play {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 52px;
+  padding: 0 22px;
+  border: 0;
+  border-radius: 999px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #6d5bd0, #2aa7c4);
+  box-shadow: 0 6px 16px rgba(76, 64, 160, .22);
+  font: inherit;
+  font-size: 18px;
+  font-weight: 800;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+.soundhunt-play span { font-size: 16px; }
+.soundhunt-play:focus-visible { outline: 3px solid #2aa7c4; outline-offset: 3px; }
+.soundhunt-play:active { transform: translateY(1px); }
+.soundhunt-slow { min-height: 44px; }
+.soundhunt-listen.is-playing .soundhunt-play { animation: soundhunt-pulse 1s ease-in-out infinite; }
+@keyframes soundhunt-pulse {
+  0%, 100% { box-shadow: 0 6px 16px rgba(76, 64, 160, .22); }
+  50% { box-shadow: 0 0 0 7px rgba(42, 167, 196, .22); }
+}
+.wordhunt-fix .soundhunt-card { display: inline-flex; align-items: center; justify-content: center; gap: 10px; }
+.wordhunt-fix .soundhunt-card span { font-size: 17px; font-family: var(--font, sans-serif); }
+
+@media (min-width: 901px) and (max-height: 650px) {
+  .soundhunt-listen { margin-top: 6px; gap: 8px; }
+  .soundhunt-play { min-height: 44px; padding: 0 18px; font-size: 16px; }
+  .soundhunt-slow { min-height: 40px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .soundhunt-listen.is-playing .soundhunt-play { animation: none; }
+}

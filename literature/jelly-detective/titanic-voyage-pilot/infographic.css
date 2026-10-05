@@ -1,0 +1,86 @@
+/* 8번 인포그래픽: 왼쪽 포스터(바다·배·빙산 그림 + 정보 자리 넷), 오른쪽 문장 카드 한 장 (2026-10-01) */
+.mindmap-screen { width: min(1160px, 100%); }
+.ig-shell { display: grid; grid-template-columns: minmax(0, 1.25fr) minmax(280px, .85fr); gap: 16px; align-items: stretch; }
+
+.ig-poster {
+  position: relative; min-height: 430px; overflow: hidden;
+  border: 3px solid #1d3557; border-radius: 22px;
+  background: linear-gradient(180deg, #eaf6f9 0%, #d3edf3 55%, #b9e1eb 100%);
+  box-shadow: 0 14px 30px rgba(29,53,87,.18);
+}
+.ig-band { position: relative; z-index: 2; padding: 12px 18px 10px; color: #f6efe2; background: #1d3557; }
+.ig-band small { display: block; color: #8fd3e4; font-size: 10px; font-weight: 900; letter-spacing: .18em; }
+.ig-band strong { display: block; margin-top: 2px; font-size: clamp(18px, 2.2vw, 24px); font-weight: 900; letter-spacing: .02em; }
+.ig-art { position: absolute; left: 50%; top: 52%; width: 74%; max-width: 440px; transform: translate(-50%, -50%); }
+
+.ig-spot {
+  position: absolute; z-index: 3; width: 44%; max-width: 230px; min-height: 76px;
+  padding: 10px 12px 10px 58px; display: grid; align-content: center; gap: 2px;
+  border: 2px dashed rgba(29,53,87,.35); border-radius: 16px;
+  color: #1d3557; background: rgba(255,255,255,.62); text-align: left; cursor: pointer;
+  transition: transform .15s ease, border-color .15s ease, background .15s ease, box-shadow .15s ease;
+}
+.ig-spot i { position: absolute; left: 10px; top: 50%; width: 40px; height: 40px; display: grid; place-items: center; border-radius: 50%; background: #f6efe2; box-shadow: inset 0 0 0 2px #1d3557; font-size: 21px; font-style: normal; transform: translateY(-50%); opacity: .7; }
+.ig-spot small { font-size: 10px; font-weight: 900; letter-spacing: .12em; opacity: .75; }
+.ig-spot b { min-height: 1em; font-size: clamp(15px, 1.7vw, 19px); font-weight: 900; line-height: 1.15; }
+.spot-old { left: 3%; top: 64px; }
+.spot-new { right: 3%; top: 64px; }
+.spot-compartment { left: 3%; bottom: 14px; }
+.spot-lifeboat { right: 3%; bottom: 14px; }
+.ig-spot.ready { border: 2px solid #e4572e; background: rgba(255,255,255,.92); box-shadow: 0 0 0 4px rgba(228,87,46,.18); animation: ig-glow 1.4s ease-in-out infinite; }
+.ig-spot.ready:hover { transform: translateY(-2px); }
+.ig-spot.filled { border: 2px solid #1d3557; background: #fffdf7; box-shadow: 0 6px 14px rgba(29,53,87,.18); cursor: default; }
+.ig-spot.filled i { opacity: 1; background: #e4572e; box-shadow: none; }
+.ig-spot.filled b { color: #c0392b; }
+.ig-spot.miss { animation: ig-shake .4s ease; }
+.ig-spot.pop { animation: ig-pop .5s ease-out; }
+@keyframes ig-glow { 50% { box-shadow: 0 0 0 7px rgba(228,87,46,.12); } }
+@keyframes ig-shake { 0%, 100% { transform: none; } 25% { transform: translateX(-7px); } 50% { transform: translateX(6px); } 75% { transform: translateX(-3px); } }
+@keyframes ig-pop { 0% { transform: scale(.9); } 60% { transform: scale(1.06); } 100% { transform: none; } }
+
+.ig-desk { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+.ig-desk-head { display: flex; align-items: center; justify-content: space-between; gap: 10px; }
+.ig-dots { display: flex; gap: 7px; }
+.ig-dots i { width: 12px; height: 12px; border-radius: 50%; background: #d6dfe8; }
+.ig-dots i.on { background: #e4572e; }
+.ig-dots i.now { outline: 2px solid #1d3557; outline-offset: 2px; }
+.ig-card {
+  flex: 1; min-height: 210px; padding: 20px 22px; display: flex; flex-direction: column; justify-content: center; gap: 14px;
+  border: 2px solid #1d3557; border-radius: 18px; background: #fffdf7;
+  box-shadow: 6px 6px 0 #1d3557;
+}
+.ig-card small { color: #e4572e; font-size: 11px; font-weight: 900; letter-spacing: .16em; }
+.ig-sentence { margin: 0; color: #1d3557; font-family: Georgia, "Times New Roman", serif; font-size: clamp(21px, 2.4vw, 27px); font-weight: 700; line-height: 1.5; }
+.ig-sentence .mindmap-cloze { width: auto; min-width: 5ch; margin: 0 4px; padding: 2px 8px; border: 0; border-bottom: 3px solid #e4572e; border-radius: 6px 6px 0 0; color: #c0392b; background: #fff1ea; font: inherit; text-align: center; }
+.ig-sentence .mindmap-cloze:focus { outline: 2px solid #8fd3e4; }
+.ig-sentence mark { margin: 0 2px; padding: 0 6px; border-radius: 6px; color: #fff; background: #e4572e; }
+.ig-actions { display: flex; align-items: center; gap: 10px; }
+.ig-ok { min-height: 46px; }
+.ig-pick { margin: 0; color: #c0392b; font-size: 15px; font-weight: 800; }
+.ig-card.word-done { border-color: #e4572e; box-shadow: 6px 6px 0 #e4572e; }
+.ig-card.miss { animation: ig-shake .4s ease; }
+.ig-card.done { border-color: #2f8a68; box-shadow: 6px 6px 0 #2f8a68; }
+.ig-hint { display: flex; flex-wrap: wrap; gap: 6px; }
+.ig-hint span { padding: 5px 12px; border: 2px solid #1d3557; border-radius: 999px; color: #1d3557; background: #fff; font-weight: 800; }
+.ig-hint span.used { opacity: .35; text-decoration: line-through; }
+.ig-desk .mindmap-feedback { min-height: 22px; margin: 0; }
+.ig-foot { display: flex; align-items: center; justify-content: space-between; gap: 10px; flex-wrap: wrap; }
+
+@media (max-height: 700px) {
+  .ig-poster { min-height: 360px; }
+  .ig-band { padding: 8px 14px 7px; }
+  .spot-old, .spot-new { top: 52px; }
+  .ig-spot { min-height: 64px; padding: 8px 10px 8px 52px; }
+  .ig-spot i { width: 34px; height: 34px; font-size: 18px; }
+  .ig-card { min-height: 170px; padding: 14px 18px; gap: 10px; }
+  .ig-sentence { font-size: 21px; }
+}
+@media (max-width: 760px) {
+  .ig-shell { grid-template-columns: minmax(0, 1fr); }
+  .ig-poster { min-height: 380px; }
+}
+@media (prefers-reduced-motion: reduce) {
+  .ig-spot, .ig-card { animation: none !important; transition: none; }
+}
+.ig-spot b { display: grid; gap: 1px; font-size: clamp(17px, 2vw, 22px); letter-spacing: .02em; overflow-wrap: anywhere; }
+.ig-spot b em { color: #1d3557; font-size: 11px; font-style: normal; font-weight: 800; letter-spacing: 0; opacity: .8; }

@@ -17,6 +17,7 @@
   try{stored=JSON.parse(sessionStorage.getItem(C.storage)||'null')}catch(_){}
   const S=Object.assign({},defaults,stored||{});
   S.visited=Array.isArray(S.visited)?S.visited:[];S.notes=S.notes||{};S.plan=Array.isArray(S.plan)?S.plan:[];S.repaired=S.repaired||{};S.selectedModules=Array.isArray(S.selectedModules)?S.selectedModules:[];S.placements=S.placements||{};S.vocabOpened=Array.isArray(S.vocabOpened)?S.vocabOpened:[];S.itemAttempts=S.itemAttempts&&typeof S.itemAttempts==='object'?S.itemAttempts:{};
+  if(C.mission){const m=S.mission&&typeof S.mission==='object'?S.mission:{};S.mission=Object.assign({phase:'brief',peeks:{},gems:{},locked:{},judged:{},judgeAttempts:{},slide:0,flips:0,testLog:[],card:0,orgOrder:null},m);['peeks','gems','locked','judged','judgeAttempts'].forEach(k=>{if(!S.mission[k]||typeof S.mission[k]!=='object')S.mission[k]={}});if(!Array.isArray(S.mission.testLog))S.mission.testLog=[];if(S.gameComplete&&C.game.type==='base')S.mission.phase='build'}
   function bumpAttempt(id){S.itemAttempts[id]=(S.itemAttempts[id]||0)+1;return S.itemAttempts[id]}
   const screens=Object.fromEntries(order.map(n=>[n,$(n+'Screen')]));
   let korean=false;
@@ -33,9 +34,9 @@
       case:[{en:'Read one incident record at a time.',ko:'사건 기록을 한 번에 한 문장씩 읽어요.'}],
       goal:[{en:'Choose the one mission goal that solves this case.',ko:'이 사건을 해결할 임무 목표 하나를 골라요.'}],
       game:C.guide?.game||[{en:'Use one control at a time.',ko:'한 번에는 조작 하나만 해요.'}],
-      check:[{en:'Look across all of your results.',ko:'지금까지 얻은 결과를 모두 살펴봐요.'},{en:'Choose the one report that fits every result.',ko:'모든 결과와 맞는 보고서 하나를 골라요.'}],
+      check:C.guide?.check||[{en:'Look across all of your results.',ko:'지금까지 얻은 결과를 모두 살펴봐요.'},{en:'Choose the one report that fits every result.',ko:'모든 결과와 맞는 보고서 하나를 골라요.'}],
       reading:[{en:'Read one sentence at a time. Keep the idea that helps the case.',ko:'한 문장씩 읽고 사건 해결에 필요한 생각을 남겨요.'}],
-      organize:[{en:'Move one card, then complete one key word.',ko:'카드 하나를 옮긴 뒤 핵심 단어 하나를 완성해요.'},{en:'Check the connections only after every card is placed.',ko:'모든 카드를 놓은 뒤 연결을 확인해요.'}],
+      organize:C.guide?.organize||[{en:'Move one card, then complete one key word.',ko:'카드 하나를 옮긴 뒤 핵심 단어 하나를 완성해요.'},{en:'Check the connections only after every card is placed.',ko:'모든 카드를 놓은 뒤 연결을 확인해요.'}],
       retell:[{en:'Use your work to explain the solution in your own words.',ko:'내가 정리한 내용을 보며 해결 과정을 내 말로 설명해요.'},{en:'Name evidence or a reason.',ko:'증거나 이유를 꼭 하나 넣어요.'}]
     }
   });
@@ -53,7 +54,7 @@
     if(S.checkSolved)parts.push('증거 확인 ✓');else if(S.checkAttempts)parts.push('증거 확인 시도 '+S.checkAttempts);
     if(S.sentenceIndex)parts.push('정보글 '+Math.min(S.sentenceIndex,C.reading[S.readingLevel].length)+'/'+C.reading[S.readingLevel].length+(S.readingRereads?' · 다시 읽기 '+S.readingRereads:'')+(S.readingSelfCheck?' · '+({understood:'이해했어요',reread:'다시 볼래요',unsure:'잘 모르겠어요'})[S.readingSelfCheck]:''));
     if(S.organizeSolved)parts.push('정보 정리 ✓');else if(S.organizeAttempts)parts.push('정리 시도 '+S.organizeAttempts);
-    return{screen:S.screen,screenLabel:labels[S.screen]||S.screen,summary:parts.join(' · '),retell:String(S.retell||'').slice(0,240),done:S.screen==='solved',sessionNo:Number(C.id)||0,helpRequestedAt:S.helpRequestedAt||0,helpRequests:S.helpRequests||0};
+    return{screen:S.screen,screenLabel:labels[S.screen]||S.screen,summary:parts.join(' · '),retell:String(S.retell||'').slice(0,240),done:S.screen==='solved',sessionNo:Number(C.id)||0,helpRequestedAt:S.helpRequestedAt||0,helpRequests:S.helpRequests||0,vault:C.mission?Object.assign(mgStats(),{stage:mgStage(),diving:Boolean(mgDiveTimer),tests:S.testsRun}):undefined};
   }
   function setWatermark(){const child=typeof runtime.child==='string'?runtime.child:runtime.child?.nickname||runtime.child?.name||runtime.child?.id;$('childWatermark').textContent=child?'ONCUVATE · '+child:'ONCUVATE · DEMO'}
   function unlocked(name){
@@ -134,9 +135,14 @@
 
   function renderGame(){
     $('gameEyebrow').textContent=C.game.eyebrow;$('gameTitle').textContent=C.game.title;if($('gameIntro'))$('gameIntro').textContent=C.game.intro||'';
+    if(C.mission&&C.game.type==='planets')renderMissionPlanets();
+    else if(C.mission&&C.game.type==='systems')renderMissionSystems();
+    else if(C.mission&&C.game.type==='base'){if(S.mission.phase!=='build'&&!S.gameComplete)renderMissionBrief();else renderMissionBuild()}
+    else{
     if(C.game.type==='planets')renderPlanetGame();
     if(C.game.type==='systems')renderSystemGame();
     if(C.game.type==='base')renderBaseGame();
+    }
     $('gameContinue').disabled=!S.gameComplete;
   }
   function renderPlanetGame(){
@@ -180,7 +186,275 @@
   }
 
 
+  /* ===== 기억 금고 작전 (C.mission이 있는 회차만, 1회차 게임화를 2~4회차 활동 종류에 맞춤 · 2026-10-01) =====
+     planets: 구역 보고 → 🔒 잠그기 → 🫧 잠수 → 기록 고르기 → 💎/🔎
+     systems: 순서 계획 → 지금 점검할 곳 보고 → 🔒 잠그기 → 🫧 잠수 → 조치 고르기 → 💎/🔎
+     base:    필요 기억 → 잠수 → 장비(규칙) 카드 한 장씩 넘기며 싣기 → 🚀 시험 불빛 → 💎/🔎
+     check:   기록 한 장씩 TRUE/FAKE(옛 문서 카드 + 게임 버튼)
+     organize: 카드 한 장씩 → 포스터의 자리 누르기 → 마지막에 빈칸 낱말 */
+  let mgDiveTimer=0,mgDiveEnds=0,mgDiveStart=0,mgDiveTotal=0,mgDiveFor='',mgPeekTimer=0,mgBriefShownAt=0;
+  const MG_DIVE=[3,4,5,5];
+  function mgSlots(){return C.game.type==='base'?['design']:C.game.items.map(x=>x.id)}
+  function needLabel(id){const n=(C.mission.needs||[]).find(x=>x[0]===id);return n?n[1]+' '+n[2]:id}
+  function mgStats(){
+    const m=S.mission||{},gems=m.gems||{};let memory=0,detective=0,combo=0,best=0;
+    mgSlots().forEach(id=>{if(gems[id]==='memory'){memory++;combo++;best=Math.max(best,combo)}else if(gems[id]==='detective'){detective++;combo=0}});
+    const judged=Object.keys(m.judged||{}).length,boss=Boolean(C.check.judge)&&judged>=C.check.judge.cards.length;
+    const peeks=Object.values(m.peeks||{}).reduce((a,n)=>a+(Number(n)||0),0);
+    return{memory:memory,detective:detective,combo:best,boss:boss,bare:boss&&!(m.flips>0),peeks:peeks,flips:m.flips||0,slots:mgSlots().length};
+  }
+  function mgStage(){
+    const st=mgStats();
+    if(st.boss)return 'boss-cleared';
+    if(S.gameComplete)return 'boss';
+    if(mgDiveTimer)return 'diving';
+    if(C.game.type==='base'&&S.mission.phase!=='build')return 'search';
+    return 'vault';
+  }
+  function mgGemIcon(id){const g=(S.mission.gems||{})[id];return g==='memory'?'💎':g==='detective'?'🔎':'🔒'}
+  function mgHud(){
+    const st=mgStats();let steps='';
+    if(C.game.type==='base'){
+      const a=S.mission.phase==='build'||S.gameComplete?'done':'current',b=S.gameComplete?'done':S.mission.phase==='build'?'current':'';
+      steps='<li class="'+a+'"><span aria-hidden="true">🔒</span>필요 기억</li><li class="'+b+'"><span aria-hidden="true">'+(S.gameComplete?mgGemIcon('design'):'🛠️')+'</span>설계·시험</li>';
+    }else{
+      const done=C.game.type==='planets'?S.notes:S.repaired;
+      steps=C.game.items.map((x,i)=>'<li class="'+(done[x.id]?'done':(S.activeItem===x.id||(C.game.type==='systems'&&mgCurrentStation()&&mgCurrentStation().id===x.id))?'current':'')+'"><span aria-hidden="true">'+mgGemIcon(x.id)+'</span>'+(i+1)+'</li>').join('');
+    }
+    return '<div class="vault-hud" aria-label="기억 금고 작전 진행"><span class="hud-title"><b>MISSION</b>기억 금고 작전</span><ol class="hud-steps">'+steps+'<li class="boss '+(st.boss?'done':S.gameComplete?'current':'')+'"><span aria-hidden="true">'+(st.boss?'🏴‍☠️':'👾')+'</span>판정</li></ol>'+(st.combo>=2&&!st.boss?'<span class="hud-combo">🔥 ×'+st.combo+'</span>':'')+'<span class="hud-gems" aria-label="모은 보석">💎 '+st.memory+' <i>·</i> 🔎 '+st.detective+'</span></div>';
+  }
+  function mgDiveHtml(label){
+    return '<div class="dive-row mg-dive"><div class="dive-panel"><div class="dive-sonar" aria-hidden="true"><i class="dive-gauge" id="diveGauge"></i><b id="diveCount">'+mgDiveTotal+'</b></div><div class="dive-copy"><small>DIVE · '+esc(label)+'</small><h3>기억을 꼭 붙들고 내려가요</h3><p>🫧 방울은 톡톡 터뜨려도 괜찮아요.</p></div></div><div class="dive-sea" aria-hidden="true">'+[1,2,3,4,5,6].map(i=>'<button type="button" class="dive-bubble b'+i+'" data-bubble tabindex="-1"></button>').join('')+'</div></div>';
+  }
+  function mgStartDive(sec,forId){
+    clearInterval(mgDiveTimer);mgDiveTotal=sec;mgDiveFor=forId||'';mgDiveStart=Date.now();mgDiveEnds=mgDiveStart+sec*1000;
+    mgDiveTimer=setInterval(mgTick,200);renderGame();liveMirror?.publishSoon(100);
+  }
+  function mgTick(){
+    const left=Math.max(0,Math.ceil((mgDiveEnds-Date.now())/1000));
+    if($('diveCount'))$('diveCount').textContent=String(left);
+    if($('diveGauge'))$('diveGauge').style.height=Math.min(100,(Date.now()-mgDiveStart)/(mgDiveTotal*1000)*100)+'%';
+    if(Date.now()<mgDiveEnds)return;
+    clearInterval(mgDiveTimer);mgDiveTimer=0;
+    const itemId=C.game.type==='base'?'base-design':(C.game.type==='planets'?'note-':'system-')+mgDiveFor;
+    signals.log('memory-hold',{activityId:'game',itemId:itemId,holdMs:mgDiveTotal*1000});
+    if(C.game.type==='base')S.mission.phase='build';else S.mission.locked[mgDiveFor]=true;
+    save();renderGame();updateCoach();
+  }
+  function mgPeek(id,text,title){
+    S.mission.peeks[id]=(S.mission.peeks[id]||0)+1;
+    const itemId=(C.game.type==='planets'?'note-':'system-')+id;
+    signals.hint('game',itemId,{helpLevel:'A3',helpType:'clue-review',trigger:'child-request'});
+    save();openModal('PEEK · 살짝 다시 보기',title,'<p>'+esc(text)+'</p>','🔒 다시 잠그고 잠수하기');$('infoDialog').dataset.after='mg-peek:'+id;
+  }
+  function mgAward(id){
+    if(S.mission.gems[id])return;
+    S.mission.gems[id]=S.mission.peeks[id]?'detective':'memory';
+    signals.log('vault-open',{activityId:'game',itemId:C.game.type==='base'?'base-design':(C.game.type==='planets'?'note-':'system-')+id,gem:S.mission.gems[id],peeks:S.mission.peeks[id]||0});
+  }
+  function mgReward(id,extra){
+    const g=S.mission.gems[id];if(!g)return '';
+    return '<div class="vault-reward '+g+'" role="status"><span class="reward-gem" aria-hidden="true">'+(g==='memory'?'💎':'🔎')+'</span><div><strong>'+(g==='memory'?'기억 보석 획득!':'탐정 보석 획득!')+'</strong><small>'+(g==='memory'?'다시 보지 않고 기억만으로 해냈어요.':'다시 보고 정확하게 해냈어요.')+'</small>'+(extra||'')+'</div></div>';
+  }
+  /* --- planets: 구역 금고 --- */
+  function renderMissionPlanets(){
+    const items=C.game.items,active=items.find(x=>x.id===S.activeItem);
+    $('gameCounter').textContent=Object.keys(S.notes).length+' / '+items.length;
+    let side='';
+    if(mgDiveTimer)side=mgDiveHtml(active?active.name:'');
+    else if(active&&!S.notes[active.id]&&S.mission.locked[active.id]){
+      side='<div class="mg-question"><small>🔐 '+esc(active.name)+' · 다이얼 맞추기</small><h3>'+esc(active.question)+'</h3><div class="choices" id="planetNoteChoices">'+active.options.map(o=>'<button type="button" data-note="'+esc(o)+'" data-item-id="note-'+active.id+'" data-track="answer" data-correct="'+(o===active.correct)+'">'+esc(o)+'</button>').join('')+'</div><button class="quiet mg-peek" id="mgPeek" type="button" data-track="hint" data-help-level="A3" data-help-type="clue-review">🔭 살짝 다시 보기</button></div>';
+    }else{
+      side='<h3>DECK LOG</h3><div class="mg-log-list">'+items.map(x=>'<article class="'+(S.notes[x.id]?'done':'')+'"><span aria-hidden="true">'+mgGemIcon(x.id)+'</span><div><small>'+esc(x.name)+'</small>'+(S.notes[x.id]?esc(S.notes[x.id]):'')+'</div></article>').join('')+'</div>'+(S.lastGem?mgReward(S.lastGem):'');
+    }
+    $('gameArea').innerHTML=mgHud()+'<div class="map-layout"><div class="space-map" id="spaceMap"><div class="probe"></div>'+items.map(x=>'<button class="planet-stop '+(S.notes[x.id]?'done':'')+'" data-planet="'+x.id+'" data-id="'+x.id+'" type="button" aria-label="'+esc(x.name)+'">'+x.name+'</button>').join('')+'</div><aside class="side-panel">'+side+'</aside></div>';
+    if(active&&!S.notes[active.id]&&S.mission.locked[active.id]&&!mgDiveTimer){signals.decorate($('planetNoteChoices').querySelectorAll('[data-note]'),'game','note-'+active.id,b=>b.dataset.note===active.correct);signals.ready('game','note-'+active.id,{textNode:$('planetNoteChoices'),attempts:S.itemAttempts['note-'+active.id]||0,measureId:'case.game'})}
+    $('spaceMap').addEventListener('click',e=>{const b=e.target.closest('[data-planet]');if(!b||mgDiveTimer)return;const item=items.find(x=>x.id===b.dataset.planet);
+      if(S.notes[item.id]){openModal('DECK REPORT · '+item.name,item.name,'<p>'+esc(item.fact)+'</p>','확인했어요');$('infoDialog').dataset.after='';return}
+      S.activeItem=item.id;S.lastGem='';if(!S.visited.includes(item.id))S.visited.push(item.id);signals.log('planet-scan',{activityId:'game',itemId:'note-'+item.id,visitNo:S.visited.length,alreadyNoted:false});save();
+      if(S.mission.locked[item.id]){renderGame();return}
+      mgBriefShownAt=performance.now();openModal('VAULT '+(Object.keys(S.notes).length+1)+' OF '+items.length+' · '+item.name,item.name,'<p>'+esc(item.fact)+'</p>','🔒 기억 잠그기');$('infoDialog').dataset.after='mg-lock:'+item.id});
+    $('mgPeek')?.addEventListener('click',()=>{const item=active;signals.decorateLater($('planetNoteChoices').querySelectorAll('[data-note]'),'game','note-'+item.id,x=>x.dataset.note===item.correct);mgPeek(item.id,item.fact,item.name)});
+    $('planetNoteChoices')?.addEventListener('click',e=>{const b=e.target.closest('[data-note]');if(!b)return;const item=active;bumpAttempt('note-'+item.id);signals.respond('game','note-'+item.id,{correct:b.dataset.note===item.correct,value:b.dataset.note,expected:item.correct,measureId:'case.game'});
+      if(b.dataset.note!==item.correct){signals.decorateLater($('planetNoteChoices').querySelectorAll('[data-note]'),'game','note-'+item.id,x=>x.dataset.note===item.correct);b.classList.add('wrong');const q=b.closest('.mg-question');q.classList.remove('dial-miss');void q.offsetWidth;q.classList.add('dial-miss');save();$('gameFeedback').textContent=(S.itemAttempts['note-'+item.id]>=2?'「살짝 다시 보기」로 확인해도 보석은 그대로 받아요.':'딸깍, 아직 안 맞아요. 기억한 핵심을 다시 떠올려 봐요.');$('gameFeedback').className='feedback attention';return}
+      S.notes[item.id]=item.correct;mgAward(item.id);S.lastGem=item.id;S.activeItem='';S.gameComplete=Object.keys(S.notes).length===items.length;save();renderGame();updateChrome();updateCoach()});
+    $('gameFeedback').textContent=S.gameComplete?'금고를 모두 열었어요. 이제 판정하러 가요!':mgDiveTimer?'보고는 잠겼어요. 머릿속에서 꼭 붙들어요.':(active&&S.mission.locked[active.id]&&!S.notes[active.id])?'기억한 핵심 정보 하나를 골라요.':'그림에서 구역 하나를 골라요.';
+    $('gameFeedback').className=S.gameComplete?'feedback success':'feedback';
+  }
+  /* --- systems: 순서 계획 → 한 곳씩 금고 --- */
+  function mgCurrentStation(){const planned=S.plan.length===C.game.items.length;return planned?C.game.items.find(x=>x.id===S.plan.find(id=>!S.repaired[id])):null}
+  function renderMissionSystems(){
+    const items=C.game.items,repaired=Object.keys(S.repaired).length,planned=S.plan.length===items.length,current=mgCurrentStation();
+    $('gameCounter').textContent=repaired+' / '+items.length;
+    const remaining=items.filter(x=>!S.plan.includes(x.id));
+    const plan='<section class="side-panel"><h3>WATCH PLAN</h3><div class="mission-order">'+[0,1,2].map((_,i)=>{const id=S.plan[i];return '<div class="'+(id&&S.repaired[id]?'done':'')+'">'+(i+1)+' · '+(id?(mgGemIcon(id)+' '+esc(items.find(x=>x.id===id).name)):'—')+'</div>'}).join('')+'</div>'+(remaining.length?'<div class="control-row mg-plan-row">'+remaining.map(x=>'<button data-plan="'+x.id+'" type="button">'+x.name+'</button>').join('')+'</div>':'')+(S.plan.length>repaired&&!mgDiveTimer?'<button class="quiet" id="clearPlan" type="button">'+(repaired?'남은 순서 다시 세우기':'계획 다시 세우기')+'</button>':'')+(S.lastGem?mgReward(S.lastGem):'')+'</section>';
+    let work='';
+    if(!planned)work='<div class="mg-station idle"><span aria-hidden="true">🧭</span><h3>점검 순서를 먼저 정해요</h3><p>오른쪽에서 첫 번째로 볼 곳부터 눌러요.</p></div>';
+    else if(!current)work='<div class="mg-station idle"><span aria-hidden="true">🏴‍☠️</span><h3>세 곳 모두 안전해요!</h3></div>';
+    else if(mgDiveTimer)work=mgDiveHtml(current.name);
+    else if(!S.mission.locked[current.id])work='<article class="mg-station"><small>STATION REPORT · '+esc(current.name)+'</small><p class="mg-report">'+esc(current.problem)+'</p><button class="primary" id="mgLockStation" type="button">🔒 기억 잠그기</button></article>';
+    else work='<article class="mg-station mg-question"><small>🔐 '+esc(current.name)+' · 어떤 조치?</small><div class="choices">'+current.options.map(o=>'<button type="button" data-system="'+current.id+'" data-control="'+esc(o)+'" data-item-id="system-'+current.id+'" data-track="answer" data-correct="'+(o===current.correct)+'">'+esc(o)+'</button>').join('')+'</div><button class="quiet mg-peek" id="mgPeek" type="button" data-track="hint" data-help-level="A3" data-help-type="clue-review">🔭 살짝 다시 보기</button></article>';
+    $('gameArea').innerHTML=mgHud()+'<div class="sim-layout"><section>'+work+'</section>'+plan+'</div>';
+    if(caseVocab)$('gameArea').querySelectorAll('.mg-report').forEach(p=>caseVocab.render(p,p.textContent));
+    if(current&&S.mission.locked[current.id]&&!mgDiveTimer){signals.decorate($('gameArea').querySelectorAll('[data-system]'),'game','system-'+current.id,b=>b.dataset.control===current.correct);signals.ready('game','system-'+current.id,{textNode:$('gameArea'),attempts:S.itemAttempts['system-'+current.id]||0,measureId:'case.game'})}
+    $('gameArea').querySelectorAll('[data-plan]').forEach(b=>b.addEventListener('click',()=>{S.plan.push(b.dataset.plan);S.lastGem='';signals.log('plan-step',{activityId:'game',itemId:'plan',stepNo:S.plan.length,value:b.dataset.plan});save();renderGame()}));
+    $('clearPlan')?.addEventListener('click',()=>{const kept=S.plan.filter(id=>S.repaired[id]);signals.log('reset',{activityId:'game',itemId:'plan',stepsCleared:S.plan.length-kept.length,keptRepaired:kept.length});S.plan=kept;save();renderGame()});
+    $('mgLockStation')?.addEventListener('click',()=>{signals.log('memory-lock',{activityId:'game',itemId:'system-'+current.id});S.lastGem='';mgStartDive(MG_DIVE[Math.min(repaired,MG_DIVE.length-1)],current.id)});
+    $('mgPeek')?.addEventListener('click',()=>{signals.decorateLater($('gameArea').querySelectorAll('[data-system]'),'game','system-'+current.id,x=>x.dataset.control===current.correct);mgPeek(current.id,current.problem,current.name)});
+    $('gameArea').querySelectorAll('[data-system]').forEach(b=>b.addEventListener('click',()=>{const item=current;bumpAttempt('system-'+item.id);signals.respond('game','system-'+item.id,{correct:b.dataset.control===item.correct,value:b.dataset.control,expected:item.correct,measureId:'case.game'});
+      if(b.dataset.control!==item.correct){signals.decorateLater($('gameArea').querySelectorAll('[data-system]'),'game','system-'+item.id,x=>x.dataset.control===item.correct);b.classList.add('wrong');const q=b.closest('.mg-question');q.classList.remove('dial-miss');void q.offsetWidth;q.classList.add('dial-miss');save();$('gameFeedback').textContent=(S.itemAttempts['system-'+item.id]>=2?'「살짝 다시 보기」로 보고를 확인해도 보석은 그대로 받아요.':'경고가 아직 전달되지 않았어요. 기억한 보고를 다시 떠올려 봐요.');$('gameFeedback').className='feedback attention';return}
+      S.repaired[item.id]=item.correct;mgAward(item.id);S.lastGem=item.id;S.gameComplete=Object.keys(S.repaired).length===items.length;save();renderGame();updateChrome();updateCoach()}));
+    $('gameFeedback').textContent=S.gameComplete?'세 곳 모두 안전해요. 이제 판정하러 가요!':!planned?'점검 순서를 정해요.':mgDiveTimer?'보고는 잠겼어요. 머릿속에서 꼭 붙들어요.':current&&!S.mission.locked[current.id]?'보고를 읽고 핵심을 외운 뒤 잠가요.':'기억한 보고에 맞는 조치 하나를 골라요.';
+    $('gameFeedback').className=S.gameComplete?'feedback success':'feedback';
+  }
+  /* --- base: 필요 기억 → 카드 한 장씩 --- */
+  function mgNeedsList(){return '<ul class="mg-needs-list">'+C.mission.needs.map(n=>'<li><span aria-hidden="true">'+n[1]+'</span><b>'+esc(n[2])+'</b><small>'+esc(n[3])+'</small></li>').join('')+'</ul>'}
+  function renderMissionBrief(){
+    $('gameCounter').textContent='NEEDS';$('gameContinue').disabled=true;
+    if(mgDiveTimer){$('gameArea').innerHTML=mgHud()+mgDiveHtml('필요 다섯 가지');$('gameFeedback').textContent='목록은 잠겼어요. 머릿속에서 꼭 붙들어요.';$('gameFeedback').className='feedback';return}
+    $('gameArea').innerHTML=mgHud()+'<div class="mg-needs"><small>NEEDS · 🔒 금고에 잠글 기억</small><h3>'+esc(C.mission.title)+'</h3>'+mgNeedsList()+'<button class="primary" id="mgLock" type="button">🔒 기억 잠그기</button></div>';
+    $('gameFeedback').textContent='다 외웠으면 잠가요.';$('gameFeedback').className='feedback';
+    mgBriefShownAt=performance.now();
+    $('mgLock').addEventListener('click',()=>{signals.log('memory-lock',{activityId:'game',itemId:'base-design',readMs:Math.round(performance.now()-mgBriefShownAt)});mgStartDive(C.mission.diveSeconds||5,'design')});
+  }
+  function mgTestSummary(){
+    const log=S.mission.testLog||[];if(!log.length)return '아직 시험 기록이 없어요.';
+    const first=log[0];if(log.length===1&&!first.length)return '시험 1번 · 한 번에 모두 통과';
+    return '시험 '+log.length+'번 · 처음엔 '+(first.length?first.map(needLabel).join(', ')+' 빠짐':'통과')+' → 고친 뒤 통과';
+  }
+  function renderMissionBuild(){
+    const mods=C.game.modules,total=moduleTotal(),missing=missingNeeds(),m=S.mission;
+    const idx=Math.max(0,Math.min(mods.length-1,m.card||0)),mod=mods[idx],loaded=S.selectedModules.includes(mod.id);
+    const coins=n=>'<span class="mb-coins" aria-label="'+n+' 크레딧">'+'<i></i>'.repeat(n)+'</span>';
+    const slots=[];let used=0;mods.filter(x=>S.selectedModules.includes(x.id)).forEach(x=>{for(let i=0;i<x.cost;i++)slots.push('<i class="on"></i>');used+=x.cost});for(let i=used;i<C.game.budget;i++)slots.push('<i></i>');
+    const loadedIcons=mods.map((x,i)=>S.selectedModules.includes(x.id)?'<button type="button" data-mb-jump="'+i+'" aria-label="'+esc(x.name)+'">'+x.icon+'</button>':'').join('');
+    const lights=S.testsRun?'<ul class="mb-lights" aria-label="시험 결과">'+C.mission.needs.map(n=>'<li class="'+(missing.includes(n[0])?'fail':'pass')+'"><span aria-hidden="true">'+n[1]+'</span><b>'+(missing.includes(n[0])?'✗':'✓')+'</b></li>').join('')+'</ul>':'';
+    $('gameArea').innerHTML=mgHud()+'<div class="mb-layout"><section class="mb-stage" id="mbStage"><button class="mb-arrow" type="button" data-mb-nav="-1" aria-label="이전 카드"'+(idx===0?' disabled':'')+'>◀</button><article class="mb-card'+(loaded?' loaded':'')+'" id="mbCard"><small>RULE '+(idx+1)+' / '+mods.length+'</small><span class="mb-icon" aria-hidden="true">'+mod.icon+'</span><strong>'+esc(mod.name)+'</strong>'+coins(mod.cost)+'<p>'+esc(mod.detail)+'</p><button class="mb-load" type="button" data-module="'+mod.id+'">'+(loaded?'✓ 실음 · 빼기':'🚢 싣기')+'</button></article><button class="mb-arrow" type="button" data-mb-nav="1" aria-label="다음 카드"'+(idx===mods.length-1?' disabled':'')+'>▶</button><div class="mb-dots" aria-hidden="true">'+mods.map((x,i)=>'<i class="'+(i===idx?'now ':'')+(S.selectedModules.includes(x.id)?'on':'')+'"></i>').join('')+'</div></section><aside class="side-panel mb-side">'+(!S.gameComplete?'<button class="quiet mg-peek" id="mgNeedsPeek" type="button" data-track="hint" data-help-level="A3" data-help-type="needs-review">🔭 필요 살짝 보기</button>':'')+'<div class="mb-cargo" id="mbCargo" aria-label="예산 '+total+' / '+C.game.budget+'">'+slots.join('')+'</div><div class="mb-loaded">'+(loadedIcons||'<span class="mb-empty" aria-hidden="true"></span>')+'</div><button class="primary" id="runTests" type="button" data-track="answer" data-item-id="base-design" data-correct="'+(missing.length===0&&S.selectedModules.length>0)+'" '+(!S.selectedModules.length?'disabled':'')+'>🚀 시험하기</button>'+lights+(S.gameComplete?mgReward('design',S.testsRun>1?'<small class="mg-fix">🔧 시험 '+S.testsRun+'번 · 고쳐서 통과했어요</small>':''):'')+'</aside></div>';
+    $('gameCounter').textContent=total+' / '+C.game.budget+' credits';
+    if(!S.gameComplete){signals.decorate([$('runTests')],'game','base-design',()=>missingNeeds().length===0&&S.selectedModules.length>0);signals.ready('game','base-design',{textNode:$('gameArea'),attempts:S.testsRun,measureId:'case.game'})}
+    $('gameArea').querySelector('[data-module]').addEventListener('click',()=>{const selected=S.selectedModules.includes(mod.id);signals.log('base-module',{activityId:'game',itemId:'base-design',module:mod.id,selected:!selected,overBudget:!selected&&total+mod.cost>C.game.budget});if(!selected&&total+mod.cost>C.game.budget){$('gameFeedback').textContent='예산이 모자라요. 다른 규칙 하나를 빼 봐요.';$('gameFeedback').className='feedback attention';const cg=$('mbCargo');cg.classList.remove('full');void cg.offsetWidth;cg.classList.add('full');return}S.selectedModules=selected?S.selectedModules.filter(id=>id!==mod.id):[...S.selectedModules,mod.id];S.gameComplete=false;save();renderGame()});
+    $('runTests').addEventListener('click',()=>{S.testsRun++;const pass=missingNeeds().length===0;signals.respond('game','base-design',{correct:pass,value:S.selectedModules.join('+'),expected:C.game.required.join('+'),missing:missingNeeds().join(','),credits:moduleTotal(),measureId:'case.game'});S.gameComplete=pass;S.mission.testLog.push(missingNeeds());if(pass){mgAward('design');setTimeout(()=>$('gameContinue')?.scrollIntoView({block:'nearest',behavior:'smooth'}),450)}save();renderGame();updateChrome();updateCoach()});
+    $('mgNeedsPeek')?.addEventListener('click',()=>{S.mission.peeks.design=(S.mission.peeks.design||0)+1;signals.hint('game','base-design',{helpLevel:'A3',helpType:'needs-review',trigger:'child-request'});save();openModal('PEEK · 살짝 다시 보기','NEEDS',mgNeedsList(),'다시 설계하기');$('infoDialog').dataset.after=''});
+    $('gameFeedback').textContent=S.gameComplete?'모든 불이 초록! 예산 안에서 통과했어요.':S.testsRun?'빨간 칸을 채울 규칙으로 하나만 바꿔 봐요.':'카드를 넘겨 보며 실을 규칙을 골라요.';
+    $('gameFeedback').className=S.gameComplete?'feedback success':S.testsRun?'feedback attention':'feedback';
+  }
+  function mbGo(delta){const n=C.game.modules.length;S.mission.card=Math.max(0,Math.min(n-1,(S.mission.card||0)+delta));save();renderGame();const c=$('mbCard');if(c)c.classList.add(delta<0?'from-left':'from-right')}
+  let mbSwipeX=null;
+  /* --- check: 기록 한 장씩 TRUE / FAKE --- */
+  function mgEvidenceRows(){
+    if(C.game.type==='planets')return C.game.items.filter(x=>S.notes[x.id]).map(x=>[x.id,x.name,S.notes[x.id]]);
+    if(C.game.type==='systems')return C.game.items.filter(x=>S.repaired[x.id]).map(x=>[x.id,x.name,S.repaired[x.id]]);
+    return [['design','TESTS',mgTestSummary()]];
+  }
+  function renderJudge(){
+    const J=C.check.judge,m=S.mission;
+    const index=Math.min(m.slide||0,J.cards.length-1),card=J.cards[index],judged=m.judged[card[0]],solved=mgStats().boss;
+    $('checkTitle').textContent=J.title;$('checkLead').textContent='';
+    $('checkChoices').className='mg-judge'+(solved?' is-cleared':'');
+    $('checkChoices').innerHTML=mgHud()
+      +'<div class="gem-peek"><small>MY GEMS</small>'+mgEvidenceRows().map((r,i)=>'<button type="button" data-gem-peek="'+r[0]+'" data-track="hint" data-help-level="A1" data-help-type="evidence-flip" aria-label="'+esc(r[1])+' 기록 잠깐 보기">'+(r[0]==='design'?'📋':mgGemIcon(r[0]))+'<i>'+(r[0]==='design'?'기록':(i+1))+'</i></button>').join('')+'</div><p class="gem-peek-bubble" id="mgPeekBubble" role="status" hidden></p>'
+      +'<div class="boss-stage"><article class="record-slide'+(judged==='true'?' is-true':judged==='fake'?' is-fake':'')+'" id="mgLogCard"><i class="record-tape" aria-hidden="true"></i><small>SHIP ARCHIVE · No. '+(index+1)+' / '+J.cards.length+'</small><strong>'+esc(card[1])+'</strong><span class="record-seal" aria-hidden="true">1912</span></article>'
+      +'<div class="judge-row" id="judgeRow"'+(judged?' hidden':'')+'><button type="button" class="game-btn" data-judge="true" data-track="answer" data-item-id="check-'+card[0]+'" data-correct="'+card[2]+'"><span class="game-btn-icon" aria-hidden="true">✓</span><span class="game-btn-label">TRUE<em>진짜 기록</em></span><kbd>T</kbd></button><button type="button" class="game-btn" data-judge="fake" data-track="answer" data-item-id="check-'+card[0]+'" data-correct="'+(!card[2])+'"><span class="game-btn-icon" aria-hidden="true">✗</span><span class="game-btn-label">FAKE<em>가짜 기록</em></span><kbd>F</kbd></button></div></div>'
+      +'<div class="record-nav"><div class="record-dots" aria-hidden="true">'+J.cards.map((c,i)=>'<i class="'+(m.judged[c[0]]?(c[2]?'true':'fake'):'')+(i===index?' now':'')+'"></i>').join('')+'</div><button class="primary" id="mgNextRule" type="button"'+(!judged||index>=J.cards.length-1?' hidden':'')+'>다음 기록 ▶</button></div>'
+      +(solved?'<div class="boss-summary" role="status"><strong>MISSION CLEAR!</strong><ul><li><b>'+mgSlots().map(mgGemIcon).join('')+'</b></li>'+(mgStats().combo>=2?'<li><b>🔥</b>×'+mgStats().combo+'</li>':'')+(mgStats().bare?'<li class="gold"><b>🏆</b>맨기억 보너스</li>':'')+'</ul></div>':'');
+    if(judged){$('checkFeedback').textContent=card[3];$('checkFeedback').className='feedback success'}
+    else if(!$('checkFeedback').classList.contains('attention')){$('checkFeedback').textContent=J.prompt;$('checkFeedback').className='feedback'}
+    $('checkContinue').disabled=!solved;$('checkContinue').hidden=!solved;
+    signals.decorate($('checkChoices').querySelectorAll('[data-judge]'),'check','check-'+card[0],b=>(b.dataset.judge==='true')===card[2]);
+    if(!judged)signals.ready('check','check-'+card[0],{textNode:$('mgLogCard'),attempts:(m.judgeAttempts[card[0]]||0),measureId:'case.check'});
+  }
+  function mgJudgeClick(e){
+    const J=C.check.judge,m=S.mission;
+    const peek=e.target.closest('[data-gem-peek]');
+    if(peek){const card=J.cards[Math.min(m.slide||0,J.cards.length-1)],row=mgEvidenceRows().find(r=>r[0]===peek.dataset.gemPeek);
+      if(!mgStats().boss){m.flips=(m.flips||0)+1;signals.hint('check','check-'+card[0],{helpLevel:'A1',helpType:'evidence-flip',trigger:'child-request',reviewedClue:peek.dataset.gemPeek});save()}
+      const bub=$('mgPeekBubble');bub.textContent=row?(row[0]==='design'?row[2]:row[1]+' · '+row[2]):'';bub.hidden=false;clearTimeout(mgPeekTimer);mgPeekTimer=setTimeout(()=>{if($('mgPeekBubble'))$('mgPeekBubble').hidden=true},3500);return}
+    if(e.target.closest('#mgNextRule')){mgNextRule();return}
+    const b=e.target.closest('[data-judge]');if(!b||b.disabled)return;
+    const index=Math.min(m.slide||0,J.cards.length-1),card=J.cards[index];if(m.judged[card[0]])return;
+    const correct=(b.dataset.judge==='true')===card[2];
+    m.judgeAttempts[card[0]]=(m.judgeAttempts[card[0]]||0)+1;S.checkAttempts++;
+    signals.respond('check','check-'+card[0],{correct:correct,value:b.dataset.judge,expected:card[2]?'true':'fake',visibleTextLen:signals.textLength($('mgLogCard')),measureId:'case.check'});
+    signals.decorateLater($('checkChoices').querySelectorAll('[data-judge]'),'check','check-'+card[0],x=>(x.dataset.judge==='true')===card[2]);
+    if(!correct){b.classList.add('incorrect');const lc=$('mgLogCard');lc.classList.remove('dial-miss');void lc.offsetWidth;lc.classList.add('dial-miss');$('checkFeedback').textContent=m.judgeAttempts[card[0]]>=2?'보석을 눌러 내 기록을 잠깐 확인해 봐요.':'음, 내 기록과 한 번 더 맞춰 봐요.';$('checkFeedback').className='feedback attention';save();return}
+    m.judged[card[0]]=card[2]?'true':'fake';
+    if(mgStats().boss){S.checkSolved=true;signals.log('boss-cleared',{activityId:'check',flips:m.flips||0,attempts:S.checkAttempts})}
+    $('checkFeedback').className='feedback';save();renderJudge();updateChrome();updateCoach();
+  }
+  function mgNextRule(){const J=C.check.judge,m=S.mission,i=m.slide||0;if(!m.judged[J.cards[i][0]]||i>=J.cards.length-1)return;m.slide=i+1;$('checkFeedback').className='feedback';save();renderJudge();$('mgLogCard')?.classList.add('slide-in')}
+  /* --- organize: 카드 한 장씩 포스터에 --- */
+  function orgCardsInOrder(){
+    const m=S.mission,ids=C.organize.cards.map(c=>c[0]);
+    if(!Array.isArray(m.orgOrder)||m.orgOrder.length!==ids.length){m.orgOrder=C.organize.type==='repair-order'?ids.slice().sort(()=>Math.random()-.5):ids.slice()}
+    return m.orgOrder;
+  }
+  function orgPlaced(id){
+    if(C.organize.type==='planet-sort')return Boolean(S.placements[id]);
+    if(C.organize.type==='needs-map')return S.placements[id]===id;
+    return (S.placements.order||[]).includes(id);
+  }
+  function orgTargetOk(id,zone){
+    if(C.organize.type==='planet-sort')return C.organize.cards.find(c=>c[0]===id)[2]===zone;
+    if(C.organize.type==='needs-map')return zone===id;
+    return Number(zone)===C.organize.cards.findIndex(c=>c[0]===id);
+  }
+  function orgZones(){
+    if(C.organize.type==='planet-sort')return C.organize.zones.map(z=>({id:z[0],label:z[1],items:C.organize.cards.filter(c=>S.placements[c[0]]===z[0]).map(c=>c[1])}));
+    if(C.organize.type==='needs-map')return C.organize.cards.map(c=>({id:c[0],label:c[1],icon:(C.mission.needs.find(n=>n[0]===c[0])||[])[1],items:S.placements[c[0]]?[c[2]]:[]}));
+    const a=S.placements.order||[];return [0,1,2].map(i=>({id:String(i),label:'STEP '+(i+1),items:a[i]?[C.organize.cards.find(c=>c[0]===a[i])[1]]:[]}));
+  }
+  function renderMissionOrganize(){
+    const order=orgCardsInOrder(),nextId=order.find(id=>!orgPlaced(id)),card=nextId?C.organize.cards.find(c=>c[0]===nextId):null;
+    const label=card?(C.organize.type==='needs-map'?card[2]:card[1]):'';
+    const done=order.filter(orgPlaced).length;
+    const zones=orgZones().map(z=>'<button type="button" class="og-zone'+(z.items.length?' filled':'')+(card&&!(C.organize.type!=='planet-sort'&&z.items.length)?' ready':'')+'" data-og-zone="'+z.id+'">'+(z.icon?'<i aria-hidden="true">'+z.icon+'</i>':'')+'<small>'+esc(z.label)+'</small>'+z.items.map(t=>'<b>'+esc(t)+'</b>').join('')+'</button>').join('');
+    const desk=card
+      ?'<article class="ig-card" id="ogCard"><small>CARD '+(done+1)+' / '+order.length+'</small><p class="ig-sentence">'+esc(label)+'</p><p class="ig-pick">👉 포스터에서 이 카드의 자리를 눌러요.</p></article>'
+      :'<article class="ig-card word-done" id="ogCard"><small>LAST STEP · KEY WORD</small><div class="ig-sentence og-blank">'+esc(C.organize.blank[0])+' <input id="organizeInput" class="mindmap-cloze" type="text" autocomplete="off" spellcheck="false" value="'+esc(S.organizeAnswer)+'" aria-label="missing word" size="'+Math.max(5,C.organize.answer.length+1)+'"'+(S.organizeSolved?' disabled':'')+'> '+esc(C.organize.blank[1])+'</div>'+(C.organize.hint&&!S.organizeSolved?(S.organizeHintShown?'<p class="ig-pick og-hint">'+esc(C.organize.hint)+'</p>':'<button class="quiet hint-button" id="organizeHint" type="button" data-track="hint" data-help-level="A2" data-help-type="word-hint">💡 낱말 힌트</button>'):'')+'</article>';
+    $('organizeArea').innerHTML='<div class="og-shell og-'+C.organize.type+'"><div class="og-poster" id="ogPoster"><header class="ig-band"><small>'+esc(C.organize.bank||'CARDS')+'</small><strong>'+esc(C.organize.title)+'</strong></header><div class="og-zones">'+zones+'</div></div><aside class="ig-desk"><div class="ig-desk-head"><div class="ig-dots">'+order.map(id=>'<i class="'+(orgPlaced(id)?'on':'')+(id===nextId?' now':'')+'"></i>').join('')+'</div></div>'+desk+'</aside></div>';
+    $('organizeCheck').hidden=Boolean(card)||S.organizeSolved;$('organizeReset').hidden=true;
+    $('ogPoster').addEventListener('click',e=>{const z=e.target.closest('[data-og-zone]');if(!z)return;if(!card){const zone=orgZones().find(x=>x.id===z.dataset.ogZone);$('organizeFeedback').textContent=zone&&zone.items.length?zone.label+' · '+zone.items.join(', '):'';$('organizeFeedback').className='feedback';return}
+      const ok=orgTargetOk(card[0],z.dataset.ogZone);
+      if(!ok){S.organizeAttempts++;signals.respond('organize','organize-check',{correct:false,step:'place',card:card[0],value:z.dataset.ogZone,measureId:'case.organize'});z.classList.remove('miss');void z.offsetWidth;z.classList.add('miss');$('organizeFeedback').textContent='그 자리는 아니에요. 카드를 한 번 더 읽어 봐요.';$('organizeFeedback').className='feedback attention';save();return}
+      if(C.organize.type==='planet-sort')S.placements[card[0]]=z.dataset.ogZone;else if(C.organize.type==='needs-map')S.placements[card[0]]=card[0];else{const a=Array.isArray(S.placements.order)?S.placements.order:[];a[Number(z.dataset.ogZone)]=card[0];S.placements.order=a}
+      S.organizeSolved=false;$('organizeFeedback').textContent=order.find(id=>!orgPlaced(id))?'좋아요! 다음 카드예요.':'카드를 다 붙였어요. 마지막 낱말을 써요.';$('organizeFeedback').className='feedback success';save();renderOrganize();setTimeout(()=>$('organizeInput')?.focus(),50)});
+    bindOrganizeInput();
+    $('organizeInput')?.addEventListener('keydown',e=>{if(e.key==='Enter'){e.preventDefault();checkOrganize()}});
+  }
+  /* --- 그룹 수업: 크루 보드 --- */
+  function renderCrewBoard(map){
+    const rowsEl=$('crewRows'),teamEl=$('crewTeam');if(!rowsEl||!teamEl)return;
+    const crew=Object.keys(map||{}).map(k=>[k,map[k]]).filter(p=>p[1]&&typeof p[1]==='object').sort((a,b)=>String(a[1].child||a[0]).localeCompare(String(b[1].child||b[0])));
+    if(!crew.length){teamEl.innerHTML='<p>수업방이 열리면 학생별 보석이 여기 모여요.</p>';rowsEl.innerHTML='';return}
+    const stageLabel={search:'🔒 기억하는 중',diving:'🫧 잠수 중 (말 걸지 않기)',vault:'🔐 금고 여는 중',boss:'👾 판정 중','boss-cleared':'🏴‍☠️ 미션 완료'};
+    let gems=0,memory=0,bosses=0;const per=mgSlots().length;
+    rowsEl.innerHTML=crew.map(([k,p])=>{const v=p.vault||{};const mm=Number(v.memory)||0,d=Number(v.detective)||0;gems+=mm+d;memory+=mm;if(v.boss)bosses++;
+      const extra=[v.bare?'🏆 맨기억':'',v.peeks?'살짝 보기 '+v.peeks:'',v.flips?'기록 보기 '+v.flips:''].filter(Boolean).join(' · ');
+      return '<li class="'+(v.boss?'done':'')+(v.diving?' diving':'')+'"><b>'+esc(p.child||k)+'</b><span class="crew-gems">'+'💎'.repeat(mm)+'🔎'.repeat(d)+'<i>'+'🔒'.repeat(Math.max(0,per-mm-d))+'</i>'+(v.boss?' 🏴‍☠️':'')+'</span><small>'+(stageLabel[v.stage]||esc(p.screenLabel||''))+(extra?' · '+extra:'')+'</small></li>'}).join('');
+    const goal=crew.length*(per+1),got=gems+bosses,pct=Math.round(got/goal*100);
+    const cheer=bosses===crew.length?'🎉 모든 크루가 미션을 마쳤어요!':got>=Math.ceil(goal/2)?'🚢 절반 넘게 모았어요':'🧭 크루 모두의 보석이 배를 움직여요';
+    teamEl.innerHTML='<div class="crew-ship"><span style="width:'+pct+'%"></span><em aria-hidden="true" style="left:'+Math.min(94,pct)+'%">🚢</em></div><p><b>팀 보물 '+got+' / '+goal+'</b> · 기억 보석 '+memory+' · 미션 완료 '+bosses+'/'+crew.length+'</p><p class="crew-cheer">'+cheer+'</p>';
+  }
+  function buildMissionCoach(){
+    if(!isCoach||!C.mission)return;
+    const anchor=$('coachParticipants')?.closest('section');if(!anchor)return;
+    anchor.insertAdjacentHTML('afterend','<section class="crew-board"><small>크루 보드 · 기억 금고 작전 (화면 공유용)</small><div id="crewTeam" class="crew-team"><p>수업방이 열리면 학생별 보석이 여기 모여요.</p></div><ul id="crewRows" class="crew-rows"></ul></section><section class="group-tips"><small>그룹 진행 (4명 안팎)</small><ol>'+(C.mission.groupTips||[]).map(t=>'<li>'+t+'</li>').join('')+'</ol></section>');
+  }
+  function mgKeys(e){
+    if(!C.mission||document.querySelector('dialog[open]:modal'))return;
+    if(e.target.closest&&e.target.closest('input, textarea, select'))return;
+    const k=e.key.toLowerCase();
+    if(S.screen==='check'&&C.check.judge){
+      if(k==='t'||k==='1'){$('checkChoices').querySelector('[data-judge="true"]:not(:disabled)')?.click();e.preventDefault()}
+      else if(k==='f'||k==='2'){$('checkChoices').querySelector('[data-judge="fake"]:not(:disabled)')?.click();e.preventDefault()}
+      else if((k==='arrowright'||k==='enter')&&$('mgNextRule')&&!$('mgNextRule').hidden){mgNextRule();e.preventDefault()}
+    }else if(S.screen==='game'&&C.game.type==='base'&&S.mission.phase==='build'){
+      if(k==='arrowleft'){mbGo(-1);e.preventDefault()}else if(k==='arrowright'){mbGo(1);e.preventDefault()}
+    }
+  }
+
   function renderCheck(){
+    if(C.mission&&C.check.judge){renderJudge();return}
     $('checkTitle').textContent=C.check.title;$('checkLead').textContent=C.check.lead;
     $('checkChoices').innerHTML=C.check.choices.map(([id,text])=>'<button type="button" data-check="'+id+'" data-item-id="check" data-track="answer" data-correct="'+(id===C.check.correct)+'" class="'+(S.checkSolved&&id===C.check.correct?'correct':'')+'">'+esc(text)+'</button>').join('');
     signals.decorate(document.querySelectorAll('[data-check]'),'check','check',b=>b.dataset.check===C.check.correct);
@@ -226,10 +500,13 @@
   function toggleReading(){S.readingLevel=S.readingLevel==='easy'?'challenge':'easy';S.readingSelfCheck='';signals.log('reading-level',{activityId:'information-reading',level:S.readingLevel});S.sentenceIndex=0;renderReading();save()}
   function renderOrganize(){
     $('organizeTitle').textContent=C.organize.title;$('organizeLead').textContent=C.organize.lead;
+    if(C.mission){renderMissionOrganize();$('organizeContinue').hidden=!S.organizeSolved}
+    else{
     if(C.organize.type==='planet-sort')renderPlanetSort();
     if(C.organize.type==='repair-order')renderRepairOrder();
     if(C.organize.type==='needs-map')renderNeedsMap();
     $('organizeContinue').hidden=!S.organizeSolved;$('organizeCheck').hidden=S.organizeSolved;
+    }
     signals.decorateLater([$('organizeCheck')],'organize','organize-check',()=>{const r=evaluateOrganize();return r.placed&&r.correct&&r.word});
     if(!S.organizeSolved)signals.ready('organize','organize-check',{textNode:$('organizeScreen'),attempts:S.organizeAttempts,measureId:'case.organize'});
   }
@@ -331,7 +608,7 @@
     signals.ready('retell','retell',{textNode:$('retellScreen'),measureId:'case.retell'});
     $('retellTitle').textContent=C.retell.title;$('retellPrompt').textContent=C.retell.prompt;$('retellInput').placeholder=C.retell.placeholder;$('retellInput').value=S.retell;
     $('retellCount').textContent=S.retell.length+' / 420';$('finishButton').disabled=S.retell.trim().length<28;
-    $('retellEvidence').innerHTML=(S.hint?'<article class="frame"><b>SENTENCE FRAME</b><br>'+esc(C.retell.frame)+'</article>':'')+organizeSummary()+'<small class="evidence-sub">MY WORK · 조작 결과</small>'+workEvidence();
+    $('retellEvidence').innerHTML=(S.hint?'<article class="frame"><b>SENTENCE FRAME</b><br>'+esc(C.retell.frame)+'</article>':'')+organizeSummary()+'<small class="evidence-sub">MY WORK · 조작 결과</small>'+(workEvidence()||'<p class="evidence-empty">3번 활동을 마치면 여기에 노트가 모여요.</p>');
     $('retellFeedback').textContent=S.retell.trim().length<28?'Use your organized information to write at least two ideas.':'Good. Check that your explanation names evidence or a reason.';
   }
   function updateRetell(){const wasEmpty=!S.retell.trim();S.retell=$('retellInput').value;if(wasEmpty&&S.retell.trim())signals.log('retell-first-input',{activityId:'retell',itemId:'retell',sinceReadyMs:signals.sinceReadyMs('retell','retell')});$('retellCount').textContent=S.retell.length+' / 420';$('finishButton').disabled=S.retell.trim().length<28;$('retellFeedback').textContent=S.retell.trim().length<28?'Add one more evidence-based idea.':'Good. Check that your explanation names evidence or a reason.';save();updateCoach()}
@@ -369,7 +646,12 @@
   $('startButton').addEventListener('click',()=>signals.startLesson());
   $('goalContinue').addEventListener('click',()=>{signals.activityComplete('goal');show('game')});
   $('gameContinue').addEventListener('click',()=>{signals.activityComplete('game',{gameType:C.game.type,testsRun:S.testsRun});show('check')});
-  $('checkChoices').addEventListener('click',chooseCheck);
+  $('checkChoices').addEventListener('click',e=>{if(C.mission&&C.check.judge)mgJudgeClick(e);else chooseCheck(e)});
+  document.addEventListener('keydown',mgKeys);
+  if(C.mission){$('gameScreen').classList.add('mg-mode');$('organizeScreen').classList.add('mg-mode')}
+  $('gameArea').addEventListener('click',e=>{const bub=e.target.closest('[data-bubble]');if(bub){bub.classList.remove('popped');void bub.offsetWidth;bub.classList.add('popped');return}const nav=e.target.closest('[data-mb-nav]');if(nav&&!nav.disabled){mbGo(Number(nav.dataset.mbNav));return}const j=e.target.closest('[data-mb-jump]');if(j){S.mission.card=Number(j.dataset.mbJump);save();renderGame()}});
+  $('gameArea').addEventListener('pointerdown',e=>{if(e.target.closest('#mbStage')&&!e.target.closest('button'))mbSwipeX=e.clientX});
+  $('gameArea').addEventListener('pointerup',e=>{if(mbSwipeX===null)return;const dx=e.clientX-mbSwipeX;mbSwipeX=null;if(Math.abs(dx)>40)mbGo(dx<0?1:-1)});
   $('checkContinue').addEventListener('click',()=>{signals.activityComplete('check');show('reading')});
   $('sentenceNext').addEventListener('click',nextSentence);
   $('readingLevel').addEventListener('click',toggleReading);
@@ -398,7 +680,11 @@
   $('holdKorean').addEventListener('keydown',e=>{if((e.key===' '||e.key==='Enter')&&!e.repeat)applyLanguage(true)});
   $('holdKorean').addEventListener('keyup',()=>applyLanguage(false));
   $('wordButton').addEventListener('click',showWordBank);$('wordClose').addEventListener('click',()=>$('wordDialog').close());
-  $('modalAction').addEventListener('click',()=>{$('infoDialog').close();if($('infoDialog').dataset.after==='planet'){$('infoDialog').dataset.after='';renderGame()}});
+  $('modalAction').addEventListener('click',()=>{$('infoDialog').close();const after=$('infoDialog').dataset.after||'';$('infoDialog').dataset.after='';
+    if(after==='planet'){renderGame();return}
+    if(after.startsWith('mg-lock:')){const id=after.slice(8);signals.log('memory-lock',{activityId:'game',itemId:'note-'+id,readMs:Math.round(performance.now()-mgBriefShownAt)});mgStartDive(MG_DIVE[Math.min(Object.keys(S.notes).length,MG_DIVE.length-1)],id);return}
+    if(after.startsWith('mg-peek:')){const id=after.slice(8);S.mission.locked[id]=false;mgStartDive(2,id);return}
+  });
   $('infoDialog').addEventListener('cancel',e=>e.preventDefault());
   $('coachClose').addEventListener('click',event=>{
     const collapsed=document.body.classList.toggle('coach-collapsed');
@@ -406,6 +692,6 @@
     event.currentTarget.setAttribute('aria-expanded',String(!collapsed));
     event.currentTarget.setAttribute('aria-label',collapsed?'코치 패널 펼치기':'코치 패널 접기');
   });
-  setWatermark();buildChrome();buildCoach();renderSolved();restore();
-  liveMirror=window.OncuvateLiveMirror?window.OncuvateLiveMirror.create({sessionNo:Number(C.id)||0,snapshot:buildProgressSnapshot,onParticipants:map=>window.OncuvateLiveMirror.renderList($('coachParticipants'),map,Number(C.id)||0),onStatus:text=>{const el=$('coachLiveStatus');if(el)el.textContent=text}}):null;
+  setWatermark();buildChrome();buildCoach();buildMissionCoach();renderSolved();restore();
+  liveMirror=window.OncuvateLiveMirror?window.OncuvateLiveMirror.create({sessionNo:Number(C.id)||0,snapshot:buildProgressSnapshot,onParticipants:map=>{window.OncuvateLiveMirror.renderList($('coachParticipants'),map,Number(C.id)||0);if(C.mission)renderCrewBoard(map)},onStatus:text=>{const el=$('coachLiveStatus');if(el)el.textContent=text}}):null;
 }());

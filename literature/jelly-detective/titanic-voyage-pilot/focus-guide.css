@@ -20,3 +20,21 @@
 body.focus-guide-enabled .screen:not(#startScreen):not(#solvedScreen) .lead{display:none}
 @media(max-width:760px){.focus-guide-conversation{grid-template-columns:82px minmax(0,1fr);gap:14px}.focus-guide-avatar{width:82px;height:82px}.focus-guide-bubble{min-height:130px;padding:22px}.focus-guide-actions{align-items:stretch;flex-direction:column-reverse}.focus-guide-hold,.focus-guide-next{width:100%}}
 @media(max-height:620px){.focus-guide-dialog{max-height:calc(100svh - 12px)}.focus-guide-shell{padding:12px 17px;border-radius:20px}.focus-guide-kicker{margin-bottom:7px;font-size:10px}.focus-guide-conversation{grid-template-columns:62px minmax(0,1fr);gap:12px}.focus-guide-avatar{width:62px;height:62px}.focus-guide-bubble{min-height:88px;padding:13px 17px}.focus-guide-message{font-size:clamp(20px,2.7vw,24px);line-height:1.38}.focus-guide-actions{margin-top:8px;flex-direction:row}.focus-guide-hold,.focus-guide-next{width:auto;min-height:42px;padding:0 16px}.focus-guide-next{min-width:124px}}
+
+/* 말풍선 모드(기본): 화면을 막지 않고 오른쪽 아래에 작게 뜬다 (2026-10-01) */
+.focus-guide-dialog.is-toast{position:fixed;inset:auto 18px 18px auto;z-index:95;width:min(430px,calc(100% - 36px));max-height:none;margin:0;animation:fg-in .3s ease-out}
+.focus-guide-dialog.is-toast .focus-guide-shell{padding:12px 14px 12px;border-radius:20px;box-shadow:0 16px 40px rgba(12,7,36,.28)}
+.focus-guide-dialog.is-toast .focus-guide-shell:after{display:none}
+.focus-guide-dialog.is-toast .focus-guide-kicker{margin-bottom:6px;font-size:10px}
+.focus-guide-dialog.is-toast .focus-guide-conversation{grid-template-columns:52px minmax(0,1fr);gap:10px}
+.focus-guide-dialog.is-toast .focus-guide-avatar{width:52px;height:52px}
+.focus-guide-dialog.is-toast .focus-guide-bubble{min-height:0;padding:10px 14px}
+.focus-guide-dialog.is-toast .focus-guide-bubble:before{left:-9px;width:16px;height:16px}
+.focus-guide-dialog.is-toast .focus-guide-message{font-size:clamp(16px,1.8vw,19px);line-height:1.4}
+.focus-guide-dialog.is-toast .focus-guide-actions{margin-top:8px;flex-direction:row;gap:8px}
+.focus-guide-dialog.is-toast .focus-guide-hold,.focus-guide-dialog.is-toast .focus-guide-next{width:auto;min-height:36px;min-width:0;padding:0 12px;font-size:12px;box-shadow:none}
+.focus-guide-x{margin-left:6px;width:26px;height:26px;border:0;border-radius:50%;color:#4b24a5;background:#eee9fb;font-size:16px;line-height:1;cursor:pointer}
+.focus-guide-kicker{gap:8px}
+.focus-guide-kicker>span:first-child{flex:1}
+@keyframes fg-in{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+@media(prefers-reduced-motion:reduce){.focus-guide-dialog.is-toast{animation:none}}
