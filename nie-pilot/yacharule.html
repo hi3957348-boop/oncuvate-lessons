@@ -886,7 +886,7 @@
     .fl-show{position:relative;display:grid;justify-items:center;align-content:center;gap:6px;width:min(560px,100%);height:100%;max-height:200px;border-radius:22px;background:#fff;border:3px solid #d4cdf0;box-shadow:0 8px 0 #e3ddf6;overflow:hidden}
     .fl-show small{color:#6a5fa0;font-size:14px;font-weight:900}
     .fl-show b{font-family:"Pretendard","Noto Sans KR",sans-serif;font-size:clamp(44px,8vw,78px);font-weight:950;letter-spacing:.12em;color:#2a2356;font-variant-numeric:tabular-nums}
-    .fl-show.hide b{color:transparent;background:repeating-linear-gradient(90deg,#efeafd 0 46px,transparent 46px 58px);border-radius:10px;min-width:60%}
+    .fl-show b .fl-box{display:inline-block;width:.62em;height:.95em;margin:0 .05em;border-radius:10px;background:#efeafd;vertical-align:middle}
     .fl-show.wait b{color:#c9bdf2;letter-spacing:.3em}
     .fl-show.flash{animation:flIn .35s cubic-bezier(.2,1.4,.4,1)}
     @keyframes flIn{0%{transform:scale(.85);opacity:.2}100%{transform:none;opacity:1}}
@@ -1900,7 +1900,7 @@ function enterGameSession(role,room,id,nickname,mode){
       lookTimer=setTimeout(function(){lookDone=true;optsAt=Date.now();renderFlash()},LOOK_MS)}
     var revealed=s.phase==='reveal',hidden=lookDone&&!revealed;
     stage.dataset.phase=(lookDone||revealed)?'pick':'look';
-    show.classList.toggle('hide',hidden);$('flNumber').textContent=pz.target;
+    show.classList.toggle('hide',hidden);if(hidden)$('flNumber').innerHTML=new Array(len+1).join('<span class="fl-box"></span>');else $('flNumber').textContent=pz.target;
     $('flLabel').textContent=revealed?'아까 본 숫자':hidden?'숫자가 숨었어요':len+'자리 숫자 · 잘 봐요!';
     var ans=answersFor(s.round),counts={},answered=Object.keys(ans).length,total=Math.max(players.length,answered),my=coach?null:mine.answers[s.round];
     Object.keys(ans).forEach(function(pid){counts[ans[pid].v]=(counts[ans[pid].v]||0)+1});
