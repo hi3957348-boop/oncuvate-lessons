@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ko" data-lesson-id="flag-game" data-lesson-title="청기백기 행동억제 게임" data-lesson-version="1.0.0">
+<html lang="ko" data-lesson-id="flag-game" data-lesson-title="청기백기 행동억제 게임" data-lesson-version="1.2.0">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
@@ -24,7 +24,7 @@
 <script>
 /* ───────── 내용 바꾸는 곳 ─────────
    rounds : 판 순서. 판 하나에
-            level  1 한 깃발(「청기 올려」) · 2 「하지 마」 섞기 · 3 두 깃발 함께·「말고」
+            level  1 한 깃발(「청기 올려」) · 2 두 깃발 함께(「백기 올리고 청기 올려」) · 3 두 깃발 + 「하지 말고」
             count  명령 수 — 명령은 그때그때 깃발 상태를 보고 만든다
             또는 commands: ['청기 올려', '백기 올리지 마', …] 로 명령을 직접 적는다(책처럼 정한 목록)
    flags  : (선택) 왼쪽·오른쪽 깃발 이름과 색. 기본은 왼쪽 청기, 오른쪽 백기
@@ -34,8 +34,8 @@ var GAME = {
   credit: '자체 제작 · 활동 방식 참고: 『느린 학습자 인지훈련 프로그램』(박현숙, 2021) 「청기백기 게임」 · 그림 © Oncuvate',
   rounds: [
     { id: 'r1', level: 1, count: 8 },     // 깃발 하나씩
-    { id: 'r2', level: 2, count: 8 },     // 「하지 마」가 섞임
-    { id: 'r3', level: 3, count: 10 }     // 두 깃발 함께 · 「말고」
+    { id: 'r2', level: 2, count: 8 },     // 두 깃발 함께
+    { id: 'r3', level: 3, count: 10 }     // 두 깃발 + 「하지 말고」
   ]
 };
 

@@ -1,18 +1,20 @@
 /*!
- * 「청기백기」 행동억제 게임 엔진  v1.0.0
+ * 「청기백기」 행동억제 게임 엔진  v1.2.0
  *
  * 바탕 활동: 『느린 학습자 인지훈련 프로그램』(박현숙, 2021) 3장 행동억제 「청기백기 게임 1·2」
  *            (왼손에 청기, 오른손에 백기를 들고 「청기 올려」「백기 올리지 마」「청기 올리지 말고 백기 내려」 같은
  *            명령을 30번쯤 이어서 따라 한다) — 활동 방식만 가져왔고, 책의 명령 목록·그림은 쓰지 않았다.
  *
- * 난이도(판마다 level)
- *   1  한 깃발 명령          「청기 올려」「백기 내려」
- *   2  + 하지 마              「백기 올리지 마」 — 깃발을 그대로 두어야 한다
- *   3  두 깃발 · 말고         「청기 올리고 백기 내려」「청기 올리지 말고 백기 올려」
- *   명령은 지금 깃발 상태를 보고 만든다. 이미 올라간 깃발에 「올려」처럼 「움직이지 않아도 되는」 명령도 섞인다.
+ * 난이도(판마다 level) — 게임이 만드는 명령은 언제나 깃발이 하나 이상 움직여야 한다(아무것도 안 하는 명령 없음)
+ *   1  한 깃발             「청기 올려」「백기 내려」
+ *   2  두 깃발 함께         「백기 올리고 청기 올려」「백기 내리고 청기 올려」 — 둘 다 움직임
+ *   3  두 깃발 + 하지 말고  「청기 올리지 말고 백기 내려」 — 앞 깃발은 그대로, 뒤 깃발은 움직임
+ *   명령은 지금 깃발 상태를 보고 만든다.
  *   rounds에 commands: ['청기 올려', …]를 주면 그 글을 그대로 읽어 쓴다(책처럼 정한 목록).
  *
- * 한 번의 흐름: 명령 → 깃발 단추(올려/내려)로 깃발을 맞춤 → 「됐어요」
+ * 한 번의 흐름(바로 판정): 명령 → 깃발 단추(올려/내려)를 누르는 순간 판정
+ *   명령대로 다 맞추면 바로 정답 · 그대로 둘 깃발을 움직이거나 반대로 누르면 바로 어긋남
+ *   (직접 적은 명령에 움직일 깃발이 없는 명령이 있으면 waitMs(2.5초) 동안 가만히 있을 때 정답)
  *   어긋나면 1번째 : 깃발이 명령 전으로 돌아가고 「명령을 다시 읽어 봐요」
  *            2번째 : 맞는 단추가 금색으로 반짝, 「청기는 올려요, 백기는 그대로예요」(도움 A4)
  *   걸린 시간은 기록에만 남긴다(아이 화면에 점수 금지).
@@ -20,7 +22,8 @@
  * 크기: 넣은 칸을 가득 채운다(온큐베이트 기본 활동창 안쪽 약 920×450 기준, 750×417까지). ⚠ 칸에 높이를 줄 것.
  *
  * 기록(온큐베이트 규격 v1.28)
- *   - 「됐어요」  data-track="answer" + data-item-id(판-몇째) + data-correct + data-response + (맞을 때) data-accuracy
+ *   - 깃발 단추   판정이 나는 단추에만 data-track="answer" + data-item-id(판-몇째) + data-correct + data-response + (맞을 때) data-accuracy
+ *                 (가만히 기다려 맞힌 명령은 누름이 없어 oncuvate:log의 game-response(by:'wait')로만 남는다)
  *   - 끝 화면     data-track="activity-complete"
  *   - 자세한 신호 oncuvate:log  game-item-ready / game-response / game-help / game-item-complete / game-activity-complete
  *
@@ -29,15 +32,14 @@
 (function (global) {
   'use strict';
 
-  var VERSION = '1.0.0';
+  var VERSION = '1.2.0';
 
   var TEXT = {
     title: '청기백기',
-    ready: '명령을 읽고 깃발을 움직인 다음 「됐어요」를 눌러요.',
+    ready: '명령을 읽고 깃발을 움직여요. 누르는 순간 바로 확인해요.',
     readyTitle: '준비!',
     start: '시작',
     run: '명령대로 깃발을 움직여요.',
-    submit: '됐어요',
     up: '올려',
     down: '내려',
     good: ['좋아요!', '딱 맞아요!', '척척이에요!'],
@@ -56,8 +58,8 @@
     again: '처음부터 다시',
     infoCount: '명령 {n}개',
     level1: '깃발 하나씩 움직여요',
-    level2: '「하지 마」가 섞여요',
-    level3: '두 깃발을 함께 들어요',
+    level2: '두 깃발을 함께 움직여요',
+    level3: '「하지 말고」가 섞여요',
     example: '예: {t}',
     infoDone: '{n}판 끝!',
     infoLeft: '남은 판 {n}개',
@@ -75,7 +77,7 @@
       { key: 'white', name: '백기', color: '#ffffff', edge: '#b9b2cc' }
     ],
     rounds: [],                // [ {id, level:1|2|3, count} ] 또는 [ {id, commands:['청기 올려', …]} ]
-    noChangeRate: 0.3,         // 움직이지 않아도 되는 명령의 비율(대략)
+    waitMs: 2500,              // (직접 적은 명령에만) 움직일 깃발이 없는 명령은 이만큼 가만히 있으면 정답
     sound: true,
     restartButton: true,
     credit: '',
@@ -336,47 +338,41 @@
       });
       return html;
     }
-    /* 지금 상태를 보고 판 수준에 맞는 명령 하나 만들기 */
-    function makeCommand(level, state, noChangeStreak, f) {
-      var allowNo = noChangeStreak < 1, wantNo = allowNo && Math.random() < o.noChangeRate;
+    /* 지금 상태를 보고 판 수준에 맞는 명령 하나 만들기 — 언제나 깃발이 하나 이상 움직여야 하는 명령만 */
+    function makeCommand(level, state, f, n) {
       var g = 1 - f;
       function changeAct(i) { return state[i] ? 'down' : 'up'; }
-      function stayAct(i) { return state[i] ? 'up' : 'down'; }
-      if (level <= 1 || (level === 2 && Math.random() < 0.55)) {
-        var act = wantNo ? stayAct(f) : changeAct(f);
-        return F[f].name + ' ' + PH[act].end;
+      /* 2판에도 가끔(첫 명령 말고) 한 깃발 명령을 섞어 깃발이 엇갈리게 — 그래야 「백기 내리고 청기 올려」가 나온다 */
+      if (level <= 1 || (level === 2 && n > 0 && Math.random() < 0.3)) {
+        /* 1: 깃발 하나 — 「청기 올려」 */
+        return F[f].name + ' ' + PH[changeAct(f)].end;
       }
-      if (level === 2) {
-        /* 하지 마: 그 깃발은 그대로 */
-        return F[f].name + ' ' + PH[pick(['up', 'down'])].no;
+      if (level === 2 || Math.random() < 0.5) {
+        /* 2: 두 깃발 함께, 둘 다 움직임 — 「백기 올리고 청기 올려」「백기 내리고 청기 올려」 */
+        return F[f].name + ' ' + PH[changeAct(f)].join + ' ' + F[g].name + ' ' + PH[changeAct(g)].end;
       }
-      if (Math.random() < 0.5) {
-        /* 두 깃발 함께: 「청기 올리고 백기 내려」 */
-        var a1 = wantNo ? stayAct(f) : (Math.random() < 0.6 ? changeAct(f) : stayAct(f));
-        var a2 = wantNo ? stayAct(g) : (a1 === stayAct(f) ? changeAct(g) : pick([changeAct(g), stayAct(g)]));
-        return F[f].name + ' ' + PH[a1].join + ' ' + F[g].name + ' ' + PH[a2].end;
+      /* 3: 하지 말고 — 앞 깃발은 그대로(움직이고 싶은 쪽을 「하지 말고」), 뒤 깃발은 움직임 */
+      if (Math.random() < 0.12) {
+        /* 가끔 같은 깃발: 「백기 올리지 말고 백기 내려」 */
+        return F[f].name + ' ' + PH[state[f] ? 'up' : 'down'].noJoin + ' ' + F[f].name + ' ' + PH[changeAct(f)].end;
       }
-      /* 말고: 「청기 올리지 말고 백기 내려」 (가끔 같은 깃발: 「백기 올리지 말고 백기 내려」) */
-      var g2 = Math.random() < 0.12 ? f : g;
-      var a = wantNo ? stayAct(g2) : changeAct(g2);
-      return F[f].name + ' ' + PH[pick(['up', 'down'])].noJoin + ' ' + F[g2].name + ' ' + PH[a].end;
+      return F[f].name + ' ' + PH[changeAct(f)].noJoin + ' ' + F[g].name + ' ' + PH[changeAct(g)].end;
     }
 
     /* 판 계획: 명령 목록을 미리 만들어 둔다(깃발은 둘 다 내린 채 시작) */
     function plan(spec, idx) {
-      var level = spec.level || 1, cmds = [], state = [false, false], streak = 0, used = [0, 0], lastF = [];
+      var level = spec.level || 1, cmds = [], state = [false, false], used = [0, 0], lastF = [];
       var texts = spec.commands ? spec.commands.slice() : null;
       var count = texts ? texts.length : (spec.count || 8);
       for (var i = 0; i < count; i++) {
         /* 깃발은 고르게, 같은 깃발이 세 번 이어지지 않게 */
         var f = used[0] === used[1] ? (Math.random() < 0.5 ? 0 : 1) : (used[0] < used[1] ? 0 : 1);
         if (lastF.length >= 2 && lastF[0] === lastF[1] && lastF[1] === f && Math.random() < 0.85) f = 1 - f;
-        var text = texts ? texts[i] : makeCommand(level, state, streak, f);
+        var text = texts ? texts[i] : makeCommand(level, state, f, i);
         used[f]++;
         lastF = [lastF[lastF.length - 1], f];
         var ops = parse(text), before = state.slice(), target = apply(state, ops);
         cmds.push({ text: text, ops: ops, before: before, target: target });
-        streak = same(before, target) ? streak + 1 : 0;
         state = target;
       }
       return { id: spec.id || ('r' + (idx + 1)), level: level, fixed: !!texts, count: count, cmds: cmds };
@@ -438,7 +434,7 @@
     }
     paintSound();
 
-    var plans = [], R = null, ri = 0, results = [], tempTimer = null, nextTimer = null;
+    var plans = [], R = null, ri = 0, results = [], tempTimer = null, nextTimer = null, waitTimer = null;
 
     function setJelly(name) { if (elJelly) elJelly.src = jellySrc(name); }
     function say(text, cls) {
@@ -466,6 +462,7 @@
       return b;
     }
     function setActions(list) {
+      elActs.parentNode.hidden = !list.length;
       elActs.innerHTML = '';
       list.forEach(function (b) { elActs.appendChild(b); });
     }
@@ -509,16 +506,43 @@
     function respText(s) {
       return F.map(function (f, i) { return f.name + (s[i] ? '↑' : '↓'); }).join(' ');
     }
-    /* 「됐어요」 단추에 기록 표시 — 지금 깃발이 맞는지 미리 붙여 둔다 */
+    /* 단추마다 「누르면 어떻게 되나」를 미리 따져 둔다
+       done = 명령을 다 맞춤(정답) · wrong = 그대로 둘 깃발을 움직이거나 반대로 누름 · step = 한 깃발만 맞춤 · none = 아무 일 없음 */
+    function outcome(i, up) {
+      var c = R.cmd, s = R.state.slice();
+      if (up !== c.target[i]) return 'wrong';
+      if (s[i] === up) {
+        var told = c.ops.some(function (op) { return op.f === i && op.act !== 'keep'; });
+        return told && same(s, c.target) ? 'done' : 'none';
+      }
+      s[i] = up;
+      return same(s, c.target) ? 'done' : 'step';
+    }
+    function accNow() { return R.errs >= 2 ? 'support' : (R.errs === 1 ? 'self-corrected' : 'accurate'); }
+    /* 판정이 나는 단추에만 기록 표시를 붙인다(누르기 전에) */
     function arm() {
-      var b = elActs.querySelector('[data-fg-act="submit"]');
-      if (!b || !R.cmd) return;
-      var ok = same(R.state, R.cmd.target);
-      b.setAttribute('data-item-id', R.p.id + '-' + (R.idx + 1));
-      b.setAttribute('data-correct', ok ? 'true' : 'false');
-      b.setAttribute('data-response', respText(R.state));
-      if (ok) b.setAttribute('data-accuracy', R.errs >= 2 ? 'support' : (R.errs === 1 ? 'self-corrected' : 'accurate'));
-      else b.removeAttribute('data-accuracy');
+      if (!R || !R.cmd) return;
+      Array.prototype.forEach.call(elSegs, function (b) {
+        var i = +b.getAttribute('data-flag'), up = b.getAttribute('data-dir') === 'up', res = outcome(i, up);
+        if (res === 'done' || res === 'wrong') {
+          var after = R.state.slice(); after[i] = up;
+          b.setAttribute('data-track', 'answer');
+          b.setAttribute('data-item-id', R.p.id + '-' + (R.idx + 1));
+          b.setAttribute('data-correct', res === 'done' ? 'true' : 'false');
+          b.setAttribute('data-response', respText(after));
+          if (res === 'done') b.setAttribute('data-accuracy', accNow()); else b.removeAttribute('data-accuracy');
+        } else {
+          ['data-track', 'data-item-id', 'data-correct', 'data-response', 'data-accuracy'].forEach(function (a) { b.removeAttribute(a); });
+        }
+      });
+    }
+    /* 움직일 깃발이 없는 명령: 가만히 기다리면 정답 */
+    function armWait() {
+      clearTimeout(waitTimer);
+      if (!R.cmd || !same(R.cmd.before, R.cmd.target)) return;
+      waitTimer = setTimeout(function () {
+        if (R.phase === 'run' && same(R.state, R.cmd.target)) judge(true, -1, true);
+      }, o.waitMs);
     }
 
     /* ── 한 판 ── */
@@ -526,6 +550,7 @@
       ri = i;
       var p = plans[i];
       clearTimeout(nextTimer);
+      clearTimeout(waitTimer);
       R = { p: p, phase: 'ready', idx: 0, cmd: null, state: [false, false], errs: 0, moves: 0,
             acc: [], rts: [], wrong: 0, inhibitFail: 0, sayText: '', tCmd: 0, tStart: 0 };
       paintRounds(i);
@@ -546,7 +571,7 @@
       elPads.hidden = false;
       elProg.hidden = false;
       say(T.run);
-      setActions([button('✔ ' + esc(T.submit), 'submit', 'is-wide', { 'data-track': 'answer' })]);
+      setActions([]);
       log('game-item-ready', {
         itemId: p.id, level: p.level, count: p.count, fixed: p.fixed,
         commands: p.cmds.map(function (c) { return c.text; }).join('|'),
@@ -574,35 +599,31 @@
       paintFlags();
       sfx('call');
       R.tCmd = now();
+      armWait();
     }
 
     function setFlag(i, up) {
       if (!R || R.phase !== 'run') return;
+      var res = outcome(i, up);
       if (R.state[i] !== up) R.moves++;
       R.state[i] = up;
       sfx('flip');
       paintFlags();
+      if (res === 'done') judge(true, i, false);
+      else if (res === 'wrong') judge(false, i, false);
     }
 
-    function submit() {
-      if (!R || R.phase !== 'run') return;
-      var p = R.p, c = R.cmd, ok = same(R.state, c.target), t = now();
-      var acc = ok ? (R.errs >= 2 ? 'support' : (R.errs === 1 ? 'self-corrected' : 'accurate')) : '';
+    /* 바로 판정 — 맞으면 다음 명령, 어긋나면 잠깐 보여 준 뒤 명령 전 깃발로 되돌림 */
+    function judge(ok, flag, byWait) {
+      var p = R.p, c = R.cmd, t = now();
+      var acc = ok ? accNow() : '';
       var noChange = same(c.before, c.target);
-      /* 어긋난 종류: 그대로 두어야 할 깃발을 움직임(inhibition) / 움직여야 할 깃발을 안 움직임·반대로(action) */
-      var errorType = '';
-      if (!ok) {
-        var moved = false, missed = false;
-        F.forEach(function (f, i) {
-          if (R.state[i] !== c.target[i]) {
-            if (c.before[i] === c.target[i]) moved = true; else missed = true;
-          }
-        });
-        errorType = moved ? 'inhibition' : (missed ? 'action' : '');
-      }
+      /* 어긋난 종류: 그대로 두어야 할 깃발을 움직임(inhibition) / 움직여야 할 깃발을 반대로(action) */
+      var errorType = ok ? '' : (c.before[flag] === c.target[flag] ? 'inhibition' : 'action');
+      clearTimeout(waitTimer);
       log('game-response', {
         itemId: p.id + '-' + (R.idx + 1), command: c.text, correct: ok, response: respText(R.state),
-        expected: respText(c.target), before: respText(c.before), noChange: noChange,
+        expected: respText(c.target), before: respText(c.before), noChange: noChange, by: byWait ? 'wait' : 'press',
         attempt: R.errs + 1, errorType: errorType, accuracy: acc, moves: R.moves, responseMs: Math.round(t - R.tCmd)
       });
       if (ok) {
@@ -625,13 +646,18 @@
       R.errs++;
       R.wrong++;
       if (errorType === 'inhibition') R.inhibitFail++;
+      R.phase = 'wait';
       sfx('again');
       wob(elCall);
       wob(elFigure);
       setJelly('jelly-thinking');
-      R.state = c.before.slice();
-      R.moves = 0;
-      paintFlags();
+      nextTimer = setTimeout(function () {
+        R.state = c.before.slice();
+        R.moves = 0;
+        R.phase = 'run';
+        paintFlags();
+        armWait();
+      }, reduced ? 150 : 420);
       if (R.errs === 1) {
         sayTemp(T.oops);
       } else {
@@ -737,7 +763,6 @@
       }
       if (name === 'restart') { restart(); return; }
       if (name === 'start' && R.phase === 'ready') { startRun(); }
-      else if (name === 'submit') submit();
       else if (name === 'next') startRound(ri + 1);
       else if (name === 'finish') finish();
     }
@@ -752,17 +777,16 @@
         wob(elPads);
       }
     }
-    /* 키보드: 1 청기↑ 2 청기↓ 3 백기↑ 4 백기↓, Enter 됐어요 */
+    /* 키보드: 1 청기↑ 2 청기↓ 3 백기↑ 4 백기↓ */
     function onKey(e) {
       if (!R || R.phase !== 'run' || e.repeat) return;
       var a = document.activeElement;
       if (a && a !== document.body && !root.contains(a)) return;
       var map = { '1': [0, true], '2': [0, false], '3': [1, true], '4': [1, false] };
-      if (map[e.key]) { e.preventDefault(); setFlag(map[e.key][0], map[e.key][1]); }
-      else if (e.key === 'Enter' && (!a || a === document.body)) {
+      if (map[e.key]) {
         e.preventDefault();
-        var s = elActs.querySelector('[data-fg-act="submit"]');
-        if (s) s.click();
+        var seg = root.querySelector('.fg-seg[data-flag="' + map[e.key][0] + '"][data-dir="' + (map[e.key][1] ? 'up' : 'down') + '"]');
+        if (seg) seg.click();
       }
     }
 
@@ -777,7 +801,7 @@
       results: function () { return results.slice(); },
       parse: parse,
       destroy: function () {
-        clearTimeout(tempTimer); clearTimeout(nextTimer);
+        clearTimeout(tempTimer); clearTimeout(nextTimer); clearTimeout(waitTimer);
         global.removeEventListener('keydown', onKey);
         root.remove();
       }
