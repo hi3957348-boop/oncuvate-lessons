@@ -1,0 +1,51 @@
+/* ══ 온큐베이트 공용 도입 화면 v1 ═══════════════════════════════════════
+ * 모든 수업이 같은 배치·같은 항목 순서·같은 버튼을 쓴다. 바뀌는 것은 그림·제목·목표 문장·활동 이름뿐.
+ * 클래스인 하한 987×521에서 스크롤 없이 「수업 시작」이 보이도록 높이를 vh로 맞춘다.
+ * 크롬 109에서 도는 문법만 쓴다.
+ * ════════════════════════════════════════════════════════════════════ */
+.oi-wrap{position:fixed;inset:0;z-index:2147481000;background:#EDE8DE;display:flex;align-items:center;justify-content:center;
+  padding:clamp(10px,3vh,32px) clamp(12px,3vw,40px);font-family:"Pretendard","Apple SD Gothic Neo","Malgun Gothic",sans-serif;color:#2A2F3A}
+.oi-wrap[hidden]{display:none}
+/* 수업의 메뉴·머리띠보다 위, 공용 코치 콘솔(2147482000~)보다 아래. 코치 화면에서는 펼친 콘솔 자리를 비워 둔다 */
+html[data-oncuvate-role="coach"][data-coach-dock="open"] .oi-wrap{right:calc(var(--onq-dock-w,360px) + 22px)}
+.oi-card{position:relative;border:3px solid transparent;background:linear-gradient(#fff,#fff) padding-box,linear-gradient(135deg,#B7A3F6,#9AD7F0) border-box;
+  width:min(980px,100%);height:min(520px,100%);align-items:center;gap:clamp(8px,2vw,28px);padding:0 clamp(16px,3vw,40px);border-radius:28px;box-shadow:0 18px 50px rgba(60,50,30,.14);
+  display:grid;grid-template-columns:minmax(0,.85fr) minmax(0,1.15fr);overflow:hidden}
+/* 테두리 안쪽 가는 선 — 가장자리가 비어 보이지 않게 */
+.oi-card::before{content:"";position:absolute;inset:9px;border:1.5px solid #EEE8FB;border-radius:20px;pointer-events:none}
+.oi-card>*{position:relative}
+/* 왼쪽: 그 수업의 그림 — 액자 안에 작게 */
+.oi-art{display:flex;align-items:center;justify-content:center;padding:clamp(12px,3vh,28px) 0;background:none}
+/* 그림을 자르지 않는다 — 원래 비율 그대로, 액자 크기만 줄인다 */
+.oi-frame{display:flex;max-width:360px;border-radius:20px;overflow:hidden;background:#fff;box-shadow:0 8px 24px rgba(60,50,30,.12);border:1px solid #EFEAE0}
+.oi-frame img{display:block;width:100%;height:auto;max-height:min(56vh,340px);object-fit:contain}
+.oi-art.empty .oi-frame{display:grid;place-items:center;width:220px;height:220px;background:linear-gradient(135deg,#F1ECFF,#E5F6FC)}
+.oi-art.empty span{font-size:clamp(56px,12vh,96px)}
+/* 오른쪽: 머리 → 제목 → 젤리코치 한마디 → 단추 둘 */
+.oi-body{display:flex;flex-direction:column;justify-content:center;padding:clamp(12px,3vh,28px) 0;gap:clamp(10px,3vh,24px);min-height:0}
+.oi-head{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.oi-series{font-size:clamp(12px,1.9vh,14px);font-weight:700;color:#6B5BB5}
+.oi-badge{font-size:clamp(11px,1.8vh,13px);font-weight:800;color:#fff;background:linear-gradient(135deg,#7B5CF0,#47BEE6);border-radius:99px;padding:3px 11px}
+.oi-title{margin:0;font-size:clamp(22px,5vh,36px);line-height:1.25;font-weight:800;letter-spacing:-.01em;word-break:keep-all}
+.oi-coach{display:flex;align-items:center;gap:12px}
+.oi-coach img{width:clamp(56px,12vh,84px);height:auto;flex:none}
+.oi-bubble{position:relative;background:#F3EFFE;border-radius:16px;padding:clamp(9px,2vh,14px) clamp(14px,1.8vw,18px);font-size:clamp(14px,2.6vh,17px);line-height:1.45;word-break:keep-all}
+.oi-bubble::before{content:"";position:absolute;left:-8px;top:50%;margin-top:-8px;border:8px solid transparent;border-right-color:#F3EFFE;border-left:0}
+/* 단추 둘 — 같은 크기, 같은 높이 */
+.oi-btns{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:440px}
+.oi-btns.one{grid-template-columns:1fr;max-width:216px}
+.oi-btn{display:flex;align-items:center;justify-content:center;gap:8px;height:clamp(46px,9.5vh,58px);border-radius:16px;font:inherit;font-weight:800;font-size:clamp(15px,2.8vh,18px);cursor:pointer;transition:transform .12s,box-shadow .12s,background .12s}
+.oi-btn span{font-size:.9em}
+.oi-btn:active{transform:translateY(1px)}
+.oi-start{border:0;color:#fff;background:linear-gradient(135deg,#6A3FE0,#5b2bc1);box-shadow:0 8px 18px rgba(91,43,193,.28)}
+.oi-start:hover{box-shadow:0 10px 22px rgba(91,43,193,.36)}
+.oi-review{border:2px solid #C9BDF4;color:#4B33B5;background:#fff}
+.oi-review:hover{background:#FAF8FF;border-color:#9C86F2}
+.oi-live{display:none;margin:0;font-size:clamp(11px,1.9vh,13px);color:#0F7B6C;font-weight:700}
+html[data-oncuvate-mode="coaching"] .oi-live{display:block}
+@media (max-width:760px){
+  .oi-card{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:100%}
+  .oi-frame{max-width:200px}
+  .oi-title{font-size:24px}
+}
+@media print{.oi-wrap{display:none}}
