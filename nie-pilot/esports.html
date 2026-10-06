@@ -868,10 +868,10 @@
     /* O X 달리기: 좁은 화면에서도 달리는 길을 남긴다 */
     .ox-run .ox-button::before,.ox-run .ox-button::after{white-space:nowrap}
     .ox-wrap .ox-play{grid-template-rows:minmax(0,auto) minmax(150px,1fr)}
-    .ox-wrap .ox-card-item{min-height:0;overflow:auto;align-content:start}
+    .ox-wrap .ox-card-item{min-height:0;overflow:hidden;align-content:center}
     .ox-wrap .ox-card-item.revealed .ox-stamp{width:46px;height:46px;font-size:26px;top:8px;right:10px}
     .ox-wrap .ox-explain{font-size:12px;padding:5px 10px}
-    .ox-foot{flex-wrap:wrap}.ox-foot .ox-coach{flex-wrap:wrap;min-width:0}.ox-foot .ox-coach-actions{flex-wrap:wrap;margin-left:auto}.ox-foot .ox-coach>span{flex:1 1 180px;min-width:0}
+    .ox-foot{flex-wrap:wrap}.ox-foot .ox-coach{flex-wrap:wrap;min-width:0}.ox-foot .ox-coach-actions{flex-wrap:nowrap;margin-left:auto}.ox-foot .ox-coach-actions button{padding:8px 10px}.ox-foot .ox-coach>span{flex:1 1 120px}.ox-foot .ox-coach>span{flex:1 1 180px;min-width:0}
     @media(max-width:1180px){.ox-wrap .ox-card-item strong{font-size:17px;line-height:1.4}.ox-wrap .ox-card-item{padding:12px 16px 8px;gap:4px}.ox-run{--gateH:64px;--gateW:92px}.ox-run .ox-button span{font-size:34px}.ox-runner.me{--rs:48px}.ox-runner{--rs:34px}}
     .mtg-note.coach-note{outline:3px solid #f3b33d;outline-offset:2px}
     .pilot-pin{display:flex;align-items:center;gap:8px;margin:4px 0 8px;font-size:13px;font-weight:900;color:#4b24a5}.pilot-pin input{width:120px;padding:7px 10px;border:1.5px solid #d4cdf0;border-radius:10px;font:inherit;letter-spacing:.12em}
