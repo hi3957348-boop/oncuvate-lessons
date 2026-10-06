@@ -1,12 +1,12 @@
 <!doctype html>
-<html lang="ko" data-lesson-id="grammar-sentence-structure" data-lesson-version="1.2.1">
+<html lang="ko" data-lesson-id="grammar-sentence-structure" data-lesson-version="2.0.1">
 <head>
 <script>try{if(localStorage.getItem('oncuvate-bareun-pilot:ok')!=='1')location.replace('index.html')}catch(e){}</script>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
 <meta name="robots" content="noindex, noarchive">
 <meta name="theme-color" content="#f4f5fb">
-<title>문장구조와 문법 1회 — 문장의 주인공과 은/는·이/가</title>
+<title>문장구조와 문법 2회 — 에, 을/를 — 움직임을 받는 말과 곳</title>
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
 <style>
 /* ===== 온큐베이트 기본: 토큰 ===== */
@@ -187,7 +187,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
   .sidebar,.sidebar-edge-toggle,.progress-rail,.actionbar,.toast,.rights{display:none!important}
   .page{display:block!important;break-after:page;padding:15mm}
 }
-/* ===== 문장구조·문법 1회: 수업 전용 ===== */
+/* ===== 문장구조·문법 수업 전용(1회 틀) ===== */
 :root{
   --sx-subject:#d6585c;      /* 문장의 주인공: 빨간 동그라미 */
   --sx-pred:#2785c7;         /* 끝 말: 파란 밑줄 */
@@ -546,6 +546,38 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
 .ox-review div{padding:6px 10px;border-radius:10px;background:#fff;border:1px solid var(--warm-line);font-size:15px;font-weight:800}
 .ox-review s{color:#b86a6e}.ox-review b{color:#247354}
 @media (max-width:620px){.ox-floor{height:120px}.ox-zone .arch{width:84px;height:84px}.ox-zone .arch b{font-size:44px}}
+/* ===== 2회: 움직임을 받는 말(초록 네모) · 곳(주황 세모) ===== */
+:root{--sx-object:#2f9467;--sx-place:#e0892c}
+.role-obj{padding:0 4px;border:2px solid var(--sx-object);border-radius:5px}
+.role-place{position:relative;padding:0 4px 0 16px;border-bottom:3px solid var(--sx-place)}
+.role-place::before{content:"";position:absolute;left:2px;top:50%;transform:translateY(-50%);border:6px solid transparent;border-bottom:10px solid var(--sx-place);border-top:0}
+/* 네 칸 기차 */
+.tr4 .car .box{padding:6px 10px 10px!important;font-size:19px!important}
+.tr4 .tr-slot{min-width:0;padding:4px 6px}
+.tr4 .tr-ph{font-size:12px;line-height:1.3}
+.tr4 .tr-slot.ok span{font-size:18px}
+.tr4 .tr-slot.ok small{font-size:10.5px}
+.tr4 .tr-slot.ok.s-place{border-color:#e9b27a!important;background:linear-gradient(180deg,#fff 0%,#fff5ea 100%)!important;box-shadow:0 3px 0 #f3d9bd}
+.tr4 .tr-slot.ok.s-obj{border-color:#8fcfb0!important;background:linear-gradient(180deg,#fff 0%,#eef8f2 100%)!important;box-shadow:0 3px 0 #cde9da}
+.tr4 .ptog{font-size:inherit}
+.tr-bank .tr-card .pt{pointer-events:none}
+.tr-done .car .box{min-width:0!important;padding:8px 10px 12px!important;font-size:18px!important}
+.tr-done .car small{font-size:10.5px}
+.car.c-place .box{border:2px solid #e9b27a!important;background:linear-gradient(180deg,#fff 0%,#fff5ea 100%)!important;box-shadow:0 3px 0 #f3d9bd}
+.car.c-obj .box{border:2px solid #8fcfb0!important;background:linear-gradient(180deg,#fff 0%,#eef8f2 100%)!important;box-shadow:0 3px 0 #cde9da}
+/* 쓰기: 소풍 가방 싸기 */
+.pk-h2{margin:8px 0 2px!important;font-size:19px!important}
+.pk-guide{margin:0 0 4px;color:var(--oc-muted);font-size:12px;font-weight:700}
+.pk-lines{display:grid;gap:6px}
+.pk-line{display:flex;flex-wrap:wrap;align-items:center;gap:5px;padding:5px 8px;border:1px solid var(--warm-line);border-radius:13px;background:#fff}
+.pk-line.ok{border-color:#9dd8c1;background:#f7fcfa}
+.pk-no{display:grid;place-items:center;width:22px;height:22px;border-radius:7px;color:#fff;background:var(--oc-violet-800);font-size:12px;font-weight:900}
+.pk-in{min-height:38px;padding:0 8px;border:1px solid var(--warm-line);border-radius:10px;background:#fff;color:var(--oc-ink);font-size:15px;font-weight:750}
+.pk-in::placeholder{color:#b9b3c4;font-weight:600}
+.pk-in:focus{border-color:var(--oc-violet-500);outline:none;box-shadow:0 0 0 3px rgba(141,112,215,.18)}
+.pk-pl{width:76px}.pk-ob{width:84px}.pk-vb{flex:1 1 90px;min-width:84px}
+.pk-e{font-size:17px;font-weight:900;background:linear-gradient(transparent 50%,var(--sx-mark) 50%)}
+.pk-line .mini-pick button{min-width:34px;min-height:36px;font-size:15px}
 /* 메뉴 간결: 부제목 숨김·간격 줄임(987×521 스크롤 없음) */
 .step-link small{display:none!important}
 .step-link{min-height:40px!important;padding:4px 6px!important}
@@ -558,7 +590,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
   <aside class="sidebar" id="sidebar" aria-label="학습 순서">
     <div class="brand-wrap">
       <img src="assets/oncuvate-brand-logo.png" alt="Oncuvate" class="brand-logo" onerror="this.replaceWith(Object.assign(document.createElement('span'),{className:'brand-text',textContent:'Oncuvate'}))">
-      <p>문장의 주인공과<br>은/는·이/가</p>
+      <p>움직임을 받는 말과 곳<br>에 · 을/를</p>
     </div>
     <nav class="step-nav" id="stepNav"></nav>
   </aside>
@@ -568,7 +600,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
     <div class="progress-rail" aria-label="학습 진행"><span id="progressBar"></span></div>
     <section class="stage" id="stage">
 
-      <section class="page fill active" data-page="0" data-title="받침 살피기" data-sub="받침 보고 은/는 · 이/가 고르기" data-activity-id="batchim-form" data-measure-id="particleForm">
+      <section class="page fill active" data-page="0" data-title="받침 살피기" data-sub="받침 보고 을/를 · 에 고르기" data-activity-id="batchim-form" data-measure-id="particleForm">
         <div class="work">
           <article class="activity-card" id="area0"></article>
           <aside class="coach" aria-label="젤리코치"><header class="coach-head"><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header><div class="coach-scroll" id="coach0"></div></aside>
@@ -581,7 +613,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
         </div>
       </section>
 
-      <section class="page fill" data-page="2" data-title="문장 기차" data-sub="끝 말 끌어다 넣기" data-activity-id="sentence-train" data-measure-id="predicateType">
+      <section class="page fill" data-page="2" data-title="문장 기차" data-sub="곳·받는 말·끝 말 넣기" data-activity-id="sentence-train" data-measure-id="sentenceStructure">
         <div class="work">
           <article class="activity-card" id="area1"></article>
           <aside class="coach" aria-label="젤리코치"><header class="coach-head"><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header><div class="coach-scroll" id="coach1"></div></aside>
@@ -602,7 +634,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
         </div>
       </section>
 
-      <section class="page fill" data-page="5" data-title="빈칸 채우기" data-sub="알맞은 은/는·이/가 넣기" data-activity-id="particle-fill" data-measure-id="particleUse">
+      <section class="page fill" data-page="5" data-title="빈칸 채우기" data-sub="알맞은 에·을·를 넣기" data-activity-id="particle-fill" data-measure-id="particleUse">
         <div class="work">
           <article class="activity-card" id="area3"></article>
           <aside class="coach" aria-label="젤리코치"><header class="coach-head"><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header><div class="coach-scroll" id="coach3"></div></aside>
@@ -616,7 +648,7 @@ body{display:grid;place-items:center;color:var(--oc-ink);font-family:var(--font)
         </div>
       </section>
 
-      <section class="page fill" data-page="7" data-title="내 문장 쓰기" data-sub="나와 가족 비교하기" data-activity-id="my-sentences" data-measure-id="sentenceProduction">
+      <section class="page fill" data-page="7" data-title="내 문장 쓰기" data-sub="소풍 가방 싸기" data-activity-id="my-sentences" data-measure-id="sentenceProduction">
         <div class="work">
           <article class="activity-card" id="area5"></article>
           <aside class="coach" aria-label="젤리코치"><header class="coach-head"><img src="assets/jelly-coach-square.png" alt="" aria-hidden="true"><strong>젤리코치</strong></header><div class="coach-scroll" id="coach5"></div></aside>
@@ -647,12 +679,15 @@ const $=id=>document.getElementById(id);
 const esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 
 /* ---------- 한글 도우미 ---------- */
+const isHangul=w=>{if(!w)return false;const c=w.charCodeAt(w.length-1)-0xAC00;return c>=0&&c<11172;};
 const hasBatchim=w=>{const c=w.charCodeAt(w.length-1)-0xAC00;return c>=0&&c<11172&&c%28!==0;};
 const JONG=['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
 const jong=w=>JONG[(w.charCodeAt(w.length-1)-0xAC00)%28];
-const topicOf=w=>w+(hasBatchim(w)?'은':'는');
-const subjOf=w=>w==='나'?'내가':w+(hasBatchim(w)?'이':'가');
-/* [은] 처럼 대괄호로 표시한 조사를 형광펜으로 */
+/* 2회 조사(교사용 메모): 움직임을 받는 말 = 을/를(받침), 곳 = 에. 안내 문장용 은/는·이/가 도우미 */
+const eulOf=w=>hasBatchim(w)?'을':'를';
+const igaOf=w=>hasBatchim(w)?'이':'가';
+const unOf=w=>hasBatchim(w)?'은':'는';
+/* [를] 처럼 대괄호로 표시한 조사를 형광펜으로 */
 const mk=t=>esc(t).replace(/\[(.+?)\]/g,'<mark class="pt">$1</mark>');
 /* 한 칸에 문장이 여럿이면 한 문장씩 줄바꿈 */
 const br=h=>h.replace(/([.!?][”"]?) (?=\S)/g,'$1<br>');
@@ -676,71 +711,84 @@ function hint(p,html){const c=$('coach'+p);const d=document.createElement('div')
 function fb(el,cls,html){el.className='inline-feedback'+(cls?' '+cls:'');el.innerHTML=html;}
 function reveal(el){requestAnimationFrame(()=>el&&el.scrollIntoView({block:'nearest',behavior:'smooth'}));}
 
+/* 2회 규칙(옛 2회 E1~E5) */
 const RULES={
-  R1:'받침이 있으면 <b>은/이</b>, 받침이 없으면 <b>는/가</b>',
-  R2:'처음 나온 것, \'누가?\'의 대답 → <b>이/가</b>',
-  R3:'비교할 때, 다시 말할 때, 설명할 때 → <b>은/는</b>'
+  E1:'받침이 있으면 <b>을</b>, 받침이 없으면 <b>를</b>',
+  E2:'움직이는 물건(움직임을 받는 말) → <b>을/를</b>',
+  E3:'물건이 도착하는 곳(곳을 알려 주는 말) → <b>에</b>',
+  E4:'순서를 바꿔도 <b>에 · 을/를</b>이 그대로면 뜻이 같아요',
+  E5:'상태·느낌 말 앞에는 움직임을 받는 말이 오지 않아요'
 };
-const ruleCard=()=>'<ol class="rule-card">'+['R1','R2','R3'].map((r,i)=>`<li><span>${i+1}</span><div>${RULES[r]}</div></li>`).join('')+'</ol>';
+const ruleCard=(keys)=>'<ol class="rule-card">'+keys.map((r,i)=>`<li><span>${i+1}</span><div>${RULES[r]}</div></li>`).join('')+'</ol>';
+const ruleText=r=>[].concat(r).map(k=>RULES[k]).join('<br>');
 
 /* ================= 1. 받침 살피기 ================= */
 const P0={i:0,tries:0,hintLv:0,
-  /* 주인공 + 끝 말 문장. 「?」 타일을 눌러 은→는→이→가, 받침에 맞는 모양이면 정답(은·이 / 는·가) */
-  items:[['책','재미있어요'],['사과','맛있어요'],['연필','짧아요'],['강아지','귀여워요'],['선생님','친절해요'],
-         ['가방','무거워요'],['우유','시원해요'],['꽃','예뻐요'],['나무','커요'],['바다','넓어요']].map(([w,p])=>({w,p})),
+  /* 받는 말 + 끝 말 문장. 「?」 타일을 눌러 을→를→에. 물건이면 받침에 맞는 을/를, 앉거나 눕는 곳이면 에 */
+  items:[['사과','먹어요'],['책','읽어요'],['우유','마셔요'],['공','차요'],['의자','앉아요','앉는 곳'],
+         ['바지','입어요'],['가방','메요'],['노래','불러요'],['침대','누워요','눕는 곳'],['연필','깎아요']].map(([w,p,pl])=>({w,p,pl})),
+  ans(it){return it.pl?'에':eulOf(it.w);},
   render(){
     const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;
-    const ok=hasBatchim(it.w)?['은','이']:['는','가'];
+    const ok=this.ans(it);
     $('area0').innerHTML=`<div class="card-head"><span class="prompt-label">받침 살피기</span><span class="counter">${this.i+1} / ${n}</span></div>
       <h2>「?」에 어울리는 글자는 무엇일까요?</h2>
-      <p class="support-copy">「?」를 누를 때마다 글자가 바뀌어요. 문장을 소리 내어 읽어 보고 골라요.</p>
+      <p class="support-copy">「?」를 누를 때마다 을 → 를 → 에로 바뀌어요. 문장을 소리 내어 읽어 보고 골라요.</p>
       <div class="mini-progress"><span style="width:${(this.i+1)/n*100}%"></span></div>
-      <div class="word-stage p0-stage"><strong id="p0word"><span class="p0-w">${esc(it.w)}</span><span id="p0slot"><button type="button" class="flip-tile" id="p0tile" aria-label="은 는 이 가 바꾸기"><span class="flip-face" id="p0face">?</span></button></span><span class="p0-p">${esc(it.p)}.</span></strong></div>
+      <div class="word-stage p0-stage"><strong id="p0word"><span class="p0-w">${esc(it.w)}</span><span id="p0slot"><button type="button" class="flip-tile" id="p0tile" aria-label="을 를 에 바꾸기"><span class="flip-face" id="p0face">?</span></button></span><span class="p0-p">${esc(it.p)}.</span></strong></div>
       <div class="p0-go"><button class="primary" type="button" id="p0check" data-track="answer" disabled>확인</button></div>
       <div class="inline-feedback" id="p0fb" role="status" aria-live="polite">「?」를 눌러 어울리는 글자를 찾아요.</div>
       <div class="card-foot"><button class="primary hidden" id="p0next" type="button">${this.i<n-1?'다음 문장':'받침 살피기 끝'}</button></div>`;
     const key='p0-'+this.i;item(key);
-    const CYCLE=['은','는','이','가'];let pick=-1;const tile=$('p0tile'),face=$('p0face');
-    tile.onclick=()=>{if(tile.disabled)return;pick=(pick+1)%4;tile.classList.remove('flip','good','bad');void tile.offsetWidth;tile.classList.add('flip');
+    const CYCLE=['을','를','에'];let pick=-1;const tile=$('p0tile'),face=$('p0face');
+    tile.onclick=()=>{if(tile.disabled)return;pick=(pick+1)%CYCLE.length;tile.classList.remove('flip','good','bad');void tile.offsetWidth;tile.classList.add('flip');
       setTimeout(()=>{face.textContent=CYCLE[pick];},170);$('p0check').disabled=false;SFX.tone(520+pick*70,0,.07,'triangle',.07);
       fb($('p0fb'),'',`「${esc(it.w)}${CYCLE[pick]} ${esc(it.p)}.」 소리 내어 읽어 봐요. 어울리면 확인!`);};
     $('p0check').onclick=()=>{if(pick<0||tile.disabled)return;const c=CYCLE[pick];
-      if(ok.includes(c)){tile.disabled=true;$('p0check').disabled=true;
+      if(c===ok){tile.disabled=true;$('p0check').disabled=true;
         $('p0slot').innerHTML=`<mark class="pt p0-done">${c}</mark>`;$('p0word').classList.add('joined');$('p0check').classList.add('hidden');
-        fb($('p0fb'),'success',`맞았어요! '${it.w}'의 마지막 글자 '${it.w.slice(-1)}'${hasBatchim(it.w)?`에는 받침 ${jong(it.w)}이 있어서 은·이가 어울려요.`:'에는 받침이 없어서 는·가가 어울려요.'}`);
+        fb($('p0fb'),'success',it.pl?`맞았어요! '${it.w}'${unOf(it.w)} ${it.pl}이에요. 곳을 알려 줄 때는 에!`:
+          `맞았어요! '${it.w}'의 마지막 글자 '${it.w.slice(-1)}'${hasBatchim(it.w)?`에는 받침 ${jong(it.w)}이 있어서 을이 어울려요.`:'에는 받침이 없어서 를이 어울려요.'}`);
         SFX.happy();finish(key);$('p0next').classList.remove('hidden');reveal($('p0next'));
       }else{miss(key);this.tries++;tile.classList.remove('flip','bad');void tile.offsetWidth;tile.classList.add('bad');
-        fb($('p0fb'),'attention',this.tries===1?'다시 한번 소리 내어 읽어 볼까요?':`'${it.w}'의 마지막 글자 '${it.w.slice(-1)}'를 봐요. 받침이 ${hasBatchim(it.w)?'있어요':'없어요'}.`);}};
+        let m='다시 한번 소리 내어 읽어 볼까요?';
+        if(this.tries>1){
+          if(it.pl)m=`'${it.w}'${unOf(it.w)} ${it.pl}이에요. 곳을 알려 줄 때는 을/를이 아니라 다른 글자예요.`;
+          else if(c==='에')m=`'${it.w}'${unOf(it.w)} 곳이 아니라 움직임을 받는 물건이에요. 을이나 를을 골라요.`;
+          else m=`'${it.w}'의 마지막 글자 '${it.w.slice(-1)}'를 봐요. 받침이 ${hasBatchim(it.w)?'있어요':'없어요'}.`;}
+        fb($('p0fb'),'attention',m);}};
     $('p0next').onclick=()=>{if(this.i<n-1){this.i++;this.render();}else this.done();};
-    say(0,this.i===0?'<b>주인공 낱말의 마지막 글자</b>를 잘 봐!<br>받침이 있는지 없는지에 따라 은/는·이/가 모양이 달라져.':'좋아, 다음 문장이야. 소리 내어 읽어 봐.');
+    say(0,this.i===0?'<b>낱말의 마지막 글자</b>를 잘 봐!<br>받침이 있으면 <b>을</b>, 없으면 <b>를</b>.<br>앉거나 눕는 <b>곳</b>이면 <b>에</b>야.':'좋아, 다음 문장이야. 소리 내어 읽어 봐.');
   },
   done(){
     $('area0').innerHTML=`<div class="done-panel"><span class="stamp" style="display:grid;place-items:center;width:52px;height:52px;border-radius:50%;color:#fff;background:#2f8a68;font-size:26px;font-weight:950">✓</span>
-      <h2>받침 규칙을 찾았어요</h2><ol class="rule-card" style="width:min(100%,460px)"><li><span>1</span><div>${RULES.R1}</div></li></ol>
+      <h2>을/를 모양 규칙을 찾았어요</h2><ol class="rule-card" style="width:min(100%,460px)"><li><span>1</span><div>${RULES.E1}</div></li><li><span>2</span><div>${RULES.E3}</div></li></ol>
       <p class="support-copy">이제 젤리런을 하러 가요.</p><button class="secondary" type="button" id="p0again">↻ 다시 풀어보기</button></div>`;
     $('p0again').onclick=()=>{this.i=0;this.render();};
-    say(0,'받침 규칙 완성! <b>다음</b>을 눌러 젤리런으로 가자.');
+    say(0,'을/를 규칙 완성! <b>다음</b>을 눌러 젤리런으로 가자.');
   },
   help(){const it=this.items[this.i];if(!it)return;hinted('p0-'+this.i);this.hintLv++;
-    hint(0,this.hintLv===1?'주인공 낱말의 <b>마지막 글자</b>만 따로 소리 내어 읽어 봐.':`'${it.w.slice(-1)}'에는 받침이 ${hasBatchim(it.w)?`있어(${jong(it.w)}). 받침이 있으면 <b>은</b>이나 <b>이</b>!`:`없어. 받침이 없으면 <b>는</b>이나 <b>가</b>!`}`);}
+    if(it.pl)hint(0,this.hintLv===1?`'${it.w}'${unOf(it.w)} 먹거나 입는 물건일까, 어떤 <b>곳</b>일까?`:`'${it.w}'${unOf(it.w)} ${it.pl}이야. 곳에는 <b>에</b>!`);
+    else hint(0,this.hintLv===1?'낱말의 <b>마지막 글자</b>만 따로 소리 내어 읽어 봐.':`'${it.w.slice(-1)}'에는 받침이 ${hasBatchim(it.w)?`있어(${jong(it.w)}). 받침이 있으면 <b>을</b>!`:`없어. 받침이 없으면 <b>를</b>!`}`);}
 };
 
 /* ================= 1-2. 젤리런 (O X 고르기) ================= */
-/* 짧은 문장만: 주인공(또는 받는 말) + 끝 말. 틀린 모양은 받침 규칙을 어긴 것. */
+/* 짧은 문장만: 받는 말(또는 곳) + 끝 말. 틀린 모양은 받침 규칙을 어기거나 에·을/를을 바꿔 쓴 것 */
 const RUN_BANK=[
-  {w:'책',ok:'이',bad:'가',p:'있어요'},{w:'강아지',ok:'가',bad:'이',p:'뛰어요'},
-  {w:'꽃',ok:'이',bad:'가',p:'예뻐요'},{w:'비',ok:'가',bad:'이',p:'와요'},
-  {w:'동생',ok:'이',bad:'가',p:'자요'},{w:'새',ok:'가',bad:'이',p:'날아요'},
-  {w:'눈',ok:'이',bad:'가',p:'와요'},{w:'아기',ok:'가',bad:'이',p:'울어요'},
-  {w:'곰',ok:'은',bad:'는',p:'커요'},{w:'엄마',ok:'는',bad:'은',p:'바빠요'},
-  {w:'친구',ok:'는',bad:'은',p:'착해요'},{w:'달',ok:'은',bad:'는',p:'밝아요'},
-  {w:'토끼',ok:'는',bad:'은',p:'빨라요'},{w:'나',ok:'는',bad:'은',p:'웃어요'},
   {w:'사과',ok:'를',bad:'을',p:'먹어요'},{w:'물',ok:'을',bad:'를',p:'마셔요'},
   {w:'공',ok:'을',bad:'를',p:'차요'},{w:'우유',ok:'를',bad:'을',p:'마셔요'},
-  {w:'빵',ok:'을',bad:'를',p:'먹어요'},{w:'나',okW:'내가',badW:'나가',p:'할게요'}];
-const runWord=(b,good)=>b.okW?(good?b.okW:b.badW):b.w+(good?b.ok:b.bad);
-const runLine=(b,good)=>{const t=runWord(b,good),n=b.okW?1:b.w.length;return esc(t.slice(0,n))+'<mark class="pt">'+esc(t.slice(n))+'</mark> '+esc(b.p)+'.';};
-const runWhy=b=>b.okW?"'나' 뒤에 '가'가 오면 <b>내가</b>!":`'${b.w.slice(-1)}'에 받침이 ${hasBatchim(b.w)?`있어요(${jong(b.w)})`:'없어요'} → <b>${b.w+b.ok}</b>`;
+  {w:'빵',ok:'을',bad:'를',p:'먹어요'},{w:'책',ok:'을',bad:'를',p:'읽어요'},
+  {w:'노래',ok:'를',bad:'을',p:'불러요'},{w:'신발',ok:'을',bad:'를',p:'신어요'},
+  {w:'바지',ok:'를',bad:'을',p:'입어요'},{w:'손',ok:'을',bad:'를',p:'씻어요'},
+  {w:'그네',ok:'를',bad:'을',p:'타요'},{w:'모래',ok:'를',bad:'을',p:'파요'},
+  {w:'의자',ok:'에',bad:'를',p:'앉아요',pl:'앉는 곳'},{w:'침대',ok:'에',bad:'를',p:'누워요',pl:'눕는 곳'},
+  {w:'벽',ok:'에',bad:'을',p:'기대요',pl:'기대는 곳'},
+  {w:'밥',ok:'을',bad:'에',p:'먹어요'},{w:'옷',ok:'을',bad:'에',p:'입어요'},{w:'연필',ok:'을',bad:'에',p:'깎아요'}];
+const runWord=(b,good)=>b.w+(good?b.ok:b.bad);
+const runLine=(b,good)=>{const t=runWord(b,good),n=b.w.length;return esc(t.slice(0,n))+'<mark class="pt">'+esc(t.slice(n))+'</mark> '+esc(b.p)+'.';};
+const runWhy=b=>b.pl?`'${b.w}'${unOf(b.w)} ${b.pl}이에요 → <b>${b.w}에</b>`
+  :b.bad==='에'?`'${b.w}'${unOf(b.w)} 곳이 아니라 움직임을 받는 물건 → <b>${b.w+b.ok}</b>`
+  :`'${b.w.slice(-1)}'에 받침이 ${hasBatchim(b.w)?`있어요(${jong(b.w)})`:'없어요'} → <b>${b.w+b.ok}</b>`;
 const shuffle=a=>{for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const OX_N=10,OX_SEC=15;
 const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
@@ -778,7 +826,7 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
   /* 시간 막대는 보여 주기만 — 다 되어도 틀린 것으로 치지 않음 */
   timer(){const t=$('oxTimer');if(!t)return;t.style.transition='none';t.style.transform='scaleX(1)';void t.offsetWidth;
     t.style.transition=`transform ${OX_SEC}s linear`;t.style.transform='scaleX(0)';
-    clearTimeout(this.tNudge);this.tNudge=setTimeout(()=>{if(this.state==='pick'&&!this.pick)say('R','천천히 골라도 괜찮아. 받침을 봐!');},OX_SEC*1000);},
+    clearTimeout(this.tNudge);this.tNudge=setTimeout(()=>{if(this.state==='pick'&&!this.pick)say('R','천천히 골라도 괜찮아. 형광펜 글자를 봐!');},OX_SEC*1000);},
   choose(v){if(this.state!=='pick')return;this.pick=v;$('oxFloor').dataset.pick=v;
     [...$('oxFloor').querySelectorAll('.ox-zone')].forEach(z=>z.classList.toggle('pick',z.dataset.v===v));
     $('oxGo').disabled=false;SFX.tone(v==='o'?660:520,0,.08,'triangle',.08);},
@@ -789,7 +837,7 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
     const zone=$('oxFloor').querySelector(`.ox-zone.${this.pick}`),answer=$('oxFloor').querySelector(`.ox-zone.${it.good?'o':'x'}`);
     if(!it.good)$('oxSent').innerHTML=`<s>${esc(runWord(it.b,false))}</s> → <span class="fix">${esc(runWord(it.b,true))}</span> ${esc(it.b.p)}.`;
     if(right){zone.classList.add('right');this.win++;this.marks[this.i]='ok';jellyReact($('areaR'),'happy');
-      say('R',it.good?'맞아! 받침 규칙에 딱 맞는 문장이야.':'맞아! 틀린 문장이었어. '+runWhy(it.b));}
+      say('R',it.good?'맞아! 에·을/를이 딱 맞는 문장이야.':'맞아! 틀린 문장이었어. '+runWhy(it.b));}
     else{zone.classList.add('wrong');answer.classList.add('right');miss(this.key);this.marks[this.i]='no';if(!it.good)this.bumps.push(it.b);jellyReact($('areaR'),'scold');
       say('R',it.good?'이 문장은 맞는 문장이었어. '+runWhy(it.b):'틀린 문장이었어. '+runWhy(it.b));}
     finish(this.key);
@@ -809,50 +857,57 @@ const PR={round:0,i:0,pick:null,state:'ready',list:[],marks:[],
   },
   leave(){clearTimeout(this.tNudge);const a=$('areaR');if(a)a.querySelectorAll('.jr,.spark').forEach(x=>x.remove());},
   help(){hinted(this.key);jellyReact($('areaR'),'think');
-    hint('R','주인공 낱말의 <b>마지막 글자</b>만 봐.<br>받침 있으면 <b>은·이·을</b>, 없으면 <b>는·가·를</b>. \'나\'는 <b>내가</b>.');}
+    hint('R','움직임을 받는 물건이면 <b>을·를</b>: 받침 있으면 <b>을</b>, 없으면 <b>를</b>.<br>앉거나 눕는 <b>곳</b>이면 <b>에</b>.');}
 };
 document.addEventListener('keydown',e=>{if(PAGES[cur]!==PR)return;
   if(PR.state==='pick'&&(e.key==='ArrowLeft'||e.key==='o'||e.key==='O')){PR.choose('o');e.preventDefault();}
   else if(PR.state==='pick'&&(e.key==='ArrowRight'||e.key==='x'||e.key==='X')){PR.choose('x');e.preventDefault();}
   else if((e.key==='Enter'||e.key===' ')&&(PR.state==='pick'&&PR.pick||PR.state==='shown')&&!e.target.closest('input,textarea')){e.preventDefault();if(!e.repeat)$('oxGo').click();}});
 
-/* ================= 2. 문장 기차 ================= */
-const TYPES={move:'움직이는 말',state:'상태나 느낌을 나타내는 말',what:'무엇인지 알려 주는 말'};
-/* 문장 기차: 주인공 한 명 + 끝 칸 세 개(움직임·상태/느낌·무엇). 보기 카드를 끌어다(또는 눌러서) 넣기.
-   주인공 뒤 글자는 눌러서 이/가 ↔ 은/는으로 바꿔 보며 느낌 비교(채점 안 함) */
+/* ================= 2. 문장 기차 (네 칸) ================= */
+const TYPES={place:'곳 · 어디에?',obj:'움직임을 받는 말 · 무엇을?',pred:'끝 말'};
+const TYPE_SHORT={place:'곳',obj:'움직임을 받는 말',pred:'끝 말'};
+/* 문장 기차: 주인공(기관차) + 곳(에) + 움직임을 받는 말(을/를) + 끝 말. 낱말 카드를 끌어다(또는 눌러서) 칸에 넣기.
+   4번은 순서를 바꾼 같은 문장(E4). 다 채우면 형광펜 글자를 눌러 에 ↔ 을/를을 서로 바꿔 보며 뜻 비교(채점 안 함) */
 const P1={i:0,tries:0,hintLv:0,
   items:[
-    {w:'강아지',sub:'가',top:'는',p:{move:'뛰어가요',state:'귀여워요',what:'동물이에요'},test:'뛰어가고 있어요'},
-    {w:'꽃',sub:'이',top:'은',p:{move:'피어나요',state:'예뻐요',what:'식물이에요'},test:'피어나고 있어요'},
-    {w:'동생',sub:'이',top:'은',p:{move:'먹어요',state:'아파요',what:'운동선수예요'},test:'먹고 있어요'},
-    {w:'공',sub:'이',top:'은',p:{move:'굴러가요',state:'동그래요',what:'장난감이에요'},test:'굴러가고 있어요'}],
-  order:['move','state','what'],
+    {s:'동생',sp:'이',place:'필통',obj:'연필',pred:'넣었어요',order:['place','obj','pred']},
+    {s:'나',sp:'는',place:'벽',obj:'그림',pred:'붙였어요',order:['place','obj','pred']},
+    {s:'엄마',sp:'가',place:'컵',obj:'물',pred:'따랐어요',order:['place','obj','pred']},
+    {s:'동생',sp:'이',place:'필통',obj:'연필',pred:'넣었어요',order:['obj','place','pred'],note:true}],
+  /* 에 · 을/를: sw(바꿔 보기)면 두 낱말의 글자가 서로 바뀜 */
+  pt(it,t,sw){return (t==='place')!==!!sw?'에':eulOf(it[t]);},
+  word(it,t,sw){return t==='pred'?esc(it.pred)+'.':esc(it[t])+'<mark class="pt">'+this.pt(it,t,sw)+'</mark>';},
+  line(it,sw){return `${it.s}${it.sp} `+it.order.map(t=>t==='pred'?it.pred+'.':it[t]+this.pt(it,t,sw)).join(' ');},
   render(){
-    const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;this.placed={};this.pt={move:it.sub,state:it.sub,what:it.sub};
+    const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;this.placed={};this.sw=false;
     const key='p1-'+this.i;item(key);this.key=key;
-    const bank=this.order.slice().sort(()=>Math.random()-.5);
+    const bank=['place','obj','pred'].sort(()=>Math.random()-.5);
     $('area1').innerHTML=`<div class="card-head"><span class="prompt-label">문장 기차</span><span class="counter">${this.i+1} / ${n}</span></div>
-      <h2 class="tr-h2">알맞은 끝 말을 끌어다 넣어요</h2>
-      <div class="tr-bank" id="p1bank">${bank.map(t=>`<button type="button" class="tr-card" data-t="${t}" data-track="answer">${esc(it.p[t])}.</button>`).join('')}</div>
-      <div class="tr-rows" id="p1rows">${this.order.map(t=>`<div class="tr-row" data-t="${t}">
-        <div class="car subject"><div class="box"><span class="tr-w">${esc(it.w)}</span><button type="button" class="ptog" data-t="${t}" aria-label="${esc(it.w)} 뒤 글자 바꾸기">${it.sub}</button></div></div>
-        <i class="link" aria-hidden="true"></i>
-        <div class="tr-slot" data-t="${t}"><span class="tr-ph">${TYPES[t]}</span></div></div>`).join('')}</div>
-      <div class="inline-feedback" id="p1fb" role="status" aria-live="polite">보기 카드를 끌어서 알맞은 빈칸에 넣어요.</div>
+      <h2 class="tr-h2">${it.note?'순서가 바뀐 기차예요. 칸에 맞게 넣어요':'낱말 카드를 알맞은 칸에 끌어다 넣어요'}</h2>
+      <div class="tr-bank" id="p1bank">${bank.map(t=>`<button type="button" class="tr-card" data-t="${t}" data-track="answer">${this.word(it,t)}</button>`).join('')}</div>
+      <div class="tr-rows" id="p1rows"><div class="tr-row tr4">
+        <div class="car subject"><div class="box"><span class="subj">${esc(it.s)}<mark class="pt">${it.sp}</mark></span></div></div>
+        ${it.order.map(t=>`<i class="link" aria-hidden="true"></i><div class="tr-slot s-${t}" data-t="${t}"><span class="tr-ph">${TYPES[t]}</span></div>`).join('')}</div></div>
+      <div class="inline-feedback" id="p1fb" role="status" aria-live="polite">낱말 카드를 끌어서 알맞은 칸에 넣어요.</div>
       <div class="card-foot"><button class="primary hidden" id="p1next" type="button">${this.i<n-1?'다음 기차':'문장 기차 끝'}</button></div>`;
     this.bind(it);
     $('p1next').onclick=()=>{if(this.i<n-1){this.i++;this.render();}else this.done();};
-    say(1,this.i===0?'끝 칸 세 개에 알맞은 말을 <b>끌어다</b> 넣어 봐.<br>주인공 뒤 글자를 <b>눌러 바꿔 보면</b> 느낌이 달라져!':'다음 기차야. 보기를 끌어다 넣어 봐.');
+    say(1,this.i===0?'오늘 기차는 <b>네 칸</b>이야!<br>맨 앞 주인공은 타 있어. 남은 칸에 낱말 카드를 <b>끌어다</b> 넣어 봐.':it.note?'어? 이번엔 낱말 <b>순서</b>가 달라.<br>그래도 칸은 같을까?':'다음 기차야. 형광펜 글자를 보고 칸을 찾아.');
   },
+  fillSlot(slot,it,t,tog){
+    const inner=t==='pred'?`<span class="pred-move">${esc(it.pred)}.</span>`
+      :`<span class="role-${t}">${esc(it[t])}${tog?`<button type="button" class="ptog" data-t="${t}" aria-label="${esc(it[t])} 뒤 글자 바꾸기">${this.pt(it,t,this.sw)}</button>`:`<mark class="pt">${this.pt(it,t,this.sw)}</mark>`}</span>`;
+    slot.innerHTML=`<span>${inner}</span><small>${TYPE_SHORT[t]}</small>`;},
   bind(it){
     const area=$('area1');let sel=null,drag=null;
     const clearSel=()=>{area.querySelectorAll('.tr-card.sel').forEach(x=>x.classList.remove('sel'));sel=null;};
     const drop=(card,slot)=>{if(!card||!slot||slot.classList.contains('ok'))return;const t=card.dataset.t;
-      if(t===slot.dataset.t){slot.classList.add('ok');slot.innerHTML=`<span class="pred-${t}">${esc(it.p[t])}.</span><small>${TYPES[t]}</small>`;card.remove();this.placed[t]=1;
-        SFX.chomp();fb($('p1fb'),'success',t==='what'?`맞아요! '${it.p[t]}'는 주인공이 무엇인지 알려 줘요.`:t==='move'?`맞아요! '지금 ${it.test}'는 자연스러워요. 움직이는 말이에요.`:`맞아요! '${it.p[t]}'는 모습이나 느낌을 나타내요.`);
-        if(Object.keys(this.placed).length===3){finish(this.key);fb($('p1fb'),'success','기차 세 대가 모두 달려요! 주인공 뒤 글자를 눌러 바꿔 보고, 느낌이 어떻게 달라지는지 읽어 봐요.');$('p1next').classList.remove('hidden');reveal($('p1next'));}}
+      if(t===slot.dataset.t){slot.classList.add('ok');this.fillSlot(slot,it,t,false);card.remove();this.placed[t]=1;
+        SFX.chomp();fb($('p1fb'),'success',t==='place'?`맞아요! '${it.place}에' — '어디에?'의 대답, 곳이에요.`:t==='obj'?`맞아요! '${it.obj}${eulOf(it.obj)}' — '무엇을?'의 대답, 움직임을 받는 말이에요.`:`맞아요! '${it.pred}.'로 문장이 끝나요.`);
+        if(Object.keys(this.placed).length===3)this.complete(it);}
       else{miss(this.key);this.tries++;slot.classList.remove('bad');void slot.offsetWidth;slot.classList.add('bad');card.classList.remove('bad');void card.offsetWidth;card.classList.add('bad');
-        fb($('p1fb'),'attention',this.tries===1?'다른 칸에 넣어 볼까요? 칸에 적힌 말을 읽어 봐요.':`'지금 ~고 있어요'를 붙여 봐요. 자연스러우면 움직이는 말, '~이에요'면 무엇인지 알려 주는 말이에요.`);}};
+        fb($('p1fb'),'attention',this.tries===1?'다른 칸에 넣어 볼까요? 칸에 적힌 말을 읽어 봐요.':`형광펜 글자를 봐요! '에'면 곳 칸, '을/를'이면 움직임을 받는 말 칸, 문장을 끝내는 말은 끝 말 칸이에요.`);}};
     /* 끌기(마우스·터치) */
     area.querySelectorAll('.tr-card').forEach(card=>{
       card.onpointerdown=e=>{if(e.button>0)return;const r=card.getBoundingClientRect();drag={card,dx:e.clientX-r.left,dy:e.clientY-r.top,x0:e.clientX,y0:e.clientY,moved:false,ghost:null};card.setPointerCapture(e.pointerId);};
@@ -866,28 +921,36 @@ const P1={i:0,tries:0,hintLv:0,
         else{const was=card.classList.contains('sel');clearSel();if(!was){card.classList.add('sel');sel=card;}}};
       card.onpointercancel=()=>{if(drag&&drag.ghost)drag.ghost.remove();drag=null;card.classList.remove('lift');};});
     /* 눌러서 넣기(카드 → 칸) */
-    area.querySelectorAll('.tr-slot').forEach(sl=>sl.onclick=()=>{if(sel){const c=sel;clearSel();drop(c,sl);}});
-    /* 주인공 뒤 글자 바꾸기 */
-    area.querySelectorAll('.ptog').forEach(b=>b.onclick=()=>{const t=b.dataset.t;this.pt[t]=this.pt[t]===it.sub?it.top:it.sub;b.textContent=this.pt[t];
-      b.classList.remove('spin');void b.offsetWidth;b.classList.add('spin');SFX.tone(this.pt[t]===it.sub?620:520,0,.08,'triangle',.07);
-      const pred=this.placed[t]?it.p[t]+'.':'…';
-      say(1,this.pt[t]===it.top?`<b>'${esc(it.w)}${it.top} ${esc(pred)}'</b><br>${esc(it.w)}에 대해 <b>설명하거나 다른 것과 견주는</b> 느낌이야.`:`<b>'${esc(it.w)}${it.sub} ${esc(pred)}'</b><br><b>누가(무엇이)</b> 그런지 새로 알려 주는 느낌이야.`);});
+    area.querySelectorAll('.tr-slot').forEach(sl=>sl.onclick=e=>{if(e.target.closest('.ptog'))return;if(sel){const c=sel;clearSel();drop(c,sl);}});
+  },
+  /* 다 채우면: 곳·받는 말의 형광펜 글자를 눌러 서로 바꿔 보기 */
+  complete(it){
+    finish(this.key);const area=$('area1');
+    ['place','obj'].forEach(t=>this.fillSlot(area.querySelector(`.tr-slot[data-t="${t}"]`),it,t,true));
+    const flip=()=>{this.sw=!this.sw;area.querySelectorAll('.ptog').forEach(b=>{b.textContent=this.pt(it,b.dataset.t,this.sw);b.classList.remove('spin');void b.offsetWidth;b.classList.add('spin');});
+      SFX.tone(this.sw?520:620,0,.08,'triangle',.07);
+      say(1,this.sw?`<b>'${esc(this.line(it,true))}'</b><br>어? 이러면 <b>${esc(it.place)}</b>${igaOf(it.place)} 움직여서 <b>${esc(it.obj)}</b>에 가! 이상하지?<br>형광펜 글자가 바뀌면 뜻이 바뀌어.`
+        :`<b>'${esc(this.line(it,false))}'</b><br><b>${esc(it.obj)}</b>${igaOf(it.obj)} 움직여서 <b>${esc(it.place)}</b>에 가.<br>움직인 물건은 <b>을/를</b>, 도착한 곳은 <b>에</b>!`);};
+    area.querySelectorAll('.ptog').forEach(b=>b.onclick=e=>{e.stopPropagation();flip();});
+    fb($('p1fb'),'success',(it.note?'순서가 바뀌어도 칸은 똑같아요! ':'기차 완성! ')+'형광펜 글자를 눌러 에 ↔ 을/를을 바꿔 보고, 뜻이 어떻게 달라지는지 읽어 봐요.');
+    say(1,it.note?`<b>'${esc(this.line(it,false))}'</b><br>1번 기차와 순서만 다르고 뜻은 같아. <b>에 · 을/를</b>이 칸을 정해 줘!`:'형광펜 글자를 <b>눌러 봐</b>. 에 ↔ 을/를이 서로 바뀌면 무슨 일이 생길까?');
+    $('p1next').classList.remove('hidden');reveal($('p1next'));
   },
   done(){
     $('area1').innerHTML=`<div class="card-head"><span class="prompt-label">문장 기차 완성</span></div>
-      <h2>문장의 뼈대는 두 칸이에요</h2>
-      <div class="train" aria-label="문장 기차"><div class="car subject"><div class="box"><span class="subj">강아지<mark class="pt">가</mark></span></div><small>문장의 주인공</small></div><i class="link" aria-hidden="true"></i><div class="car pred"><div class="box"><span class="pred-move">뛰어가요.</span></div><small>움직이는 말</small></div></div>
-      <ul class="rule-card" style="margin-top:14px">
-        <li><span style="background:var(--sx-subject)">주</span><div><b>문장의 주인공</b>: 누가? 무엇이? — 빨간 동그라미</div></li>
-        <li><span style="background:var(--sx-pred)">끝</span><div><b>끝 말</b>: 움직이는 말 · 상태나 느낌을 나타내는 말 · 무엇인지 알려 주는 말 — 파란 밑줄</div></li>
-        <li><span style="background:#caa431">은</span><div>주인공 뒤에 오는 <mark class="pt">은/는 · 이/가</mark>를 오늘 공부해요</div></li></ul>
+      <h2>오늘 기차는 네 칸이에요</h2>
+      <div class="train tr-done" aria-label="문장 기차"><div class="car subject"><div class="box"><span class="subj">동생<mark class="pt">이</mark></span></div><small>주인공</small></div><i class="link" aria-hidden="true"></i><div class="car c-place"><div class="box"><span class="role-place">필통<mark class="pt">에</mark></span></div><small>곳</small></div><i class="link" aria-hidden="true"></i><div class="car c-obj"><div class="box"><span class="role-obj">연필<mark class="pt">을</mark></span></div><small>움직임을 받는 말</small></div><i class="link" aria-hidden="true"></i><div class="car pred"><div class="box"><span class="pred-move">넣었어요.</span></div><small>끝 말</small></div></div>
+      <ul class="rule-card" style="margin-top:12px">
+        <li><span style="background:var(--sx-object)">받</span><div><b>움직임을 받는 말</b>: 무엇을? — 초록 네모 · <mark class="pt">을/를</mark></div></li>
+        <li><span style="background:var(--sx-place)">곳</span><div><b>곳을 알려 주는 말</b>: 어디에? — 주황 세모 · <mark class="pt">에</mark></div></li>
+        <li><span style="background:#caa431">↔</span><div>${RULES.E4}</div></li></ul>
       <div class="card-foot"><button class="secondary" type="button" id="p1again">↻ 다시 풀어보기</button></div>`;
     $('p1again').onclick=()=>{this.i=0;this.render();};
-    say(1,'기차 완성! 주인공 뒤에 붙은 <b>은/는·이/가</b>를 더 알아보자.');
+    say(1,'기차 완성! 순서가 바뀌어도 칸은 그대로였지?<br><b>에 · 을/를</b>이 칸을 정해 줘.');
   },
   help(){const it=this.items[this.i];if(!it)return;hinted(this.key);this.hintLv++;
-    if(this.hintLv===1)hint(1,'<b>"지금 ~고 있어요"</b>를 붙여서 말해 봐.<br>자연스러우면 움직이는 말이야. <b>~이에요</b>로 끝나면 무엇인지 알려 주는 말!');
-    else hint(1,`'<b>지금 ${it.test}</b>' — 자연스럽지? <b>${esc(it.p.move)}</b>는 움직이는 말, <b>${esc(it.p.what)}</b>는 무엇인지 알려 주는 말이야.`);}
+    if(this.hintLv===1)hint(1,"<b>'에'</b>가 있는 카드는 <b>곳</b> 칸,<br><b>'을/를'</b>이 있는 카드는 <b>움직임을 받는 말</b> 칸이야.");
+    else hint(1,`<b>${esc(it.place)}에</b> → 곳, <b>${esc(it.obj)}${eulOf(it.obj)}</b> → 움직임을 받는 말, <b>${esc(it.pred)}.</b> → 끝 말!`);}
 };
 
 /* 효과음: 파일 없이 브라우저에서 합성(외부 전송 없음) */
@@ -909,7 +972,7 @@ const soundBtn=()=>`<button type="button" class="sound-toggle" data-sound aria-l
 document.addEventListener('click',e=>{const b=e.target.closest('[data-sound]');if(!b)return;SFX.on=!SFX.on;document.querySelectorAll('[data-sound]').forEach(x=>x.textContent=SFX.on?'🔊':'🔇');});
 /* 반응 캐릭터: assets/king-*.webp */
 const JR_LINES={cheer:['옳거니! 바로 그거다!','훌륭하도다!','얼씨구, 잘했다!'],thumbs:['잘했노라!','역시 귀가 밝구나!','최고로다!'],
-  scold:['어허! 다시 읽어 보거라!','에헴! 귀를 쫑긋 세우거라!','이 문장은 아니 되오!'],cry:['흑흑… 과인이 슬프도다.','엉엉, 다시 한 번 읽어 주거라…','훌쩍… 은/는·이/가를 보거라…'],think:['흠… 상황을 다시 읽어 보거라.','흠… 은/는·이/가만 다르구나.']};
+  scold:['어허! 다시 읽어 보거라!','에헴! 귀를 쫑긋 세우거라!','이 문장은 아니 되오!'],cry:['흑흑… 과인이 슬프도다.','엉엉, 다시 한 번 읽어 주거라…','훌쩍… 에·을/를을 보거라…'],think:['흠… 상황을 다시 읽어 보거라.','흠… 에·을/를만 다르구나.']};
 function jellyReact(box,kind){
   if(kind==='happy')kind=Math.random()<.5?'cheer':'thumbs';
   if(kind==='scold'){jellyReact.flip=!jellyReact.flip;kind=jellyReact.flip?'scold':'cry';} /* 오답 반응은 호통 ↔ 울음 번갈아 */
@@ -928,16 +991,16 @@ function sparkle(btn){['✦','★','✧','✦','★'].forEach((c,k)=>{const e=do
 /* ================= 3. 짝 문장 읽기 ================= */
 const P2={i:0,tries:0,hintLv:0,
   items:[
-    {ctx:'형과 나를 비교해요.',good:'형[은] 키가 커요. 나[는] 키가 작아요.',bad:'형[이] 키가 커요. 내[가] 키가 작아요.',r:'R3',first:'good'},
-    {ctx:'“누가 왔어요?” 하고 물었어요.',good:'민수[가] 왔어요.',bad:'민수[는] 왔어요.',r:'R2',first:'bad'},
-    {ctx:'이야기의 첫 문장과 다음 문장이에요.',good:'옛날에 토끼[가] 살았어요. 그 토끼[는] 달리기를 잘했어요.',bad:'옛날에 토끼[는] 살았어요. 그 토끼[가] 달리기를 잘했어요.',r:'R2',extra:'R3',first:'bad'},
-    {ctx:'연필이 무엇인지 설명해요.',good:'연필[은] 글씨를 쓰는 도구예요.',bad:'연필[이] 글씨를 쓰는 도구예요.',r:'R3',first:'good'}],
+    {ctx:'네모를 먼저 그리고, 그 안에 동그라미를 그렸어요.',good:'네모 안[에] 동그라미[를] 그렸어요.',bad:'동그라미 안[에] 네모[를] 그렸어요.',r:'E2',extra:'E3',first:'good'},
+    {ctx:'동전이 지갑 속으로 쏙 들어갔어요.',good:'지갑[에] 동전[을] 넣었어요.',bad:'동전[에] 지갑[을] 넣었어요.',r:'E2',extra:'E3',first:'bad'},
+    {ctx:'그림 위에 색종이를 올려 붙였어요. 그림이 가려졌어요.',good:'그림[에] 색종이[를] 붙였어요.',bad:'색종이[에] 그림[을] 붙였어요.',r:'E2',extra:'E3',first:'bad'},
+    {ctx:'“지갑에 동전을 넣었어요.”와 뜻이 같은 문장은?',good:'동전[을] 지갑[에] 넣었어요.',bad:'동전[에] 지갑[을] 넣었어요.',r:'E4',first:'good'}],
   render(){
     const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;const key='p2-'+this.i;item(key);
     const opts=it.first==='good'?[['good',it.good],['bad',it.bad]]:[['bad',it.bad],['good',it.good]];
     $('area2').innerHTML=`<div class="card-head"><span class="prompt-label">짝 문장 비교</span><span style="display:flex;gap:6px;align-items:center">${soundBtn()}<span class="counter">${this.i+1} / ${n}</span></span></div>
-      <p class="pair-ask">더 자연스러운 문장은 어느 쪽일까요?</p>
-      <div class="situation"><span>상황</span><strong>${esc(it.ctx)}</strong></div>
+      <p class="pair-ask">상황에 맞는 문장은 어느 쪽일까요?</p>
+      <div class="situation"><span>상황</span><strong>${br(esc(it.ctx))}</strong></div>
       <div class="pair-h" id="p2choices">${opts.map(([k,s],j)=>`<button type="button" data-k="${k}" data-track="answer"><span class="tag">${'AB'[j]}</span><span>${br(mk(s))}</span></button>`).join('')}</div>
       <div id="p2rule"></div>
       <div class="inline-feedback" id="p2fb" role="status" aria-live="polite">두 문장을 모두 소리 내어 읽어요.</div>
@@ -945,17 +1008,17 @@ const P2={i:0,tries:0,hintLv:0,
     $('p2choices').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;b.style.animation='';
       if(b.dataset.k==='good'){b.classList.add('correct');[...$('p2choices').children].forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('dim');});sparkle(b);jellyReact($('area2'),'happy');
         $('p2rule').innerHTML=`<div class="rule-pop"><b>규칙</b><span>${RULES[it.r]}${it.extra?'<br>'+RULES[it.extra]:''}</span></div>`;
-        fb($('p2fb'),'success','맞았어요! 색칠된 은/는·이/가를 보며 규칙을 말해 봐요.');
+        fb($('p2fb'),'success','맞았어요! 형광펜 칠한 에·을/를을 보며 규칙을 말해 봐요.');
         finish(key);$('p2next').classList.remove('hidden');reveal($('p2next'));
       }else{b.classList.add('wrong');b.disabled=true;miss(key);this.tries++;jellyReact($('area2'),'scold');
-        fb($('p2fb'),'attention','다른 문장도 소리 내어 읽어 볼까요? 어느 쪽이 더 자연스러운가요?');}
+        fb($('p2fb'),'attention','다른 문장도 소리 내어 읽어 볼까요? 무엇이 움직였는지 생각해요.');}
     };
     $('p2next').onclick=()=>{if(this.i<n-1){this.i++;this.render();}else this.done();};
-    say(2,this.i===0?'두 문장을 <b>소리 내어</b> 읽어 봐.<br>형광펜 칠한 은/는·이/가만 달라!':'다음 짝 문장이야. 상황을 먼저 읽어.');
+    say(2,this.i===0?'두 문장을 <b>소리 내어</b> 읽어 봐.<br>형광펜 칠한 <b>에·을/를</b>이 어느 낱말에 있는지 봐!':'다음 상황이야. 무엇이 움직였는지 생각해.');
   },
   done(){
     $('area2').innerHTML=`<div class="card-head"><span class="prompt-label">규칙 카드 ①</span></div>
-      <h2>은/는 · 이/가 규칙 카드</h2>${ruleCard()}
+      <h2>에 · 을/를 규칙 카드</h2>${ruleCard(['E2','E3','E4'])}
       <div class="card-foot"><button class="secondary" type="button" id="p2again">↻ 다시 풀어보기</button></div>`;
     $('p2again').onclick=()=>{this.i=0;this.render();};
     say(2,'규칙 카드 완성! 이제 <b>세종문답</b>에 도전!');
@@ -963,28 +1026,31 @@ const P2={i:0,tries:0,hintLv:0,
   /* 다른 페이지에 갔다 오면 카드·캐릭터 애니메이션이 다시 돌지 않게 */
   leave(){const a=$('area2');if(!a)return;a.querySelectorAll('.pair-h button').forEach(b=>b.style.animation='none');a.querySelectorAll('.jr,.spark').forEach(x=>x.remove());},
   help(){const it=this.items[this.i];if(!it)return;hinted('p2-'+this.i);this.hintLv++;jellyReact($('area2'),'think');
-    hint(2,this.hintLv===1?'<b>상황</b>을 다시 읽어 봐. 비교하는 걸까, 질문에 대답하는 걸까?':'규칙 카드: '+RULES[it.r]);}
+    hint(2,this.hintLv===1?'<b>상황</b>을 다시 읽어 봐. 무엇이 움직였을까? 어디에 들어갔을까?':'규칙 카드: '+RULES[it.r]+(it.extra?'<br>'+RULES[it.extra]:''));}
 };
 
 /* ================= 5. 세종문답 ================= */
-/* ① 물음에 맞는 대답 고르기 → ② 덧붙일 문장이 어느 문장과 이어지는지 고르기 */
+/* 같은 낱말에 에 / 을·를 — 둘 다 맞는 문장. ① 물음(무엇을? / 어디에?)에 맞는 대답 고르기 →
+   ② 앞(또는 뒤)에 오는 문장과 이어 읽었을 때 자연스러운 쪽 고르기. 키: e = 에, o = 을/를 */
 const QA={i:0,phase:'ask',
   items:[
-    {w:'꽃',t:'이',c:'은',p:'예뻐요',q:'무엇이 예쁘냐?',a:'t',why:"'무엇이?'를 물으면 대답은 <b>이/가</b>!",link:'그런데 가시가 있어요.',pos:'after',la:'c'},
-    {w:'꽃',t:'이',c:'은',p:'예뻐요',q:'꽃은 어떠하냐?',a:'c',why:"물음에 이미 나온 '꽃'을 다시 말하니까 <b>은/는</b>!",link:'와, 저기 봐요!',pos:'before',la:'t'},
-    {w:'동생',t:'이',c:'은',p:'자요',q:'누가 자느냐?',a:'t',why:"'누가?'의 대답은 <b>이/가</b>!",link:'그런데 나는 안 졸려요.',pos:'after',la:'c'},
-    {w:'비',t:'가',c:'는',p:'와요',q:'밖에 무엇이 오느냐?',a:'t',why:"'무엇이?'의 대답은 <b>이/가</b>!",link:'어? 창밖을 봐요!',pos:'before',la:'t'},
-    {w:'떡',t:'이',c:'은',p:'맛있어요',q:'이 떡은 맛이 어떠하냐?',a:'c',why:"물음에 나온 '떡'을 다시 말하니까 <b>은/는</b>!",link:'그런데 식혜는 너무 달아요.',pos:'after',la:'c'}],
-  linkWhy:{after:"'그런데'로 다른 것과 <b>견줄 때</b>는 <b>은/는</b>이 어울려요.",before:"처음 보고 <b>가리킬 때</b>는 <b>이/가</b>가 어울려요."},
-  sen(it,k){return esc(it.w)+'<mark class="pt">'+esc(it[k])+'</mark> '+esc(it.p)+'.';},
+    {w:'상자',p:'넣었어요',q:'무엇을 넣었느냐?',a:'o',link:'인형을 모두 모았어요.',pos:'before',la:'e'},
+    {w:'가방',p:'넣었어요',q:'책을 어디에 넣었느냐?',a:'e',link:'사물함 문을 열었어요.',pos:'before',la:'o'},
+    {w:'종이',p:'붙였어요',q:'벽에 무엇을 붙였느냐?',a:'o',link:'벽이 너무 허전했어요.',pos:'before',la:'o'},
+    {w:'공책',p:'붙였어요',q:'스티커를 어디에 붙였느냐?',a:'e',link:'예쁜 스티커를 샀어요.',pos:'before',la:'e'},
+    {w:'봉투',p:'넣었어요',q:'우체통에 무엇을 넣었느냐?',a:'o',link:'편지를 다 썼어요.',pos:'before',la:'e'}],
+  why:{o:"'무엇을?'을 물으면 대답은 <b>을/를</b>!",e:"'어디에?'를 물으면 대답은 <b>에</b>!"},
+  linkWhy:{e:"앞 문장의 물건이 들어가거나 붙는 <b>곳</b>이니까 <b>에</b>가 어울려요.",o:"이 물건이 <b>직접 움직이니까</b> <b>을/를</b>이 어울려요."},
+  pt(it,k){return k==='e'?'에':eulOf(it.w);},
+  sen(it,k){return esc(it.w)+'<mark class="pt">'+this.pt(it,k)+'</mark> '+esc(it.p)+'.';},
   render(){
-    const it=this.items[this.i],n=this.items.length;this.phase='ask';this.hintLv=0;this.order=Math.random()<.5?['t','c']:['c','t'];
+    const it=this.items[this.i],n=this.items.length;this.phase='ask';this.hintLv=0;this.order=Math.random()<.5?['e','o']:['o','e'];
     const ka='pQ-'+this.i+'a';item(ka);
     $('areaQ').innerHTML=`<div class="card-head"><span class="prompt-label">세종문답</span><span style="display:flex;gap:6px;align-items:center">${soundBtn()}<span class="counter">${this.i+1} / ${n}</span></span></div>
       <div class="qa-king"><img src="assets/king-think.webp" alt="임금님"><div class="qa-scroll" id="qaScroll"><small>세종대왕의 물음</small>“${esc(it.q)}”</div></div>
       <p class="phase-label" id="qaStep">① 임금님께 올릴 대답을 골라요.</p>
       <div class="pair-h" id="qaCards">${this.order.map((k,j)=>`<button type="button" data-k="${k}" data-track="answer"><span class="tag">${'AB'[j]}</span><span class="qa-s">${this.sen(it,k)}</span></button>`).join('')}</div>
-            <div class="inline-feedback" id="qaFb" role="status" aria-live="polite">두 대답 모두 맞는 문장이에요. 물음을 잘 읽어요.</div>
+      <div class="inline-feedback" id="qaFb" role="status" aria-live="polite">두 대답 모두 맞는 문장이에요. 물음을 잘 읽어요.</div>
       <div class="card-foot"><button class="primary hidden" id="qaNext" type="button">${this.i<n-1?'다음 물음':'문답 끝'}</button></div>`;
     this.bindNext();
     $('qaCards').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;b.style.animation='';
@@ -993,7 +1059,7 @@ const QA={i:0,phase:'ask',
   },
   pickAnswer(b,it,ka){
     if(b.dataset.k===it.a){b.classList.add('correct');sparkle(b);jellyReact($('areaQ'),'happy');finish(ka);
-      fb($('qaFb'),'success','맞았어요! '+it.why);[...$('qaCards').children].forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('dim');});
+      fb($('qaFb'),'success','맞았어요! '+this.why[it.a]);[...$('qaCards').children].forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('dim');});
       this.phase='asked';$('qaNext').textContent='이어 말하기로 →';$('qaNext').classList.remove('hidden');reveal($('qaNext'));
     }else{b.classList.add('wrong');b.disabled=true;miss(ka);jellyReact($('areaQ'),'scold');
       fb($('qaFb'),'attention','이 문장도 맞는 문장이지만, 임금님 물음에는 안 어울려요. 물음을 다시 읽어 봐요.');}
@@ -1003,7 +1069,7 @@ const QA={i:0,phase:'ask',
   /* ② 이어 말하기: ①과 다른 화면. 보기마다 두 문장을 1 → 2 순서로 보여 준다 */
   toLink(it){
     const n=this.items.length;this.phase='link';this.hintLv=0;const kb='pQ-'+this.i+'b';item(kb);this.kb=kb;
-    const order=Math.random()<.5?['t','c']:['c','t'];
+    const order=Math.random()<.5?['e','o']:['o','e'];
     const seq=k=>{const a=`<span class="qa-main">${this.sen(it,k)}</span>`,l=`<span class="qa-linkline">${esc(it.link)}</span>`,two=it.pos==='after'?[a,l]:[l,a];
       return `<ol class="qa-seq">${two.map((x,j)=>`<li><i>${j+1}</i>${x}</li>`).join('')}</ol>`;};
     $('areaQ').innerHTML=`<div class="card-head"><span class="prompt-label qa-label2">세종문답 · 이어 말하기</span><span style="display:flex;gap:6px;align-items:center">${soundBtn()}<span class="counter">${this.i+1} / ${n}</span></span></div>
@@ -1014,13 +1080,13 @@ const QA={i:0,phase:'ask',
       <div class="card-foot"><button class="primary hidden" id="qaNext" type="button">${this.i<n-1?'다음 물음':'문답 끝'}</button></div>`;
     this.bindNext();
     $('qaCards').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;b.style.animation='';this.pickLink(b,it);};
-    say('Q',it.pos==='after'?'<b>그런데</b>가 나오면 무엇과 무엇을 <b>견주는</b> 걸까?':'<b>처음 보고</b> 손가락으로 가리키는 느낌이야!');
+    say('Q','1 → 2로 읽으면서 생각해 봐.<br><b>'+esc(it.w)+'</b>'+unOf(it.w)+' 직접 <b>움직인 물건</b>일까, 무엇이 들어가거나 붙는 <b>곳</b>일까?');
   },
   pickLink(b,it){
     if(this.phase!=='link')return;
     if(b.dataset.k===it.la){b.classList.add('correct');[...$('qaCards').children].forEach(x=>{x.disabled=true;if(x!==b)x.classList.add('dim');});
       sparkle(b);jellyReact($('areaQ'),'happy');finish(this.kb);this.phase='done';
-      fb($('qaFb'),'success','맞았어요! '+this.linkWhy[it.pos]+' 두 문장을 이어서 소리 내어 읽어요.');
+      fb($('qaFb'),'success','맞았어요! '+this.linkWhy[it.la]+' 두 문장을 이어서 소리 내어 읽어요.');
       $('qaNext').classList.remove('hidden');reveal($('qaNext'));
     }else{b.classList.add('wrong');b.disabled=true;miss(this.kb);jellyReact($('areaQ'),'scold');
       fb($('qaFb'),'attention','이어서 읽어 보면 조금 어색해요. 다른 쪽도 1 → 2 순서로 읽어 볼까요?');}
@@ -1028,8 +1094,8 @@ const QA={i:0,phase:'ask',
   done(){
     $('areaQ').innerHTML=`<div class="card-head"><span class="prompt-label">세종문답 완료</span></div>
       <h2>둘 다 맞는 문장, 무엇이 다를까?</h2>
-      <ul class="qa-rules"><li><mark class="pt">이/가</mark> — '누가? 무엇이?'의 대답, 처음 보고 가리킬 때<br><span style="color:#566077">와, 저기 봐요! 꽃<mark class="pt">이</mark> 예뻐요.</span></li>
-        <li><mark class="pt">은/는</mark> — 이미 나온 것을 다시 말할 때, '그런데'로 견줄 때<br><span style="color:#566077">꽃<mark class="pt">은</mark> 예뻐요. 그런데 가시가 있어요.</span></li></ul>
+      <ul class="qa-rules"><li><mark class="pt">을/를</mark> — '무엇을?'의 대답, 직접 움직이는 물건<br><span style="color:#566077">사물함 문을 열었어요.<br>가방<mark class="pt">을</mark> 넣었어요.</span></li>
+        <li><mark class="pt">에</mark> — '어디에?'의 대답, 물건이 들어가거나 붙는 곳<br><span style="color:#566077">편지를 다 썼어요.<br>봉투<mark class="pt">에</mark> 넣었어요.</span></li></ul>
       <div class="card-foot"><button class="secondary" type="button" id="qaAgain">↻ 다시 풀어보기</button></div>`;
     $('qaAgain').onclick=()=>{this.i=0;this.render();};
     jellyReact($('areaQ'),'happy');
@@ -1037,20 +1103,21 @@ const QA={i:0,phase:'ask',
   },
   leave(){const a=$('areaQ');if(!a)return;a.querySelectorAll('.pair-h button,.qa-scroll,.qa-add').forEach(b=>b.style.animation='none');a.querySelectorAll('.jr,.spark').forEach(x=>x.remove());},
   help(){const it=this.items[this.i];if(!it)return;hinted(this.phase==='link'?this.kb:'pQ-'+this.i+'a');this.hintLv++;jellyReact($('areaQ'),'think');
-    if(this.phase==='link')hint('Q',this.hintLv===1?'A와 B를 하나씩 1 → 2 순서로 소리 내어 읽어 봐.':this.linkWhy[it.pos]);
-    else hint('Q',this.hintLv===1?"물음에 <b>'누가?·무엇이?'</b>가 있을까, 아니면 <b>'○○은/는'</b>이 있을까?":it.why);}
+    if(this.phase==='link')hint('Q',this.hintLv===1?'A와 B를 하나씩 1 → 2 순서로 소리 내어 읽어 봐.':this.linkWhy[it.la]);
+    else hint('Q',this.hintLv===1?"물음에 <b>'무엇을?'</b>이 있을까, <b>'어디에?'</b>가 있을까?":this.why[it.a]);}
 };
 
 /* ================= 4. 빈칸 채우기 ================= */
-const GROUP={은:'topic',는:'topic',이:'subj',가:'subj'};
+const GROUP={에:'place',을:'obj',를:'obj'};
 const P3={i:0,tries:0,hintLv:0,
   items:[
-    {t:'형은 키가 큰데 나{_} 키가 작아요.',w:'나',a:'는',r:'R3'},
-    {t:'“누가 창문을 열었어?” “민수{_} 열었어.”',w:'민수',a:'가',r:'R2'},
-    {t:'옛날 어느 마을에 아기돼지 삼형제{_} 살았어요.',w:'삼형제',a:'가',r:'R2'},
-    {t:'첫째 돼지{_} 짚으로 집을 지었어요. 둘째 돼지[는] 나무로 지었어요.',w:'돼지',a:'는',r:'R3'},
-    {t:'내 아이스크림{_} 딸기 맛이야. 네 아이스크림[은] 무슨 맛이야?',w:'아이스크림',a:'은',r:'R3'},
-    {t:'책상 위에 필통{_} 있어요.',w:'필통',a:'이',r:'R2'}],
+    {t:'빨래{_} 세탁기에 넣었어요.',w:'빨래',a:'를',r:'E2'},
+    {t:'세탁기{_} 세제를 넣었어요.',w:'세탁기',a:'에',r:'E3'},
+    {t:'벽{_} 못을 박았어요.',w:'벽',a:'에',r:'E3'},
+    {t:'가족사진{_} 벽에 걸었어요.',w:'가족사진',a:'을',r:'E2'},
+    {t:'엄마가 붕어빵을 봉지{_} 넣어 주셨어요.',w:'봉지',a:'에',r:'E3'},
+    {t:'촛불을 끈 뒤 케이크{_} 접시에 담았어요.',w:'케이크',a:'를',r:'E2'},
+    {t:'먹고 남은 케이크를 냉장고{_} 넣었어요.',w:'냉장고',a:'에',r:'E3'}],
   sent(it,fill){const [a,b]=it.t.split('{_}');return br(mk(a)+(fill?`<span class="blank"><mark class="pt">${fill}</mark></span>`:'<span class="blank">&nbsp;</span>')+mk(b));},
   render(){
     const it=this.items[this.i],n=this.items.length;this.tries=0;this.hintLv=0;const key='p3-'+this.i;item(key);
@@ -1058,22 +1125,21 @@ const P3={i:0,tries:0,hintLv:0,
       <h2>빈칸에 들어갈 글자를 골라 보세요</h2>
       <div class="mini-progress"><span style="width:${(this.i+1)/n*100}%"></span></div>
       <div class="sent-stage"><p id="p3sent">${this.sent(it)}</p></div>
-      <div class="chip-row" id="p3choices">${['은','는','이','가'].map(x=>`<button type="button" data-x="${x}" data-track="answer">${x}</button>`).join('')}</div>
+      <div class="chip-row" style="--n:3" id="p3choices">${['에','을','를'].map(x=>`<button type="button" data-x="${x}" data-track="answer">${x}</button>`).join('')}</div>
       <div class="inline-feedback" id="p3fb" role="status" aria-live="polite">규칙 카드를 떠올리며 골라요.</div>
       <div class="card-foot"><button class="primary hidden" id="p3next" type="button">${this.i<n-1?'다음 문장':'빈칸 채우기 끝'}</button></div>`;
     $('p3choices').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const x=b.dataset.x;
       if(x===it.a){b.classList.add('correct');[...$('p3choices').children].forEach(y=>y.disabled=true);
         $('p3sent').innerHTML=this.sent(it,x);
-        fb($('p3fb'),'success','맞았어요! '+RULES[it.r]);finish(key);$('p3next').classList.remove('hidden');reveal($('p3next'));
+        fb($('p3fb'),'success','맞았어요! '+RULES[it.r]+(GROUP[it.a]==='obj'?'<br>'+RULES.E1:''));finish(key);$('p3next').classList.remove('hidden');reveal($('p3next'));
       }else{b.classList.add('wrong');b.disabled=true;miss(key);this.tries++;
         if(GROUP[x]===GROUP[it.a])fb($('p3fb'),'attention',`뜻은 맞게 골랐어요! '${it.w}'의 받침을 다시 봐요.`);
         else fb($('p3fb'),'attention',this.tries===1?'문장 전체를 다시 소리 내어 읽어 볼까요?':'규칙 카드: '+RULES[it.r]);}
     };
     $('p3next').onclick=()=>{if(this.i<n-1){this.i++;this.render();}else this.done();};
-    say(3,this.i===0?'두 가지를 생각해!<br>① <b>뜻</b>: 은/는일까, 이/가일까?<br>② <b>받침</b>: 받침이 있을까?':'다음 문장이야. 뜻 먼저, 받침 다음!');
+    say(3,this.i===0?'두 가지를 생각해!<br>① <b>뜻</b>: 움직인 물건일까, 도착한 곳일까?<br>② <b>받침</b>: 을일까, 를일까?':'다음 문장이야. 뜻 먼저, 받침 다음!');
   },
   done(){
-    const s=stats();
     $('area3').innerHTML=`<div class="done-panel"><span style="display:grid;place-items:center;width:52px;height:52px;border-radius:50%;color:#fff;background:#2f8a68;font-size:26px;font-weight:950">✓</span>
       <h2>빈칸 채우기 완료!</h2><p class="support-copy">이제 틀린 문장을 찾아 고치는 탐정이 되어 봐요.</p>
       <button class="secondary" type="button" id="p3again">↻ 다시 풀어보기</button></div>`;
@@ -1081,31 +1147,37 @@ const P3={i:0,tries:0,hintLv:0,
     say(3,'잘했어! 다음은 <b>틀린 문장 고치기</b>야.');
   },
   help(){const it=this.items[this.i];if(!it)return;hinted('p3-'+this.i);this.hintLv++;
-    hint(3,this.hintLv===1?'먼저 뜻을 생각해 봐: '+(GROUP[it.a]==='topic'?'비교하거나, 다시 말하거나, 설명하는 문장일까?':'처음 나왔거나 \'누가?\'의 대답일까?'):`'${it.w}'의 마지막 글자에 받침이 ${hasBatchim(it.w)?'있어':'없어'}. 답은 <b>${it.a}</b>!`);}
+    const obj=GROUP[it.a]==='obj';
+    hint(3,this.hintLv===1?'먼저 뜻을 생각해 봐: '+`'${it.w}'${unOf(it.w)} 움직인 물건일까, 물건이 도착한 곳일까?`
+      :obj?`'${it.w}'${unOf(it.w)} 움직인 물건이야. 마지막 글자에 받침이 ${hasBatchim(it.w)?'있어':'없어'}. 답은 <b>${it.a}</b>!`:`'${it.w}'${unOf(it.w)} 물건이 도착한 곳이야. 답은 <b>에</b>!`);}
 };
 
 /* ================= 5. 틀린 문장 고치기 ================= */
-const REASONS=[['R1','받침 규칙'],['R2','처음 나옴 · 누가? → 이/가'],['R3','비교 · 다시 · 설명 → 은/는']];
+const REASONS=[['E1','받침 규칙'],['E2','움직이는 물건 → 을/를'],['E3','도착하는 곳 → 에'],['E5','상태·느낌 말과 짝']];
+/* bad: 틀린 낱말 자리(둘이면 배열 — 에·을/를이 서로 바뀐 문장). ans: 고친 낱말을 띄어 쓴 것(bad 순서대로). r: 맞는 이유(배열이면 어느 쪽이든 정답) */
 const P4={i:0,phase:'',tries:0,hintLv:0,errs:0,
   items:[
-    {lv:1,toks:['내','동생는','여덟','살이에요.'],bad:1,fixes:['동생은','동생가'],ans:'동생은',r:'R1'},
-    {lv:1,toks:['책상','위에','책가','있어요.'],bad:2,fixes:['책는','책이'],ans:'책이',r:'R1'},
-    {lv:2,ctx:'“누가 창문을 깼니?”',toks:['철수는','깼어요.'],bad:0,fixes:['철수가','철수를'],ans:'철수가',r:'R2'},
-    {lv:2,toks:['형은','안경을','썼는데','내가','안경을','안','썼어요.'],bad:3,fixes:['나를','나는'],ans:'나는',r:'R3'},
-    {lv:2,kind:'end',toks:['우리','집','강아지가','아주','빠르게.'],fixes:['강아지','달려요','빠르게'],ans:'달려요'},
-    {lv:3,toks:['사과는','빨갛고','바나나는','노래요.'],ok:true},
-    {lv:3,toks:['나는','수학은','좋아하지만','국어가','싫어요.'],bad:3,fixes:['국어는','국어를'],ans:'국어는',r:'R3'},
-    {lv:3,ctx:'“누가 먹었어?”',toks:['동생은','먹었어.'],bad:0,fixes:['동생이','동생을'],ans:'동생이',r:'R2'},
-    {lv:3,toks:['고양이가','소파','위에서','자요.'],ok:true}],
+    {lv:1,toks:['필통에','가방을','넣었어요.'],bad:[0,1],fixes:['가방에 필통을','가방을 필통에'],ans:'가방에 필통을',r:['E2','E3'],h1:'가방과 필통 중에 어느 것이 움직여서 들어갔을까?'},
+    {lv:1,toks:['필통를','열었어요.'],bad:[0],fixes:['필통을','필통에'],ans:'필통을',r:'E1'},
+    {lv:2,toks:['꽃에','꽃병을','꽂았어요.'],bad:[0,1],fixes:['꽃병에 꽃을','꽃병을 꽃에'],ans:'꽃병에 꽃을',r:['E2','E3']},
+    {lv:2,toks:['옷에','옷걸이를','걸었어요.'],bad:[0,1],fixes:['옷걸이를 옷에','옷걸이에 옷을'],ans:'옷걸이에 옷을',r:['E2','E3']},
+    {lv:2,toks:['씨앗에','화분을','심었어요.'],bad:[0,1],fixes:['화분에 씨앗을','화분을 씨앗에'],ans:'화분에 씨앗을',r:['E2','E3']},
+    {lv:3,toks:['밥을','그릇에','담았어요.'],ok:true},
+    {lv:3,toks:['냉장고를','케이크에','넣었어요.'],bad:[0,1],fixes:['케이크를 냉장고에','냉장고에 케이크를'],ans:'케이크를 냉장고에',r:['E2','E3']},
+    {lv:3,toks:['사과를','빨개요.'],bad:[0],fixes:['사과가','사과에'],ans:'사과가',r:'E5',h1:"'빨개요'는 움직이는 말일까, 상태를 나타내는 말일까?"},
+    {lv:3,toks:['얼굴에','로션을','발랐어요.'],ok:true},
+    {lv:3,toks:['벽을','달력에','걸었어요.'],bad:[0,1],fixes:['달력을 벽에','달력에 벽을'],ans:'달력을 벽에',r:['E2','E3']}],
   lvName:{1:'1단계 · 틀린 곳 찾기',2:'2단계 · 뜻을 살펴 찾기',3:'3단계 · 맞는 문장일까?'},
   num(k){const it=this.items[this.i];return '①②③④'[(it.lv===3?1:0)+k];},
   key(){return 'p4-'+this.i;},
+  bads(it){return it.bad==null?[]:[].concat(it.bad);},
+  badWords(it){return this.bads(it).map(j=>it.toks[j]).join(' ');},
   tokens(it,opt={}){
+    const bad=this.bads(it),fx=opt.fixed&&it.ans?it.ans.split(' '):[];
     return `<div class="token-line" id="p4toks">${it.toks.map((t,j)=>{
-      let cls='token';if(opt.tap)cls+=' tappable';if(opt.flag&&j===it.bad)cls+=' flag';
+      const bi=bad.indexOf(j);let cls='token';if(opt.tap)cls+=' tappable';if(opt.flag&&bi>=0)cls+=' flag';
       let html=esc(t);
-      if(opt.fixed&&j===it.bad){cls+=' fixed';const w=it.ans;html=esc(w.slice(0,-1))+'<mark class="pt">'+esc(w.slice(-1))+'</mark>';}
-      if(opt.fixed&&it.kind==='end'&&j===it.toks.length-1)html=esc(t.replace('.',''))+' <b style="color:var(--sx-pred)">'+esc(it.ans)+'.</b>';
+      if(opt.fixed&&bi>=0&&fx[bi]){cls+=' fixed';const w=fx[bi];html=esc(w.slice(0,-1))+'<mark class="pt">'+esc(w.slice(-1))+'</mark>';}
       return opt.tap?`<button type="button" class="${cls}" data-j="${j}">${html}</button>`:`<span class="${cls}">${html}</span>`;}).join('')}</div>`;
   },
   frame(inner){
@@ -1126,29 +1198,24 @@ const P4={i:0,phase:'',tries:0,hintLv:0,errs:0,
       fb($('p4fb'),'','천천히 소리 내어 읽어요.');
       $('p4ox').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const v=b.dataset.v;
         const right=(v==='o')===!!it.ok;
-        if(!right){b.style.borderColor='#efb6b8';b.style.background='var(--oc-danger-bg)';b.disabled=true;this.err('다시 한번 소리 내어 읽어 볼까요?');return;}
+        if(!right){b.style.borderColor='#efb6b8';b.style.background='var(--oc-danger-bg)';b.disabled=true;this.err('다시 한번 소리 내어 읽어 볼까요? 무엇이 움직였는지 생각해요.');return;}
         [...$('p4ox').children].forEach(x=>x.disabled=true);b.style.borderColor='#9dd8c1';b.style.background='var(--oc-success-bg)';
         if(it.ok){$('p4sent').innerHTML=this.tokens(it,{fixed:true});fb($('p4fb'),'success','맞아요! 틀린 곳이 없는 문장이에요.');this.complete();}
         else this.find();};
       say(4,'이번엔 <b>맞는 문장</b>도 섞여 있어.<br>읽어 보고 판단해!');
-    }else if(it.kind==='end'){this.phase='fix';$('p4sent').innerHTML=this.tokens(it);
-      $('p4work').innerHTML=`<div class="train" style="min-height:0;margin-top:10px"><div class="car subject"><div class="box" style="font-size:18px"><span class="subj">강아지<mark class="pt">가</mark></span></div><small>문장의 주인공</small></div><i class="link"></i><div class="car pred empty"><div class="box" style="font-size:18px">?</div><small>끝 말</small></div></div>
-        <p class="phase-label">문장 기차의 끝 칸이 비었어요. 어떤 말을 넣을까요?</p>${this.fixChips(it)}`;
-      fb($('p4fb'),'','문장이 끝나지 않았어요.');this.bindFix();
-      say(4,'이 문장은 뭔가 <b>끝나지 않은</b> 느낌이지?<br>끝 칸을 채워 줘.');
     }else this.find();
   },
   err(msg){miss(this.key());this.tries++;this.errs++;fb($('p4fb'),'attention',msg);},
   find(){
-    const it=this.items[this.i];this.phase='find';
+    const it=this.items[this.i],bad=this.bads(it);this.phase='find';
     $('p4sent').innerHTML=this.tokens(it,{tap:true});
     $('p4work').innerHTML=`<p class="phase-label">${this.num(0)} 어색한 낱말을 찾아 눌러요.</p>`;
     fb($('p4fb'),'','문장을 소리 내어 읽고, 어느 낱말이 어색한지 찾아요.');
     say(4,this.i===0?'<b>틀린 문장 고치기</b>야!<br>① 틀린 곳 찾기 ② 왜 틀렸는지 ③ 맞는 표현 고르기 순서로 해.':'어색한 <b>낱말</b>을 찾아 눌러 봐.');
     $('p4toks').onclick=e=>{const b=e.target.closest('button');if(!b)return;const j=+b.dataset.j;
-      if(j===it.bad){$('p4sent').innerHTML=this.tokens(it,{flag:true});this.reason();}
+      if(bad.includes(j)){$('p4sent').innerHTML=this.tokens(it,{flag:true});this.reason();}
       else{b.classList.add('wrong');setTimeout(()=>b.classList.remove('wrong'),700);
-        this.err(this.tries===0?'그 낱말은 괜찮아요. 은/는·이/가를 살펴봐요.':'주인공에 붙은 은/는·이/가를 살펴봐요.');}};
+        this.err(this.tries===0?'그 낱말은 괜찮아요. 에·을/를이 있는 낱말을 살펴봐요.':'무엇이 움직였는지, 어디에 들어갔는지 생각해 봐요.');}};
   },
   fixChips(it){return `<div class="chip-row" style="--n:${it.fixes.length}" id="p4fix">${it.fixes.map(f=>`<button type="button" data-f="${f}" data-track="answer">${f}</button>`).join('')}</div>`;},
   bindFix(){
@@ -1156,116 +1223,93 @@ const P4={i:0,phase:'',tries:0,hintLv:0,errs:0,
     $('p4fix').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
       if(b.dataset.f===it.ans){b.classList.add('correct');[...$('p4fix').children].forEach(x=>x.disabled=true);
         $('p4sent').innerHTML=this.tokens(it,{fixed:true});
-        if(it.kind==='end'){const e=document.querySelector('#p4work .car.empty');if(e){e.classList.remove('empty');e.innerHTML='<div class="box" style="font-size:18px"><span class="pred-move">달려요.</span></div><small>움직이는 말</small>';}fb($('p4fb'),'success','맞아요! 끝 칸에 움직이는 말이 들어가서 문장이 끝났어요.');this.complete();}
-        else{fb($('p4fb'),'success','바르게 고쳤어요! 고친 문장을 소리 내어 읽어 봐요.');this.complete();}}
-      else{b.classList.add('wrong');b.disabled=true;this.err('다시 소리 내어 읽어 볼까요?');}};
+        fb($('p4fb'),'success','바르게 고쳤어요! 고친 문장을 소리 내어 읽어 봐요.');this.complete();}
+      else{b.classList.add('wrong');b.disabled=true;this.err('다시 소리 내어 읽어 볼까요? 무엇이 움직였을까요?');}};
   },
   reason(){
     const it=this.items[this.i];this.phase='reason';
     $('p4work').innerHTML=`<p class="phase-label">${this.num(1)} 왜 틀렸을까요? 규칙 카드에서 골라요.</p>
-      <div class="chip-row" style="--n:3" id="p4why">${REASONS.map(([k,v])=>`<button type="button" data-r="${k}" style="font-size:13px" data-track="answer">${v}</button>`).join('')}</div>`;
+      <div class="chip-row" style="--n:2" id="p4why">${REASONS.map(([k,v])=>`<button type="button" data-r="${k}" style="font-size:13.5px;min-height:44px" data-track="answer">${v}</button>`).join('')}</div>`;
     fb($('p4fb'),'success','찾았어요! 먼저 왜 틀렸는지 골라요.');say(4,'어디가 틀렸는지 찾았어!<br><b>왜</b> 틀렸을까?');
     $('p4why').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
-      if(b.dataset.r===it.r){b.classList.add('correct');[...$('p4why').children].forEach(x=>x.disabled=true);this.fixStep(RULES[it.r]);}
+      if([].concat(it.r).includes(b.dataset.r)){b.classList.add('correct');[...$('p4why').children].forEach(x=>x.disabled=true);this.fixStep(ruleText(it.r));}
       else{b.classList.add('wrong');b.disabled=true;this.err('다른 규칙도 살펴볼까요?');}};
   },
   /* 마지막: 맞는 표현 고르기 */
   fixStep(rule){
     const it=this.items[this.i];this.phase='fix';
     $('p4work').insertAdjacentHTML('beforeend',`<p class="phase-label">${this.num(2)} 맞는 표현을 골라요.</p>${this.fixChips(it)}`);
-    fb($('p4fb'),'success','맞아요! '+rule+'. 이제 맞는 표현을 골라요.');say(4,'이유를 알았으니 <b>맞는 표현</b>을 골라 봐!');this.bindFix();reveal($('p4fix'));
+    fb($('p4fb'),'success','맞아요! '+rule+'<br>이제 맞는 표현을 골라요.');say(4,'이유를 알았으니 <b>맞는 표현</b>을 골라 봐!');this.bindFix();reveal($('p4fix'));
   },
   complete(){finish(this.key());this.phase='done';$('p4next').classList.remove('hidden');reveal($('p4next'));},
   done(){
     $('area4').innerHTML=`<div class="done-panel"><span style="display:grid;place-items:center;width:52px;height:52px;border-radius:50%;color:#fff;background:#2f8a68;font-size:26px;font-weight:950">✓</span>
-      <h2>문장 탐정 성공!</h2><p class="support-copy">틀린 곳을 찾고, 고치고, 이유까지 말했어요.</p>
+      <h2>문장 탐정 성공!</h2><p class="support-copy">틀린 곳을 찾고, 이유를 말하고, 바르게 고쳤어요.</p>
       <button class="secondary" type="button" id="p4again">↻ 다시 풀어보기</button></div>`;
     $('p4again').onclick=()=>{this.i=0;this.render();};
     say(4,'멋져! 이제 <b>내 문장</b>을 써 볼 차례야.');
   },
   help(){const it=this.items[this.i];if(!it)return;hinted(this.key());this.hintLv++;
-    const m={judge:['주인공 뒤의 은/는·이/가를 하나씩 소리 내어 읽어 봐.',it.ok?'이 문장은 규칙에 맞게 쓰였어.':`'${it.toks[it.bad]}' 부분을 잘 봐.`],
-      find:['은/는·이/가가 붙은 낱말만 살펴봐.',`'${it.toks[it.bad]}'가 어색하지 않아?`],
-      fix:[it.kind==='end'?'끝 칸에는 움직이는 말이나 상태·느낌을 표현하는 말이 와.':'규칙 카드를 떠올려 봐.',it.kind==='end'?'강아지가 무엇을 하는지 알려 주는 말이야.':`'${it.ans}'를 넣어 소리 내어 읽어 봐.`],
-      reason:['받침 때문일까, 뜻 때문일까?','규칙 카드: '+(it.r?RULES[it.r]:'')]};
+    const m={judge:['에·을/를이 있는 낱말을 하나씩 소리 내어 읽어 봐.',it.ok?'이 문장은 규칙에 맞게 쓰였어.':`'${this.badWords(it)}' 부분을 잘 봐.`],
+      find:[it.h1||'에·을/를이 있는 낱말만 살펴봐.',`'${this.badWords(it)}'${this.bads(it).length>1?' 두 낱말':''}이 어색하지 않아?`],
+      fix:['규칙 카드를 떠올려 봐. 움직인 물건은 을/를, 도착한 곳은 에!',`이렇게 고쳐 읽어 봐: <b>${esc(it.ans||'')}</b>`],
+      reason:['받침 때문일까, 뜻 때문일까?','규칙 카드: '+(it.r?ruleText(it.r):'')]};
     const arr=m[this.phase]||m.fix;hint(4,arr[Math.min(this.hintLv,2)-1]);}
 };
 
-/* ================= 6. 내 문장 쓰기 ================= */
-const FAMILY=['엄마','아빠','형','오빠','누나','언니','동생','할머니','할아버지'];
-const QUESTIONS=['일찍 자요','많이 먹어요','잘 웃어요','키가 커요'];
-const P5={who:null,whoOk:false,q:null,ansWho:null,ansOk:false,part:0,
+/* ================= 6. 내 문장 쓰기: 소풍 가방 싸기 ================= */
+/* 한 줄 = 곳에 + 물건(을/를 고르기) + 끝 말. 4번은 순서를 바꿔 쓴다(물건 먼저). 을/를은 쓴 낱말의 받침으로 채점 */
+const P5={st:[{},{},{},{}],hintLv:0,
+  lines:[
+    {ph:['가방','돗자리','넣었어요']},
+    {ph:['도시락','김밥','담았어요']},
+    {ph:['물병','보리차','따랐어요']},
+    {ph:['가방','이름표','붙였어요'],swap:true}],
+  lineHtml(L,k){
+    const s=this.st[k],v=f=>esc(s[f]||'');
+    const place=`<input class="pk-in pk-pl" data-k="${k}" data-f="place" maxlength="10" placeholder="${L.ph[0]}" value="${v('place')}" aria-label="${k+1}번 곳"><b class="pk-e">에</b>`;
+    const obj=`<input class="pk-in pk-ob" data-k="${k}" data-f="obj" maxlength="10" placeholder="${L.ph[1]}" value="${v('obj')}" aria-label="${k+1}번 물건"><span class="mini-pick" data-k="${k}">${['을','를'].map(x=>`<button type="button" data-x="${x}" data-track="answer">${x}</button>`).join('')}</span>`;
+    const verb=`<input class="pk-in pk-vb" data-k="${k}" data-f="verb" maxlength="12" placeholder="${L.ph[2]}" value="${v('verb')}" aria-label="${k+1}번 끝 말">`;
+    return `<div class="pk-line${s.ok?' ok':''}" data-k="${k}"><span class="pk-no">${k+1}</span>${L.swap?obj+place:place+obj}${verb}</div>`;
+  },
   render(){
-    const wk=this.who,part=this.part;
-    const segs=['① 누구와 비교할까','② 다른 점 쓰기','③ 질문과 대답'].map((t,k)=>`<span class="${k===part?'on':k<part?'done':''}">${t}</span>`).join('');
-    $('area5').innerHTML=`<div class="card-head"><span class="prompt-label">나와 가족 비교하기</span><button class="secondary" type="button" id="p5ex" style="min-height:34px;font-size:12px">예시 보기</button></div>
-      <div class="seg">${segs}</div><div id="p5body"></div>
-      <div class="card-foot"><button class="secondary ${part?'':'hidden'}" id="p5prev" type="button">← 앞 단계</button><button class="primary ${part<2&&(part>0||this.whoOk)?'':'hidden'}" id="p5go" type="button">${part===0?'다른 점 쓰러 가기':'질문과 대답으로'}</button><button class="primary ${part===2?'':'hidden'}" id="p5done" type="button" style="background:linear-gradient(135deg,#27866a,#4bb58e)">완료 ✓</button></div>`;
-    $('p5ex').onclick=()=>hint(5,'예시<br>아빠는 커피를 좋아해요. 나는 우유를 좋아해요.<br>우리 집에서 누가 제일 일찍 자요? 동생이 제일 일찍 자요.');
-    $('p5prev').onclick=()=>{this.part--;this.render();};
-    $('p5go').onclick=()=>{this.part++;this.render();};
+    $('area5').innerHTML=`<div class="card-head"><span class="prompt-label">소풍 가방 싸기</span><button class="secondary" type="button" id="p5ex" style="min-height:34px;font-size:12px">예시 보기</button></div>
+      <h2 class="pk-h2">내일 소풍 가방에 무엇을 넣을까요?</h2>
+      <p class="pk-guide">낱말을 쓰고 <b>을·를</b> 중에서 골라요. <b>4번</b>은 순서를 바꿔 써요.</p>
+      <div class="pk-lines" id="p5lines">${this.lines.map((L,k)=>this.lineHtml(L,k)).join('')}</div>
+      <div class="card-foot"><button class="primary" id="p5done" type="button" data-track="activity-complete" style="background:linear-gradient(135deg,#27866a,#4bb58e)">완료 ✓</button></div>`;
+    $('p5ex').onclick=()=>hint(5,'예시<br>가방에 돗자리를 넣었어요.<br>도시락에 김밥을 담았어요.<br>물병에 보리차를 따랐어요.<br>이름표를 가방에 붙였어요.');
     $('p5done').onclick=()=>this.done();
-    if(part===0)this.partWho();else if(part===1)this.partPairs();else this.partQA();
-  },
-  partWho(){
-    const wk=this.who;
-    $('p5body').innerHTML=`<h2 style="font-size:21px">누구와 나를 비교할까요?</h2>
-      <div class="family-row" id="p5fam">${FAMILY.map(f=>`<button type="button" class="${f===wk?'on':''}" data-f="${f}">${f}</button>`).join('')}</div>
-      ${wk?`<p class="phase-label">'${esc(wk)}' 뒤에 은/는 중 무엇이 어울릴까요?</p><div class="frame" style="grid-template-columns:auto"><div class="mini-pick" id="p5pick">${[wk+'은',wk+'는'].map(f=>`<button type="button" data-f="${f}" data-track="answer">${f}</button>`).join('')}</div></div>`:''}`;
-    $('p5fam').onclick=e=>{const b=e.target.closest('button');if(!b)return;this.who=b.dataset.f;this.whoOk=false;this.render();};
-    if(!wk){say(5,'가족 중 한 명을 골라 봐!<br>나와 <b>다른 점</b>을 두 가지 쓸 거야.');return;}
-    const key='p5-who',pick=$('p5pick');item(key);
-    if(this.whoOk){[...pick.children].forEach(x=>{x.disabled=true;if(x.dataset.f===topicOf(wk))x.classList.add('correct');});say(5,'좋아! <b>다른 점 쓰러 가기</b>를 눌러.');return;}
-    say(5,`'${wk}'${hasBatchim(wk)?'과':'와'} 나를 <b>비교</b>할 거야.<br>비교할 때 쓰는 말을 골라 봐.`);
-    pick.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
-      if(b.dataset.f===topicOf(wk)){b.classList.add('correct');this.whoOk=true;[...pick.children].forEach(x=>x.disabled=true);finish(key);$('p5go').classList.remove('hidden');say(5,'맞아! 비교할 때는 은/는, 받침도 딱 맞아.<br><b>다른 점 쓰러 가기</b>를 눌러.');}
-      else{b.classList.add('wrong');b.disabled=true;miss(key);hint(5,`'${wk}'의 마지막 글자 '${wk.slice(-1)}'에 받침이 ${hasBatchim(wk)?'있어':'없어'}.`);}};
-  },
-  partPairs(){
-    const wk=this.who;if(!wk||!this.whoOk){this.part=0;return this.render();}
-    const t=topicOf(wk);
-    $('p5body').innerHTML=`<h2 style="font-size:21px">${esc(wk)}${hasBatchim(wk)?'과':'와'} 나의 다른 점을 써요</h2>`+[0,1].map(k=>`<div class="pair-block" style="margin-top:8px"><h3>다른 점 ${k+1}</h3><div class="pair-row">
-        <div class="frame"><span class="who"><span class="subj">${esc(wk)}<mark class="pt">${t.slice(wk.length)}</mark></span></span><input id="p5a${k}" maxlength="30" placeholder="${k?'책을 읽어요.':'커피를 좋아해요.'}" value="${esc(this['a'+k]||'')}"></div>
-        <div class="frame"><span class="who"><span class="subj">나<mark class="pt">는</mark></span></span><input id="p5b${k}" maxlength="30" placeholder="${k?'그림을 그려요.':'우유를 좋아해요.'}" value="${esc(this['b'+k]||'')}"></div></div></div>`).join('');
-    [0,1].forEach(k=>{$('p5a'+k).oninput=e=>this['a'+k]=e.target.value;$('p5b'+k).oninput=e=>this['b'+k]=e.target.value;});
-    say(5,'주인공은 이미 들어 있어.<br>빈칸에는 끝 칸까지 써야 해. <b>끝 말</b>을 잊지 마!');
-  },
-  partQA(){
-    $('p5body').innerHTML=`<h2 style="font-size:21px">우리 집에서 누가 제일 그럴까요?</h2>
-      <div class="family-row" id="p5q">${QUESTIONS.map(q=>`<button type="button" class="${q===this.q?'on':''}" data-q="${q}">누가 제일 ${q}?</button>`).join('')}</div><div id="p5ans"></div>`;
-    $('p5q').onclick=e=>{const b=e.target.closest('button');if(!b)return;this.q=b.dataset.q;this.ansWho=null;this.ansOk=false;[...$('p5q').children].forEach(x=>x.classList.toggle('on',x===b));this.renderAns();};
-    if(this.q)this.renderAns();
-    say(5,'질문을 하나 골라 봐.<br>대답할 때는 <b>\'누가?\'의 대답</b> 규칙!');
-  },
-  renderAns(){
-    const who=['나',...FAMILY];const aw=this.ansWho;
-    $('p5ans').innerHTML=`<p class="phase-label" style="margin-top:8px">누구인지 고르고, 이/가를 골라요.</p>
-      <div class="family-row" id="p5aw">${who.map(f=>`<button type="button" class="${f===aw?'on':''}" data-f="${f}">${f}</button>`).join('')}</div>
-      ${aw?`<div class="frame"><div class="mini-pick" id="p5ap">${(aw==='나'?['나가','내가']:[aw+(hasBatchim(aw)?'가':'이'),subjOf(aw)].sort()).map(f=>`<button type="button" data-f="${f}" data-track="answer">${f}</button>`).join('')}</div><span id="p5full" style="font-size:16px;font-weight:850"></span></div>`:''}`;
-    $('p5aw').onclick=e=>{const b=e.target.closest('button');if(!b)return;this.ansWho=b.dataset.f;this.ansOk=false;this.renderAns();};
-    if(!aw)return;const key='p5-ans-'+aw;item(key);
-    const ok=subjOf(aw);
-    const full=()=>{$('p5full').innerHTML=`→ <span class="subj">${esc(aw==='나'?'내':aw)}<mark class="pt">${ok.slice(aw==='나'?1:aw.length)}</mark></span> 제일 ${esc(this.q)}.`;};
-    if(this.ansOk){[...$('p5ap').children].forEach(x=>{x.disabled=true;if(x.dataset.f===ok)x.classList.add('correct');});full();}
-    $('p5ap').onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;
-      if(b.dataset.f===ok){b.classList.add('correct');[...$('p5ap').children].forEach(x=>x.disabled=true);this.ansOk=true;finish(key);full();
-        say(5,aw==='나'?'맞아! \'나\' 뒤에 \'가\'가 오면 <b>내가</b>로 바뀌어.':'맞아! \'누가?\'의 대답에는 <b>이/가</b>!');}
-      else{b.classList.add('wrong');b.disabled=true;miss(key);hint(5,aw==='나'?'"나가 제일 일찍 자요"라고 말하면 어색하지? 소리 내어 비교해 봐.':'\'누가?\'의 대답이니까 이/가를 써. 받침도 확인해!');}};
+    const box=$('p5lines');
+    box.querySelectorAll('.pk-in').forEach(inp=>inp.oninput=()=>{const k=+inp.dataset.k,f=inp.dataset.f,s=this.st[k];s[f]=inp.value;
+      if(f==='obj'&&s.ok!==undefined){s.ok=undefined;const pk=box.querySelector(`.mini-pick[data-k="${k}"]`);[...pk.children].forEach(b=>{b.disabled=false;b.classList.remove('correct','wrong');});inp.closest('.pk-line').classList.remove('ok');}});
+    box.querySelectorAll('.mini-pick').forEach(pk=>{const k=+pk.dataset.k,s=this.st[k];
+      if(s.ok){[...pk.children].forEach(b=>{b.disabled=true;if(b.dataset.x===eulOf(s.obj.trim()))b.classList.add('correct');});}
+      pk.onclick=e=>{const b=e.target.closest('button');if(!b||b.disabled)return;const w=(s.obj||'').trim();
+        if(!w){hint(5,`먼저 ${k+1}번 줄에 넣을 <b>물건 이름</b>을 써 줘.`);return;}
+        if(!isHangul(w)){hint(5,'물건 이름을 한글로 써 줘. 마지막 글자의 받침을 봐야 해.');return;}
+        const key='p5-'+k;item(key);
+        if(b.dataset.x===eulOf(w)){b.classList.add('correct');[...pk.children].forEach(x=>x.disabled=true);s.ok=true;finish(key);pk.closest('.pk-line').classList.add('ok');SFX.chomp();
+          say(5,`맞아! '${esc(w.slice(-1))}'에 받침이 ${hasBatchim(w)?'있으니까 <b>을</b>':'없으니까 <b>를</b>'}.<br>끝 말까지 쓰면 한 문장 완성!`);}
+        else{b.classList.add('wrong');b.disabled=true;miss(key);hint(5,`'${esc(w)}'의 마지막 글자 '${esc(w.slice(-1))}'에 받침이 ${hasBatchim(w)?'있어':'없어'}.`);}};});
+    say(5,'소풍 가방을 싸 보자!<br><b>어디에</b> · <b>무엇을</b> · <b>끝 말</b>을 쓰고,<br>물건 뒤에 <b>을/를</b>을 골라.');
   },
   done(){const n=this.sentences().length;
-    say(5,n?`<b>${n}문장</b>을 썼어! 멋져.<br><b>다음</b>을 눌러 점검과 정리로 가자.`:'아직 쓴 문장이 없어. 그래도 괜찮아, <b>다음</b>에서 함께 점검해 보자.');
+    say(5,n?`<b>${n}문장</b>을 썼어! 멋져.<br><b>다음</b>을 눌러 점검과 정리로 가자.`:'아직 다 쓴 문장이 없어. 그래도 괜찮아, <b>다음</b>에서 함께 점검해 보자.');
     ocToast('내 문장 쓰기를 마쳤어요.');},
   sentences(){
-    const out=[];if(!this.who)return out;const t=topicOf(this.who);
-    [0,1].forEach(k=>{const a=(this['a'+k]||'').trim(),b=(this['b'+k]||'').trim();if(a)out.push(this.who+'['+t.slice(this.who.length)+'] '+a);if(b)out.push('나[는] '+b);});
-    if(this.q&&this.ansWho&&this.ansOk){const sw=subjOf(this.ansWho),base=this.ansWho==='나'?'내':this.ansWho;out.push(`우리 집에서 누가 제일 ${this.q}? ${base}[${sw.slice(base.length)}] 제일 ${this.q}.`);}
-    return out.map(s=>/[.?!]$/.test(s)?s:s+'.');
+    const out=[];
+    this.lines.forEach((L,k)=>{const s=this.st[k],pl=(s.place||'').trim(),ob=(s.obj||'').trim(),vb=(s.verb||'').trim().replace(/[.!?]+$/,'');
+      if(!pl||!ob||!vb||!s.ok)return;const a=pl+'[에]',b=ob+'['+eulOf(ob)+']';
+      out.push((L.swap?b+' '+a:a+' '+b)+' '+vb+'.');});
+    return out;
   },
-  help(){hinted('p5-who');hint(5,this.part===2?'\'누가?\'의 대답에는 이/가! \'나\'는 \'내가\'로 바뀌어.':!this.who?'나랑 제일 다른 가족을 떠올려 봐. 좋아하는 음식, 하는 일, 모습!':'끝 칸에 움직이는 말(먹어요, 읽어요)이나 상태·느낌 말(커요, 좋아요)을 꼭 넣어.');}
+  help(){hinted('p5-0');this.hintLv++;
+    hint(5,this.hintLv===1?'소풍에 가져갈 물건을 떠올려 봐. 돗자리, 김밥, 모자, 물병…':'움직이는 물건 뒤에는 <b>을/를</b>! 받침이 있으면 <b>을</b>, 없으면 <b>를</b>.<br>물건이 들어가는 곳 뒤에는 <b>에</b>.');}
 };
 
 /* ================= 7. 점검과 정리 ================= */
-const CHECKS=['문장의 주인공이 있나요?','주인공을 설명해주는 말이 있나요?','은/는 · 이/가를 맞게 썼나요?','소리 내어 읽었을 때 자연스러운가요?','마침표를 찍었나요?'];
+const CHECKS=['문장을 끝내는 끝 말이 있나요?','움직인 물건 뒤에 을/를이 있나요?','물건이 도착하는 곳 뒤에 에가 있나요?','소리 내어 읽었을 때 자연스러운가요?','마침표를 찍었나요?'];
 const P6={today:null,saved:false,
   render(){
     const ss=P5.sentences();const st=stats();
@@ -1274,17 +1318,17 @@ const P6={today:null,saved:false,
       <div><h3>점검표</h3><div class="check-list">${CHECKS.map((c,k)=>`<label><input type="checkbox" data-c="${k}"><i></i><span>${c}</span></label>`).join('')}</div></div></div>
       <div class="metrics"><div><strong>${st.first} / ${st.total}</strong><span>첫 반응 정확</span></div><div><strong>${st.indep} / ${st.total}</strong><span>도움 없이 해결</span></div><div><strong>${st.self}회</strong><span>스스로 고침</span></div></div>
       <div class="inline-feedback hidden" id="p6fb" role="status" aria-live="polite"></div>
-      <div class="card-foot"><a class="secondary" href="session01-review.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">복습 워크지 열기</a><button class="primary" id="p6save" type="button" data-track="activity-complete">오늘 기록 저장하기</button></div>`;
+      <div class="card-foot"><a class="secondary" href="session02-review.html" target="_blank" rel="noopener" style="display:inline-flex;align-items:center;text-decoration:none">복습 워크지 열기</a><button class="primary" id="p6save" type="button" data-track="activity-complete">오늘 기록 저장하기</button></div>`;
     $('p6s').onclick=e=>{const b=e.target.closest('button');if(!b)return;this.today=+b.dataset.k;[...$('p6s').children].forEach(x=>x.classList.toggle('on',x===b));say(6,'좋은 문장이야! 이 문장을 <b>규칙 카드 뒷면</b>에 옮겨 써 줘.');};
     $('p6save').onclick=()=>{
       const checks=[...document.querySelectorAll('#area6 .check-list input')].map(x=>x.checked);
-      window.ocLessonResult={lesson:'grammar-sentence-s01',today:this.today!=null?strip(ss[this.today]):null,sentences:ss.map(strip),checks,stats:stats(),items:log.items};
+      window.ocLessonResult={lesson:'grammar-sentence-s02',today:this.today!=null?strip(ss[this.today]):null,sentences:ss.map(strip),checks,stats:stats(),items:log.items};
       emit('lesson-complete',{result:window.ocLessonResult});
-      fb($('p6fb'),'success','<b>오늘의 문장 공부 완료!</b> 다음 시간에는 \'에\'와 \'를\'을 배워요.');$('p6fb').classList.remove('hidden');reveal($('p6fb'));
+      fb($('p6fb'),'success','<b>오늘의 문장 공부 완료!</b> 다음 시간에는 \'에\'와 \'에서\'를 배워요.');$('p6fb').classList.remove('hidden');reveal($('p6fb'));
       ocToast('오늘 기록을 저장했어요.');this.saved=true;};
     say(6,ss.length?'내 문장을 하나씩 점검표로 확인해 봐.<br>가장 마음에 드는 문장을 눌러 <b>오늘의 문장</b>으로 골라!':'8단계에서 문장을 먼저 써 줘.');
   },
-  help(){hint(6,'문장마다 빨간 동그라미(주인공)와 파란 밑줄(끝 말)을 손가락으로 짚어 봐.');}
+  help(){hint(6,'문장마다 <b>움직인 물건</b>(을/를)과 <b>도착한 곳</b>(에)을 손가락으로 짚어 봐.');}
 };
 
 const PAGES=[P0,PR,P1,P2,QA,P3,P4,P5,P6];
@@ -1336,7 +1380,7 @@ go(0);
 <script src="intro/oncuvate-intro.js"></script>
 <script>
 /* 공용 도입 화면 — 「수업 시작」은 지금 화면(1단계)으로, 「복습하기」는 같은 폴더의 워크지로 */
-(function(){var c={"series": "바른 문장 쓰기", "session": "1회", "title": "문장의 주인공과 은/는·이/가", "goal": "받침을 보고 은/는·이/가를 골라 써요.", "image": "assets/king-think.webp", "imageAlt": "세종대왕", "review": {"label": "복습하기"}};c.onStart=function(mode){if(mode==="review")location.href="session01-review.html";};if(window.ONQ_INTRO)ONQ_INTRO.mount(c);})();
+(function(){var c={"series": "바른 문장 쓰기", "session": "2회", "title": "에, 을/를 — 움직임을 받는 말과 곳", "goal": "을/를과 에를 알맞게 넣어 문장을 만들어요.", "image": "assets/king-think.webp", "imageAlt": "세종대왕"};c.onStart=function(mode){if(mode==="review")location.href="session02-review.html";};if(window.ONQ_INTRO)ONQ_INTRO.mount(c);})();
 </script>
 </body>
 </html>
