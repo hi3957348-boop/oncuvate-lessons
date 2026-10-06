@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, noarchive">
+<title>인지훈련 게임</title>
+<style>
+  :root { --v8:#3b2a9e; --v6:#5b48d6; --v3:#cfc3ee; --v1:#ede7ff; --ink:#27344e; --muted:#6f7789;
+          --font: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", "Malgun Gothic", system-ui, sans-serif; }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; }
+  body { min-height: 100vh; padding: 28px 16px 40px; font-family: var(--font); color: var(--ink);
+         background: radial-gradient(circle at 8% 0%, rgba(75,201,220,.07), transparent 28%), linear-gradient(145deg,#f7f8f5,#f1f3f0 62%,#f5f4f1); }
+  main { max-width: 880px; margin: 0 auto; }
+  h1 { margin: 0 0 4px; font-size: 26px; font-weight: 900; letter-spacing: -.03em; color: var(--v8); }
+  p.lead { margin: 0 0 20px; color: var(--muted); font-size: 14px; font-weight: 600; line-height: 1.5; }
+  .list { display: grid; grid-template-columns: repeat(auto-fill, minmax(250px, 1fr)); gap: 14px; }
+  a.game { display: grid; grid-template-columns: 64px minmax(0,1fr); gap: 14px; align-items: center; padding: 16px; border-radius: 20px;
+           text-decoration: none; color: inherit; background: linear-gradient(145deg,#fff,#f7f4ff); border: 1px solid #e7e3ef;
+           box-shadow: 0 5px 0 var(--v3), 0 12px 24px rgba(37,20,78,.08); transition: transform .12s; }
+  a.game:hover { transform: translateY(-2px); }
+  a.game:focus-visible { outline: 3px solid rgba(75,201,220,.6); outline-offset: 3px; }
+  .ic { width: 64px; height: 64px; border-radius: 16px; display: grid; place-items: center; font-size: 32px;
+        background: radial-gradient(circle at 50% 42%,#5b48d6 0%,#3b2a9e 60%,#1b1462 100%); }
+  .tag { display: inline-block; margin-bottom: 4px; padding: 2px 8px; border-radius: 99px; background: var(--v1); color: var(--v6); font-size: 11px; font-weight: 900; }
+  b { display: block; font-size: 18px; font-weight: 900; letter-spacing: -.02em; }
+  small { display: block; margin-top: 3px; color: var(--muted); font-size: 13px; font-weight: 600; line-height: 1.4; word-break: keep-all; }
+  footer { margin-top: 24px; color: var(--muted); font-size: 11px; opacity: .8; }
+</style>
+</head>
+<body>
+<main>
+  <h1>인지훈련 게임</h1>
+  <p class="lead">『느린 학습자 인지훈련 프로그램』(박현숙, 2021)의 활동 방식을 바탕으로 만든 게임입니다.</p>
+  <div class="list">
+    <a class="game" href="position-memory/session01.html"><span class="ic">🧩</span><span><span class="tag">작업기억</span><b>어디 있었지?</b><small>판에 나온 그림의 자리를 기억해 다시 놓기</small></span></a>
+    <a class="game" href="sequence-memory/session01.html"><span class="ic">🎞️</span><span><span class="tag">작업기억</span><b>순서대로 콕콕</b><small>하나씩 나온 그림을 순서대로, 거꾸로 누르기</small></span></a>
+    <a class="game" href="opposite-press/session01.html"><span class="ic">🔄</span><span><span class="tag">행동억제</span><b>반대로 누르기</b><small>해를 보면 「밤」, 별을 보면 「낮」</small></span></a>
+    <a class="game" href="flag-game/session01.html"><span class="ic">🚩</span><span><span class="tag">행동억제</span><b>청기백기</b><small>명령대로 깃발 올리고 내리기</small></span></a>
+  </div>
+  <footer>자체 제작 · 그림 © Oncuvate</footer>
+</main>
+</body>
+</html>
