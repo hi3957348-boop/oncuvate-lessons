@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="count-scan" data-lesson-title="몇 개일까 계획하고 세기 게임" data-lesson-version="1.0.0">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, noarchive">
+<title>몇 개일까?</title>
+<style>
+  /* 활동창 크기(920×450)로 가운데에. 화면이 더 작으면 그만큼 줄어든다 */
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 8% 0%, rgba(75,201,220,.07), transparent 28%),
+                linear-gradient(145deg, #f7f8f5, #f1f3f0 62%, #f5f4f1);
+  }
+  #game { width: min(920px, calc(100vw - 24px)); height: min(450px, calc(100vh - 24px)); }
+  @media (max-aspect-ratio: 5/4) { #game { width: calc(100vw - 16px); height: calc(100vh - 16px); } }
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<script src="shared/count-scan.js"></script>
+<script>
+/* ───────── 내용 바꾸는 곳 ─────────
+   things : 판에 놓일 것 — label · img(그림) 또는 shape(기호: star heart tri square circle diamond moon star2) 또는 emoji · unit(세는 말)
+   rounds : 판 순서. 판 하나에
+            size   판 크기(가로·세로 칸 수, 3~9)
+            items  문제들 — target 찾을 것 · count 몇 개 놓을지 · others 나머지 칸을 채울 것들(비슷한 것을 넣으면 어려워짐)
+*/
+var CARD = 'assets/images/cards/';
+function A(label, file) { return { label: label, img: CARD + file + '.webp', unit: '마리' }; }
+function S(label, shape) { return { label: label, shape: shape, unit: '개' }; }
+var GAME = {
+  activityId: 'count-scan',
+  credit: '자체 제작 · 활동 방식 참고: 『느린 학습자 인지훈련 프로그램』(박현숙, 2021) 「문제해결」 · 그림 © Oncuvate',
+  things: {
+    bear: A('곰', 'bear'), cat: A('고양이', 'cat'), dog: A('강아지', 'dog'), fox: A('여우', 'fox'),
+    duck: A('오리', 'duck'), goat: A('염소', 'goat'), hen: A('닭', 'hen'), mouse: A('쥐', 'mouse'),
+    star: S('노란 별', 'star'), star2: S('회색 별', 'star2'), heart: S('하트', 'heart'), tri: S('세모', 'tri'),
+    square: S('네모', 'square'), circle: S('동그라미', 'circle'), diamond: S('마름모', 'diamond'), moon: S('달', 'moon')
+  },
+  rounds: [
+    { id: 'r1', size: 4, items: [
+      { id: 'r1-cat',  target: 'cat',  count: 5, others: ['dog', 'bear', 'duck'] },
+      { id: 'r1-star', target: 'star', count: 4, others: ['heart', 'circle', 'tri'] } ] },
+    { id: 'r2', size: 5, items: [
+      { id: 'r2-dog',   target: 'dog',   count: 7, others: ['fox', 'cat', 'goat', 'bear', 'mouse'] },
+      { id: 'r2-heart', target: 'heart', count: 6, others: ['diamond', 'star', 'circle', 'tri', 'square'] } ] },
+    { id: 'r3', size: 7, items: [
+      { id: 'r3-star',  target: 'star',  count: 10, others: ['star2', 'moon', 'diamond', 'heart', 'tri', 'circle'] },
+      { id: 'r3-mouse', target: 'mouse', count: 9,  others: ['cat', 'bear', 'fox', 'goat', 'hen', 'dog', 'duck'] } ] }
+  ]
+};
+
+CountScan.mount(document.getElementById('game'), GAME);
+</script>
+</body>
+</html>
