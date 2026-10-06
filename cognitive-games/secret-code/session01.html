@@ -1,0 +1,52 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="secret-code" data-lesson-title="암호 풀기 한글 암호 게임" data-lesson-version="1.0.0">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, noarchive">
+<title>암호 풀기</title>
+<style>
+  /* 활동창 크기(920×450)로 가운데에. 화면이 더 작으면 그만큼 줄어든다 */
+  html, body { height: 100%; margin: 0; }
+  body {
+    display: grid; place-items: center;
+    background: radial-gradient(circle at 8% 0%, rgba(75,201,220,.07), transparent 28%),
+                linear-gradient(145deg, #f7f8f5, #f1f3f0 62%, #f5f4f1);
+  }
+  #game { width: min(920px, calc(100vw - 24px)); height: min(450px, calc(100vh - 24px)); }
+  @media (max-aspect-ratio: 5/4) { #game { width: calc(100vw - 16px); height: calc(100vh - 16px); } }
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<script src="shared/secret-code.js"></script>
+<script>
+/* ───────── 내용 바꾸는 곳 ─────────
+   rounds : 판 순서. 판 하나에
+            mode        'decode' 암호 풀기(기호 → 글자) · 'encode' 암호 만들기(글자 → 기호)
+            consonants  암호표에 넣을 자음(ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ 가운데서). 번호는 늘 ㄱ=1 … ㅎ=14
+            vowels      암호표에 넣을 모음(ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ 가운데서)
+            words       낱말과 그림(이모지). 표에 없는 글자가 든 낱말은 저절로 빠짐
+            count       한 판에 낼 낱말 수(words 가운데서 무작위로)
+*/
+var GAME = {
+  activityId: 'secret-code',
+  credit: '자체 제작 · 활동 방식 참고: 『느린 학습자 인지훈련 프로그램』(박현숙, 2021) 「암호 풀기 · 암호문 만들기」',
+  rounds: [
+    { id: 'r1', mode: 'decode', consonants: 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈ', vowels: 'ㅏㅗㅜㅣ', count: 4, words: [
+      { word: '나비', icon: '🦋' }, { word: '모자', icon: '👒' }, { word: '바다', icon: '🌊' }, { word: '오리', icon: '🦆' },
+      { word: '구두', icon: '👞' }, { word: '사자', icon: '🦁' }, { word: '고기', icon: '🍖' } ] },
+    { id: 'r2', mode: 'decode', consonants: 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅊㅋㅌㅍㅎ', vowels: 'ㅏㅑㅓㅕㅗㅛㅜㅠㅡㅣ', count: 4, words: [
+      { word: '기차', icon: '🚂' }, { word: '하마', icon: '🦛' }, { word: '포도', icon: '🍇' }, { word: '우유', icon: '🥛' },
+      { word: '치즈', icon: '🧀' }, { word: '피자', icon: '🍕' }, { word: '여우', icon: '🦊' }, { word: '버스', icon: '🚌' }, { word: '토마토', icon: '🍅' } ] },
+    { id: 'r3', mode: 'encode', consonants: 'ㄱㄴㄷㄹㅁㅂㅅㅇㅈㅌ', vowels: 'ㅏㅓㅕㅗㅜㅣ', count: 4, words: [
+      { word: '사탕', icon: '🍬' }, { word: '수박', icon: '🍉' }, { word: '우산', icon: '☂️' }, { word: '공', icon: '⚽' },
+      { word: '달', icon: '🌙' }, { word: '별', icon: '⭐' }, { word: '곰', icon: '🐻' }, { word: '문', icon: '🚪' } ] }
+  ]
+};
+
+SecretCode.mount(document.getElementById('game'), GAME);
+</script>
+</body>
+</html>
