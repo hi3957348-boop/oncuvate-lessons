@@ -11,11 +11,7 @@ window.ONQ_CONTENT_PACK = {
   "helpSpelling": "소리는 이어져도 글자는 받침을 그대로 써요. 글자를 잘 봐요.",
   "credit": {
     "title": "돌멩이 수프",
-    "source": "온큐베이트",
-    "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
-    "modified": "온큐베이트 창작",
-    "programRights": "읽기유창성 프로그램 활동 · 평가 설계 © 온큐베이트",
-    "allRights": "© 2026 온큐베이트. All rights reserved."
+    "allRights": "© 2026 온큐베이트"
   },
   "sessions": {
     "session01": {
