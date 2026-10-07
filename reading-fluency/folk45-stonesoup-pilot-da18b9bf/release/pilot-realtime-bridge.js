@@ -25,7 +25,7 @@
   const room = String(params.get("ocroom") || "").replace(/\D/g, "").slice(0, 5);
   if (!room) return;                       // 방이 없으면 자율학습 그대로 둔다
 
-  const COACH_KEY = "onq-pilot-2026";
+  const COACH_KEY = "80646074";
   const wantsCoach = params.get("ocrole") === "coach" && params.get("ockey") === COACH_KEY;
 
   // 브라우저마다 하나. 이게 「누구인가」의 자리를 대신한다.
