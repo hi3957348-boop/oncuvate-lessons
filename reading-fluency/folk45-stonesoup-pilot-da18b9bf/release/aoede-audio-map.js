@@ -209,5 +209,20 @@ window.ONQ_AOEDE_AUDIO_MAP = Object.freeze({
   "주머니에서 둥근": "assets/audio/aoede-s01/s01-2463315c02.mp3",
   "마을에 퍼졌어요": "assets/audio/aoede-s01/s01-e5c842ea46.mp3",
   "마을로 떠났답니다": "assets/audio/aoede-s01/s01-e74ffc6973.mp3",
-  "요리사": "assets/audio/aoede-s01/s01-42310b3f79.mp3"
+  "요리사": "assets/audio/aoede-s01/s01-42310b3f79.mp3",
+  "가운데": "assets/audio/aoede-s01/s01-d80a4e0c38.mp3",
+  "한가운데": "assets/audio/aoede-s01/s01-a1cc49c0ab.mp3",
+  "들어": "assets/audio/aoede-s01/s01-d2088674e4.mp3",
+  "들어서다": "assets/audio/aoede-s01/s01-1fa1f08528.mp3",
+  "모여": "assets/audio/aoede-s01/s01-c5e873ed48.mp3",
+  "모여들다": "assets/audio/aoede-s01/s01-f3d120b376.mp3",
+  "수프": "assets/audio/aoede-s01/s01-e0f1a15bdf.mp3",
+  "수프라고": "assets/audio/aoede-s01/s01-82c4cfbf07.mp3",
+  "가져": "assets/audio/aoede-s01/s01-e14e16082f.mp3",
+  "가져오다": "assets/audio/aoede-s01/s01-ed9e84d7f4.mp3",
+  "끓어": "assets/audio/aoede-s01/s01-dea7ab7c66.mp3",
+  "끓으면": "assets/audio/aoede-s01/s01-c2a3ef8268.mp3",
+  "둘러": "assets/audio/aoede-s01/s01-1cf621cf60.mp3",
+  "떠나다": "assets/audio/aoede-s01/s01-1d54f11af1.mp3",
+  "떠났다": "assets/audio/aoede-s01/s01-8e3b04a261.mp3"
 });

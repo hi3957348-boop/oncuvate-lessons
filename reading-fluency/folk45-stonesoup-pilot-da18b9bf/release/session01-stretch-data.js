@@ -183,8 +183,8 @@ window.ONQ_SESSION01_STRETCH = Object.freeze({
     {
       "w": "둘러앉아",
       "chunks": [
-        "앉아",
         "둘러",
+        "둘러앉다",
         "둘러앉아"
       ],
       "focus": "앉아",

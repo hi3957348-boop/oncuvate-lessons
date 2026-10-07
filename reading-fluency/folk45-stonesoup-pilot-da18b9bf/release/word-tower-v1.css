@@ -1,0 +1,139 @@
+/* 낱말 탑 쌓기 — 보라 젤리 · 둥근 블록 · 부드러운 색(빙고·이야기 차례와 같은 결). 글꼴은 수업 것을 물려받는다.
+ * 클래스인 하한 987×521 에서 활동 칸은 약 760×420 — 그 칸을 그대로 채워 스크롤 없이 들어가게 한다.
+ * 크롬 109 하한: CSS 중첩·:has()·컨테이너 쿼리를 쓰지 않는다.
+ */
+/* 높이는 활동 칸(.activity-view 안쪽)을 그대로 채운다 — 셸이 넓은 화면에서 높이를 555px로 묶어 100vh 로 재면 아래 단추 줄을 덮는다(10-07 1366×768 실측). */
+#app .onq-tower { width: 100%; height: 100%; min-height: 340px; margin: 0 auto; display: flex; }
+#app .wt-root { flex: 1; min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; color: #2f3350; }
+
+/* 위 줄 — 제목 · 판 · 진행 점 */
+#app .wt-top { flex: none; height: 38px; display: flex; align-items: center; gap: 12px; padding: 0 4px; }
+#app .wt-title { font-size: 18px; font-weight: 800; color: #4b2fae; white-space: nowrap; }
+#app .wt-rounds { display: flex; gap: 6px; }
+#app .wt-round { display: inline-flex; align-items: center; gap: 6px; height: 32px; padding: 0 12px 0 6px; border: 2px solid #e4dcfb; border-radius: 99px;
+  background: #fff; color: #7a6cb0; font: inherit; font-size: 14px; font-weight: 800; cursor: pointer; white-space: nowrap; }
+#app .wt-round span { display: inline-grid; place-items: center; width: 20px; height: 20px; border-radius: 50%; background: #ece6fd; color: #6a4ad8; font-size: 12px; }
+#app .wt-round.on { background: #f1ecff; border-color: #a58ef0; color: #4b2fae; }
+#app .wt-round.on span { background: #7b5ce6; color: #fff; }
+#app .wt-dots { margin-left: auto; display: flex; gap: 6px; }
+#app .wt-dots i { width: 14px; height: 14px; border-radius: 5px; background: #ece8f8; box-shadow: 0 2px 0 #ddd5f5; transition: background .2s; }
+#app .wt-dots i.on { background: #8b6ff0; box-shadow: 0 2px 0 #5b3fc4; }
+#app .wt-dots i.now { background: #fff; box-shadow: inset 0 0 0 2.5px #8b6ff0; }
+
+#app .wt-main { flex: 1; min-height: 0; display: grid; grid-template-columns: minmax(0, 1fr) 272px; gap: 14px; }
+
+/* 무대 — 하늘 · 구름 · 풀밭 */
+#app .wt-stage { position: relative; min-width: 0; min-height: 0; overflow: hidden; border-radius: 24px; border: 2.5px solid #ddd3fb;
+  background: linear-gradient(180deg, #f1ecff 0%, #f8f6ff 55%, #ffffff 100%); box-shadow: 0 5px 0 #ece6fd; }
+#app .wt-ground { position: absolute; left: 0; right: 0; bottom: 0; height: 28px; background: linear-gradient(180deg, #d4f0df, #bce6cd); border-top: 3px solid #a6dcbd; }
+#app .wt-cloud { position: absolute; width: 74px; height: 22px; border-radius: 99px; background: #fff; opacity: .9; box-shadow: 22px -10px 0 4px #fff; }
+#app .wt-cloud.c1 { left: 9%; top: 16%; animation: wt-drift 9s ease-in-out infinite alternate; }
+#app .wt-cloud.c2 { right: 12%; top: 30%; transform: scale(.75); animation: wt-drift 11s ease-in-out infinite alternate-reverse; }
+
+/* 탑 — 아래 블록부터 위로(column-reverse) */
+#app .wt-tower { position: absolute; left: 50%; bottom: 28px; transform: translateX(-50%); display: flex; flex-direction: column-reverse; align-items: center; gap: 6px; padding-bottom: 2px; }
+#app .wt-block, #app .wt-choice, #app .wt-mblock { --bg: #f1ecff; --b: #b9a6f5; --s: #ddd3fb; }
+#app .lv0 { --bg: #e8f5fd; --b: #9fd0ef; --s: #c9e5f7; }
+#app .lv1 { --bg: #fff6cf; --b: #ffd45c; --s: #f5e3a2; }
+#app .lv2 { --bg: #fdeeeb; --b: #f3b2a8; --s: #f6d6cf; }
+#app .lv3 { --bg: #eaf8f1; --b: #9fd9bf; --s: #cdeee0; }
+#app .lv4 { --bg: #f1ecff; --b: #b9a6f5; --s: #ddd3fb; }
+#app .wt-block { box-sizing: border-box; padding: 7px 22px; border: 2.5px solid var(--b); border-radius: 16px; background: var(--bg); box-shadow: 0 5px 0 var(--s);
+  font-size: clamp(24px, 3vw, 36px); font-weight: 800; letter-spacing: .03em; line-height: 1.25; white-space: nowrap; color: #2f3350; text-align: center; }
+#app .wt-block.drop { animation: wt-drop .55s cubic-bezier(.3, 1.45, .5, 1) both; }
+#app .wt-block.slot { min-width: 120px; border-style: dashed; border-color: #c9bdf3; background: rgba(255, 255, 255, .65); box-shadow: none; color: #b6a8ea; animation: wt-breathe 1.6s ease-in-out infinite; }
+#app .wt-block.ghost { height: 44px; border: 2.5px dashed #d6ccf8; background: rgba(255, 255, 255, .55); box-shadow: none; }
+#app .wt-block mark { background: none; color: inherit; border-bottom: 3px solid #ff9f1a; padding: 0 1px; }
+
+/* 꼭대기로 폴짝 — 오른쪽(젤리코치 자리)에서 뛰어 올라온다 */
+#app .wt-hop { position: relative; width: 66px; height: 66px; margin-bottom: -4px; }
+#app .wt-hop img { width: 100%; height: 100%; object-fit: contain; filter: drop-shadow(0 4px 4px rgba(79, 53, 184, .2)); }
+#app .wt-hop.go { animation: wt-hop .95s ease-out both; }
+#app .wt-hop i { position: absolute; font-style: normal; font-size: 18px; color: #ffcf3d; opacity: 0; animation: wt-twinkle .9s ease-out .8s both; }
+#app .wt-hop i.s1 { left: -18px; top: 4px; }
+#app .wt-hop i.s2 { left: -26px; top: 32px; animation-delay: .9s; }
+#app .wt-hop i.s3 { right: -18px; top: 8px; animation-delay: 1s; }
+
+/* 다 쌓은 낱말 줄(탑 쌓기를 마친 뒤) */
+#app .wt-shelf { position: absolute; left: 16px; right: 16px; top: 16px; bottom: 40px; display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; align-content: center; }
+#app .wt-shelf .wt-mblock { font-size: 18px; padding: 8px 10px; animation: wt-fall .5s cubic-bezier(.3, 1.45, .5, 1) both; }
+
+/* 번개 탑 — 왼쪽 작은 탑 + 번쩍 창 */
+#app .wt-mini { position: absolute; left: 12px; bottom: 30px; width: 124px; display: flex; flex-direction: column-reverse; align-items: center; gap: 4px; }
+#app .wt-mini.center { left: 50%; width: auto; min-width: 150px; transform: translateX(-50%); }
+#app .wt-mblock { box-sizing: border-box; max-width: 100%; padding: 3px 9px; border: 2px solid var(--b); border-radius: 10px; background: var(--bg); box-shadow: 0 3px 0 var(--s);
+  font-size: 14px; font-weight: 800; line-height: 1.3; white-space: nowrap; color: #2f3350; text-align: center; }
+#app .wt-mini.center .wt-mblock { font-size: 15px; padding: 2px 14px; max-width: none; }
+#app .wt-mblock.empty { width: 84px; height: 24px; border: 2px dashed #ddd3fb; background: transparent; box-shadow: none; }
+#app .wt-mblock.drop { animation: wt-drop .5s cubic-bezier(.3, 1.45, .5, 1) both; }
+#app .wt-flashzone { position: absolute; left: 146px; right: 14px; top: 12px; bottom: 40px; display: flex; align-items: center; justify-content: center; }
+#app .wt-flash { position: relative; box-sizing: border-box; width: 100%; max-width: 380px; height: 128px; display: flex; align-items: center; justify-content: center;
+  border-radius: 22px; background: #fff; border: 3px solid #cfc4f6; box-shadow: 0 6px 0 #e6defc;
+  font-size: clamp(30px, 3.5vw, 46px); font-weight: 800; letter-spacing: .04em; color: #2f3350; white-space: nowrap; }
+#app .wt-flash.ready { background: rgba(255, 255, 255, .7); border-style: dashed; box-shadow: none; }
+#app .wt-flash.word { border-color: #8b6ff0; }
+#app .wt-flash.mask::before { content: ""; position: absolute; left: 30px; right: 30px; top: 26px; bottom: 26px; border-radius: 10px;
+  background: repeating-linear-gradient(45deg, #b9a9f2 0 7px, #efeafd 7px 14px), #efeafd; }
+#app .wt-flash.mask::after { content: ""; position: absolute; left: 30px; right: 30px; top: 26px; bottom: 26px; border-radius: 10px;
+  background: repeating-linear-gradient(-45deg, rgba(139, 111, 240, .45) 0 5px, transparent 5px 12px); }
+#app .wt-flash.ask { color: #b6a8ea; font-size: 54px; }
+#app .wt-flash.show { background: #fff6cf; border-color: #ffcf3d; box-shadow: 0 6px 0 #f5e3a2; animation: wt-pop .35s ease-out; }
+#app .wt-fixdot { width: 14px; height: 14px; border-radius: 50%; background: #8b6ff0; box-shadow: 0 0 0 6px #ece6fd; }
+#app .wt-bolt { min-height: 62px; padding: 0 26px; border: 0; border-radius: 18px; background: linear-gradient(135deg, #ffd45c, #ffb703); color: #3a2f00;
+  font: inherit; font-size: 22px; font-weight: 800; box-shadow: 0 5px 0 #e59a00; cursor: pointer; animation: wt-breathe 1.6s ease-in-out infinite; }
+#app .wt-bolt:active { transform: translateY(3px); box-shadow: none; }
+
+/* 오른쪽 — 젤리코치 · 할 일 */
+#app .wt-side { min-width: 0; min-height: 0; display: flex; flex-direction: column; gap: 10px; padding: 12px; border-radius: 24px; background: #fff;
+  border: 2.5px solid #ddd3fb; box-shadow: 0 5px 0 #ece6fd; }
+#app .wt-coach { flex: none; display: flex; align-items: center; gap: 10px; }
+#app .wt-coach img { flex: none; width: 60px; height: 60px; object-fit: contain; animation: wt-bob 2.4s ease-in-out infinite; }
+#app .wt-bubble { position: relative; flex: 1; margin: 0; padding: 9px 12px; border: 2.5px solid #d6ccf8; border-radius: 16px; background: #f6f3ff;
+  font-size: 15px; font-weight: 700; line-height: 1.4; color: #2f3350; }
+#app .wt-bubble::before { content: ""; position: absolute; left: -8px; top: 50%; width: 12px; height: 12px; margin-top: -6px; background: #f6f3ff;
+  border-left: 2.5px solid #d6ccf8; border-bottom: 2.5px solid #d6ccf8; transform: rotate(45deg); }
+#app .wt-act { flex: 1; min-height: 0; display: flex; flex-direction: column; justify-content: center; gap: 10px; }
+#app .wt-btn { min-height: 48px; padding: 0 18px; border: 0; border-radius: 16px; font: inherit; font-size: 18px; font-weight: 800; cursor: pointer; }
+#app .wt-btn.go { background: linear-gradient(135deg, #8b6ff0, #6a4ad8); color: #fff; box-shadow: 0 4px 0 #4f35b8; }
+#app .wt-btn.big { min-height: 58px; font-size: 21px; }
+#app .wt-btn.soft { min-height: 42px; font-size: 16px; background: #fff; color: #2c6f9e; border: 2px solid #b6dcf3; box-shadow: 0 3px 0 #e8f5fd; }
+#app .wt-btn:active { transform: translateY(3px); box-shadow: none; }
+#app .wt-end { display: flex; flex-direction: column; gap: 10px; }
+
+/* 고르는 블록 — 위에서 떨어진다 */
+#app .wt-choices { display: flex; flex-direction: column; gap: 12px; }
+#app .wt-choices.n3 { gap: 10px; }
+#app .wt-choice { box-sizing: border-box; min-height: 58px; padding: 6px 12px; border: 2.5px solid var(--b); border-radius: 16px; background: var(--bg); box-shadow: 0 5px 0 var(--s);
+  font: inherit; font-size: clamp(22px, 2.5vw, 28px); font-weight: 800; letter-spacing: .03em; color: #2f3350; white-space: nowrap; cursor: pointer; }
+#app .wt-choices.n3 .wt-choice { min-height: 54px; background: #fff; }
+#app .wt-choice:hover { transform: translateY(-2px); }
+#app .wt-choice:active { transform: translateY(3px); box-shadow: none; }
+#app .wt-choice.fall { animation: wt-fall .55s cubic-bezier(.3, 1.45, .5, 1) both; animation-delay: var(--d, 0ms); }
+#app .wt-choice.nope { animation: wt-nope .38s; }
+#app .wt-choice.glow { border-color: #ffcf3d; animation: wt-glow 1.1s ease-in-out infinite; }
+
+/* 여기만 기억해요 — 늘려 읽기 카드와 같은 모양 */
+#app .wt-card { padding: 10px 12px 12px; border-radius: 14px; background: #fff8e0; border: 1.5px solid #ffc21a; text-align: center; }
+#app .wt-tag { display: inline-block; font-size: 12px; font-weight: 800; color: #b36b12; background: #ffe9b0; border-radius: 99px; padding: 2px 9px; margin-bottom: 6px; }
+#app .wt-eq { display: flex; align-items: center; justify-content: center; gap: 8px; font-size: 22px; font-weight: 800; color: #24324a; }
+#app .wt-eq .s { display: inline-grid; place-items: center; min-width: 42px; height: 42px; padding: 0 6px; border-radius: 10px; background: #fff; border: 2px solid #ffc21a; }
+#app .wt-eq .op { color: #b36b12; font-size: 18px; }
+#app .wt-eq .to { color: #1d4fa3; font-size: 24px; letter-spacing: .04em; }
+#app .wt-card p { margin: 8px 0 0; font-size: 15px; font-weight: 600; line-height: 1.4; color: #3d4554; }
+
+@keyframes wt-drop { 0% { transform: translateY(-90px); opacity: 0; } 60% { opacity: 1; } 100% { transform: translateY(0); opacity: 1; } }
+@keyframes wt-fall { 0% { transform: translateY(-46px); opacity: 0; } 100% { transform: translateY(0); opacity: 1; } }
+@keyframes wt-nope { 20% { transform: translateX(-7px) rotate(-2deg); } 45% { transform: translateX(7px) rotate(2deg); } 70% { transform: translateX(-4px); } 100% { transform: none; } }
+@keyframes wt-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(255, 207, 61, 0), 0 5px 0 var(--s); } 50% { box-shadow: 0 0 0 7px rgba(255, 207, 61, .55), 0 5px 0 var(--s); } }
+@keyframes wt-hop { 0% { transform: translate(170px, 60px) scale(.7); opacity: 0; } 25% { opacity: 1; } 45% { transform: translate(90px, -70px) scale(.95); }
+  75% { transform: translate(10px, -26px) scale(1.04, .96); } 88% { transform: translate(0, 4px) scale(1.08, .9); } 100% { transform: translate(0, 0) scale(1); opacity: 1; } }
+@keyframes wt-twinkle { 0% { opacity: 0; transform: scale(.4); } 40% { opacity: 1; transform: scale(1.2); } 100% { opacity: 0; transform: scale(.8) translateY(-10px); } }
+@keyframes wt-bob { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-4px); } }
+@keyframes wt-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
+@keyframes wt-pop { 0% { transform: scale(.85); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
+@keyframes wt-drift { from { margin-left: 0; } to { margin-left: 26px; } }
+@media (prefers-reduced-motion: reduce) { #app .onq-tower * { animation: none !important; } }
+@media (max-width: 760px) {
+  #app .onq-tower { height: auto; }
+  #app .wt-main { grid-template-columns: 1fr; grid-template-rows: 300px auto; }
+}

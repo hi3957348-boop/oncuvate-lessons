@@ -43,6 +43,8 @@
     { id: "game2", label: "점핑워드", sub: "뛰어오르는 젤리 잡고 읽기" },
     { id: "game1", label: "문장 완성", sub: "듣고 순서 맞추기" },
     { id: "sentence", label: "나누어 읽기", sub: "한 문장씩 끊어 읽기" },
+    // 🆕 낱말 탑 쌓기(세계전래동화 2026-10-07) — 늘려 읽은 낱말로 탑 쌓기 + 번개 탑. 화면은 release/word-tower-v1.js. 데이터 window.ONQ_WORD_TOWER 가 있을 때만.
+    { id: "tower", label: "낱말 탑 쌓기", sub: "늘려 읽은 낱말로 탑 쌓기" },
     { id: "paragraph", label: "전체 읽기", sub: "전체 글과 질문" },
     // 🆕 이야기 차례(세계전래동화) — 인지훈련게임 「차례대로 놓기」 엔진. 데이터 window.ONQ_STORY_ORDER 가 있을 때만.
     { id: "storyorder", label: "이야기 차례", sub: "일어난 차례대로 놓기" },
@@ -51,7 +53,7 @@
     // 🆕 비단어 게임(2026-10-05 · L6·L7 음운변동 회차만) — 비단어 빙고 / 비단어 탐정 중 골라 하기. 화면은 release/nonword-games-v1.js.
     { id: "nonword", label: "비단어 게임", sub: "빙고·탐정 골라 하기" },
     { id: "worksheet", label: "3단계 쓰기", sub: "보기·첫소리·스스로" }
-  ].filter(step => (step.id !== "storyorder" || !!window.ONQ_STORY_ORDER) && (step.id !== "vocab" || (lesson.vocab || []).length > 0) && (step.id !== "nonword" || (lesson.nonwords || []).length >= 16));
+  ].filter(step => (step.id !== "tower" || !!window.ONQ_WORD_TOWER) && (step.id !== "game1" || !window.ONQ_WORD_TOWER) && (step.id !== "storyorder" || !!window.ONQ_STORY_ORDER) && (step.id !== "vocab" || (lesson.vocab || []).length > 0) && (step.id !== "nonword" || (lesson.nonwords || []).length >= 16));
 
   const state = {
     step: 0,
@@ -115,6 +117,7 @@
     game2: ["바닥에서 콩콩 뛰던 젤리 하나가 하늘로 튀어 올라요.", "하늘 선에 닿기 전에 눌러 잡으면 숨어 있던 낱말이 크게 나타나요.", "소리가 나기 전에 먼저 소리 내어 읽어 봐요."],
     sentence: ["먼저 그림과 관계있는 낱말을 다섯 개 이상 찾아요.", "그다음 그림과 한 문장씩 보며 정확하게 읽어요.", "도움이 나오면 바로 비슷한 문장에 적용해요."],
     storyorder: ["이야기에서 일어난 일을 떠올려요.", "카드를 일이 일어난 차례대로 눌러 놓아요.", "어려우면 ‘끝 보기’를 눌러요."],
+    tower: ["젤리가 읽어 주는 블록을 듣고 소리 내어 읽어요.", "두 블록 가운데 알맞은 블록을 골라 탑 위에 쌓아요.", "번개 탑: 잠깐 나타난 낱말을 읽고, 본 낱말을 찾아요."],
     paragraph: ["회차에서 읽은 전체 글을 처음부터 끝까지 읽어요.", "질문을 보고 정답이 되는 문장을 본문에서 직접 골라요."],
     bingo: ["젤리코치가 부르는 낱말을 잘 들어요.", "판에서 그 낱말을 찾아 눌러요.", "한 줄을 채우면 빙고! 세 줄에 도전해요."],
     nonword: ["처음 보는 낱말로 소리 규칙을 써 봐요.", "빙고: 소리를 듣고 글자를 찾아요.", "탐정: 글자를 보고 어떻게 읽는지 골라요."],
@@ -137,6 +140,7 @@
     game1: "primary",      // 들은 순서를 붙들고 카드를 고른다
     sentence: "secondary", // 읽기가 주부담, 기억은 보조
     paragraph: "secondary",// 전체 글을 읽고 질문에 답한다
+    tower: "secondary",    // 앞 덩이를 붙들고 늘어난 꼴을 고른다 · 번개 탑은 잠깐 본 낱말을 붙든다
     storyorder: "primary", // 일어난 일을 차례대로 떠올려 붙든다
     bingo: "secondary",    // 들은 낱말을 붙들고 판을 훑는다
     nonword: "secondary",  // 처음 보는 낱말에 규칙을 옮겨 쓴다
@@ -150,6 +154,7 @@
     game2: "intervention.word_phrase",
     sentence: "intervention.sentence",
     paragraph: "evaluation.paragraph",
+    tower: "game.word_tower",
     storyorder: "game.story_order",
     bingo: "game.word_bingo",
     nonword: "game.nonword_bingo",
@@ -163,11 +168,11 @@
   //    `none`이 있어야 「해당 없음」과 「안 적었음」이 갈린다.
   const phonologicalAwareness = {
     cover: "none", vocab: "none", game2: "low", game1: "high",
-    sentence: "high", paragraph: "mid", storyorder: "none", bingo: "mid", nonword: "high", worksheet: "high"
+    sentence: "high", tower: "mid", paragraph: "mid", storyorder: "none", bingo: "mid", nonword: "high", worksheet: "high"
   };
   const spellingAwareness = {
     cover: "none", vocab: "mid", game2: "mid", game1: "low",
-    sentence: "mid", paragraph: "mid", storyorder: "low", bingo: "high", nonword: "high", worksheet: "high"
+    sentence: "mid", tower: "high", paragraph: "mid", storyorder: "low", bingo: "high", nonword: "high", worksheet: "high"
   };
 
   // 집계 가능 그룹(`trendGroupId`) — 규격 §12.2 「**추세분석 가능한 값만** 명시적으로 묶는다」.
@@ -175,7 +180,7 @@
   const trendGroupIds = {
     vocab: "trend.vocabulary", game2: "trend.vocabulary",
     game1: "trend.spelling",   worksheet: "trend.spelling",
-    sentence: "trend.fluency", paragraph: "trend.fluency", bingo: "trend.spelling", nonword: "trend.spelling"
+    sentence: "trend.fluency", tower: "trend.fluency", paragraph: "trend.fluency", bingo: "trend.spelling", nonword: "trend.spelling"
   };
   // 🆕 빈칸 채우기 갈래(2026-10-04) — 같은 game1 자리지만 **재는 것이 다르다.**
   //   순서 맞추기(intervention.phrase_sequence)는 들은 어절 순서를 붙드는 일이고,
@@ -795,6 +800,12 @@
       return { itemsDone: done, itemsTotal: total * 2, correct, wrong: Math.max(0, done - correct),
                extra: `${state.vocabIndex + 1}번째 낱말 · ${state.vocabPhase === "book" ? "책 문장" : "그림"}` };
     }
+    if (id === "tower") {
+      // 낱말 탑 — 이 판(탑 쌓기/번개 탑)에서 마친 낱말 수. 맞음/틀림은 세지 않는다(아이 화면에도 점수가 없다).
+      const live = window.ONQ_TOWER_GAME?.progress?.();
+      if (!live) return none;
+      return { itemsDone: live.done, itemsTotal: live.total, correct: null, wrong: null, extra: live.extra };
+    }
     if (id === "worksheet") {
       // 「read A」 같은 내부 코드가 아니라 「읽은 문장 · 보기」로 낸다.
       const live = window.ONQ_STEP5_WORKSHEET?.getState?.();
@@ -816,6 +827,7 @@
       if (!live || live.phase === "menu") return "점핑워드 — 모드 고르는 중";
       return state.game2Current != null ? (lesson.game2[state.game2Current]?.word || "점핑워드") : "점핑워드 — 젤리를 기다려요";
     }
+    if (id === "tower") return window.ONQ_TOWER_GAME?.prompt?.() || steps[state.step].sub;
     return steps[state.step].sub;
   }
 
@@ -877,11 +889,12 @@
 
   function render() {
     const id = steps[state.step].id;
-    const html = id === "cover" ? renderCover() : id === "game1" ? renderGame1() : id === "game2" ? renderGame2() : id === "sentence" ? renderSentence() : id === "paragraph" ? renderParagraph() : id === "vocab" ? renderVocab() : id === "storyorder" ? `<div class="activity-view"><div class="onq-storyorder" id="storyorderHost"></div></div>` : id === "bingo" ? `<div class="activity-view"><div class="onq-bingo" id="bingoHost"></div></div>` : id === "nonword" ? `<div class="activity-view"><div class="onq-nonword" id="nonwordHost"></div></div>` : renderWorksheet();
+    const html = id === "cover" ? renderCover() : id === "game1" ? renderGame1() : id === "game2" ? renderGame2() : id === "sentence" ? renderSentence() : id === "paragraph" ? renderParagraph() : id === "vocab" ? renderVocab() : id === "storyorder" ? `<div class="activity-view"><div class="onq-storyorder" id="storyorderHost"></div></div>` : id === "tower" ? `<div class="activity-view"><div class="onq-tower" id="towerHost"></div></div>` : id === "bingo" ? `<div class="activity-view"><div class="onq-bingo" id="bingoHost"></div></div>` : id === "nonword" ? `<div class="activity-view"><div class="onq-nonword" id="nonwordHost"></div></div>` : renderWorksheet();
     root.innerHTML = shell(html);
     setupCanvas();
     if (id === "game2") mountJump();
     if (id === "bingo" && window.ONQ_BINGO) window.ONQ_BINGO.mount(document.getElementById("bingoHost"));
+    if (id === "tower" && window.ONQ_TOWER_GAME) window.ONQ_TOWER_GAME.mount(document.getElementById("towerHost"));
     if (id === "storyorder" && window.StepOrder && window.ONQ_STORY_ORDER) window.StepOrder.mount(document.getElementById("storyorderHost"), window.ONQ_STORY_ORDER);
     if (id === "nonword" && window.ONQ_NONWORD) window.ONQ_NONWORD.mount(document.getElementById("nonwordHost"));
     // 새 말풍선이 붙으면 대화창은 맨 아래로 — 마지막 말을 놓치면 다음 걸음을 못 뗀다.
@@ -900,6 +913,7 @@
     // 🔴 점핑워드를 떠날 때는 반드시 멈춘다 — rAF·타이머가 남으면 다른 차례에서 계속 돈다.
     if (steps[state.step].id === "game2") stopJump();
     if (steps[state.step].id === "bingo") window.ONQ_BINGO?.stop?.();
+    if (steps[state.step].id === "tower") window.ONQ_TOWER_GAME?.stop?.();   // 번쩍 타이머·소리를 멈춘다
     if (steps[state.step].id === "nonword") window.ONQ_NONWORD?.stop?.();
     state.step = target;
     state.activityStartedAt = performance.now();
