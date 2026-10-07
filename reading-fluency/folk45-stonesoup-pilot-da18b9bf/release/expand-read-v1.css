@@ -1,0 +1,27 @@
+/* 늘려 읽기 — 꼼꼼 읽기 수업의 모양을 그대로 옮김. ＋/✓는 ::before 로 그린다(문장 글자에 섞이지 않게). */
+.xr-chip{display:inline-flex;align-items:center;justify-content:center;width:24px;height:24px;margin:0 3px 0 4px;vertical-align:4px;border:1.5px solid #8a6fd8;border-radius:50%;background:#f5f1ff;color:#5b2bc1;font-family:inherit;font-weight:800;font-size:15px;line-height:1;cursor:pointer;padding:0;flex:none}
+.xr-chip::before{content:"＋"}
+.xr-chip:hover,.xr-chip:focus-visible{background:#5b2bc1;color:#fff;outline:none}
+.xr-chip.done{background:#5b2bc1;border-color:#5b2bc1;color:#fff;font-size:12px}
+.xr-chip.done::before{content:"✓"}
+.xr-pop{position:fixed;z-index:9000;width:min(360px,calc(100vw - 24px));background:#fff;border:2px solid #8a6fd8;border-radius:18px;box-shadow:0 14px 34px rgba(40,30,90,.22);padding:14px 16px;color:#24324a}
+.xr-pop[hidden]{display:none}
+.xr-head{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.xr-head b{font-size:16px;color:#5b2bc1}
+.xr-head small{color:#7a7f8f;font-size:13px}
+.xr-x{margin-left:auto;border:0;background:#f1eefb;color:#5b2bc1;width:30px;height:30px;border-radius:50%;font-size:15px;cursor:pointer}
+.xr-lines{list-style:none;margin:0;padding:0;display:grid;gap:6px}
+.xr-lines li{font-size:22px;font-weight:700;letter-spacing:.04em;padding:6px 12px;border-radius:12px;background:#f7f5fd;color:#9aa0ad;transition:background .2s,color .2s}
+.xr-lines li.now{background:#ffe36e;color:#22262d;font-size:28px}
+.xr-lines li.read{background:#f3f0fb;color:#4b2fae}
+.xr-lines li[hidden]{display:none}
+.xr-lines mark{background:none;color:inherit;border-bottom:3px solid #ff9f1a;padding:0 1px}
+.xr-say{margin:0 0 10px;padding:10px 12px 12px;border-radius:14px;background:#fff8e0;border:1.5px solid #ffc21a;text-align:center}
+.xr-say[hidden]{display:none}
+.xr-tag{display:inline-block;font-size:12px;font-weight:800;color:#b36b12;background:#ffe9b0;border-radius:99px;padding:2px 9px;margin-bottom:6px}
+.xr-eq{display:flex;align-items:center;justify-content:center;gap:8px;font-size:22px;font-weight:800;color:#24324a}
+.xr-eq .s{display:inline-grid;place-items:center;min-width:42px;height:42px;padding:0 6px;border-radius:10px;background:#fff;border:2px solid #ffc21a}
+.xr-eq .op{color:#b36b12;font-size:18px}
+.xr-eq .to{color:#1d4fa3;font-size:24px;letter-spacing:.04em}
+.xr-say p{margin:8px 0 0;font-size:15px;font-weight:600;color:#3d4554}
+.xr-go{margin-top:12px;width:100%;border:0;border-radius:14px;background:#5b2bc1;color:#fff;font-family:inherit;font-weight:800;font-size:16px;padding:11px;cursor:pointer}

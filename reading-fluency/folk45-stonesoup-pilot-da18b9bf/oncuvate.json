@@ -1,0 +1,35 @@
+{
+  "oncuvate": 2,
+  "id": "folk45-stonesoup-k5-fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-10-04",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "L5 · 돌멩이 수프(줄글) 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L5",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "돌멩이 수프",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    }
+  }
+}

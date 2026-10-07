@@ -1,0 +1,18 @@
+/* 세계전래동화 수업만 손본 화면 값 — 틀(kids-theme-v1.css) 뒤에 실린다.
+ * 2026-10-07 사용자: 「폰트 조금 줄여도 될 것 같아. 75% 정도로.」 — 문장 하나를 크게 보여 주는 자리 둘을 75%로.
+ *   나누어 읽기 문장  clamp(32px, 3.9vw, 46px) → clamp(24px, 2.9vw, 34px)
+ *   문장 완성 빈칸 문장 clamp(28px, 3.9vw, 42px) → clamp(21px, 2.9vw, 32px)
+ */
+#app .reading-sentence { font-size: clamp(24px, 2.9vw, 34px) !important; }
+#app .override-fill .fill-line { font-size: clamp(21px, 2.9vw, 32px) !important; }
+/* 늘려 읽기 ＋ 단추가 낱말과 떨어져 혼자 다음 줄로 가지 않게 */
+#app .xr-word { white-space: nowrap; }
+/* 2026-10-07 사용자: 「스크롤 생기면서 모서리 가리는 것도 해결」 — 둥근 상자(문장 칸 등) 자체가 스크롤되면
+ * 기본 스크롤 막대가 둥근 모서리 위에 그려지고 위아래 화살표가 모서리를 가린다.
+ * → 화살표를 없애고, 막대를 가늘게, 위아래로 모서리 둥글기만큼 비켜서(track margin) 그린다. 크롬 109(클래스인)도 같은 방식.
+ */
+#app *::-webkit-scrollbar { width: 8px; height: 8px; }
+#app *::-webkit-scrollbar-button { display: none; width: 0; height: 0; }
+#app *::-webkit-scrollbar-track { background: transparent; margin: 22px 0; }
+#app *::-webkit-scrollbar-thumb { background: rgba(120, 110, 160, .28); border-radius: 99px; }
+#app *::-webkit-scrollbar-thumb:hover { background: rgba(120, 110, 160, .45); }

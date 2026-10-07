@@ -1,0 +1,97 @@
+/* Final child layout: content-sized activity and unboxed navigation. */
+.studio {
+  grid-template-rows: auto auto !important;
+  align-content: start !important;
+  align-items: start !important;
+}
+.activity-shell {
+  height: auto !important;
+  min-height: 0 !important;
+  align-self: start !important;
+  overflow: hidden;
+}
+.activity-view {
+  height: auto !important;
+  min-height: 0 !important;
+  padding-bottom: 18px !important;
+}
+.bottombar,
+.menu-hidden .bottombar {
+  min-height: 0 !important;
+  margin-top: 12px !important;
+  padding: 0 max(4px, env(safe-area-inset-right)) max(4px, env(safe-area-inset-bottom)) max(4px, env(safe-area-inset-left)) !important;
+  border: 0 !important;
+  border-radius: 0 !important;
+  background: transparent !important;
+  box-shadow: none !important;
+  align-self: start !important;
+}
+.bottombar > .quiet-btn,
+.bottombar .primary-btn {
+  min-height: 44px;
+}
+.annotation-launcher {
+  right: 18px !important;
+  bottom: 18px !important;
+}
+.progression-game2,
+.progression-game2 .g2p-layout,
+.progression-game2 .g2p-board-panel,
+.progression-game2 .g2p-side {
+  width: 100%;
+  min-width: 0;
+  height: auto !important;
+  min-height: 0 !important;
+  box-sizing: border-box;
+}
+.progression-game2 .g2p-layout {
+  align-items: start;
+  overflow-x: hidden;
+}
+.progression-game2 .g2p-side,
+.progression-game2 .g2p-side > * {
+  min-width: 0;
+  max-width: 100%;
+  box-sizing: border-box;
+}
+.progression-game2 .g2p-side { overflow-x: hidden; }
+.progression-game2 .g2p-decisions {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 7px;
+  width: 100%;
+}
+.progression-game2 .g2p-decisions button {
+  min-width: 0;
+  width: 100%;
+  padding: 8px 5px;
+  white-space: nowrap;
+}
+.progression-game2 .g2p-decisions img { width: 46px; height: 46px; }
+.progression-game2 .g2p-tools {
+  display: grid !important;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 7px !important;
+  width: 100%;
+}
+.progression-game2 .g2p-tools button {
+  min-width: 0 !important;
+  width: 100%;
+  min-height: 44px !important;
+  padding-inline: 5px !important;
+  white-space: nowrap;
+  font-size: clamp(10px, .9vw, 13px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+@media (max-width: 980px) {
+  .studio { grid-template-rows: auto auto auto !important; }
+}
+@media (max-width: 620px) {
+  .activity-view { padding-bottom: 12px !important; }
+  .bottombar,.menu-hidden .bottombar { margin-top: 8px !important; }
+  .progression-game2 .g2p-decisions img { width: 42px; height: 42px; }
+}
+@media print {
+  .activity-view { min-height: 0 !important; }
+}

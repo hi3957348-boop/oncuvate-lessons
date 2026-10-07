@@ -1,0 +1,177 @@
+/* 점핑워드 v1 스타일 — og-digraph.css 의 .ojw-* 묶음(257~440줄) 사본.
+ *   · .onq-jump  →  .onq-jump   (다른 .ojw-* 이름은 그대로 두었다)
+ *   · 987x521 수업 화면에 맞춰 무대 높이/글자 크기를 줄인 것은 맨 아래 한 묶음뿐이다.
+ */
+/* ⑦ 점핑워드 */
+.onq-jump,.ojw{width:100%;height:100%}
+.ojw{display:grid;align-items:stretch}
+.ojw-menu{display:grid;justify-items:center;align-content:center;gap:16px;min-height:300px;border-radius:18px;background:linear-gradient(180deg,#dff4ff 0%,#f3effd 70%,#e9f9ef 100%)}
+.ojw-title{display:grid;justify-items:center;gap:4px;text-align:center}
+.ojw-title b{font:900 12px/1 var(--oc-en,sans-serif);letter-spacing:.2em;color:#2785c7}
+.ojw-title strong{font-size:34px;color:#35206f}
+.ojw-title span{color:#29243a;font-size:13px;font-weight:800}
+.ojw-modes{display:flex;gap:16px}
+.ojw-mode{display:grid;justify-items:center;gap:4px;width:210px;padding:16px 12px;border:3px solid #8d70d7;border-radius:18px;background:#fff;box-shadow:0 6px 0 #d9cff5;cursor:pointer;transition:transform .12s ease}
+.ojw-mode:hover{transform:translateY(-3px)}
+.ojw-mode.minute{border-color:#f0a020;box-shadow:0 6px 0 #ffe2a8}
+.ojw-mode i{font-style:normal;font-size:30px}
+.ojw-mode b{font-size:17px;color:#35206f}
+.ojw-mode small{color:#777187;font-size:11px;font-weight:800}
+.ojw-mode em{margin-top:4px;padding:3px 9px;border-radius:999px;background:#faf8ff;color:#4b24a5;font-style:normal;font-size:11px;font-weight:900}
+.ojw-stage{position:relative;height:310px;overflow:hidden;border-radius:18px;background:linear-gradient(180deg,#8fd3ff 0%,#c9ecff 38%,#f1f7ff 72%,#f7f3ff 100%);touch-action:none;user-select:none}
+.ojw-sky i{position:absolute;height:22px;border-radius:999px;background:#fff;opacity:.85;box-shadow:18px -8px 0 4px #fff,38px 0 0 0 #fff;animation:ojwCloud 26s linear infinite}
+.ojw-sky .c1{top:34px;left:-80px;width:60px}
+.ojw-sky .c2{top:70px;left:-160px;width:44px;animation-duration:34s;animation-delay:-12s;opacity:.7}
+.ojw-sky .c3{top:18px;left:-120px;width:52px;animation-duration:30s;animation-delay:-22s}
+@keyframes ojwCloud{to{transform:translateX(1100px)}}
+.ojw-skyline{position:absolute;left:0;right:0;top:0;height:6px;background:repeating-linear-gradient(90deg,#fff 0 12px,transparent 12px 22px);opacity:.9}
+.ojw-skyline span{position:absolute;right:10px;top:8px;color:#2785c7;font-size:10px;font-weight:900}
+.ojw-hud{position:absolute;left:10px;right:10px;top:12px;z-index:5;display:flex;align-items:center;gap:10px;pointer-events:none}
+.ojw-hud>span{padding:5px 11px;border-radius:999px;background:rgba(255,255,255,.88);color:#35206f;font-size:12px;font-weight:900;box-shadow:0 2px 8px rgba(39,133,199,.12)}
+.ojw-hud b{font-size:16px;color:#4b24a5}
+.ojw-hud b.hot{color:#e0524d}
+.ojw-hud-combo:empty{display:none}
+.ojw-hud-combo{background:#fff1e0!important;color:#d9822b!important}
+.ojw-hud-time{margin-left:auto}
+.ojw-field{position:absolute;left:0;right:0;top:0;bottom:34px}
+.ojw-ground{position:absolute;left:0;right:0;bottom:0;height:34px;background:linear-gradient(180deg,#b8e6c4,#8fd3a4);border-top:3px solid #7cc592}
+.ojw-jelly{position:absolute;bottom:0;width:66px;height:66px;margin:0;padding:6px;border:0;background:transparent;cursor:pointer;transform-origin:50% 100%;-webkit-tap-highlight-color:transparent}
+.ojw-jelly img{width:100%;height:100%;object-fit:contain;filter:hue-rotate(var(--hue,0deg)) drop-shadow(0 6px 4px rgba(53,32,111,.18));pointer-events:none}
+.ojw-q{position:absolute;left:50%;top:-8px;transform:translateX(-50%);display:none;width:20px;height:20px;border-radius:50%;background:#fff;color:#4b24a5;font:900 13px/20px var(--oc-en,sans-serif);box-shadow:0 2px 6px rgba(0,0,0,.15)}
+.ojw-jelly.fly .ojw-q,.ojw-jelly.crouch .ojw-q{display:block}
+.ojw-jelly.fly{filter:drop-shadow(0 0 10px rgba(255,255,255,.9))}
+.ojw-jelly.caught{animation:ojwCaught .45s ease-out forwards}
+.ojw-jelly.escaped{opacity:0;transition:opacity .25s}
+@keyframes ojwCaught{0%{opacity:1}100%{opacity:0;filter:brightness(1.6)}}
+.ojw-pop{position:absolute;z-index:4;transform:translateX(-50%);pointer-events:none}
+.ojw-pop b{display:block;color:#ffb020;font:900 26px/1 var(--oc-en,sans-serif);text-shadow:0 2px 0 #fff;animation:ojwUp .9s ease-out forwards}
+.ojw-pop i{position:absolute;left:50%;top:10px;width:8px;height:8px;border-radius:50%;background:#ffcf4d;animation:ojwSpark .7s ease-out forwards}
+.ojw-pop i:nth-of-type(2n){background:#4bc9dc}.ojw-pop i:nth-of-type(3n){background:#e8637a}
+.ojw-pop i:nth-of-type(1){--dx:-40px;--dy:-30px}.ojw-pop i:nth-of-type(2){--dx:40px;--dy:-30px}.ojw-pop i:nth-of-type(3){--dx:-50px;--dy:5px}.ojw-pop i:nth-of-type(4){--dx:50px;--dy:5px}
+.ojw-pop i:nth-of-type(5){--dx:-25px;--dy:-50px}.ojw-pop i:nth-of-type(6){--dx:25px;--dy:-50px}.ojw-pop i:nth-of-type(7){--dx:-10px;--dy:30px}.ojw-pop i:nth-of-type(8){--dx:12px;--dy:28px}
+@keyframes ojwUp{to{transform:translateY(-40px);opacity:0}}
+@keyframes ojwSpark{to{transform:translate(var(--dx),var(--dy)) scale(.3);opacity:0}}
+.ojw-word{position:absolute;left:50%;top:52px;z-index:6;transform:translateX(-50%);pointer-events:none;opacity:0}
+.ojw-word strong{display:block;padding:10px 28px;border:3px solid #8d70d7;border-radius:20px;background:#fffefb;color:#35206f;font:900 58px/1 var(--oc-en,sans-serif);box-shadow:0 12px 26px rgba(36,20,79,.22)}
+.ojw-word.show{animation:ojwWord 1.2s ease-out forwards}
+@keyframes ojwWord{0%{opacity:0;transform:translateX(-50%) scale(.5)}12%{opacity:1;transform:translateX(-50%) scale(1.1)}20%{transform:translateX(-50%) scale(1)}80%{opacity:1}100%{opacity:0;transform:translateX(-50%) translateY(-10px)}}
+.ojw-overlay{position:absolute;inset:0;z-index:8;display:grid;place-items:center;pointer-events:none}
+.ojw-overlay span{font:900 90px/1 var(--oc-en,sans-serif);color:#4b24a5;text-shadow:0 4px 0 #fff,0 10px 24px rgba(75,36,165,.3)}
+.ojw-overlay.pop span{animation:ojwCount .6s ease-out}
+@keyframes ojwCount{0%{transform:scale(1.8);opacity:0}40%{opacity:1}100%{transform:scale(1)}}
+.ojw-end{display:grid;justify-items:center;align-content:center;gap:8px;min-height:300px;border-radius:18px;background:linear-gradient(180deg,#fff7e6,#f3effd);text-align:center}
+.ojw-trophy{font-size:46px;animation:ogdLand .5s cubic-bezier(.2,1.6,.4,1)}
+.ojw-end h3{margin:0;color:#35206f;font-size:22px}
+.ojw-end h3 b{color:#4b24a5;font-size:30px}
+.ojw-best{margin:0;color:#d9822b;font-size:12px;font-weight:900}
+.ojw-read{margin:4px 0 0;color:#777187;font-size:11px;font-weight:800}
+.ojw-chips{display:flex;flex-wrap:wrap;justify-content:center;gap:6px;max-width:620px}
+.ojw-chip{padding:5px 10px;border:1px solid #d9cff5;border-radius:10px;background:#fff;color:#35206f;font:900 17px/1.1 var(--oc-en,sans-serif);cursor:pointer}
+.ojw-chip small{margin-left:3px;color:#9d93b8;font-size:10px}
+.ojw-end-act{display:flex;gap:10px;margin-top:6px}
+.ojw-end-act .s6-primary{margin:0}
+.ojw-speed{display:flex;align-items:center;gap:6px;padding:6px 8px;border-radius:999px;background:rgba(255,255,255,.8)}
+.ojw-speed span{padding:0 4px;color:#777187;font-size:11px;font-weight:900}
+.ojw-speed button{height:30px;padding:0 12px;border:1px solid #d9cff5;border-radius:999px;background:#fff;color:#35206f;font-size:12px;font-weight:900;cursor:pointer}
+.ojw-speed button.on{border-color:#4b24a5;background:#4b24a5;color:#fff}
+
+/* 점핑워드 이지모드: 뛰어오를 젤리 아래 부스터 불꽃 (기본 모드에서는 숨김) */
+.ojw-q{display:none!important}
+.ojw-boost{position:absolute;left:50%;bottom:-16px;z-index:-1;display:none;width:34px;height:30px;transform:translateX(-50%)}
+.ojw-stage.easy .ojw-jelly.crouch .ojw-boost,.ojw-stage.easy .ojw-jelly.fly .ojw-boost{display:block}
+.ojw-boost i{position:absolute;left:50%;top:0;width:18px;height:28px;margin-left:-9px;border-radius:50% 50% 50% 50%/40% 40% 60% 60%;background:radial-gradient(circle at 50% 30%,#fff7c2 0 20%,#ffcf4d 45%,#ff7a2f 80%,transparent 82%);animation:ojwFlame .16s ease-in-out infinite alternate;transform-origin:50% 0}
+.ojw-boost i:nth-child(2){left:22%;width:12px;height:18px;margin-left:-6px;animation-delay:.05s;opacity:.85}
+.ojw-boost i:nth-child(3){left:78%;width:12px;height:18px;margin-left:-6px;animation-delay:.1s;opacity:.85}
+.ojw-stage.easy .ojw-jelly.crouch .ojw-boost i{animation-duration:.1s}
+.ojw-stage.easy .ojw-jelly.crouch{filter:drop-shadow(0 0 8px rgba(255,176,32,.9))}
+@keyframes ojwFlame{from{transform:scaleY(.75)}to{transform:scaleY(1.15)}}
+.ojw-easy{display:flex;align-items:center;gap:8px;padding:6px 14px 6px 8px;border:1px solid #d9cff5;border-radius:999px;background:#fff;color:#35206f;cursor:pointer}
+.ojw-easy i{position:relative;width:34px;height:20px;border-radius:10px;background:#e8e4ef;transition:background .15s}
+.ojw-easy i:after{content:'';position:absolute;left:2px;top:2px;width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 3px rgba(0,0,0,.2);transition:left .15s}
+.ojw-easy.on i{background:#f0a020}
+.ojw-easy.on i:after{left:16px}
+.ojw-easy b{font-size:13px}
+.ojw-easy small{color:#777187;font-size:11px;font-weight:800}
+.ojw-boost{bottom:-24px;width:44px;height:40px}
+.ojw-boost i{width:24px;height:38px;margin-left:-12px}
+.ojw-boost i:nth-child(2),.ojw-boost i:nth-child(3){width:15px;height:24px;margin-left:-7px}
+.ojw-lock{margin-left:4px;color:#777187;font-size:11px;font-style:normal;font-weight:900}
+.ojw-speed button:disabled,.ojw-easy:disabled{cursor:default;opacity:.7}
+
+/* ── 읽기유창성 셸에 얹는 부분 ─────────────────────────────────────────
+   원본은 50분 수업용 큰 화면(310px 무대) 기준이다. 수업 화면 하한
+   987×521에서 스크롤 없이 다 들어와야 하므로 여기서 높이·글자를 줄인다.
+   ⚠️ 엔진(js)은 무대 높이를 실측해서 뛰어오르는 거리를 정하므로
+      높이만 바꿔도 젤리가 하늘 선에 정확히 닿는다. js는 고치지 않는다. */
+.onq-jump,.ojw{--oc-en:"Pretendard","Noto Sans KR",system-ui,sans-serif;--oc-font:"Pretendard","Noto Sans KR",system-ui,sans-serif}
+.onq-jump{min-height:0}
+.ojw-stage{height:100%;max-height:340px;min-height:230px;border-radius:14px}
+.ojw-menu,.ojw-end{min-height:0;padding:10px 12px;border-radius:14px}
+.ojw-menu{gap:9px}
+.ojw-title strong{font-size:24px}
+.ojw-title span{font-size:12px;max-width:520px}
+.ojw-modes{gap:12px}
+.ojw-mode{width:198px;padding:10px 10px;border-width:2px;box-shadow:0 4px 0 #d9cff5}
+.ojw-mode.minute{box-shadow:0 4px 0 #ffe2a8}
+.ojw-mode i{font-size:24px}
+.ojw-mode b{font-size:15px}
+.ojw-jelly{width:54px;height:54px;padding:4px}
+.ojw-ground,.ojw-field{--h:28px}
+.ojw-ground{height:28px}
+.ojw-field{bottom:28px}
+.ojw-word{top:44px}
+.ojw-word strong{padding:6px 18px;border-width:2px;border-radius:14px;font-size:36px;box-shadow:0 8px 18px rgba(36,20,79,.2)}
+.ojw-overlay span{font-size:64px}
+.ojw-hud>span{padding:3px 9px;font-size:11px}
+.ojw-hud b{font-size:14px}
+.ojw-end{gap:5px}
+.ojw-trophy{font-size:34px}
+.ojw-end h3{font-size:18px}
+.ojw-end h3 b{font-size:24px}
+.ojw-chips{max-width:100%;max-height:96px;overflow-y:auto;gap:5px}
+.ojw-chip{padding:4px 9px;font-size:15px}
+@keyframes ogdLand{0%{transform:scale(.7)}100%{transform:scale(1)}}
+/* 끝 화면 단추 두 개 — 엔진이 .ogd-soft / .s6-primary 라는 이름을 쓴다(이름은 안 고친다) */
+.ojw-end-act .ogd-soft,.ojw-end-act .s6-primary{height:34px;padding:0 16px;border-radius:10px;font-size:13px;font-weight:900;cursor:pointer}
+.ojw-end-act .ogd-soft{border:1px solid #d9cff5;background:#fff;color:#35206f}
+.ojw-end-act .s6-primary{border:0;background:#4b24a5;color:#fff}
+/* 🔴 여백을 더하지 마라 — 활동 칸이 정확히 꽉 차 있어 2px만 넘겨도 스크롤이 생긴다
+      (987×521에서 활동 칸 안쪽 높이가 421px이다). */
+.activity-view .onq-jump{margin:0}
+
+/* ── 도입 화면 v2 (2026-10-04 「더 예쁘고 단순하게 · 옵션 버튼 따로」) ── */
+.ojw-menu.ojw-v2{position:relative;gap:12px;padding:18px 16px;background:linear-gradient(180deg,#dff2fd 0%,#fff8e6 100%)}
+.ojw-v2 .ojw-hero{width:78px;height:78px;object-fit:contain;filter:drop-shadow(0 8px 6px rgba(47,51,80,.15));animation:ojw-hop 1.6s ease-in-out infinite}
+@keyframes ojw-hop{0%,100%{transform:translateY(0) scale(1,1)}40%{transform:translateY(-14px) scale(.96,1.04)}70%{transform:translateY(0) scale(1.06,.94)}}
+.ojw-v2 .ojw-title strong{font-size:34px;font-weight:800;color:#2f3350}
+.ojw-v2 .ojw-title span{font-size:16px;font-weight:700;color:#4a4f6a}
+.ojw-v2 .ojw-modes{gap:18px;margin-top:4px}
+.ojw-v2 .ojw-mode{width:200px;min-height:116px;align-content:center;gap:6px;padding:14px 12px;border:0;border-radius:24px;background:linear-gradient(160deg,#ff9d8f,#f2766a);box-shadow:0 6px 0 #d65a4f;color:#fff}
+.ojw-v2 .ojw-mode.minute{background:linear-gradient(160deg,#7cc8f2,#3fa3e2);box-shadow:0 6px 0 #2a7fb8}
+.ojw-v2 .ojw-mode:hover{transform:translateY(-3px)}
+.ojw-v2 .ojw-mode:active{transform:translateY(4px);box-shadow:0 2px 0 rgba(0,0,0,.15)}
+.ojw-v2 .ojw-mode i{font-size:34px}
+.ojw-v2 .ojw-mode b{font-size:22px;font-weight:800;color:#fff}
+.ojw-v2 .ojw-mode em{margin:0;padding:3px 10px;border-radius:999px;background:rgba(255,255,255,.28);color:#fff;font-size:13px;font-weight:800}
+.ojw-v2 .ojw-opt-btn{position:absolute;top:12px;right:12px;height:36px;padding:0 14px;border:2px solid #b6dcf3;border-radius:999px;background:#fff;color:#2f3350;font-size:14px;font-weight:800;cursor:pointer;z-index:3}
+.ojw-v2 .ojw-opt-btn.on{border-color:#3fa3e2;background:#e8f5fd}
+.ojw-v2 .ojw-opt-panel{position:absolute;top:54px;right:12px;z-index:3;display:grid;gap:8px;padding:12px;border:2px solid #b6dcf3;border-radius:18px;background:#fff;box-shadow:0 10px 24px rgba(47,51,80,.14);animation:ojw-drop .18s ease-out}
+@keyframes ojw-drop{from{opacity:0;transform:translateY(-6px)}to{opacity:1;transform:none}}
+.ojw-v2 .ojw-opt-panel .ojw-speed{padding:0;background:none}
+.ojw-v2 .ojw-opt-panel .ojw-speed span{font-size:13px;color:#4a4f6a}
+.ojw-v2 .ojw-opt-panel .ojw-speed button{height:34px;font-size:13px}
+.ojw-v2 .ojw-opt-panel .ojw-speed button.on{border-color:#3fa3e2;background:#3fa3e2}
+.ojw-v2 .ojw-opt-panel .ojw-easy{justify-self:start}
+.ojw-v2 .ojw-opt-panel .ojw-easy.on i{background:#ffb703}
+@media (max-height:600px){.ojw-menu.ojw-v2{gap:8px;padding:12px}.ojw-v2 .ojw-hero{width:60px;height:60px}.ojw-v2 .ojw-title strong{font-size:28px}.ojw-v2 .ojw-mode{min-height:100px}}
+@media (prefers-reduced-motion:reduce){.ojw-v2 .ojw-hero{animation:none}}
+
+
+/* 젤리 색(2026-10-04 「노랗게」): hue-rotate 는 젤리 그림의 원래 색에 따라 탁한 올리브가 나와서,
+   sepia 로 한 번 바랜 뒤 색을 입힌다 → 어떤 젤리 그림이든 같은 여섯 색(보라·파랑·노랑·주황·초록·청록 — 원래 순서 유지, 올리브 자리=주황, 노랑은 레몬 말고 따뜻하게) */
+.ojw-jelly[data-jw-tone="t0"] img{filter:sepia(1) saturate(4) hue-rotate(225deg) brightness(.95) drop-shadow(0 6px 4px rgba(53,32,111,.18))}
+.ojw-jelly[data-jw-tone="t1"] img{filter:sepia(1) saturate(5) hue-rotate(170deg) brightness(.95) drop-shadow(0 6px 4px rgba(53,32,111,.18))}
+.ojw-jelly[data-jw-tone="t2"] img{filter:sepia(1) saturate(4.5) hue-rotate(2deg) brightness(1.25) drop-shadow(0 6px 4px rgba(53,32,111,.18))}
+.ojw-jelly[data-jw-tone="t3"] img{filter:sepia(1) saturate(5) hue-rotate(-18deg) brightness(1.12) drop-shadow(0 6px 4px rgba(53,32,111,.18))}
+.ojw-jelly[data-jw-tone="t4"] img{filter:sepia(1) saturate(3.5) hue-rotate(75deg) brightness(1.1) drop-shadow(0 6px 4px rgba(53,32,111,.18))}
+.ojw-jelly[data-jw-tone="t5"] img{filter:sepia(1) saturate(3) hue-rotate(140deg) brightness(.95) drop-shadow(0 6px 4px rgba(53,32,111,.18))}

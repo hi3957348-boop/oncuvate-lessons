@@ -1,0 +1,152 @@
+/* Long-reading owns one fixed pane; only the actual text viewport scrolls. */
+#app .activity-view:has(> .paragraph-grid) {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0 !important;
+  padding: 16px 18px 72px !important;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  align-content: stretch;
+  overflow: hidden !important;
+  scrollbar-gutter: auto;
+  overscroll-behavior: none;
+}
+
+#app .activity-view:has(> .paragraph-grid) > .page-head {
+  min-height: 0;
+  margin: 0 0 10px;
+  flex: none;
+}
+
+#app .activity-view > .paragraph-grid {
+  width: 100%;
+  height: 100%;
+  min-height: 0 !important;
+  align-self: stretch !important;
+  display: grid;
+  grid-template-columns: minmax(0, 1.14fr) minmax(280px, .72fr);
+  grid-template-rows: minmax(0, 1fr);
+  gap: 16px;
+  overflow: hidden;
+}
+
+#app .paragraph-grid > .text-board {
+  box-sizing: border-box;
+  height: 100%;
+  min-height: 0 !important;
+  padding: 0;
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr) auto;
+  overflow: hidden;
+  border-radius: 20px;
+  background: #fffaf0;
+}
+
+#app .paragraph-grid .text-board-head {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 14px 20px 12px;
+  display: flex;
+  flex: none;
+  background: #fffaf0;
+  border-bottom: 1px solid #eadfc8;
+}
+
+#app .paragraph-grid .paragraph-text {
+  min-height: 0;
+  padding: 16px 20px 20px;
+  display: grid;
+  align-content: start;
+  gap: 7px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  background: #fffdf8;
+}
+
+#app .paragraph-grid .text-board > .speech-row {
+  position: relative;
+  z-index: 1;
+  min-height: 0;
+  margin: 0;
+  padding: 12px 20px 14px;
+  flex: none;
+  background: #fffaf0;
+  border-top: 1px solid #eadfc8;
+}
+
+#app .paragraph-grid > .question-panel {
+  box-sizing: border-box;
+  width: 100%;
+  height: 100%;
+  min-height: 0 !important;
+  align-self: stretch !important;
+  padding: clamp(18px, 2.2vw, 26px);
+  overflow: hidden;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 10px;
+  align-items: start;
+  align-content: start;
+}
+
+/* 나누어읽기 질문 영역에 있는 이미지들을 그리드로 배치 */
+#app .paragraph-grid > .question-panel img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 12px;
+}
+
+#app .paragraph-grid > .question-panel > * {
+  flex: none;
+}
+
+@media (max-width: 899px) {
+  #app .activity-view:has(> .paragraph-grid) {
+    padding: 14px 16px 72px !important;
+  }
+
+  #app .activity-view > .paragraph-grid {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) clamp(180px, 23vh, 235px);
+    gap: 12px;
+  }
+
+  #app .paragraph-grid > .question-panel {
+    height: 100%;
+    min-height: 0 !important;
+    padding: 16px 20px;
+  }
+
+  #app .paragraph-grid > .question-panel h2 {
+    margin: 6px 0 10px;
+    font-size: clamp(20px, 3vw, 25px);
+  }
+
+  #app .paragraph-grid > .question-panel .question-note {
+    min-height: 0;
+  }
+}
+
+@media (max-width: 620px) {
+  #app .activity-view:has(> .paragraph-grid) {
+    padding: 10px 10px 68px !important;
+  }
+
+  #app .activity-view > .paragraph-grid {
+    grid-template-rows: minmax(0, 1fr) 180px;
+    gap: 9px;
+  }
+
+  #app .paragraph-grid .text-board-head,
+  #app .paragraph-grid .paragraph-text,
+  #app .paragraph-grid .text-board > .speech-row {
+    padding-inline: 14px;
+  }
+}
+

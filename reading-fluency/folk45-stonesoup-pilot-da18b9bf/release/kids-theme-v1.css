@@ -1,0 +1,184 @@
+/* 저학년 테마 — 2026-10-04 사용자 지정.
+   ⚠️ 회차 html 맨 끝에 싣는다(다른 스타일시트를 이기려고). 화면 구조는 건드리지 않고 겉모습만 바꾼다.
+   색 — 「보라만 있다」는 말에 따라 **비슷한 맑은 톤 셋**으로 나눴다(사용자가 보여 준 연산호 테두리 기준).
+     연산호(coral) : 카드 테두리 · 메뉴 번호 · 안내 창
+     하늘(sky)     : 단추(다음·읽었어요·지금 메뉴) · 보기 단추 테두리 · 진행 알약
+     노랑(yellow)  : 강조만 — 고른 칸 · 빈칸 · 확장 읽기 형광펜 · 칭찬 말풍선
+   보라는 젤리 캐릭터에만 남는다. 갈색·회청색·회녹색 안 씀.
+   글씨는 크게 · 단추는 도톰하고 둥글게(누르면 쑥) · 그림이 없으면 젤리 + 「그림 준비 중」. */
+:root {
+  --k-ink: #2f3350; --k-sub: #6b7088;
+  --k-coral: #f6c4bd; --k-coral-soft: #fdeeeb; --k-coral-deep: #e07a6c;
+  --k-sky: #b6dcf3; --k-sky-soft: #e8f5fd; --k-sky-deep: #2f8fd0; --k-sky-1: #6fc2f0; --k-sky-2: #3fa3e2; --k-sky-shadow: #2a7fb8;
+  --k-yellow: #ffe27a; --k-yellow-soft: #fff6cf; --k-yellow-line: #ffcf3d; --k-orange: #ff9f1a;
+}
+
+/* ── 좌측 메뉴 — 원래 보라 스타일 그대로(2026-10-04 사용자 지정: 하늘색으로 바꿨다가 되돌림) ── */
+
+/* ── 단추 ───────────────────────────────────────────────── */
+#app .quiet-btn, #app .activity-guide-action, #app .annotation-launcher {
+  min-height: 40px; border: 2px solid var(--k-sky) !important; border-radius: 14px !important; background: #fff !important; color: #2c6f9e !important;
+  font-size: 15px !important; font-weight: 800 !important; box-shadow: 0 3px 0 var(--k-sky-soft); }
+#app button.primary-btn:not(.annotation-launcher), #app .sentence-main-action, #app .sentence-main-action[data-mode="manual"] {
+  min-height: 40px; border: 0 !important; border-radius: 14px !important; background: linear-gradient(135deg, var(--k-sky-1), var(--k-sky-2)) !important; color: #fff !important;
+  font-weight: 900 !important; box-shadow: 0 4px 0 var(--k-sky-shadow) !important; }
+#app button.primary-btn:not(.annotation-launcher) { font-size: 15px !important; }
+#app .sentence-main-action { min-height: 56px !important; font-size: 20px !important; border-radius: 18px !important; }
+#app :is(button.primary-btn, .sentence-main-action, .quiet-btn):active { transform: translateY(3px); box-shadow: none !important; }
+#app button.primary-btn:disabled { opacity: .45; box-shadow: none !important; }
+
+/* ── 카드 — 흰 바탕 + 연산호 테두리 ─────────────────────── */
+#app .vocab-panel, #app .word-quiz-card, #app .text-board, #app .question-panel, #app .sentence-panel, #app .ws-item {
+  background: #fff !important; border: 2.5px solid var(--k-coral) !important; border-radius: 24px !important; box-shadow: 0 5px 0 var(--k-coral-soft) !important; }
+#app .vocab-art, #app .sentence-art, #app .cover-art { border-radius: 24px !important; }
+#app .feedback-line { border-radius: 14px; font-size: 17px; font-weight: 700; color: var(--k-ink); }
+#app .sentence-progress { display: inline-block; width: auto !important; align-self: flex-start; padding: 4px 14px !important; border-radius: 999px !important;
+  background: var(--k-sky-soft) !important; color: var(--k-sky-deep) !important; font-size: 15px !important; font-weight: 900 !important; }
+
+/* 빈 그림 자리 — 젤리 + 「그림 준비 중」(shared.css 규칙의 색을 하늘빛으로) */
+#app .sentence-art:has(img.img-missing), #app .scene-card:not(.word-scene-collage):has(img.img-missing), #app .word-scene-collage > *:has(img.img-missing),
+#app .activity-view > .sentence-layout > .sentence-art:has(img.img-missing), #app .vocab-art:has(img.missing), #app .vocab-art:has(img.img-missing) {
+  background: var(--k-sky-soft) url("kids-jelly-guide.png") center 40% / 64px no-repeat !important; border: 2.5px solid var(--k-sky) !important; }
+#app .word-scene-collage > *:has(img.img-missing) { background-size: 44px !important; }
+
+/* ── 표지 ───────────────────────────────────────────────── */
+#app .cover-copy .primary-btn { min-height: 54px !important; padding: 0 30px !important; font-size: 20px !important; border-radius: 18px !important; }
+
+/* ── 1 어휘체크 ─────────────────────────────────────────── */
+#app .vocab-frame { font-size: clamp(26px, 3vw, 34px) !important; font-weight: 900 !important; line-height: 1.5 !important; color: var(--k-ink); }
+#app .vocab-blank { min-width: 3.2em; border-bottom: 4px solid var(--k-yellow-line) !important; background: var(--k-yellow-soft) !important; border-radius: 8px 8px 0 0; }
+#app .vocab-choice { min-height: 66px !important; border: 2.5px solid var(--k-sky) !important; border-radius: 20px !important; background: #fff !important;
+  font-size: clamp(22px, 2.6vw, 28px) !important; font-weight: 900 !important; color: var(--k-ink) !important; box-shadow: 0 4px 0 var(--k-sky-soft) !important; }
+
+/* ── 3 문장 완성(빈칸 채우기) — 긴 문장도 987×521 안에 ─────── */
+#app .override-fill .fill-stage { gap: 16px !important; }
+#app .override-fill .fill-line { font-size: clamp(28px, 3.9vw, 42px) !important; line-height: 1.4 !important; }
+#app .override-fill .fill-slot { border-bottom-color: var(--k-yellow-line) !important; background: var(--k-yellow-soft) !important; }
+#app .override-fill .fill-slot.filled { border-bottom-color: var(--k-sky-2) !important; background: var(--k-sky-soft) !important; }
+#app .override-fill .fill-choices { flex-wrap: nowrap !important; gap: 12px !important; }
+#app .override-fill .fill-choice { min-width: 5.6em !important; min-height: 58px !important; padding: 0 18px !important; font-size: clamp(22px, 2.6vw, 28px) !important;
+  border: 2.5px solid var(--k-sky) !important; border-radius: 18px !important; background: #fff !important; box-shadow: 0 4px 0 var(--k-sky-soft) !important; font-weight: 900 !important; }
+#app .override-fill .fill-choice.wrong { box-shadow: none !important; }
+
+/* ── 4 나누어 읽기 ─────────────────────────────────────── */
+#app .reading-sentence { font-size: clamp(32px, 3.9vw, 46px) !important; line-height: 1.55; color: var(--k-ink); }
+/* 읽기 전 예측(아홉 칸) — 하늘 테두리 · 고른 칸은 노랑 · ✓ 는 하늘 */
+#app .pick-cell { border-color: var(--k-sky) !important; box-shadow: 0 4px 0 var(--k-sky-soft) !important; }
+#app .pick-cell small { color: var(--k-sky-deep) !important; }
+#app .pick-cell.sel, #app .pick-cell.hit { border-color: var(--k-yellow-line) !important; background: var(--k-yellow) !important; box-shadow: 0 4px 0 var(--k-yellow-line) !important; }
+#app .pick-cell.hit::after { background: var(--k-sky-2) !important; }
+#app .pick-cell.miss { border: 2.5px dashed var(--k-yellow-line) !important; background: #fffdf3 !important; box-shadow: none !important; }
+#app .pick-cell.trap { border-color: #e6e3ee !important; background: #f6f5f9 !important; box-shadow: none !important; color: #8a879c !important; }
+#app .pick-cell.trap small { color: #8a879c !important; }
+#app .pick-card .feedback-line.good { background: var(--k-yellow-soft) !important; border: 2px solid var(--k-yellow) !important; }
+
+/* ── 5 전체 읽기 ─────────────────────────────────────────── */
+#app .text-board { border-color: var(--k-sky) !important; box-shadow: 0 5px 0 var(--k-sky-soft) !important; }
+#app .text-board h2 { font-size: 22px !important; font-weight: 900 !important; }
+#app .text-sentence { font-size: clamp(21px, 2.4vw, 26px) !important; font-weight: 800 !important; color: var(--k-ink) !important; border-radius: 14px !important; }
+#app .question-panel { border-color: var(--k-yellow) !important; box-shadow: 0 5px 0 var(--k-yellow-soft) !important; }
+#app .question-panel h2 { font-weight: 900 !important; color: var(--k-ink); }
+
+/* ── 6 3단계 쓰기 ────────────────────────────────────────── */
+#app .ws-sentence { font-size: clamp(22px, 2.6vw, 28px) !important; font-weight: 900 !important; color: var(--k-ink) !important; }
+#app .ws-number { background: var(--k-sky-2) !important; color: #fff !important; }
+#app .ws-choice { min-height: 46px !important; border: 2px solid var(--k-sky) !important; border-radius: 14px !important; background: #fff !important;
+  font-size: 20px !important; font-weight: 900 !important; color: var(--k-ink) !important; box-shadow: 0 3px 0 var(--k-sky-soft) !important; }
+#app .ws-pack-tab.active, #app .ws-stage-tabs button.active, #app .ws-stage-tabs [aria-selected="true"] { background: var(--k-sky-2) !important; color: #fff !important; border-color: var(--k-sky-2) !important; }
+#app .ws-input { font-size: 22px !important; font-weight: 800 !important; }
+#app .ws-guide-card { border-radius: 20px !important; }
+
+/* ── 활동 안내 창 — 젤리코치가 안내한다 ─────────────────── */
+.modal[data-modal-card] { border-radius: 26px !important; border: 3px solid var(--k-coral) !important; padding-right: 130px !important;
+  background: #fff url("kids-jelly-guide.png") right 26px center / 86px no-repeat !important; animation: kt-pop .35s ease-out both; }
+.modal[data-modal-card] h2 { font-weight: 900 !important; color: var(--k-ink); }
+.modal[data-modal-card] li { font-size: 17px !important; line-height: 1.6; font-weight: 700; color: #3a3f5a; }
+
+/* ── 움직임 — 차례가 바뀔 때만(jelly-coach-v1.js 가 #app 에 kt-enter 를 잠깐 붙인다) ── */
+@keyframes kt-rise { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: none; } }
+@keyframes kt-pop { 0% { opacity: 0; transform: scale(.85); } 70% { opacity: 1; transform: scale(1.04); } 100% { transform: none; } }
+#app.kt-enter .activity-view { animation: kt-rise .35s ease-out both; }
+#app.kt-enter :is(.vocab-choice, .pick-cell, .text-sentence, .ws-item, .sentence-main-action, .fill-choice) { animation: kt-pop .4s ease-out both; }
+#app.kt-enter :is(.vocab-choice, .pick-cell, .text-sentence, .ws-item, .fill-choice):nth-child(2) { animation-delay: .05s; }
+#app.kt-enter :is(.vocab-choice, .pick-cell, .text-sentence, .ws-item, .fill-choice):nth-child(3) { animation-delay: .1s; }
+#app.kt-enter :is(.pick-cell, .text-sentence, .ws-item):nth-child(4) { animation-delay: .15s; }
+#app.kt-enter :is(.pick-cell, .text-sentence, .ws-item):nth-child(5) { animation-delay: .2s; }
+#app.kt-enter :is(.pick-cell, .text-sentence, .ws-item):nth-child(6) { animation-delay: .25s; }
+#app.kt-enter :is(.pick-cell, .text-sentence):nth-child(7) { animation-delay: .3s; }
+#app.kt-enter :is(.pick-cell, .text-sentence):nth-child(8) { animation-delay: .35s; }
+#app.kt-enter :is(.pick-cell, .text-sentence):nth-child(9) { animation-delay: .4s; }
+/* 누를 수 있는 것은 살짝 떠오른다 */
+#app :is(.vocab-choice, .ws-choice, .pick-cell, .fill-choice, .quiet-btn, button.primary-btn):hover:not(:disabled) { transform: translateY(-2px); }
+#app :is(.vocab-choice, .ws-choice, .pick-cell, .fill-choice, .quiet-btn, button.primary-btn) { transition: transform .1s, box-shadow .1s, background .15s; }
+@media (prefers-reduced-motion: reduce) {
+  #app *, #app.kt-enter *, .modal[data-modal-card] { animation: none !important; transition: none !important; }
+}
+
+/* ── 글꼴 — 나눔스퀘어라운드(네이버 나눔글꼴, OFL: 상업 이용·웹 임베딩 허용, 파일 판매만 금지) ──
+   사용자 지정 2026-10-04: 「가독성 좋고 예쁘게 · 너무 두껍지 않게」. 파일은 폴더 안(release/fonts) — 외부 주소 금지(규격 3장).
+   굵기는 셋만 — 300↓ 얇게(L) · 400~600 보통(R) · 700↑ 굵게(B). 가장 굵은 ExtraBold 는 일부러 안 넣었다.
+   아이가 읽는 본문 문장은 「보통」, 제목·단추는 「굵게」. */
+@font-face { font-family: "NanumSquareRound"; src: url("fonts/nanum-square-round-l.woff2") format("woff2"); font-weight: 100 350; font-display: swap; }
+@font-face { font-family: "NanumSquareRound"; src: url("fonts/nanum-square-round-r.woff2") format("woff2"); font-weight: 351 650; font-display: swap; }
+@font-face { font-family: "NanumSquareRound"; src: url("fonts/nanum-square-round-b.woff2") format("woff2"); font-weight: 651 1000; font-display: swap; }
+#app, #app *, .modal, .modal *, #onqJelly .jc-say { font-family: "NanumSquareRound", "Apple SD Gothic Neo", "Malgun Gothic", sans-serif !important; }
+/* 읽는 문장은 보통 굵기 */
+#app :is(.reading-sentence, .text-sentence, .vocab-frame, .fill-line, .ws-sentence, .feedback-line, .modal li) { font-weight: 400 !important; }
+#app :is(.vocab-choice, .fill-choice, .pick-cell, .ws-choice) { font-weight: 700 !important; }
+
+/* 좌측 메뉴 7칸(빙고 추가) — 칸 높이·간격을 작은 값으로 고정하고 위부터 쌓는다.
+   화면이 커도 칸이 퍼지지 않아 7번 아래에 여백이 남는다(2026-10-04 「7번 밑에 딱 붙지 않게」). */
+#app .step-nav { gap: 6px !important; align-content: start !important; grid-auto-rows: auto !important; grid-template-rows: none !important; }
+#app .step-nav .step-btn { min-height: 0 !important; height: 46px !important; padding-top: 0 !important; padding-bottom: 0 !important; }
+/* 좌측 메뉴 가로 스크롤바 숨김 — 987px 에서 9px 넘쳐 막대가 보였다 */
+#app .step-nav { overflow-x: hidden !important; }
+
+/* ── 전체 읽기 기다림 판 v2 (2026-10-05 「저학년용 · 동적인 효과」) ──
+   옛 판은 2×2 격자에 젤리·작은 제목·큰 제목이 흩어져 앉았다 → 한 덩어리(.qp-wait)를 가운데 세운다. */
+#app .paragraph-grid > .question-panel.qp-v2 { display: flex !important; align-items: center !important; justify-content: center !important;
+  grid-template-columns: none !important; grid-template-rows: none !important; padding: 16px !important;
+  background: radial-gradient(circle at 50% 38%, #fff8dc 0%, #fffdf6 55%, #fff 100%) !important; }
+#app .qp-v2 .qp-wait { position: relative; display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 320px; text-align: center; }
+#app .qp-v2 .qp-jelly, #app .qp-v2 .qp-jelly img { width: 118px !important; height: 118px !important; object-fit: contain !important; border-radius: 0 !important; }
+#app .qp-v2 .qp-jelly { position: relative; padding: 0; border: 0; background: none; cursor: pointer; filter: drop-shadow(0 10px 8px rgba(47,51,80,.14)); }
+#app .qp-v2 button.qp-jelly { animation: qp-hop 1.8s ease-in-out infinite; }
+#app .qp-v2 button.qp-jelly:hover { animation-duration: .9s; }
+#app .qp-v2 .qp-listen img { position: relative; z-index: 1; animation: qp-sway 1.4s ease-in-out infinite; }
+#app .qp-v2 .qp-wave { position: absolute; inset: 8px; border: 4px solid #6fc2f0; border-radius: 50%; opacity: 0; animation: qp-ring 1.8s ease-out infinite; }
+#app .qp-v2 .qp-wave.w2 { animation-delay: .9s; border-color: #ffcf3d; }
+#app .qp-v2 .qp-bubble { position: relative; padding: 12px 18px; border: 3px solid #b6dcf3; border-radius: 20px; background: #fff;
+  color: #2f3350; font-size: 21px; font-weight: 800; line-height: 1.35; word-break: keep-all; box-shadow: 0 5px 0 #e8f5fd; animation: qp-pop .4s ease-out both; }
+#app .qp-v2 .qp-bubble::before { content: ""; position: absolute; left: 50%; top: -11px; width: 16px; height: 16px; margin-left: -8px; background: #fff;
+  border-left: 3px solid #b6dcf3; border-top: 3px solid #b6dcf3; transform: rotate(45deg); }
+#app .qp-v2 .qp-dots { display: inline-flex; gap: 4px; margin-left: 6px; vertical-align: middle; }
+#app .qp-v2 .qp-dots i { width: 7px; height: 7px; border-radius: 50%; background: #3fa3e2; animation: qp-dot 1s ease-in-out infinite; }
+#app .qp-v2 .qp-dots i:nth-child(2) { animation-delay: .15s; } #app .qp-v2 .qp-dots i:nth-child(3) { animation-delay: .3s; }
+#app .qp-v2 .qp-steps { display: flex; align-items: center; gap: 8px; margin: 4px 0 0; padding: 0; list-style: none; }
+#app .qp-v2 .qp-steps li { display: flex; align-items: center; gap: 6px; padding: 8px 14px 8px 8px; border-radius: 999px; background: #f1f2f7;
+  color: #8a8ea3; font-size: 16px; font-weight: 800; }
+#app .qp-v2 .qp-steps li b { display: grid; place-items: center; width: 28px; height: 28px; border-radius: 50%; background: #fff; font-size: 14px; }
+#app .qp-v2 .qp-steps li.on { background: linear-gradient(135deg, #ff9d8f, #f2766a); color: #fff; box-shadow: 0 4px 0 #d65a4f; animation: qp-glow 1.6s ease-in-out infinite; }
+#app .qp-v2 .qp-steps li.on b { color: #f2766a; }
+#app .qp-v2 .qp-steps li.done { background: #e8f8ef; color: #2e9e62; }
+#app .qp-v2 .qp-steps li.qp-arrow { padding: 0; background: none; color: #c9cbd8; font-size: 26px; }
+#app .qp-v2 .qp-star { position: absolute; color: #ffcf3d; font-size: 22px; animation: qp-twinkle 2.2s ease-in-out infinite; pointer-events: none; }
+#app .qp-v2 .qp-star.s1 { left: 6%; top: 4%; } #app .qp-v2 .qp-star.s2 { right: 8%; top: 14%; color: #6fc2f0; animation-delay: .7s; }
+#app .qp-v2 .qp-star.s3 { right: 18%; bottom: 30%; font-size: 16px; animation-delay: 1.3s; }
+@keyframes qp-hop { 0%, 100% { transform: translateY(0) scale(1, 1); } 45% { transform: translateY(-14px) scale(.97, 1.03); } 70% { transform: translateY(0) scale(1.05, .95); } }
+@keyframes qp-sway { 0%, 100% { transform: rotate(-4deg); } 50% { transform: rotate(4deg); } }
+@keyframes qp-ring { 0% { transform: scale(.7); opacity: .8; } 100% { transform: scale(1.5); opacity: 0; } }
+@keyframes qp-pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes qp-dot { 0%, 100% { transform: translateY(0); opacity: .4; } 50% { transform: translateY(-5px); opacity: 1; } }
+@keyframes qp-glow { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+@keyframes qp-twinkle { 0%, 100% { transform: scale(.7) rotate(0); opacity: .35; } 50% { transform: scale(1.15) rotate(20deg); opacity: 1; } }
+@media (max-height: 600px) { #app .qp-v2 .qp-jelly, #app .qp-v2 .qp-jelly img { width: 92px !important; height: 92px !important; }
+  #app .qp-v2 .qp-bubble { font-size: 18px; padding: 10px 14px; } #app .qp-v2 .qp-wait { gap: 10px; } }
+@media (prefers-reduced-motion: reduce) { #app .qp-v2 * { animation: none !important; } }
+#app .qp-v2 .qp-steps { flex-wrap: nowrap; }
+#app .qp-v2 .qp-steps li { white-space: nowrap; }
+@media (max-width: 1100px) { #app .qp-v2 .qp-steps { gap: 4px; } #app .qp-v2 .qp-steps li { padding: 6px 10px 6px 6px; font-size: 14px; gap: 4px; }
+  #app .qp-v2 .qp-steps li b { width: 24px; height: 24px; font-size: 12px; } #app .qp-v2 .qp-steps li.qp-arrow { font-size: 20px; } }
+@media (max-height: 600px) { #app .qp-v2 .qp-jelly, #app .qp-v2 .qp-jelly img { width: 112px !important; height: 112px !important; } }
+/* 메뉴가 여덟 칸(비단어 게임이 있는 L6·L7 회차)이면 칸을 조금 낮춰 987×521 에서도 8번 아래 여백이 남게 */
+#app .step-nav:has(> .step-btn:nth-child(8)) { gap: 5px !important; }
+#app .step-nav:has(> .step-btn:nth-child(8)) .step-btn { height: 41px !important; }

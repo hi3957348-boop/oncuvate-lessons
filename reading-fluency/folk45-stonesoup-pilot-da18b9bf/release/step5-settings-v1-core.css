@@ -1,0 +1,357 @@
+@media screen {
+  #app .activity-view:has(.ws-step5) .ws-toolbar,
+  #app .activity-view:has(.ws-step5) .ws-stage-tabs {
+    --ws-control-paper: #fffaf2;
+    --ws-control-soft: #f5efe5;
+    --ws-control-line: #dcd2c3;
+    --ws-control-sage: #667a68;
+    --ws-control-sage-dark: #536456;
+    --ws-control-ink: #26352e;
+    --ws-control-muted: #766f65;
+    border-color: var(--ws-control-line) !important;
+    background: var(--ws-control-paper) !important;
+    box-shadow: 0 10px 28px rgba(74, 63, 48, .08) !important;
+  }
+
+  #app .activity-view:has(.ws-step5) :is(.ws-pack-tab, .ws-sound-switch button, .ws-print-button, .ws-settings-button, .ws-stage-tabs button) {
+    min-height: 42px !important;
+    border: 1px solid var(--ws-control-line) !important;
+    color: var(--ws-control-ink) !important;
+    background: #fffdf8 !important;
+    box-shadow: none !important;
+  }
+
+  #app .activity-view:has(.ws-step5) :is(.ws-pack-tab.active, .ws-sound-switch button.active, .ws-stage-tabs button.active) {
+    border-color: var(--ws-control-sage) !important;
+    color: #fff !important;
+    background: var(--ws-control-sage) !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-stage-tabs button.active > span {
+    color: var(--ws-control-sage-dark) !important;
+    background: #fffaf2 !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-stage-tabs button:not(.active) > span {
+    color: var(--ws-control-sage-dark) !important;
+    background: #eee7dc !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-print-button,
+  #app .activity-view:has(.ws-step5) .ws-settings-button {
+    grid-column: auto !important;
+    width: 100% !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-print-button {
+    color: var(--ws-control-sage-dark) !important;
+    background: #edf2ea !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-settings-button {
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    gap: 7px !important;
+    color: #665640 !important;
+    background: #f4e8d8 !important;
+  }
+
+  .ws-settings-icon {
+    position: relative;
+    width: 16px;
+    height: 12px;
+    border-top: 2px solid currentColor;
+    border-bottom: 2px solid currentColor;
+  }
+
+  .ws-settings-icon::after {
+    content: "";
+    position: absolute;
+    top: 4px;
+    left: 0;
+    width: 16px;
+    border-top: 2px solid currentColor;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-stage-heading {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 1px 3px 5px;
+    color: var(--ws-control-ink);
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-stage-heading strong {
+    font-size: 13px;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-stage-heading small {
+    color: var(--ws-control-muted);
+    font-size: 10px;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-stage-tabs button.is-finished::after {
+    content: "완성";
+    margin-left: auto;
+    color: currentColor;
+    font-size: 10px;
+    font-weight: 800;
+    opacity: .75;
+  }
+
+  #app .activity-view:has(.ws-step5) :is(.ws-pack-tab, .ws-sound-switch button, .ws-print-button, .ws-settings-button, .ws-stage-tabs button):focus-visible {
+    outline: 3px solid rgba(150, 126, 91, .32) !important;
+    outline-offset: 2px !important;
+  }
+
+  .ws-settings-layer {
+    position: fixed;
+    inset: 0;
+    z-index: 240;
+    display: grid;
+    place-items: center;
+    padding: 20px;
+    background: rgba(42, 38, 32, .28);
+  }
+
+  .ws-settings-panel {
+    width: min(480px, 100%);
+    padding: 22px;
+    border: 1px solid #dcd2c3;
+    border-radius: 22px;
+    color: #26352e;
+    background: #fffaf2;
+    box-shadow: 0 22px 60px rgba(49, 42, 33, .22);
+    font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
+  }
+
+  .ws-settings-panel header {
+    display: flex;
+    align-items: flex-start;
+    justify-content: space-between;
+    gap: 16px;
+    margin-bottom: 18px;
+  }
+
+  .ws-settings-panel header span {
+    color: #7b6d59;
+    font-size: 12px;
+    font-weight: 800;
+  }
+
+  .ws-settings-panel h2 {
+    margin: 4px 0 0;
+    font-size: 24px;
+    letter-spacing: -.03em;
+  }
+
+  .ws-settings-close {
+    width: 42px;
+    height: 42px;
+    border: 1px solid #dcd2c3;
+    border-radius: 12px;
+    color: #5e574e;
+    background: #fffdf8;
+    font-size: 24px;
+  }
+
+  .ws-settings-panel fieldset {
+    margin: 0 0 18px;
+    padding: 0;
+    border: 0;
+  }
+
+  .ws-settings-panel legend {
+    margin-bottom: 9px;
+    font-size: 14px;
+    font-weight: 850;
+  }
+
+  .ws-setting-options,
+  .ws-setting-stages {
+    display: grid;
+    gap: 9px;
+  }
+
+  .ws-setting-options { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+  .ws-setting-stages { grid-template-columns: repeat(3, minmax(0, 1fr)); }
+
+  .ws-setting-options button,
+  .ws-setting-stages button,
+  .ws-settings-done {
+    min-height: 48px;
+    border: 1px solid #dcd2c3;
+    border-radius: 13px;
+    color: #26352e;
+    background: #fffdf8;
+    font: inherit;
+  }
+
+  .ws-setting-options button {
+    display: grid;
+    gap: 4px;
+    justify-items: start;
+    padding: 13px 14px;
+    text-align: left;
+  }
+
+  .ws-setting-options small { color: #766f65; font-size: 11px; }
+
+  .ws-setting-options button.active,
+  .ws-setting-stages button.active {
+    border-color: #667a68;
+    background: #e9f0e7;
+    box-shadow: inset 0 0 0 1px #667a68;
+  }
+
+  .ws-setting-stages button span {
+    display: inline-grid;
+    place-items: center;
+    width: 24px;
+    height: 24px;
+    margin-right: 6px;
+    border-radius: 50%;
+    color: #fff;
+    background: #667a68;
+    font-weight: 900;
+  }
+
+  .ws-settings-done {
+    width: 100%;
+    border-color: #536456;
+    color: #fff;
+    background: #667a68;
+    font-weight: 850;
+  }
+
+  .ws-settings-panel button:focus-visible {
+    outline: 3px solid rgba(150, 126, 91, .35);
+    outline-offset: 2px;
+  }
+}
+
+@media screen and (max-width: 620px) {
+  .ws-setting-options { grid-template-columns: 1fr; }
+}
+
+@media print {
+  .ws-settings-layer,
+  .ws-settings-button,
+  .ws-stage-heading { display: none !important; }
+}
+
+/* ══ 활동 설정 — 자리와 색 (2026-08-25) ═════════════════════════════
+   ⑴ 화면 한가운데에 크게 뜨던 것을 **누른 자리(오른쪽 위)** 로 옮긴다.
+       설정은 방금 누른 버튼에 딸린 것이지, 화면을 가로막을 일이 아니다.
+   ⑵ 색이 이 화면에서만 세이지·크림이었다. 나머지 화면이 쓰는
+       흰 바탕 · 연회색 테두리 · 보라 강조로 맞춘다.                     */
+html .ws-settings-layer {
+  /* 다른 규칙이 display:block으로 덮어 place-items가 먹지 않았다. flex로 못 박는다. */
+  display: flex !important;
+  align-items: flex-start !important;
+  justify-content: flex-end !important;
+  padding: 14px !important;
+  background: rgba(42, 38, 32, .18) !important;
+}
+html .ws-settings-panel {
+  width: min(390px, 100%) !important;
+  margin-top: 8px !important;
+  padding: 18px !important;
+  border: 1px solid #e4e2ec !important;
+  border-radius: 16px !important;
+  background: #fff !important;
+  color: #3f4757 !important;
+  box-shadow: 0 16px 44px rgba(37, 20, 78, .16) !important;
+}
+html .ws-settings-panel h2 { color: #2f3648 !important; }
+html .ws-settings-panel header span,
+html .ws-settings-panel legend { color: #6b7280 !important; }
+
+/* 고르는 칸 — 안 고른 것은 조용히, 고른 것만 보라 */
+html .ws-settings-panel .ws-settings-row button,
+html .ws-settings-panel .ws-setting-options button,
+html .ws-settings-panel .ws-setting-stages button,
+html .ws-settings-panel .ws-settings-print {
+  border: 1px solid #e4e2ec !important;
+  border-radius: 10px !important;
+  background: #fff !important;
+  color: #6b7280 !important;
+}
+html .ws-settings-panel .ws-settings-row button:hover,
+html .ws-settings-panel .ws-setting-options button:hover,
+html .ws-settings-panel .ws-setting-stages button:hover,
+html .ws-settings-panel .ws-settings-print:hover {
+  border-color: #cfcbdd !important; background: #fafaff !important; color: #3f4757 !important;
+}
+/* 고른 것은 **채워서** 보여 준다. 연한 배경·테두리만으로는 골랐는지 아닌지
+   한눈에 안 갈렸다(실제로 구분이 안 간다는 말을 들었다). */
+html .ws-settings-panel .active,
+html .ws-settings-panel [aria-pressed="true"] {
+  border-color: #4a3a8f !important;
+  background: #4a3a8f !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 8px rgba(74, 58, 143, .25) !important;
+}
+html .ws-settings-panel .active *,
+html .ws-settings-panel [aria-pressed="true"] * { color: #fff !important; }
+html .ws-settings-panel .active small,
+html .ws-settings-panel [aria-pressed="true"] small { color: rgba(255,255,255,.82) !important; }
+/* A·B·C 동그라미는 반대로 뒤집어 흰 바탕에 보라 글씨 */
+html .ws-settings-panel .ws-setting-stages .active span:first-child {
+  background: #fff !important; color: #4a3a8f !important;
+}
+
+/* 마무리 버튼만 채운 보라 — 이 화면에서 눌러야 할 곳은 하나다 */
+html .ws-settings-panel .ws-settings-done {
+  border: 0 !important;
+  border-radius: 10px !important;
+  background: #4a3a8f !important;
+  color: #fff !important;
+}
+html .ws-settings-panel .ws-settings-close {
+  border: 1px solid #e4e2ec !important;
+  background: #fff !important;
+  color: #6b7280 !important;
+}
+
+/* ── 앞의 손질이 안 먹던 두 가지 (2026-08-25) ────────────────────────
+   ⑴ 패널이 `position: fixed; left: 12px`라 바깥 상자의 정렬이 애초에 무의미했다.
+       자리 자체를 오른쪽 위로 못 박는다.
+   ⑵ 「고른 것」 배경을 common-ui-step5-v23·step5-compact-controls-v2가 **더 늦게**
+       칠해 이기고 있었다(선택자 무게가 같으면 나중 것이 이긴다).
+       그 파일들이 쓰는 모양보다 한 단계 무겁게 적는다.                    */
+html body .ws-settings-panel {
+  position: fixed !important;
+  left: auto !important;
+  right: 14px !important;
+  top: 14px !important;
+  bottom: auto !important;
+  max-height: calc(100vh - 28px) !important;
+  overflow: auto !important;
+}
+html body .ws-settings-panel .ws-settings-row button,
+html body .ws-settings-panel .ws-setting-options button,
+html body .ws-settings-panel .ws-setting-stages button {
+  background: #fff !important;
+  border: 1px solid #ddd9e8 !important;
+  color: #6b7280 !important;
+  font-weight: 600 !important;
+}
+html body .ws-settings-panel .ws-settings-row button.active,
+html body .ws-settings-panel .ws-setting-options button.active,
+html body .ws-settings-panel .ws-setting-stages button.active,
+html body .ws-settings-panel button[aria-pressed="true"] {
+  background: #4a3a8f !important;
+  border-color: #4a3a8f !important;
+  color: #fff !important;
+  font-weight: 800 !important;
+  box-shadow: 0 2px 10px rgba(74, 58, 143, .28) !important;
+}
+html body .ws-settings-panel button[aria-pressed="true"] small,
+html body .ws-settings-panel .active small { color: rgba(255,255,255,.85) !important; }
+html body .ws-settings-panel .ws-setting-stages button.active span:first-child {
+  background: #fff !important; color: #4a3a8f !important;
+}

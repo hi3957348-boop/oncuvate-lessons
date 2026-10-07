@@ -1,0 +1,128 @@
+/* Step 4: the text viewport alone scrolls; outer panes stay fixed and equal. */
+#app .activity-view:has(> .paragraph-grid) {
+  min-height: 0;
+  overflow: hidden !important;
+}
+
+#app .activity-view > .paragraph-grid {
+  display: grid !important;
+  grid-template-columns: minmax(0, 1.35fr) minmax(250px, .65fr) !important;
+  grid-template-rows: minmax(0, 1fr) !important;
+  gap: clamp(12px, 1.6vw, 18px) !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+  align-items: stretch !important;
+}
+
+#app .paragraph-grid > :is(.text-board, .question-panel) {
+  min-height: 0 !important;
+  height: 100% !important;
+  align-self: stretch !important;
+  overflow: hidden !important;
+  border-radius: clamp(16px, 1.8vw, 24px);
+}
+
+#app .paragraph-grid > .text-board {
+  display: grid !important;
+  grid-template-rows: auto minmax(0, 1fr) auto !important;
+  background: #fff !important;
+}
+
+#app .text-board > .text-board-head {
+  position: relative !important;
+  z-index: 1;
+  background: #fff !important;
+}
+
+#app .text-board > .paragraph-text {
+  min-height: 0 !important;
+  overflow-y: auto !important;
+  overflow-x: hidden !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+  padding: clamp(16px, 2vw, 24px) !important;
+  background: #fff !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+#app .paragraph-text::before,
+#app .paragraph-text::after,
+#app .activity-view:has(> .paragraph-grid)::before,
+#app .activity-view:has(> .paragraph-grid)::after {
+  content: none !important;
+  display: none !important;
+}
+
+#app .paragraph-grid > .question-panel {
+  display: grid !important;
+  place-content: center !important;
+  justify-items: center !important;
+  align-content: center !important;
+  gap: clamp(10px, 1.6vh, 16px) !important;
+  padding: clamp(16px, 2vw, 24px) !important;
+  text-align: center;
+}
+
+#app .question-panel .jelly-button,
+#app .question-panel .jelly-button img {
+  width: clamp(80px, 9vw, 112px) !important;
+  height: clamp(80px, 9vw, 112px) !important;
+  object-fit: contain !important;
+}
+
+/* The bottom row is a control line, not a translucent fade band. */
+#app .studio > .bottombar,
+#app .studio.menu-hidden > .bottombar {
+  background: transparent !important;
+  background-image: none !important;
+  -webkit-mask-image: none !important;
+  mask-image: none !important;
+}
+
+#app .studio > .bottombar::before,
+#app .studio > .bottombar::after {
+  content: none !important;
+  display: none !important;
+}
+
+/* Clear role hierarchy: guide, draw, then primary next. */
+#app .activity-shell > .annotation-launcher {
+  color: #fff !important;
+  background: #2f8393 !important;
+  background-image: none !important;
+  border-color: #287483 !important;
+  opacity: 1 !important;
+}
+
+#app .compact-info {
+  color: #234f70 !important;
+  background: #e9f5fb !important;
+  background-image: none !important;
+  border-color: #a9cee0 !important;
+  opacity: 1 !important;
+}
+
+#app .bottombar .primary-btn,
+#app :is(.next-btn, .finish-btn, .next-level-btn):not([disabled]) {
+  color: #fff !important;
+  background: #6952dc !important;
+  background-image: none !important;
+  border-color: #5f49cf !important;
+}
+
+@media (max-width: 899px) {
+  #app .question-panel .jelly-button,
+  #app .question-panel .jelly-button img {
+    width: clamp(74px, 12vw, 96px) !important;
+    height: clamp(74px, 12vw, 96px) !important;
+  }
+}
+
+@media (max-width: 620px) {
+  #app .activity-view > .paragraph-grid {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: minmax(0, 1fr) minmax(150px, .42fr) !important;
+  }
+}

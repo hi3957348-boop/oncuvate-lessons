@@ -1,0 +1,12 @@
+@import url("step5-settings-v1-core.css?rev=20260825r");
+
+@media screen {
+  #app .activity-view:has(.ws-step5) .ws-sound-switch {
+    border-color: #dcd2c3 !important;
+    background: #f5efe5 !important;
+  }
+
+  #app .activity-view:has(.ws-step5) .ws-sound-switch > span {
+    color: #766f65 !important;
+  }
+}

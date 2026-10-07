@@ -1,0 +1,62 @@
+/* 비단어 게임 — 고르기 화면 · 비단어 탐정. 빙고 판은 bingo-v1.css 의 .bg-* 를 같이 쓴다. 색은 수업 테마(연산호·하늘·노랑). */
+#app .onq-nonword { flex: 1; min-height: 0; display: flex; }
+#app .onq-nonword > * { flex: 1; min-height: 0; }
+
+/* 고르기 */
+#app .nw-pick { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 22px; padding: 10px;
+  background: radial-gradient(circle at 50% 30%, #fff8dc 0%, #fffdf6 60%); border-radius: 26px; }
+#app .nw-pick-title { display: flex; align-items: center; gap: 14px; }
+#app .nw-pick-title img { width: 84px; height: 84px; object-fit: contain; animation: nw-hop 1.8s ease-in-out infinite; }
+#app .nw-pick-title h2 { margin: 0; font-size: 30px; font-weight: 800; color: #2f3350; }
+#app .nw-pick-title p { margin: 4px 0 0; font-size: 17px; font-weight: 700; color: #4a4f6a; }
+#app .nw-cards { display: flex; gap: 22px; }
+#app .nw-card { display: grid; justify-items: center; align-content: center; gap: 8px; width: 230px; min-height: 160px; padding: 16px; border: 0; border-radius: 26px;
+  color: #fff; cursor: pointer; transition: transform .12s; animation: nw-pop .35s ease-out both; }
+#app .nw-card.bingo { background: linear-gradient(160deg, #ff9d8f, #f2766a); box-shadow: 0 7px 0 #d65a4f; }
+#app .nw-card.det { background: linear-gradient(160deg, #7cc8f2, #3fa3e2); box-shadow: 0 7px 0 #2a7fb8; animation-delay: .08s; }
+#app .nw-card:hover { transform: translateY(-4px) rotate(-1deg); }
+#app .nw-card:active { transform: translateY(4px); box-shadow: 0 2px 0 rgba(0,0,0,.15); }
+#app .nw-card i { font-style: normal; font-size: 46px; animation: nw-wiggle 2.4s ease-in-out infinite; }
+#app .nw-card b { font-size: 25px; font-weight: 800; }
+#app .nw-card small { font-size: 15px; font-weight: 700; opacity: .95; }
+#app .nw-back { min-height: 40px; padding: 0 16px; border: 2px solid #b6dcf3; border-radius: 999px; background: #fff; color: #2f3350; font-size: 15px; font-weight: 800; cursor: pointer; }
+
+/* 탐정 */
+#app .nw-det { display: flex; flex-direction: column; gap: 12px; padding: 4px; }
+#app .nw-det-head { display: flex; align-items: center; gap: 14px; }
+#app .nw-case { padding: 6px 14px; border-radius: 999px; background: #2f3350; color: #ffe27a; font-size: 16px; font-weight: 800; }
+#app .nw-trail { display: flex; gap: 6px; flex: 1; }
+#app .nw-trail i { width: 14px; height: 14px; border-radius: 50%; background: #e7e8ef; }
+#app .nw-trail i.done { background: #ffcf3d; } #app .nw-trail i.now { background: #3fa3e2; transform: scale(1.25); }
+#app .nw-det-body { flex: 1; min-height: 0; display: grid; grid-template-columns: 1fr 1fr; gap: 20px; align-items: stretch; }
+#app .nw-clue { position: relative; display: grid; place-items: center; align-content: center; gap: 8px; border: 3px dashed #c9b88a; border-radius: 26px;
+  background: repeating-linear-gradient(0deg, #fffaf0 0 30px, #fbf3df 30px 31px); }
+#app .nw-clue b { font-size: clamp(54px, 7vw, 82px); font-weight: 800; color: #2f3350; letter-spacing: .04em; animation: nw-pop .35s ease-out both; }
+#app .nw-clue small { font-size: 15px; font-weight: 700; color: #8a7a52; }
+#app .nw-glass { position: absolute; right: 18px; top: 12px; font-size: 40px; animation: nw-scan 2.6s ease-in-out infinite; }
+#app .nw-clue.solved { border-style: solid; border-color: #6fc79a; background: #effaf3; }
+#app .nw-side { display: flex; flex-direction: column; justify-content: center; gap: 14px; }
+#app .nw-tip { display: flex; align-items: center; gap: 10px; padding: 10px 14px; border: 3px solid #b6dcf3; border-radius: 20px; background: #fff; font-size: 19px; font-weight: 800; color: #2f3350; }
+#app .nw-tip img { width: 56px; height: 56px; object-fit: contain; }
+#app .nw-opts { display: grid; gap: 10px; }
+#app .nw-opt { min-height: 58px; border: 3px solid #f6c4bd; border-radius: 18px; background: #fff; color: #2f3350; font-size: 26px; font-weight: 800;
+  box-shadow: 0 4px 0 #fdeeeb; cursor: pointer; transition: transform .1s; }
+#app .nw-opt:hover:not(:disabled) { transform: translateY(-2px); }
+#app .nw-opt.wrong { opacity: .45; text-decoration: line-through; animation: nw-nope .35s; }
+#app .nw-opt.right { border-color: #6fc79a; background: #e8f8ef; color: #1f7a4c; animation: nw-pop .3s ease-out; }
+#app .nw-opt.glow { animation: nw-glow 1s ease-in-out infinite; border-color: #ffcf3d; }
+#app .nw-end { align-items: center; justify-content: center; text-align: center; }
+#app .nw-end img { width: 120px; height: 120px; object-fit: contain; animation: nw-hop 1.4s ease-in-out infinite; }
+#app .nw-end h2 { margin: 0; font-size: 28px; font-weight: 800; color: #2f3350; }
+#app .nw-row { display: flex; gap: 12px; justify-content: center; }
+
+@keyframes nw-hop { 0%, 100% { transform: translateY(0); } 45% { transform: translateY(-10px); } }
+@keyframes nw-pop { from { transform: scale(.85); opacity: 0; } to { transform: none; opacity: 1; } }
+@keyframes nw-wiggle { 0%, 100% { transform: rotate(0); } 10% { transform: rotate(-12deg); } 20% { transform: rotate(10deg); } 30% { transform: rotate(0); } }
+@keyframes nw-scan { 0%, 100% { transform: translate(0, 0) rotate(-8deg); } 50% { transform: translate(-16px, 10px) rotate(8deg); } }
+@keyframes nw-nope { 25% { transform: translateX(-5px); } 60% { transform: translateX(5px); } }
+@keyframes nw-glow { 0%, 100% { box-shadow: 0 0 0 0 rgba(255,207,61,0); } 50% { box-shadow: 0 0 0 6px rgba(255,207,61,.55); } }
+@media (max-width: 1100px), (max-height: 600px) {
+  #app .nw-card { width: 200px; min-height: 130px; } #app .nw-card i { font-size: 38px; } #app .nw-card b { font-size: 22px; }
+  #app .nw-clue b { font-size: 54px; } #app .nw-opt { min-height: 50px; font-size: 22px; } #app .nw-tip { font-size: 17px; } }
+@media (prefers-reduced-motion: reduce) { #app .onq-nonword * { animation: none !important; } }

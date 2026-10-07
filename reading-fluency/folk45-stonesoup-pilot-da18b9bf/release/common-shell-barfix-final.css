@@ -1,0 +1,14 @@
+#app .conveyor-v5 > .compact-activity-bar {
+  position: static !important;
+  inset: auto !important;
+  z-index: auto !important;
+  width: 100% !important;
+  max-width: none !important;
+  transform: none !important;
+  margin: 0 !important;
+}
+
+#app .conveyor-v5 > .compact-activity-bar .compact-actions,
+#app .conveyor-v5 > .compact-activity-bar .compact-settings {
+  gap: 12px !important;
+}
