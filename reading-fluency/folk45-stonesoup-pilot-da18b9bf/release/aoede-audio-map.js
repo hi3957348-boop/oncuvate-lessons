@@ -224,5 +224,7 @@ window.ONQ_AOEDE_AUDIO_MAP = Object.freeze({
   "끓으면": "assets/audio/aoede-s01/s01-c2a3ef8268.mp3",
   "둘러": "assets/audio/aoede-s01/s01-1cf621cf60.mp3",
   "떠나다": "assets/audio/aoede-s01/s01-1d54f11af1.mp3",
-  "떠났다": "assets/audio/aoede-s01/s01-8e3b04a261.mp3"
+  "떠났다": "assets/audio/aoede-s01/s01-8e3b04a261.mp3",
+  "이렇게 맛있는": "assets/audio/aoede-s01/s01-719ee25e7a.mp3",
+  "사람도 있었고": "assets/audio/aoede-s01/s01-87ad12171b.mp3"
 });

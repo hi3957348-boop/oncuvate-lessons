@@ -6,6 +6,9 @@
  *     「여기만 기억해요 [앞]+[뒤] → [소리]」 카드(늘려 읽기와 같은 모양). 탑이 다 서면 젤리가 꼭대기로 폴짝 → 다음 낱말.
  *  ② 번개 탑 — 다 쌓은 낱말이 통째로 잠깐 번쩍(1500ms에서 낱말마다 줄어 700ms, 600ms 밑으로는 안 내려감)하고 사라진다.
  *     아이는 소리 내어 읽고, 본 낱말을 보기 셋(정답 + 닮은 함정 둘)에서 찾는다. 보이는 시간을 줄여 가며 한눈에 읽기(자동성)를 기른다.
+ *  ③ 번쩍 카드(2026-10-08 사용자) — 3·2·1 세고 낱말·어절이 아주 짧게(450ms → 250ms) 반짝하고 사라진다.
+ *     바르게 적힌 카드를 넷(정답 + 소리 나는 대로 적은 것 등 함정 셋) 가운데서 고른다. 낱말 탑보다 길거나 소리 규칙이 까다로운 말.
+ *     데이터: DATA.cards = { flash:{startMs,endMs,minMs}, items:[{ w, lures:[[글자,오답유형]×3], sound, rule, focus }] }
  *  · 틀리면 그 블록이 흔들리고 그대로 남는다. 같은 칸에서 두 번 틀리면 바른 블록이 살짝 빛난다(도움 A2 로 기록).
  *  · 아이 화면에 점수는 띄우지 않는다.
  *  · 기록: oncuvate:event(activity_start · answer · hint · item_complete · round_complete · activity_complete)
@@ -32,15 +35,21 @@
   const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
   const FACE = { guide: "assets/jelly/guide.png", listen: "assets/jelly/listening.png", think: "assets/jelly/thinking.png", praise: "assets/jelly/praise.png" };
   const blankTally = () => ({ accurate: 0, "self-corrected": 0, support: 0 });
+  const CARDS = (DATA.cards && Array.isArray(DATA.cards.items)) ? DATA.cards.items : [];
+  const M = CARDS.length;
+  const CFLASH = Object.assign({ startMs: 450, endMs: 250, minMs: 200 }, (DATA.cards && DATA.cards.flash) || {});
+  const cardExposure = i => Math.max(CFLASH.minMs, Math.round(CFLASH.startMs - (CFLASH.startMs - CFLASH.endMs) * (M > 1 ? i / (M - 1) : 0)));
+  const END = 4;   // round 4 = 끝
 
-  // round: 0 처음 · 1 탑 쌓기 · 2 번개 탑 · 3 끝
+  // round: 0 처음 · 1 탑 쌓기 · 2 번개 탑 · 3 번쩍 카드 · 4 끝
+  // phase(번쩍 카드): ready → count(3·2·1) → flash → mask → pick → show
   // phase(탑 쌓기): read → (card) → pick → read … → hop · between
   // phase(번개 탑): ready → fix → flash → mask → read → pick → show · end
   const S = {
     host: null, round: 0, phase: "intro", attempt: 1, startedAt: performance.now(),
     wi: 0, level: 0, choices: [], fails: 0, helped: false, wordFails: 0, wordHelped: false, wordAt: 0, itemAt: 0,
-    built: [], order: [], fi: 0, flashed: [], plannedMs: 0, shownMs: 0,
-    tally: { 1: blankTally(), 2: blankTally() }, anim: {}, timers: new Set()
+    built: [], order: [], fi: 0, flashed: [], plannedMs: 0, shownMs: 0, corder: [], ci: 0, carded: [], count: 3,
+    tally: { 1: blankTally(), 2: blankTally(), 3: blankTally() }, anim: {}, timers: new Set()
   };
 
   function later(fn, ms) {
@@ -55,6 +64,7 @@
   const ruleOf = w => (w && w.rule ? { target_rule_id: w.rule } : {});
   const word = () => WORDS[S.wi];
   const flashWord = () => WORDS[S.order[S.fi]];
+  const cardItem = () => CARDS[S.corder[S.ci]];
   const exposureFor = i => Math.max(FLASH.minMs, Math.round(FLASH.startMs - (FLASH.startMs - FLASH.endMs) * (N > 1 ? i / (N - 1) : 0)));
 
   function emit(type, payload) {
@@ -164,14 +174,70 @@
     if (S.phase !== "show") return;
     S.fi += 1;
     if (S.fi < N) { S.phase = "ready"; draw(); pushProgress(); return; }
+    if (M) { S.phase = "between"; const t = S.tally[2];
+      emit("round_complete", { round: 2, round_name: "flash_read", items: N, accurate: t.accurate, self_corrected: t["self-corrected"], support: t.support });
+      draw(); pushProgress(); return; }
+    finish();
+  }
+  // ── ③ 번쩍 카드 ─────────────────────────────────────────────
+  function startCards() {
+    if (!M) return;
+    clearTimers(); hush();
+    if (S.round > 0) S.attempt += 1;
+    S.round = 3; S.corder = shuffle(CARDS.map((_, i) => i)); S.ci = 0; S.carded = []; S.tally[3] = blankTally(); S.startedAt = performance.now();
+    emit("activity_start", { round: 3, round_name: "flash_card", attempt_no: S.attempt, items_total: M, exposure_start_ms: cardExposure(0) });
+    S.phase = "ready"; draw(); pushProgress();
+  }
+  // 3 · 2 · 1 → 반짝(정해진 시간) → 무늬 가림 → 카드 고르기. 보인 시간은 화면에 그려진 뒤부터 잰다.
+  function cardGo() {
+    if (S.round !== 3 || S.phase !== "ready") return;
+    S.plannedMs = cardExposure(S.ci); S.phase = "count"; S.count = 3; draw();
+    const tick = () => {
+      if (S.phase !== "count") return;
+      S.count -= 1;
+      if (S.count > 0) { const b = S.host.querySelector(".wt-count"); if (b) { b.textContent = S.count; b.classList.remove("beat"); void b.offsetWidth; b.classList.add("beat"); } later(tick, 650); return; }
+      const box = S.host.querySelector(".wt-flash"); if (!box) return;
+      S.phase = "flash"; box.className = "wt-flash word card"; box.textContent = cardItem().w;
+      requestAnimationFrame(() => {
+        const t0 = performance.now();
+        later(() => {
+          const b = S.host.querySelector(".wt-flash");
+          if (S.phase !== "flash" || !b) return;
+          S.shownMs = Math.round(performance.now() - t0);
+          S.phase = "mask"; b.className = "wt-flash mask"; b.textContent = "";
+          later(() => { if (S.phase === "mask") startPick3(); }, 350);
+        }, S.plannedMs);
+      });
+    };
+    later(tick, 650);
+  }
+  function startPick3() {
+    const it = cardItem();
+    S.choices = shuffle([{ text: it.w, ok: true }].concat(it.lures.map(f => ({ text: f[0], ok: false, type: f[1] || null }))));
+    S.fails = 0; S.helped = false; S.phase = "pick"; S.anim.choices = true; S.itemAt = performance.now();
+    draw();
+  }
+  function cardHit(it, accuracy) {
+    emit("item_complete", Object.assign({ item_id: `card-${it.w}`, round: 3, word: it.w, exposure_ms: S.plannedMs, shown_ms: S.shownMs,
+      misses: S.fails, helped: S.helped, accuracy }, ruleOf(it)));
+    S.carded.push(S.corder[S.ci]); S.phase = "show"; S.anim.placed = S.carded.length - 1;
+    draw(); pushProgress();
+    later(() => say(it.w), 250);
+    later(nextCard, reduced ? 1600 : 2400);
+  }
+  function nextCard() {
+    if (S.phase !== "show") return;
+    S.ci += 1;
+    if (S.ci < M) { S.phase = "ready"; draw(); pushProgress(); return; }
     finish();
   }
   function finish() {
-    S.round = 3; S.phase = "end"; S.anim.hop = true;
-    const a = S.tally[1], b = S.tally[2];
-    emit("activity_complete", { completion: "all_rounds", items: N, final_exposure_ms: exposureFor(N - 1),
+    S.round = END; S.phase = "end"; S.anim.hop = true;
+    const a = S.tally[1], b = S.tally[2], c = S.tally[3];
+    emit("activity_complete", Object.assign({ completion: "all_rounds", items: N, final_exposure_ms: exposureFor(N - 1),
       tower_accurate: a.accurate, tower_self_corrected: a["self-corrected"], tower_support: a.support,
-      flash_accurate: b.accurate, flash_self_corrected: b["self-corrected"], flash_support: b.support });
+      flash_accurate: b.accurate, flash_self_corrected: b["self-corrected"], flash_support: b.support },
+      M ? { card_items: M, card_final_exposure_ms: cardExposure(M - 1), card_accurate: c.accurate, card_self_corrected: c["self-corrected"], card_support: c.support } : {}));
     draw(); pushProgress();
   }
 
@@ -179,8 +245,8 @@
   function choose(i, el) {
     if (S.phase !== "pick") return;
     const c = S.choices[i]; if (!c) return;
-    const r2 = S.round === 2, w = r2 ? flashWord() : word(), k = S.level;
-    const itemId = r2 ? `flash-${w.w}` : `tower-${w.w}-${k + 1}`;
+    const r3 = S.round === 3, r2 = S.round === 2 || r3, w = r3 ? cardItem() : S.round === 2 ? flashWord() : word(), k = S.level;
+    const itemId = r3 ? `card-${w.w}` : r2 ? `flash-${w.w}` : `tower-${w.w}-${k + 1}`;
     const base = Object.assign({
       item_id: itemId, round: S.round, word: w.w, response: c.text, expected: r2 ? w.w : w.chunks[k], correct: c.ok,
       attempt_no: S.fails + 1, response_time_ms: Math.round(performance.now() - S.itemAt),
@@ -200,7 +266,8 @@
     }
     const accuracy = accuracyOf(S.fails, S.helped);
     emit("answer", Object.assign(base, { accuracy }, S.helped ? { help_level: "A2" } : {}));
-    S.tally[r2 ? 2 : 1][accuracy] += 1;
+    S.tally[S.round][accuracy] += 1;
+    if (r3) { cardHit(w, accuracy); return; }
     if (r2) { flashHit(w, accuracy); return; }
     S.wordFails += S.fails; S.wordHelped = S.wordHelped || S.helped;
     placeBlock();
@@ -214,14 +281,16 @@
     return `<div class="wt-hop ${go ? "go" : ""}" aria-hidden="true"><img src="${FACE.praise}" alt="">${go ? '<i class="s1">✦</i><i class="s2">★</i><i class="s3">✦</i>' : ""}</div>`;
   }
   function topBar() {
-    const done = S.round >= 2 ? S.flashed.length : S.built.length;
-    const cur = S.round === 1 && S.phase !== "between" ? S.wi : S.round === 2 ? S.fi : -1;
-    const dots = WORDS.map((_, i) => `<i class="${i < done ? "on" : i === cur ? "now" : ""}"></i>`).join("");
+    const r3 = S.round === 3 || (S.round === END && M);
+    const done = r3 ? S.carded.length : S.round >= 2 ? S.flashed.length : S.built.length;
+    const cur = S.round === 1 && S.phase !== "between" ? S.wi : S.round === 2 && S.phase !== "between" ? S.fi : S.round === 3 ? S.ci : -1;
+    const dots = (r3 ? CARDS : WORDS).map((_, i) => `<i class="${i < done ? "on" : i === cur ? "now" : ""}"></i>`).join("");
     return `<div class="wt-top">
         <b class="wt-title">낱말 탑 쌓기</b>
         <div class="wt-rounds">
           <button type="button" class="wt-round ${S.round === 1 ? "on" : ""}" data-wt-round="1"><span>1</span>탑 쌓기</button>
-          <button type="button" class="wt-round ${S.round >= 2 ? "on" : ""}" data-wt-round="2"><span>2</span>번개 탑</button>
+          <button type="button" class="wt-round ${S.round === 2 ? "on" : ""}" data-wt-round="2"><span>2</span>번개 탑</button>
+          ${M ? `<button type="button" class="wt-round ${S.round === 3 ? "on" : ""}" data-wt-round="3"><span>3</span>번쩍 카드</button>` : ""}
         </div>
         <div class="wt-dots" aria-hidden="true">${dots}</div>
       </div>`;
@@ -241,13 +310,32 @@
       const slot = S.phase === "pick" || S.phase === "card" ? `<div class="wt-block slot" aria-hidden="true">?</div>` : "";
       return `${deco}<div class="wt-tower">${blocks}${slot}${S.phase === "hop" ? hopper(!!a.hop) : ""}</div>`;
     }
+    if (S.round === 3 || (S.round === END && M)) {
+      const cm = CARDS.map((_, k) => {
+        const idx = S.carded[k];
+        return idx == null ? `<span class="wt-mblock empty"></span>`
+          : `<span class="wt-mblock lv${k % 5} ${k === a.placed ? "drop" : ""}">${esc(CARDS[idx].w)}</span>`;
+      }).join("");
+      if (S.round === END) return `${deco}<div class="wt-mini center">${cm}${hopper(!!a.hop)}</div>`;
+      const it = cardItem();
+      const box = S.phase === "ready" ? `<div class="wt-flash ready"><button type="button" class="wt-bolt" data-wt-act="card3">✨ 3·2·1 번쩍!</button></div>`
+        : S.phase === "count" ? `<div class="wt-flash fix"><b class="wt-count beat">${S.count}</b></div>`
+        : S.phase === "flash" ? `<div class="wt-flash word card">${esc(it.w)}</div>`
+        : S.phase === "mask" ? `<div class="wt-flash mask"></div>`
+        : S.phase === "show" ? `<div class="wt-flash show card"><span>${marked(it.w, it)}</span>${it.sound ? `<small class="wt-sound">소리: ${esc(it.sound)}</small>` : ""}</div>`
+        : `<div class="wt-flash ask">?</div>`;
+      return `${deco}<div class="wt-mini">${cm}</div><div class="wt-flashzone">${box}</div>`;
+    }
+    if (S.round === 2 && S.phase === "between") {
+      return `${deco}<div class="wt-mini center">${S.flashed.map((i, k) => `<span class="wt-mblock lv${k % 5}">${esc(WORDS[i].w)}</span>`).join("")}</div>`;
+    }
     // 번개 탑 — 왼쪽에 다 읽은 낱말이 쌓이는 작은 탑, 가운데에 번쩍 창
     const minis = WORDS.map((_, k) => {
       const idx = S.flashed[k];
       return idx == null ? `<span class="wt-mblock empty"></span>`
         : `<span class="wt-mblock lv${k % 5} ${k === a.placed ? "drop" : ""}">${esc(WORDS[idx].w)}</span>`;
     }).join("");
-    if (S.round === 3) {
+    if (S.round === END) {
       return `${deco}<div class="wt-mini center">${minis}${hopper(!!a.hop)}</div>`;
     }
     const w = flashWord();
@@ -260,10 +348,10 @@
     return `${deco}<div class="wt-mini">${minis}</div><div class="wt-flashzone">${box}</div>`;
   }
   function choicesHtml(a) {
-    const r2 = S.round === 2, w = r2 ? flashWord() : word(), k = S.level;
-    const itemId = r2 ? `flash-${w.w}` : `tower-${w.w}-${k + 1}`;
+    const r3 = S.round === 3, r2 = S.round === 2 || r3, w = r3 ? cardItem() : S.round === 2 ? flashWord() : word(), k = S.level;
+    const itemId = r3 ? `card-${w.w}` : r2 ? `flash-${w.w}` : `tower-${w.w}-${k + 1}`;
     const tone = r2 ? "" : `lv${k % 5}`;
-    return `<div class="wt-choices ${r2 ? "n3" : "n2"}" data-item-id="${esc(itemId)}" role="group" aria-label="${r2 ? "본 낱말 고르기" : "다음 블록 고르기"}">${S.choices.map((c, i) => {
+    return `<div class="wt-choices ${r3 ? "n3 n4" : r2 ? "n3" : "n2"}" data-item-id="${esc(itemId)}" role="group" aria-label="${r3 ? "바르게 적힌 카드 고르기" : r2 ? "본 낱말 고르기" : "다음 블록 고르기"}">${S.choices.map((c, i) => {
       const glow = c.ok && S.helped;
       const track = glow ? `data-track="hint" data-help-level="A2" data-help-type="target-glow"` : `data-track="answer"`;
       return `<button type="button" class="wt-choice ${tone} ${a.choices ? "fall" : ""} ${glow ? "glow" : ""}" style="--d:${i * 110}ms"
@@ -295,6 +383,17 @@
         face = FACE.praise; bubble = `탑 ${N}개를 다 쌓았어요! 이번엔 번개 탑이에요.`;
         act = `<button type="button" class="wt-btn go big" data-wt-act="round2">⚡ 번개 탑 시작</button>`;
       }
+    } else if (S.round === 2 && S.phase === "between") {
+      face = FACE.praise; bubble = "번개 탑 완성! 이번엔 더 빨라요. 번쩍 카드!";
+      act = `<button type="button" class="wt-btn go big" data-wt-act="round3">✨ 번쩍 카드 시작</button>`;
+    } else if (S.round === 3) {
+      if (S.phase === "ready") bubble = "‘3·2·1 번쩍!’을 누르면 아주 잠깐 보였다 사라져요. 눈을 크게!";
+      else if (S.phase === "count" || S.phase === "flash" || S.phase === "mask") bubble = "가운데를 잘 봐요!";
+      else if (S.phase === "pick") {
+        face = S.fails ? FACE.think : FACE.guide;
+        bubble = S.fails >= 2 ? "반짝이는 카드를 눌러 봐요!" : S.fails ? "소리 나는 대로 쓴 카드도 있어요. 다시 봐요!" : "바르게 적힌 카드를 골라요.";
+        act = choicesHtml(a);
+      } else if (S.phase === "show") { face = FACE.praise; bubble = "맞아요! 소리 내어 읽어 봐요."; }
     } else if (S.round === 2) {
       if (S.phase === "ready") bubble = "‘번개 보기’를 누르면 낱말이 잠깐 나타나요. 잘 봐요!";
       else if (S.phase === "fix" || S.phase === "flash" || S.phase === "mask") bubble = "가운데를 잘 봐요!";
@@ -305,10 +404,10 @@
         act = choicesHtml(a);
       } else if (S.phase === "show") { face = FACE.praise; bubble = "맞아요! 같이 읽어 봐요."; }
     } else {
-      face = FACE.praise; bubble = "번개 탑까지 다 쌓았어요! 멋져요!";
+      face = FACE.praise; bubble = M ? "번쩍 카드까지 다 했어요! 눈이 번개처럼 빨라요!" : "번개 탑까지 다 쌓았어요! 멋져요!";
       act = `<div class="wt-end" data-track="activity-complete" data-activity-id="${esc(ID)}">
           <button type="button" class="wt-btn soft" data-wt-act="again">처음부터 다시</button>
-          <button type="button" class="wt-btn go" data-wt-act="round2">⚡ 번개 탑 다시</button></div>`;
+          ${M ? `<button type="button" class="wt-btn go" data-wt-act="round3">✨ 번쩍 카드 다시</button>` : `<button type="button" class="wt-btn go" data-wt-act="round2">⚡ 번개 탑 다시</button>`}</div>`;
     }
     return `<div class="wt-coach"><img src="${face}" alt="젤리코치"><p class="wt-bubble" aria-live="polite">${esc(bubble)}</p></div>
       <div class="wt-act">${act}</div>`;
@@ -333,6 +432,7 @@
     if (t.dataset.wtPick != null) { choose(Number(t.dataset.wtPick), t); return; }
     if (t.dataset.wtRound === "1") { startTower(); return; }
     if (t.dataset.wtRound === "2") { startFlash(); return; }
+    if (t.dataset.wtRound === "3") { startCards(); return; }
     const act = t.dataset.wtAct;
     if (act === "start" || act === "again") startTower();
     else if (act === "round2") startFlash();
@@ -340,30 +440,34 @@
     else if (act === "read") { if (S.phase !== "read") return; if (S.round === 1) afterRead(); else startPick2(); }
     else if (act === "card") { if (S.phase === "card") startPick(); }
     else if (act === "flash") flashGo();
+    else if (act === "round3") startCards();
+    else if (act === "card3") cardGo();
   }, true);
 
   window.ONQ_TOWER_GAME = {
     mount(host) {
       S.host = host;
       // 다른 차례에 갔다 오면 멈춰 둔 흐름을 이어 준다(번쩍 도중이면 그 낱말을 처음부터).
-      if (S.phase === "fix" || S.phase === "flash" || S.phase === "mask") { clearTimers(); S.phase = "ready"; }
+      if (S.phase === "fix" || S.phase === "flash" || S.phase === "mask" || S.phase === "count") { clearTimers(); S.phase = "ready"; }
+      else if (S.round === 3 && S.phase === "show" && !S.timers.size) { nextCard(); return; }
       else if (S.phase === "hop" && !S.timers.size) { nextWord(); return; }
       else if (S.phase === "show" && !S.timers.size) { nextFlash(); return; }
       draw();
     },
     stop() { clearTimers(); hush(); S.host = null; },
     progress() {
-      const r2 = S.round >= 2;
-      const done = r2 ? S.flashed.length : S.built.length;
-      const name = S.round === 0 ? "시작 전" : S.round === 1 ? "탑 쌓기" : S.round === 2 ? "번개 탑" : "마침";
-      const now = S.round === 1 && S.phase !== "between" ? word() : S.round === 2 ? flashWord() : null;
-      return { round: S.round, done, total: N, completed: S.round === 3,
-               extra: `${name}${now ? ` · ${now.w}` : ""}${S.round === 2 ? ` · ${exposureFor(S.fi)}ms` : ""}` };
+      const r3 = S.round === 3 || (S.round === END && M);
+      const done = r3 ? S.carded.length : S.round >= 2 ? S.flashed.length : S.built.length;
+      const name = S.round === 0 ? "시작 전" : S.round === 1 ? "탑 쌓기" : S.round === 2 ? "번개 탑" : S.round === 3 ? "번쩍 카드" : "마침";
+      const now = S.round === 1 && S.phase !== "between" ? word() : S.round === 2 && S.phase !== "between" ? flashWord() : S.round === 3 ? cardItem() : null;
+      return { round: S.round, done, total: r3 ? M : N, completed: S.round === END,
+               extra: `${name}${now ? ` · ${now.w}` : ""}${S.round === 2 ? ` · ${exposureFor(S.fi)}ms` : S.round === 3 ? ` · ${cardExposure(S.ci)}ms` : ""}` };
     },
     prompt() {
       if (S.round === 1 && S.phase !== "between") return `탑 쌓기 — ${word().w}`;
-      if (S.round === 2) return `번개 탑 — ${flashWord().w}`;
-      return S.round === 3 ? "낱말 탑 쌓기 마침" : "낱말 탑 쌓기 — 시작 전";
+      if (S.round === 2 && S.phase !== "between") return `번개 탑 — ${flashWord().w}`;
+      if (S.round === 3) return `번쩍 카드 — ${cardItem().w}`;
+      return S.round === END ? "낱말 탑 쌓기 마침" : S.round === 2 ? "번개 탑 마침 — 번쩍 카드로" : "낱말 탑 쌓기 — 시작 전";
     }
   };
 })();

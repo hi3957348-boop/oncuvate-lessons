@@ -74,6 +74,15 @@
     pop.hidden = true; cur = null; chip.focus();
   }
 
+  function makeChip(item) {
+    const chip = document.createElement("button");
+    chip.type = "button"; chip.className = "xr-chip" + (done.has(item.w) ? " done" : ""); chip.dataset.w = item.w;
+    chip.dataset.track = "hint"; chip.dataset.helpLevel = "A2"; chip.dataset.helpType = "stretch-reading";
+    chip.setAttribute("aria-label", (done.has(item.w) ? "늘려 읽기 다 했어요: " : "늘려 읽기: ") + item.w); chip.title = "늘려 읽기";
+    chip.addEventListener("click", e => { e.stopPropagation(); open(item, chip); });
+    return chip;
+  }
+
   // 나누어 읽기 문장에서 어절 끝자리를 찾아 바로 뒤에 단추를 넣는다(확장 읽기 단추로 글자가 나뉘어 있어도 찾는다).
   function decorate() {
     document.querySelectorAll(".sentence-layout .reading-sentence").forEach(p => {
@@ -95,7 +104,15 @@
         const end = at + item.w.length;
         const hit = nodes.find(([n, o]) => end > o && end <= o + n.data.length); if (!hit) return;
         const [node, off] = hit;
-        if (node.parentElement.closest("button")) return;            // 다른 단추 안에는 넣지 않는다
+        const btn = node.parentElement.closest("button");
+        if (btn) {
+          // 확장 읽기 노란 단추가 바로 그 낱말이면 단추 바깥 옆에 붙인다(단추+＋를 한 덩이로 묶어 줄바꿈 금지). 다른 단추 안에는 넣지 않는다.
+          if (!btn.classList.contains("onq-target-trigger") || (btn.textContent || "") !== item.w) return;
+          const wrapB = document.createElement("span"); wrapB.className = "xr-word";
+          btn.parentNode.insertBefore(wrapB, btn); wrapB.append(btn);
+          const chipB = makeChip(item); wrapB.append(chipB);
+          return;
+        }
         const rest = node.splitText(end - off);
         // 낱말이 한 글자 마디 안에 다 있으면 낱말+단추를 한 덩이(.xr-word, 줄바꿈 금지)로 묶는다 — 단추만 다음 줄로 떨어지지 않게
         let wrap = null;
@@ -104,11 +121,7 @@
           wrap = document.createElement("span"); wrap.className = "xr-word";
           word.parentNode.insertBefore(wrap, word); wrap.append(word);
         }
-        const chip = document.createElement("button");
-        chip.type = "button"; chip.className = "xr-chip" + (done.has(item.w) ? " done" : ""); chip.dataset.w = item.w;
-        chip.dataset.track = "hint"; chip.dataset.helpLevel = "A2"; chip.dataset.helpType = "stretch-reading";
-        chip.setAttribute("aria-label", (done.has(item.w) ? "늘려 읽기 다 했어요: " : "늘려 읽기: ") + item.w); chip.title = "늘려 읽기";
-        chip.addEventListener("click", e => { e.stopPropagation(); open(item, chip); });
+        const chip = makeChip(item);
         if (wrap) wrap.append(chip); else rest.parentNode.insertBefore(chip, rest);
       });
     });

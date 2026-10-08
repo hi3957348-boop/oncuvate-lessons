@@ -132,6 +132,15 @@
 @keyframes wt-breathe { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.04); } }
 @keyframes wt-pop { 0% { transform: scale(.85); } 70% { transform: scale(1.05); } 100% { transform: scale(1); } }
 @keyframes wt-drift { from { margin-left: 0; } to { margin-left: 26px; } }
+/* ③ 번쩍 카드 */
+#app .wt-count { font-size: 76px; font-weight: 900; color: #7a5cf0; line-height: 1; }
+#app .wt-count.beat { animation: wt-beat .6s ease-out; }
+@keyframes wt-beat { 0% { transform: scale(1.6); opacity: 0; } 30% { opacity: 1; } 100% { transform: scale(1); opacity: .9; } }
+#app .wt-flash.card { font-size: 38px; letter-spacing: .02em; }
+#app .wt-flash.show.card { flex-direction: column; gap: 4px; }
+#app .wt-sound { font-size: 16px; font-weight: 800; color: #8a6d00; }
+#app .wt-choices.n4 { gap: 8px; }
+#app .wt-choices.n4 .wt-choice { min-height: 46px; font-size: 20px; }
 @media (prefers-reduced-motion: reduce) { #app .onq-tower * { animation: none !important; } }
 @media (max-width: 760px) {
   #app .onq-tower { height: auto; }

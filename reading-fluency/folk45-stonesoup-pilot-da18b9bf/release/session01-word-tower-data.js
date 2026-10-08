@@ -289,5 +289,174 @@ window.ONQ_WORD_TOWER = {
       "rule": "nasalization",
       "focus": "답니"
     }
-  ]
+  ],
+  "cards": {
+    "flash": {
+      "startMs": 450,
+      "endMs": 250,
+      "minMs": 200
+    },
+    "items": [
+      {
+        "w": "집집마다",
+        "sound": "[집찜마다]",
+        "lures": [
+          [
+            "집찜마다",
+            "soundSpelling"
+          ],
+          [
+            "짐짐마다",
+            "codaSwap"
+          ],
+          [
+            "집집마타",
+            "initialSwap"
+          ]
+        ],
+        "rule": "nasalization",
+        "focus": "집마"
+      },
+      {
+        "w": "퍼졌어요",
+        "sound": "[퍼저써요]",
+        "lures": [
+          [
+            "퍼저써요",
+            "soundSpelling"
+          ],
+          [
+            "퍼졋어요",
+            "codaSwap"
+          ],
+          [
+            "퍼젔어요",
+            "vowelSwap"
+          ]
+        ],
+        "rule": "liaison",
+        "focus": "졌어"
+      },
+      {
+        "w": "처음이라며",
+        "sound": "[처으미라며]",
+        "lures": [
+          [
+            "처으미라며",
+            "soundSpelling"
+          ],
+          [
+            "처은이라며",
+            "codaSwap"
+          ],
+          [
+            "처움이라며",
+            "vowelSwap"
+          ]
+        ],
+        "rule": "liaison",
+        "focus": "음이"
+      },
+      {
+        "w": "퐁당 넣었어요",
+        "sound": "[퐁당 너어써요]",
+        "lures": [
+          [
+            "퐁당 너어써요",
+            "soundSpelling"
+          ],
+          [
+            "퐁당 너었어요",
+            "codaDrop"
+          ],
+          [
+            "퐁당 넣엇어요",
+            "codaSwap"
+          ]
+        ],
+        "rule": "hDeletion",
+        "focus": "넣었"
+      },
+      {
+        "w": "끓이는 거예요",
+        "sound": "[끄리는 거에요]",
+        "lures": [
+          [
+            "끄리는 거예요",
+            "soundSpelling"
+          ],
+          [
+            "끌이는 거예요",
+            "codaSwap"
+          ],
+          [
+            "끓이는 거에요",
+            "vowelSwap"
+          ]
+        ],
+        "rule": "hDeletion",
+        "focus": "끓이"
+      },
+      {
+        "w": "맛있는 냄새가",
+        "sound": "[마신는 냄새가]",
+        "lures": [
+          [
+            "마신는 냄새가",
+            "soundSpelling"
+          ],
+          [
+            "맛잇는 냄새가",
+            "codaSwap"
+          ],
+          [
+            "맛있는 냄세가",
+            "vowelSwap"
+          ]
+        ],
+        "rule": "nasalization",
+        "focus": "맛있는"
+      },
+      {
+        "w": "이렇게 맛있는",
+        "sound": "[이러케 마신는]",
+        "lures": [
+          [
+            "이러케 맛있는",
+            "soundSpelling"
+          ],
+          [
+            "이럭게 맛있는",
+            "codaSwap"
+          ],
+          [
+            "이렇게 마신는",
+            "soundSpelling"
+          ]
+        ],
+        "rule": "aspiration",
+        "focus": "렇게"
+      },
+      {
+        "w": "사람도 있었고",
+        "sound": "[사람도 이썯꼬]",
+        "lures": [
+          [
+            "사람도 이썯꼬",
+            "soundSpelling"
+          ],
+          [
+            "사람도 있엇고",
+            "codaSwap"
+          ],
+          [
+            "사람도 있었꼬",
+            "soundSpelling"
+          ]
+        ],
+        "rule": "tensification",
+        "focus": "있었고"
+      }
+    ]
+  }
 };
