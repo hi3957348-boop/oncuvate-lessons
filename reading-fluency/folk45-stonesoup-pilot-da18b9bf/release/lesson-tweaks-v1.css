@@ -16,3 +16,7 @@
 #app *::-webkit-scrollbar-track { background: transparent; margin: 22px 0; }
 #app *::-webkit-scrollbar-thumb { background: rgba(120, 110, 160, .28); border-radius: 99px; }
 #app *::-webkit-scrollbar-thumb:hover { background: rgba(120, 110, 160, .45); }
+/* 2026-10-08 사용자 「학생 자습 가능하게」 — 자습(방 없음)에는 「도와주세요」를 받을 선생님이 없다.
+ * 누르면 「선생님에게 알렸어요. 잠시만 기다려요.」가 떠서 아이가 하염없이 기다리게 된다 → 자습에선 단추를 숨긴다.
+ * 자습 표시는 coach-mode-v2.js 가 <html data-oncuvate-mode="solo"> 로 단다(방이 있으면 "coaching"). */
+html[data-oncuvate-mode="solo"] .help-request { display: none !important; }

@@ -11,16 +11,16 @@
   :root { --ink:#2f3648; --dim:#6b7280; --line:#e4e2ec; --accent:#4a3a8f; --cream:#fbf9f4; }
   * { box-sizing: border-box; }
   body {
-    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 16px;
+    margin: 0; min-height: 100vh; display: grid; place-items: center; padding: 12px 16px;
     background: var(--cream); color: var(--ink);
     font-family: Pretendard, "Noto Sans KR", "Apple SD Gothic Neo", sans-serif;
   }
   .card {
     width: min(720px, 100%); background: #fff; border: 1px solid var(--line);
-    border-radius: 18px; padding: 22px 24px; box-shadow: 0 14px 40px rgba(37,20,78,.08);
+    border-radius: 18px; padding: 16px 22px; box-shadow: 0 14px 40px rgba(37,20,78,.08);
   }
   h1 { margin: 0 0 2px; font-size: 20px; }
-  .sub { margin: 0 0 16px; color: var(--dim); font-size: 13px; }
+  .sub { margin: 0 0 12px; color: var(--dim); font-size: 13px; }
   .lanes { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; }
   @media (max-width: 700px) { .lanes { grid-template-columns: 1fr; } }
   fieldset { margin: 0; border: 1px solid var(--line); border-radius: 14px; padding: 14px; }
@@ -40,25 +40,32 @@
   .made { margin-top: 10px; padding: 10px; border-radius: 10px; background: #efeafd;
           color: var(--accent); font-weight: 800; text-align: center; letter-spacing: .18em; font-size: 24px; }
   .hint { margin: 8px 0 0; font-size: 12px; line-height: 1.6; color: var(--dim); }
-  .warn { margin: 14px 0 0; padding: 10px 12px; border-radius: 10px;
+  .warn { margin: 10px 0 0; padding: 10px 12px; border-radius: 10px;
           background: #fdf6ec; color: #8a6a33; font-size: 12px; line-height: 1.6; }
   [hidden] { display: none !important; }
+  /* 2026-10-08 자습 — 코드 없이 혼자 여는 줄(수업 · 복습 워크지). 987×521에서 스크롤 없이 들어가게 여백을 줄였다. */
+  .solo { display: grid; grid-template-columns: 1fr 190px 190px; gap: 10px; align-items: center;
+          margin-top: 10px; padding: 10px 14px; border: 1px solid #cfe3f1; border-radius: 14px; background: #f2f8fc; }
+  .solo b { display: block; font-size: 15px; }
+  .solo span { font-size: 12px; color: var(--dim); }
+  .solo button { margin-top: 0; }
+  .solo button.review { background: #fff; color: var(--accent); border: 1.5px solid var(--accent); }
+  @media (max-width: 700px) { .solo { grid-template-columns: 1fr; } }
 </style>
 </head>
 <body>
 <main class="card">
   <h1>돌멩이 수프</h1>
-  <p class="sub">코치는 방을 만들고, 학생은 코드를 받아 들어옵니다.</p>
+  <p class="sub">코치와 함께 하면 방 코드로, 혼자 하면 아래 「혼자 공부하기」로 들어옵니다.</p>
 
   <div class="lanes">
     <fieldset>
-      <legend>학생</legend>
+      <legend>학생 · 코치와 함께</legend>
       <label for="code">코치가 알려 준 코드</label>
       <input id="code" class="code" inputmode="numeric" maxlength="5" placeholder="00000" autocomplete="off">
       <label for="s1">회차</label>
       <select id="s1"><option value="session01">1회차 · 돌멩이 수프(5단계)</option></select>
       <button id="join">들어가기</button>
-      <p class="hint">코드는 숫자 5자리입니다.</p>
     </fieldset>
 
     <fieldset>
@@ -74,8 +81,13 @@
     </fieldset>
   </div>
 
-  <p class="warn">이 화면은 <b>파일럿용 임시 통로</b>입니다. 코치 암호는 아이가 코치 화면을 여는 것을
-  막는 정도이지 정식 인증이 아닙니다. 코치 주소는 코치에게만 알려 주세요.</p>
+  <div class="solo">
+    <div><b>혼자 공부하기</b><span>코드 없이 바로 시작해요</span></div>
+    <button id="soloLesson">수업 혼자 하기</button>
+    <button id="soloReview" class="review">복습하기</button>
+  </div>
+
+  <p class="warn">이 화면은 <b>파일럿용 임시 통로</b>입니다. 코치 암호는 정식 인증이 아닙니다 — 코치 주소는 코치에게만 알려 주세요.</p>
 </main>
 
 <script>
@@ -112,6 +124,10 @@
     $("made").hidden = false;
     $("go").hidden = false;
   });
+  // 자습 — 방 없이 연다. 회차 파일은 방이 없으면 혼자 도는 모드(solo)로 켜진다.
+  $("soloLesson").addEventListener("click", () => { location.href = `${$("s1").value}.html`; });
+  $("soloReview").addEventListener("click", () => { location.href = "review/session01.html"; });
+
   $("go").addEventListener("click", () => {
     if (!made) return;
     location.href = url($("s2").value, made, true);

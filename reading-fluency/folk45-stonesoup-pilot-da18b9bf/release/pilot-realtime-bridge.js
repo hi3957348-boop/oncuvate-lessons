@@ -23,7 +23,15 @@
 
   const params = new URLSearchParams(location.search);
   const room = String(params.get("ocroom") || "").replace(/\D/g, "").slice(0, 5);
-  if (!room) return;                       // 방이 없으면 자율학습 그대로 둔다
+  if (!room) {                             // 방이 없으면 자율학습 — 다리는 열지 않는다
+    // 그래도 coach-mode-v2.js 는 띄운다. 파일럿본은 회차 HTML에서 그 태그를 뺐으므로(아래 ③),
+    // 여기서 안 띄우면 자습 때 기록 넘기기(oncuvate:event → oncuvate:log)와 자습 표시
+    // (<html data-oncuvate-mode="solo"> — 「도와주세요」 숨김)가 빠진다. (2026-10-08 자습 열기)
+    const script = document.createElement("script");
+    script.src = "release/coach-mode-v2.js?rev=20260825pilot";
+    document.body.appendChild(script);
+    return;
+  }
 
   const COACH_KEY = "80646074";
   const wantsCoach = params.get("ocrole") === "coach" && params.get("ockey") === COACH_KEY;

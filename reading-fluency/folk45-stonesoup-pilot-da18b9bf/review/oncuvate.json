@@ -1,0 +1,27 @@
+{
+  "oncuvate": 2,
+  "id": "folk45-stonesoup-k5-review",
+  "version": "0.1.0",
+  "updatedAt": "2026-10-08",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "order": 1,
+      "minDurationMin": 25,
+      "level": "L5",
+      "axes": [
+        "accuracy"
+      ],
+      "title": "L5 · 「돌멩이 수프」 복습(세로 A4 · 소리와 글자 · 낱말 쓰임 · 새 이야기 · 내 이야기 · 돌아보기)",
+      "copyright": {
+        "kind": "inHouse",
+        "title": "돌멩이 수프 복습",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    }
+  }
+}
