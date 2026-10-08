@@ -19,6 +19,7 @@ function fix(s){if(!s)return s;const e=typeof emptyState==="function"?emptyState
   ["players","responses","locks","reflections","openingVotes"].forEach(k=>{if(!n[k]||typeof n[k]!=="object")n[k]={}});
   n.historyLab={timeline:[],comparison:{},lastActor:"",...(s.historyLab||{})};n.historyLab.timeline=arr(n.historyLab.timeline);if(!n.historyLab.comparison)n.historyLab.comparison={};
   if(n.basket&&!n.basket.picks)n.basket.picks={};
+  if(n.flash&&!n.flash.picks)n.flash.picks={};
   if(n.reviewBingo)n.reviewBingo.called=arr(n.reviewBingo.called);
   if(n.keywordTalk)n.keywordTalk.used=arr(n.keywordTalk.used);
   return n}
