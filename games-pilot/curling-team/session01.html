@@ -1,0 +1,46 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="curling-team" data-lesson-title="젤리 컬링 팀전" data-lesson-version="1.0.0">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, noarchive">
+<title>젤리 컬링 팀전</title>
+<style>
+  body {
+    background: radial-gradient(circle at 8% 0%, rgba(75,201,220,.07), transparent 28%),
+                linear-gradient(145deg, #f7f8f5, #f1f3f0 62%, #f5f4f1);
+  }
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<script src="shared/curling.js"></script>
+<script src="shared/team.js"></script>
+<script>
+/* ───────── 내용 바꾸는 곳 ─────────
+   stonesPerTeam : 한 판(엔드)에 팀마다 던지는 돌 수(모두 이 수의 두 배)
+   barMs         : 힘 막대가 바닥에서 꼭대기까지 오르는 시간(밀리초, 작을수록 빠름)
+   names         : 아이가 고르는 닉네임(이름 입력칸 없음)
+   coachCode     : 코치 번호
+   fbRoot        : Firebase 저장 자리(방은 <fbRoot>/<5자리 방 번호>, 3시간)
+   ※ 파일럿 전용 — Firebase 직접 연결은 정식 납품본에 넣지 않는다(납품 땐 플랫폼 실시간 연동으로 바꿈).
+*/
+var GAME = {
+  activityId: 'curling-team',
+  stonesPerTeam: 4,
+  barMs: 1400,
+  coachCode: '80646074',
+  names: ['햇살고래', '구름토끼', '별빛여우', '초록수달', '달빛참새', '바람다람쥐',
+          '노을펭귄', '무지개곰', '이슬고양이', '솜사탕양', '파도돌고래', '꽃잎사슴'],
+  fbRoot: 'curling-team-pilot/rooms',
+  firebase: { apiKey: 'AIzaSyAHib_-XPXfuvhsZcPlMSnqi4O46kAR0mM', authDomain: 'non-1-4a6f5.firebaseapp.com',
+              databaseURL: 'https://non-1-4a6f5-default-rtdb.asia-southeast1.firebasedatabase.app', projectId: 'non-1-4a6f5',
+              storageBucket: 'non-1-4a6f5.firebasestorage.app', messagingSenderId: '871721592960',
+              appId: '1:871721592960:web:b342eab286024473845e65' }
+};
+
+window.curlingTeam = CurlingTeam.mount(document.getElementById('game'), GAME);
+</script>
+</body>
+</html>
