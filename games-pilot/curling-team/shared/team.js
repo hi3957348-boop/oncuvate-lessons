@@ -122,6 +122,9 @@
     'pointer-events:none;animation:cu-pop .35s cubic-bezier(.3,1.5,.5,1)}',
     '.ct-result.is-red{background:#fff0f0;color:#c23b3b}.ct-result.is-blue{background:#edf5ff;color:#2a62c0}',
     '.ct-glow{animation:ct-glow .7s ease-in-out infinite alternate}',
+    '.ct-live{position:absolute;left:50%;bottom:10px;z-index:5;transform:translateX(-50%);padding:.3em .9em;border-radius:99px;background:#ffffff;color:#3b3170;font-size:15px;font-weight:900;white-space:nowrap;box-shadow:0 3px 0 rgba(27,20,98,.25)}',
+    '.ct-live.is-red{color:#c0392b;box-shadow:0 0 0 3px #f8b4ac,0 3px 0 rgba(27,20,98,.25)}',
+    '.ct-live.is-blue{color:#1f5fbf;box-shadow:0 0 0 3px #a9c8f5,0 3px 0 rgba(27,20,98,.25)}',
     '@keyframes ct-glow{from{opacity:.2}to{opacity:1}}',
     '@keyframes ct-pulse{from{filter:none}to{filter:brightness(1.07) saturate(1.2)}}',
     '.cu-arena.is-locked{cursor:default}',
@@ -588,7 +591,7 @@
       return '<div class="cu-arena ct-arena"><div class="cu-rays"></div>' + D.sheetSVG() +
         (kid ? '<button type="button" class="cu-aimb is-l" data-act="aimL" aria-label="왼쪽으로" hidden>' + D.icon('left', '#5b48d6') + '</button>' +
                '<button type="button" class="cu-aimb is-r" data-act="aimR" aria-label="오른쪽으로" hidden>' + D.icon('right', '#5b48d6') + '</button>' : '') +
-        '<div class="cu-hint" hidden></div><div class="cu-toast" hidden></div><div class="ct-result" hidden></div></div>';
+        '<div class="cu-hint" hidden></div><div class="cu-toast" hidden></div><div class="ct-result" hidden></div><div class="ct-live" hidden></div></div>';
     }
     function scoreHTML() {
       return '<div class="ct-score"><div class="ct-sc is-red"><b>' + esc(TEAM.red.name) + '</b><strong data-sc="red">0</strong></div>' +
@@ -597,7 +600,7 @@
     }
     function bindArena() {
       var $ = function (s) { return root.querySelector(s); };
-      el.arena = $('.cu-arena'); el.sheet = $('.cu-sheet'); el.toast = $('.cu-toast'); el.hint = $('.cu-hint'); el.result = $('.ct-result');
+      el.arena = $('.cu-arena'); el.sheet = $('.cu-sheet'); el.toast = $('.cu-toast'); el.hint = $('.cu-hint'); el.result = $('.ct-result'); el.live = $('.ct-live');
       el.aimL = $('.cu-aimb.is-l'); el.aimR = $('.cu-aimb.is-r');
       el.house = $('.cu-house'); el.r0 = $('.cu-r0'); el.r1 = $('.cu-r1'); el.r2 = $('.cu-r2');
       el.stones = $('.cu-stones'); el.aim = $('.cu-aim'); el.spare = $('.cu-spare');
@@ -969,10 +972,24 @@
       var w = W || worldFromG();
       var showResult = G && G.status === 'result' && !(A && A.running);
       if (showResult && G.result) glow = arr(G.result.glow);
+      var live = null, rank = {};
+      if (G && G.status === 'play' && !(A && A.running)) {
+        live = scoreEnd(w.stones.map(function (s) { return s.out ? { x: -99, y: -99, t: s.own } : { x: s.x, y: s.y, t: s.own }; }));
+        var ord = live.glow.slice().sort(function (a, b) { return S.distTo(HOUSE, w.stones[a]) - S.distTo(HOUSE, w.stones[b]); });
+        ord.forEach(function (i, k) { rank[i] = k + 1; });
+      }
       w.stones.forEach(function (s, i) {
         if (s.out) return;
-        html += '<g transform="translate(' + s.x.toFixed(2) + ' ' + s.y.toFixed(2) + ')">' + teamStone(s.own, glow.indexOf(i) >= 0) + '</g>';
+        var badge = rank[i] ? '<g transform="translate(3.4 -3.4)"><circle r="2.3" fill="#ffd23f" stroke="#ffffff" stroke-width="0.6"/><text y="0.95" text-anchor="middle" font-size="2.8" font-weight="900" fill="#3a2a00">' + rank[i] + '</text></g>' : '';
+        html += '<g transform="translate(' + s.x.toFixed(2) + ' ' + s.y.toFixed(2) + ')">' + teamStone(s.own, glow.indexOf(i) >= 0) + badge + '</g>';
       });
+      if (el.live) {
+        if (live) {
+          el.live.hidden = false;
+          el.live.className = 'ct-live' + (live.win ? ' is-' + live.win : '');
+          el.live.textContent = live.win ? '지금은 ' + TEAM[live.win].name + ' ' + live.pts + '점' : '아직 과녁 안에 돌이 없어요';
+        } else el.live.hidden = true;
+      }
       /* 던질 돌(아직 안 던졌을 때) */
       var waiting = G && G.status === 'play' && !A && !(TH && TH.id === idOf(G));
       if (waiting) html += '<g transform="translate(' + (canAct() ? K.sx : (POS && POS.id === idOf(G) ? POS.sx : S.START_X)) + ' ' + S.START_Y + ')">' + teamStone(G.team, false) + '</g>';
