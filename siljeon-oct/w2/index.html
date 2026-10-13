@@ -1,0 +1,144 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>실전! 문해력 - 신문 읽기 - 노벨상</title>
+  <link rel="stylesheet" href="worksheet.css">
+  <link rel="stylesheet" href="worksheet-overrides.css">
+  <link rel="stylesheet" href="listen.css">
+  <meta name="robots" content="noindex">
+</head>
+<body>
+  <nav class="toolbar" aria-label="활동지 도구">
+    <div class="toolbar__brand"><img src="oncuvate-brand-logo.png" alt="Oncuvate"><strong>실전! 문해력</strong></div>
+    <div class="toolbar__pages">
+      <a href="#page-1">1 기사·어휘</a><a href="#page-2">2 정확히 읽기</a><a href="#page-3">3 기사 이해</a><a href="#page-4">4 핵심 낱말</a>
+    </div>
+    <div class="toolbar__actions">
+      <button type="button" id="printBlank">빈 활동지 인쇄</button>
+      <button type="button" id="printFilled">내 답 포함 인쇄</button>
+      <a class="primary" href="output/pdf/siljeon-literacy-nobel-reading.pdf">PDF</a>
+      <button type="button" id="resetAll">다시 시작</button>
+    </div>
+  </nav>
+
+  <main class="workbook">
+    <section class="sheet" id="page-1" data-page="1">
+      <header class="sheet-head">
+        <div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">NIE 신문 읽기 02</span></div>
+        <div class="student-line">이름 <input aria-label="이름" data-save="student-name"> 날짜 <input aria-label="날짜" data-save="student-date"></div>
+      </header>
+      <div class="title-block title-block--article"><h2 data-seg="0">노벨상에는 왜 수학상이 없을까?</h2></div>
+      <section class="listen-box" aria-label="본문 듣기">
+        <div>
+          <ol class="listen-steps">
+            <li><b><span class="print-only">QR 코드를 찍어 본문을 들어요.</span><span class="screen-only">▶ 본문 듣기를 눌러 본문을 들어요.</span></b></li>
+            <li><span>들으면서 뜻이 이어지는 말 사이에 <b>/</b>를 표시해요.</span></li>
+            <li><span>표시한 곳에서 잠깐 쉬며 <b>스스로 다시 읽어요.</b></span></li>
+          </ol>
+          <p class="listen-eg">예: 매년 10월이면<i>/</i>세계적으로 유명한<i>/</i>노벨상 수상자들이 발표됩니다.</p>
+          <div class="listen-player" role="group" aria-label="본문 음성">
+            <button type="button" id="listenPlay">▶ 본문 듣기</button><button type="button" id="listenRestart">처음부터</button>
+            <div class="listen-track" id="listenTrack"><span id="listenBar"></span></div><span id="listenTime">0:00</span>
+          </div>
+          <audio id="listenAudio" src="audio/article.mp3" preload="metadata"></audio>
+        </div>
+        <figure class="listen-qr"><svg role="img" aria-label="본문 듣기 QR" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 41 41" shape-rendering="crispEdges"><path class="qrline" stroke="#10213b" d="M2 2.5h7m1 0h2m1 0h1m3 0h1m1 0h1m1 0h3m3 0h4m1 0h7m-37 1h1m5 0h1m3 0h1m1 0h2m1 0h3m1 0h1m3 0h3m2 0h1m1 0h1m5 0h1m-37 1h1m1 0h3m1 0h1m3 0h2m2 0h1m2 0h2m2 0h1m2 0h1m2 0h1m2 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h4m2 0h3m1 0h1m6 0h1m4 0h1m1 0h3m1 0h1m-37 1h1m1 0h3m1 0h1m1 0h3m1 0h1m2 0h4m3 0h2m3 0h1m2 0h1m1 0h3m1 0h1m-37 1h1m5 0h1m1 0h1m1 0h2m1 0h3m1 0h1m1 0h1m8 0h1m1 0h1m5 0h1m-37 1h7m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h7m-29 1h2m2 0h2m2 0h1m2 0h3m2 0h1m1 0h1m1 0h1m-29 1h1m3 0h1m1 0h4m1 0h1m3 0h2m3 0h1m3 0h1m4 0h5m2 0h1m-37 1h1m3 0h1m3 0h3m6 0h3m2 0h1m1 0h1m1 0h2m4 0h1m2 0h1m-35 1h7m1 0h1m3 0h3m2 0h2m1 0h1m1 0h1m3 0h6m-31 1h1m2 0h1m1 0h2m1 0h8m1 0h5m5 0h1m4 0h2m-36 1h3m1 0h1m1 0h2m1 0h1m2 0h1m1 0h1m2 0h1m2 0h3m1 0h1m1 0h6m1 0h4m-34 1h1m1 0h1m1 0h1m2 0h2m3 0h1m2 0h1m1 0h2m1 0h1m1 0h3m4 0h2m1 0h1m-36 1h2m2 0h1m1 0h1m3 0h2m3 0h1m1 0h1m2 0h1m2 0h1m1 0h1m1 0h1m1 0h6m-35 1h1m1 0h1m1 0h2m1 0h2m1 0h2m1 0h1m1 0h1m1 0h4m1 0h1m1 0h1m1 0h1m4 0h2m1 0h1m-35 1h2m3 0h5m1 0h4m3 0h1m3 0h3m4 0h2m2 0h4m-35 1h3m3 0h1m4 0h2m1 0h1m2 0h3m2 0h1m2 0h2m3 0h1m2 0h1m-36 1h1m1 0h1m2 0h2m4 0h1m1 0h1m2 0h1m3 0h5m1 0h2m1 0h4m-31 1h1m4 0h4m1 0h1m4 0h2m2 0h2m1 0h1m1 0h1m4 0h2m1 0h2m-36 1h1m2 0h1m1 0h6m1 0h4m1 0h1m1 0h6m2 0h2m1 0h2m2 0h1m-32 1h1m1 0h1m1 0h1m1 0h1m5 0h3m4 0h6m1 0h1m1 0h2m-30 1h8m1 0h2m1 0h2m1 0h1m1 0h4m2 0h2m2 0h5m-35 1h1m1 0h1m5 0h8m5 0h1m1 0h1m3 0h1m1 0h1m1 0h2m1 0h2m-35 1h1m2 0h1m1 0h1m1 0h1m1 0h1m2 0h1m2 0h1m3 0h1m3 0h1m1 0h1m2 0h3m1 0h3m-36 1h1m1 0h2m3 0h1m2 0h3m1 0h1m3 0h2m2 0h7m2 0h4m-33 1h1m1 0h3m5 0h1m2 0h1m1 0h3m1 0h1m1 0h1m1 0h1m1 0h1m1 0h1m1 0h2m-31 1h4m2 0h2m1 0h11m5 0h1m2 0h1m3 0h1m-35 1h2m2 0h1m1 0h3m1 0h3m3 0h2m2 0h3m5 0h5m1 0h1m1 0h1m-29 1h1m1 0h1m3 0h3m4 0h1m1 0h1m2 0h3m3 0h1m-33 1h7m1 0h1m3 0h4m1 0h1m5 0h4m1 0h1m1 0h1m1 0h1m-33 1h1m5 0h1m2 0h2m1 0h1m2 0h6m1 0h1m1 0h1m1 0h3m3 0h3m-35 1h1m1 0h3m1 0h1m1 0h1m2 0h2m5 0h1m3 0h2m4 0h8m-36 1h1m1 0h3m1 0h1m4 0h2m3 0h1m2 0h2m2 0h2m2 0h1m2 0h2m1 0h2m1 0h1m-37 1h1m1 0h3m1 0h1m2 0h2m1 0h1m3 0h1m1 0h1m1 0h1m1 0h6m2 0h1m2 0h1m-34 1h1m5 0h1m2 0h1m2 0h3m2 0h1m3 0h2m1 0h1m1 0h2m1 0h2m1 0h1m1 0h2m-36 1h7m1 0h3m1 0h1m2 0h1m1 0h1m1 0h3m2 0h1m2 0h1m3 0h1m1 0h4"/></svg>
+<figcaption>본문 듣기</figcaption></figure>
+      </section>
+      <article class="news-article news-article--single news-article--nobel">
+        <h3 data-seg="1">수학자를 미워해서 상을 만들지 않았다는 소문, 사실일까?</h3>
+        <p><span data-seg="2">매년 10월이면 세계적으로 유명한 노벨상 <b>수상자</b>들이 발표됩니다.</span> <span data-seg="3">물리학, 화학, 의학, 문학, 평화, 경제학까지 모두 여섯 <b>분야</b>입니다.</span> <span data-seg="4">그런데 이상한 점이 있습니다.</span> <span data-seg="5">과학에서 꼭 필요한 수학은 빠져 있다는 것입니다.</span> <span data-seg="6">수학자들은 왜 노벨상을 받을 수 없을까요?</span></p>
+        <p><span data-seg="7">이 질문에는 아주 오래된 <b>소문</b>이 따라다닙니다.</span> <span data-seg="8">노벨상을 만든 알프레드 노벨의 아내가 다른 수학자를 사랑하게 되자, 화가 난 노벨이 수학상을 만들지 않았다는 이야기입니다.</span> <span data-seg="9">하지만 이 소문에는 큰 문제가 있습니다.</span> <span data-seg="10">노벨은 평생 결혼한 적이 없기 때문입니다.</span> <span data-seg="11">사실처럼 퍼진 이야기가 실제로는 <b>근거</b> 없는 소문이었던 것입니다.</span></p>
+        <p><span data-seg="12">그렇다면 진짜 이유는 무엇일까요?</span> <span data-seg="13">노벨은 1895년 <b>유언장</b>에서 물리학, 화학, 의학, 문학, 평화의 다섯 분야에 상을 주도록 했습니다.</span> <span data-seg="14">하지만 수학을 <b>제외</b>한 이유는 따로 설명하지 않았습니다.</span> <span data-seg="15">노벨이 <b>발명</b>과 실생활에 도움이 되는 연구를 중요하게 생각했기 때문이라는 <b>추측</b>도 있습니다.</span> <span data-seg="16">그러나 정확한 이유는 지금까지도 밝혀지지 않았습니다.</span></p>
+        <p><span data-seg="17">수학자들에게도 특별한 상이 있습니다.</span> <span data-seg="18">바로 필즈상과 아벨상입니다.</span> <span data-seg="19">필즈상은 4년마다 뛰어난 <b>업적</b>을 이룬 젊은 수학자들에게 주어집니다.</span> <span data-seg="20">아벨상은 노르웨이에서 매년 수학 발전에 크게 <b>기여</b>한 사람에게 주는 상입니다.</span> <span data-seg="21">두 상 모두 수학계에서 매우 높은 평가를 받습니다.</span></p>
+        <p><span data-seg="22">우리가 사용하는 휴대전화, 인터넷 보안 기술, 인공지능에도 수학이 <b>활용</b>됩니다.</span> <span data-seg="23">노벨상에 수학 분야가 없다고 해서 수학이 중요하지 않은 것은 아닙니다.</span> <span data-seg="24">오히려 수학은 눈에 잘 보이지 않는 곳에서도 세상을 움직이는 중요한 <b>역할</b>을 하고 있습니다.</span></p>
+        <p class="source">출처: 온큐베이트 NIE 글(2026. 10.)</p>
+      </article>
+      <section class="vocab-strip">
+        <div class="section-kicker"><span>🔎</span><b>낱말 돋보기</b><em>뜻과 한자를 살펴보세요.</em></div>
+        <div class="vocab-grid">
+          <div class="vocab-card"><h3>유언장 <small>遺言狀</small></h3><p>죽기 전에 남기고 싶은 말을 적은 글</p><label>같은 <b>言(말씀 언)</b>이 든 말 <input data-save="vocab-eon" aria-label="언이 든 말"></label></div>
+          <div class="vocab-card"><h3>추측 <small>推測</small></h3><p>미루어 짐작함</p><label>같은 <b>測(헤아릴 측)</b>이 든 말 <input data-save="vocab-cheuk" aria-label="측이 든 말"></label></div>
+          <div class="vocab-card"><h3>업적 <small>業績</small></h3><p>애써서 이루어 낸 훌륭한 결과</p><label>같은 <b>業(일 업)</b>이 든 말 <input data-save="vocab-eop" aria-label="업이 든 말"></label></div>
+          <div class="vocab-card"><h3>기여 <small>寄與</small></h3><p>도움이 되도록 이바지함</p><label>같은 <b>與(줄 여)</b>가 든 말 <input data-save="vocab-yeo" aria-label="여가 든 말"></label></div>
+        </div>
+      </section>
+      <footer><span>소문과 사실을 가르는 문장에 표시했나요?</span><b>1 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-2" data-page="2">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">정확히 읽기</span></div><div class="student-line">이름 <input data-save="student-name-2" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 1</span><h2>본문에 나온 말로 빈칸을 채우세요.</h2></div>
+      <div class="word-bank"><b>보기</b><span>소문</span><span>근거</span><span>유언장</span><span>제외</span><span>추측</span><span>기여</span></div>
+      <ol class="fill-list nobel-fill">
+        <li>노벨상에 수학상이 없는 까닭을 두고 아주 오래된 <input data-save="fill-1" data-answer="소문" aria-label="첫 번째 빈칸">이 따라다닙니다.</li>
+        <li>노벨은 평생 결혼한 적이 없으므로, 그 이야기는 <input data-save="fill-2" data-answer="근거" aria-label="두 번째 빈칸"> 없는 소문이었습니다.</li>
+        <li>노벨은 1895년 <input data-save="fill-3" data-answer="유언장" aria-label="세 번째 빈칸">에서 다섯 분야에 상을 주도록 했습니다.</li>
+        <li>노벨은 수학을 <input data-save="fill-4a" data-answer="제외" aria-label="네 번째 빈칸">한 이유를 따로 설명하지 않았고, 실생활에 도움이 되는 연구를 중요하게 생각했기 때문이라는 <input data-save="fill-4b" data-answer="추측" aria-label="다섯 번째 빈칸">도 있습니다.</li>
+        <li>아벨상은 수학 발전에 크게 <input data-save="fill-5" data-answer="기여" aria-label="여섯 번째 빈칸">한 사람에게 주는 상입니다.</li>
+      </ol>
+      <button class="check-btn" type="button" data-check-group="fill-list">확인하기</button>
+
+      <div class="page-title second"><span>활동 2</span><h2>본문과 다른 부분을 찾아 바르게 고쳐 쓰세요.</h2></div>
+      <div class="correction-list">
+        <div><p><b>1</b> 노벨상은 물리학, 화학, 의학, 문학, 평화, 경제학까지 모두 <u>다섯 분야</u>입니다.</p><label>바르게 고치기 <input data-save="correct-1" data-answer="여섯 분야" aria-label="첫 번째 고쳐 쓰기"></label></div>
+        <div><p><b>2</b> 노벨은 <u>1985년</u> 유언장에서 다섯 분야에 상을 주도록 했습니다.</p><label>바르게 고치기 <input data-save="correct-2" data-answer="1895년" aria-label="두 번째 고쳐 쓰기"></label></div>
+        <div><p><b>3</b> 필즈상은 <u>매년</u> 뛰어난 업적을 이룬 젊은 수학자들에게 주어집니다.</p><label>바르게 고치기 <input data-save="correct-3" data-answer="4년마다" aria-label="세 번째 고쳐 쓰기"></label></div>
+      </div>
+      <button class="check-btn" type="button" data-check-group="correction-list">확인하기</button>
+      <div class="self-check"><b>읽기 점검</b><label><input type="checkbox" data-save="self-1"> 연도와 분야의 개수를 정확히 읽었어요.</label><label><input type="checkbox" data-save="self-2"> 문장을 끝까지 읽고 본문과 비교했어요.</label></div>
+      <footer><span>숫자 순서와 ‘다섯’·‘여섯’ 같은 말까지 확인했나요?</span><b>2 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-3" data-page="3">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">기사 이해</span></div><div class="student-line">이름 <input data-save="student-name-3" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 3</span><h2>기사의 내용을 생각하며 답하세요.</h2></div>
+      <div class="quiz-grid">
+        <fieldset class="quiz"><legend><b>1</b> 노벨이 수학상을 만들지 않았다는 소문이 근거 없는 까닭은?</legend><label><input type="radio" name="q1" data-save="q1" value="a"> 노벨은 수학을 아주 좋아했기 때문이에요.</label><label><input type="radio" name="q1" data-save="q1" value="b" data-correct="true"> 노벨은 평생 결혼한 적이 없기 때문이에요.</label><label><input type="radio" name="q1" data-save="q1" value="c"> 노벨은 수학자를 만난 적이 없기 때문이에요.</label></fieldset>
+        <fieldset class="quiz"><legend><b>2</b> 노벨이 1895년 유언장에서 상을 주도록 한 분야는 몇 개인가요?</legend><label><input type="radio" name="q2" data-save="q2" value="a" data-correct="true"> 다섯 분야예요.</label><label><input type="radio" name="q2" data-save="q2" value="b"> 여섯 분야예요.</label><label><input type="radio" name="q2" data-save="q2" value="c"> 일곱 분야예요.</label></fieldset>
+        <fieldset class="quiz wide-quiz"><legend><b>3</b> 필즈상에 대한 설명으로 알맞은 것은?</legend><label><input type="radio" name="q3" data-save="q3" value="a"> 노르웨이에서 해마다 주는 상이에요.</label><label><input type="radio" name="q3" data-save="q3" value="b"> 노벨상 여섯 분야 가운데 하나예요.</label><label><input type="radio" name="q3" data-save="q3" value="c" data-correct="true"> 4년마다 뛰어난 젊은 수학자들에게 주는 상이에요.</label></fieldset>
+      </div>
+      <button class="check-btn compact" type="button" data-check-group="quiz-grid">확인하기</button>
+
+      <div class="page-title mini"><span>활동 4</span><h2>맞으면 O, 다르면 X에 표시하세요.</h2></div>
+      <div class="ox-grid">
+        <div><p>노벨상 수상자는 매년 10월에 발표됩니다.</p><label><input type="radio" name="ox1" data-save="ox1" value="O" data-correct="true">O</label><label><input type="radio" name="ox1" data-save="ox1" value="X">X</label></div>
+        <div><p>노벨은 유언장에 수학을 뺀 이유를 자세히 적었습니다.</p><label><input type="radio" name="ox2" data-save="ox2" value="O">O</label><label><input type="radio" name="ox2" data-save="ox2" value="X" data-correct="true">X</label></div>
+        <div><p>인공지능에도 수학이 활용됩니다.</p><label><input type="radio" name="ox3" data-save="ox3" value="O" data-correct="true">O</label><label><input type="radio" name="ox3" data-save="ox3" value="X">X</label></div>
+        <div><p>필즈상은 나이가 많은 수학자에게 주는 상입니다.</p><label><input type="radio" name="ox4" data-save="ox4" value="O">O</label><label><input type="radio" name="ox4" data-save="ox4" value="X" data-correct="true">X</label></div>
+      </div>
+
+      <div class="page-title mini"><span>활동 5</span><h2>설명 번호를 알맞은 칸에 쓰세요.</h2></div>
+      <div class="compare-statements"><span><b>1</b> 4년마다 줌</span><span><b>2</b> 해마다 줌</span><span><b>3</b> 젊은 수학자에게 줌</span><span><b>4</b> 노르웨이에서 줌</span><span><b>5</b> 수학자에게 주는 상</span><span><b>6</b> 수학계에서 높은 평가를 받음</span></div>
+      <div class="compare-boxes"><label>필즈상만<input data-save="compare-a" data-answer="1,3" aria-label="필즈상만"></label><label>둘 다<input data-save="compare-b" data-answer="5,6" aria-label="둘 다"></label><label>아벨상만<input data-save="compare-c" data-answer="2,4" aria-label="아벨상만"></label></div>
+      <div class="short-answer"><label>사실처럼 퍼진 소문을 들으면 어떻게 확인하면 좋을까요? 기사에서 근거를 찾아 한 문장으로 쓰세요.<textarea data-save="open-1" rows="2"></textarea></label></div>
+      <footer><span>답의 근거가 나온 문장을 기사에서 다시 찾아보세요.</span><b>3 / 4</b></footer>
+    </section>
+
+    <section class="sheet" id="page-4" data-page="4">
+      <header class="sheet-head"><div><span class="brand-line">ONCUVATE · 실전! 문해력</span><span class="issue">핵심 낱말</span></div><div class="student-line">이름 <input data-save="student-name-4" aria-label="이름"></div></header>
+      <div class="page-title"><span>활동 6</span><h2>기사의 핵심 낱말 10개를 찾아 표시하세요.</h2></div>
+      <p class="wordsearch-help">첫 글자에서 마지막 글자까지 가로, 세로, 대각선으로 드래그하세요. 맞으면 바로 채점됩니다.</p>
+      <div class="wordsearch-layout">
+        <div id="wordGrid" class="word-grid" aria-label="낱말 찾기 글자판"></div>
+        <div class="word-list" aria-label="찾을 낱말">
+          <h3>찾을 낱말</h3>
+          <label><input type="checkbox" data-save="word-1" data-word="수상자">수상자</label><label><input type="checkbox" data-save="word-2" data-word="분야">분야</label><label><input type="checkbox" data-save="word-3" data-word="소문">소문</label><label><input type="checkbox" data-save="word-4" data-word="근거">근거</label><label><input type="checkbox" data-save="word-5" data-word="유언장">유언장</label><label><input type="checkbox" data-save="word-6" data-word="제외">제외</label><label><input type="checkbox" data-save="word-7" data-word="발명">발명</label><label><input type="checkbox" data-save="word-8" data-word="추측">추측</label><label><input type="checkbox" data-save="word-9" data-word="업적">업적</label><label><input type="checkbox" data-save="word-10" data-word="기여">기여</label>
+          <p id="wordFeedback" class="word-feedback" role="status" aria-live="polite">낱말을 드래그해 찾아보세요. <b>0 / 10</b></p>
+        </div>
+      </div>
+      <section class="finish-writing">
+        <div><span>1</span><label>찾은 낱말 중 이 기사의 제목과 가장 가까운 말은 무엇인가요?<input data-save="finish-1"></label></div>
+        <div><span>2</span><label>수학이 세상에서 하는 역할을 기사에 나온 내용으로 한 문장으로 써 보세요.<textarea data-save="finish-2" rows="3"></textarea></label></div>
+      </section>
+      <div class="reflection"><b>신문 읽기 마무리</b><label><input type="checkbox" data-save="reflect-1"> 제목과 부제를 먼저 읽었어요.</label><label><input type="checkbox" data-save="reflect-2"> 소문과 사실을 가려 읽었어요.</label><label><input type="checkbox" data-save="reflect-3"> 답의 근거를 기사에서 찾았어요.</label></div>
+      <footer><span>기사 한 편을 끝까지 꼼꼼하게 읽었습니다!</span><b>4 / 4</b></footer>
+    </section>
+  </main>
+  <script>window.LISTEN_MARKS=[[0.0, 2.95], [3.55, 7.7], [8.3, 13.15], [13.45, 19.1], [19.4, 22.0], [22.3, 25.55], [25.85, 29.05], [29.35, 32.85], [33.15, 41.9], [42.2, 45.2], [45.5, 48.85], [49.15, 54.4], [54.7, 57.35], [57.65, 65.85], [66.15, 70.0], [70.3, 76.1], [76.4, 81.05], [81.35, 84.1], [84.4, 87.3], [87.6, 92.3], [92.6, 98.45], [98.75, 102.3], [102.6, 107.95], [108.25, 112.75], [113.05, 119.7]];</script>
+  <script src="worksheet.js"></script>
+  <script src="listen.js"></script>
+</body>
+</html>
