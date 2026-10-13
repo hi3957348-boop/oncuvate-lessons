@@ -32,6 +32,7 @@
   var LIFE = 3 * 60 * 60 * 1000;
   var DT = S.DT, TICK = S.TICK_MS, QUICK = 4, AIM_STEP = 3, AIM_MAX = 30, SX_STEP = 3, SX_MIN = 34, SX_MAX = 66;
   var HOUSE = { x: 50, y: S.HOUSE_Y, r: [S.RING[0], S.RING[1], S.RING[2]] };
+  var MAX_ENDS = 3;   // 3판이면 경기 끝
 
   var TEAM = {
     red:  { name: '빨강 팀', fill: '#ff7a7a', stroke: '#d64545', inner: '#ffe0e0', dark: '#c23b3b', soft: '#fff0f0' },
@@ -64,7 +65,7 @@
     quick: '꾹 누르고 있다가 떼요.',
     aimTip: '얼음을 누르면 방향',
     hold: '꾹 누르기',
-    endNo: '{n}판',
+    endNo: '{n} / 3판',
     points: '{team} {n}점!',
     blank: '이번 판은 0 : 0',
     blankLine: '과녁 안에 돌이 없어요.',
@@ -368,6 +369,7 @@
         if (r.win) g.score[r.win] += r.pts;
         g.history.push({ red: r.red, blue: r.blue });
         g.thrower = null;
+        if (g.endNo >= MAX_ENDS) g.over = true;
         return g;
       }
       g.team = g.turn % 2 === 0 ? g.first : other(g.first);
@@ -750,7 +752,7 @@
         store.txn('game', function (g) {
           if (!g) return null;
           g = norm(g);
-          if (g.status !== 'result') return;
+          if (g.status !== 'result' || g.over) return;
           var r = g.result || {};
           if (r.win) g.first = other(r.win);              // 점수를 못 낸 팀이 먼저(0:0이면 그대로)
           g.endNo++; g.turn = 0; g.stones = []; g.thrown = { red: 0, blue: 0 }; g.result = null; g.status = 'play';
@@ -1047,7 +1049,11 @@
       if (g && g.status === 'result' && !(A && A.running)) {
         var r = g.result || {};
         el.result.className = 'ct-result' + (r.win ? ' is-' + r.win : '');
-        el.result.textContent = r.win ? fmt(T.points, { team: TEAM[r.win].name, n: r.pts }) : T.blank;
+        if (g.over) {
+          var fw = g.score.red > g.score.blue ? 'red' : g.score.blue > g.score.red ? 'blue' : '';
+          el.result.className = 'ct-result' + (fw ? ' is-' + fw : '');
+          el.result.textContent = '경기 끝! ' + (fw ? TEAM[fw].name + ' 승리 ' : '비겼어요 ') + g.score.red + ' : ' + g.score.blue;
+        } else el.result.textContent = r.win ? fmt(T.points, { team: TEAM[r.win].name, n: r.pts }) : T.blank;
         el.result.hidden = false;
       } else el.result.hidden = true;
       if (role === 'kid') paintKid(); else paintCoach();
@@ -1072,6 +1078,7 @@
         var r = g.result || {};
         line = r.win ? fmt(T.winLine, { team: TEAM[r.win].name }) : T.blankLine;
         mood = r.win ? 'jelly-cheer' : 'jelly-thinking';
+        if (g.over) { line = '3판이 모두 끝났어요. 모두 수고했어요!'; mood = 'jelly-cheer'; }
       } else if (A && A.running) { line = T.sliding; }
       else if (act) { line = K.phase === 'hold' ? T.holding : T.aimGo; mood = 'jelly-praise'; }
       if (el.bubble.textContent !== line) el.bubble.textContent = line;
@@ -1103,7 +1110,7 @@
       en('split', st !== 'play');
       en('start', st === 'lobby');
       en('skip', st === 'play' && !flying);
-      en('more', st === 'result');
+      en('more', st === 'result' && !(g && g.over));
       en('reset', true);
       var hs = g ? g.history : [];
       el.hist.textContent = hs.length ? T.history + ': ' + hs.map(function (x, i) {
