@@ -30,7 +30,7 @@
   if (!C || !C.sim || !C.draw) throw new Error('shared/curling.js(팀전 사본)를 team.js 보다 먼저 불러 주세요');
   var S = C.sim, D = C.draw, SFX = D.SFX;
   var LIFE = 3 * 60 * 60 * 1000;
-  var DT = S.DT, TICK = S.TICK_MS, QUICK = 4, AIM_STEP = 1.5;
+  var DT = S.DT, TICK = S.TICK_MS, QUICK = 4, AIM_STEP = 3, AIM_MAX = 30, SX_STEP = 3, SX_MIN = 34, SX_MAX = 66;
   var HOUSE = { x: 50, y: S.HOUSE_Y, r: [S.RING[0], S.RING[1], S.RING[2]] };
 
   var TEAM = {
@@ -147,6 +147,12 @@
     '.ct-name:active{transform:translateY(2px);box-shadow:0 2px 0 #cfc3ee}',
     '.ct-name[disabled]{opacity:.35;cursor:default;box-shadow:none;background:#eeeaf7}',
     '.ct-join .cu-btn{touch-action:manipulation}',
+    '.ct-ctrl{display:grid;grid-template-columns:1fr 1fr;gap:6px}',
+    '.ct-ctrl-row{display:flex;align-items:center;gap:5px;padding:4px 6px;border-radius:12px;background:#f3effe}',
+    '.ct-ctrl-row span{flex:1;color:#4b24a5;font-size:12.5px;font-weight:900;white-space:nowrap}',
+    '.ct-cb{display:grid;place-items:center;width:34px;height:30px;padding:0;border:2px solid #d4cdf0;border-radius:10px;background:#fff;cursor:pointer;touch-action:manipulation}',
+    '.ct-cb svg{width:18px;height:18px}',
+    '.ct-cb:disabled{opacity:.4;cursor:default}',
     /* 코치 칸 */
     '.ct-room{display:flex;align-items:baseline;gap:8px;font-weight:900;color:#3b2a9e}',
     '.ct-room b{font-size:13px;color:#6f7789}',
@@ -420,7 +426,8 @@
     /* 상태 */
     var store = null, role = '', room = '', me = '', myName = '';
     var P = {}, G = null, TH = null;
-    var K = { phase: 'idle', aim: 0, power: 0, dir: 1, holdTicks: 0, forId: '' };
+    var POS = null;
+    var K = { phase: 'idle', aim: 0, power: 0, dir: 1, holdTicks: 0, forId: '', sx: S.START_X };
     var A = null, W = null, done = {}, animT = null, holdT = null, aimDrag = false, seenResult = {};
     var el = {};
 
@@ -610,6 +617,7 @@
       if (!namesSub) { namesSub = true; store.on('players', function (v) { P = v || {}; paintAll(); }); }
       store.on('game', function (v) { G = v ? norm(v) : null; sync(); });
       store.on('throw', function (v) { TH = v; sync(); });
+      store.on('pos', function (v) { POS = v; if (!(A && A.running)) paintAll(); });
     }
 
     function enterKid() {
@@ -627,6 +635,10 @@
               '<div class="cu-row"><b>' + esc(TEAM.blue.name) + '</b><span class="cu-pips" data-pips="blue"></span></div>' +
               '<div class="ct-team-line"></div>' +
             '</div>' +
+            '<div class="ct-ctrl">' +
+              '<div class="ct-ctrl-row"><span>출발 자리</span><button type="button" class="ct-cb" data-act="sxL" aria-label="출발 자리 왼쪽">' + D.icon('left', '#5b48d6') + '</button><button type="button" class="ct-cb" data-act="sxR" aria-label="출발 자리 오른쪽">' + D.icon('right', '#5b48d6') + '</button></div>' +
+              '<div class="ct-ctrl-row"><span>던지는 방향</span><button type="button" class="ct-cb" data-act="aL" aria-label="방향 왼쪽">' + D.icon('left', '#5b48d6') + '</button><button type="button" class="ct-cb" data-act="aR" aria-label="방향 오른쪽">' + D.icon('right', '#5b48d6') + '</button></div>' +
+            '</div>' +
             '<div class="cu-actions"><div class="cu-btns"><button type="button" class="cu-btn is-hold is-off" data-act="hold">' + D.icon('stone', '#ffffff') + esc(T.hold) + '</button></div></div>' +
             '<div class="ct-foot"><span>' + esc(T.roomNo) + ' ' + esc(room) + '</span>' + (store.kind === 'local' ? '<span class="ct-local">' + esc(T.localMode) + '</span>' : '') + '</div>' +
           '</aside>' +
@@ -640,6 +652,10 @@
       el.arena.addEventListener('pointermove', onArenaMove);
       el.aimL.addEventListener('click', function () { setAim(K.aim - AIM_STEP); });
       el.aimR.addEventListener('click', function () { setAim(K.aim + AIM_STEP); });
+      root.querySelector('[data-act="aL"]').addEventListener('click', function () { setAim(K.aim - AIM_STEP); });
+      root.querySelector('[data-act="aR"]').addEventListener('click', function () { setAim(K.aim + AIM_STEP); });
+      root.querySelector('[data-act="sxL"]').addEventListener('click', function () { setSx(K.sx - SX_STEP); });
+      root.querySelector('[data-act="sxR"]').addEventListener('click', function () { setSx(K.sx + SX_STEP); });
       subscribe();
       paintAll();
     }
@@ -766,7 +782,7 @@
       if (!A) W = worldFromG();
       if (G && G.status === 'play' && G.thrower === me && !(TH && TH.id === idOf(G))) {
         if (K.forId !== idOf(G)) {
-          K = { phase: 'aim', aim: 0, power: 0, dir: 1, holdTicks: 0, forId: idOf(G) };
+          K = { phase: 'aim', aim: 0, power: 0, dir: 1, holdTicks: 0, forId: idOf(G), sx: S.START_X };
           sfx('up');
         }
       } else if (K.phase === 'aim' || K.phase === 'hold') {
@@ -785,7 +801,7 @@
 
     function startAnim() {
       done[TH.id] = 1;
-      var L = S.launch(TH.power, TH.aim);
+      var L = S.launch(TH.power, TH.aim, TH.sx);
       W = worldFromG();
       W.active = W.stones.length;
       W.stones.push({ x: L.x, y: L.y, vx: L.vx, vy: L.vy, own: G.team, out: false });
@@ -845,10 +861,16 @@
       if (!r.width) return null;
       return { x: (e.clientX - r.left) / r.width * 100, y: (e.clientY - r.top) / r.height * 100 };
     }
-    function aimTo(x, y) { return S.aimTo ? S.aimTo(x, y) : Math.atan2(x - S.START_X, S.START_Y - y) * 180 / Math.PI; }
+    function aimTo(x, y) { return Math.atan2(x - K.sx, S.START_Y - y) * 180 / Math.PI; }
+    function setSx(x) {
+      if (!canAct() || K.phase !== 'aim') return;
+      K.sx = Math.max(SX_MIN, Math.min(SX_MAX, x));
+      try { store.set('pos', { id: idOf(G), sx: K.sx }); } catch (e) {}
+      sfx('pick'); paintAll();
+    }
     function setAim(a) {
       if (!canAct() || K.phase !== 'aim') return;
-      K.aim = Math.round(S.clampAim(a) * 2) / 2;
+      K.aim = Math.round(Math.max(-AIM_MAX, Math.min(AIM_MAX, a)) * 2) / 2;
       render();
     }
     function onArenaDown(e) {
@@ -903,7 +925,7 @@
       }
       var p = Math.round(Math.max(0, Math.min(1, K.power)) * 10000) / 10000, aim = K.aim, id = idOf(G);
       K.phase = 'sent'; K.lastHoldMs = K.holdTicks * TICK;
-      var shot = { id: id, power: p, aim: aim, by: me, at: Date.now() };
+      var shot = { id: id, power: p, aim: aim, sx: K.sx, by: me, at: Date.now() };
       store.txn('throw', function (cur) { if (cur && cur.id === id) return; return shot; }).then(function (res) {
         if (!res.committed) { if (K.phase === 'sent' && K.forId === id) K.phase = 'aim'; sync(); return; }
         TH = shot; sync();
@@ -953,14 +975,15 @@
       });
       /* 던질 돌(아직 안 던졌을 때) */
       var waiting = G && G.status === 'play' && !A && !(TH && TH.id === idOf(G));
-      if (waiting) html += '<g transform="translate(' + S.START_X + ' ' + S.START_Y + ')">' + teamStone(G.team, false) + '</g>';
+      if (waiting) html += '<g transform="translate(' + (canAct() ? K.sx : (POS && POS.id === idOf(G) ? POS.sx : S.START_X)) + ' ' + S.START_Y + ')">' + teamStone(G.team, false) + '</g>';
       el.stones.innerHTML = html;
       /* 방향 점선(내 차례일 때만) */
       var aiming = canAct();
       if (aiming) {
-        var ar = K.aim * Math.PI / 180, L = 26;
+        var ar = K.aim * Math.PI / 180, L = 40;
         el.aim.setAttribute('display', 'inline');
-        el.aim.setAttribute('x2', (S.START_X + Math.sin(ar) * L).toFixed(2));
+        el.aim.setAttribute('x1', K.sx);
+        el.aim.setAttribute('x2', (K.sx + Math.sin(ar) * L).toFixed(2));
         el.aim.setAttribute('y2', (S.START_Y - Math.cos(ar) * L).toFixed(2));
       } else el.aim.setAttribute('display', 'none');
       /* 힘 막대 */
@@ -1041,6 +1064,7 @@
       el.arena.classList.toggle('is-locked', !act);
       var showAim = act && K.phase === 'aim';
       el.aimL.hidden = el.aimR.hidden = !showAim;
+      Array.prototype.forEach.call(root.querySelectorAll('.ct-cb'), function (b) { b.disabled = !showAim; });
       if (showAim) { el.hint.textContent = T.aimTip; el.hint.className = 'cu-hint is-top'; el.hint.hidden = false; }
       else el.hint.hidden = true;
     }

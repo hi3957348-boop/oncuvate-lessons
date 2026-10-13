@@ -200,9 +200,9 @@
     for (var i = 0; i < w.stones.length; i++) if (moving(w.stones[i])) return false;
     return true;
   }
-  function launch(p, aimDeg) {
+  function launch(p, aimDeg, sx) {
     var v = speedFor(p), a = rad(aimDeg);
-    return { x: START_X, y: START_Y, vx: v * Math.sin(a), vy: -v * Math.cos(a) };
+    return { x: sx == null ? START_X : sx, y: START_Y, vx: v * Math.sin(a), vy: -v * Math.cos(a) };
   }
   /* 던져 보기: stones(놓인 돌들) + 내 돌(p, aim, brushTicks: 던진 뒤 몇 틱 솔질) → 멈춘 뒤 돌들 */
   function simulate(stones, p, aimDeg, opt) {
