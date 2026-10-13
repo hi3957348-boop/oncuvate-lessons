@@ -588,7 +588,7 @@ var nav=$('stepNav'),dots=$('stepDots'),studio=$('studio'),sidebar=$('sidebar'),
 var cur=0;
 pages.forEach(function(p,i){
   var b=document.createElement('button');b.type='button';b.className='step-link';
-  b.innerHTML='<span class="step-no">'+(i+1)+'</span><span><b>'+p.dataset.title+'</b><small>'+(p.dataset.sub||'')+'</small></span>';
+  b.innerHTML='<span class="step-no">'+(i+1)+'</span><span><b>'+p.dataset.title+'</b></span>';
   b.onclick=function(){go(i);};nav.appendChild(b);
   var d=document.createElement('button');d.type='button';d.setAttribute('aria-label',(i+1)+'단계');d.onclick=function(){go(i);};dots.appendChild(d);
 });
