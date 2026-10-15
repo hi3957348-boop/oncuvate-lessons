@@ -1,18 +1,299 @@
-.oncuvate-coach-dock{position:fixed;z-index:3000;top:18px;right:18px;width:min(320px,calc(100vw - 28px));font-family:inherit;color:#142746}
-.oncuvate-coach-tab{display:block;margin-left:auto;border:0;border-radius:999px;padding:10px 16px;background:#5128b7;color:#fff;font-weight:800;box-shadow:0 8px 24px rgba(59,35,120,.22);cursor:pointer}
-.oncuvate-coach-panel{margin-top:8px;max-height:calc(100vh - 88px);overflow:auto;border:1px solid #dcd4f5;border-radius:18px;padding:14px;background:rgba(255,253,249,.98);box-shadow:0 18px 48px rgba(41,31,78,.18)}
-.oncuvate-coach-dock.collapsed .oncuvate-coach-panel{display:none}
-.oncuvate-coach-panel header{display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:10px;border-bottom:1px solid #ece7f8}
-.oncuvate-coach-panel header strong{font-size:16px}.oncuvate-coach-status{color:#087f78;font-weight:700}
-.oncuvate-coach-controls{display:grid;grid-template-columns:1fr 1fr 1.2fr;gap:7px;margin:12px 0}
-.oncuvate-coach-controls button{min-height:40px;border:1px solid #d8cff2;border-radius:11px;background:#fff;color:#352365;font-weight:800;cursor:pointer}
-.oncuvate-coach-controls [aria-pressed="true"]{border-color:#5128b7;background:#eee8ff;color:#5128b7}
-.oncuvate-coach-screen{margin:0 0 10px;padding:9px 10px;border-radius:10px;background:#eefbfc;font-size:13px}
-.oncuvate-coach-participants{display:grid;gap:8px;margin:0;padding:0;list-style:none}
-.oncuvate-coach-participants li{display:grid;gap:3px;padding:10px;border:1px solid #e6e0f4;border-radius:12px;background:#fff}
-.oncuvate-coach-participants li>div{display:flex;align-items:center;justify-content:space-between;gap:8px}
-.oncuvate-coach-participants span,.oncuvate-coach-participants small{font-size:12px;color:#68738a}
-.oncuvate-coach-participants em{justify-self:start;border-radius:999px;padding:3px 8px;background:#e8f8f1;color:#087f5b;font-size:11px;font-style:normal;font-weight:800}
-.oncuvate-help-flag{border-radius:999px;padding:3px 8px;background:#fff1dc;color:#a45800;font-size:11px}
-html[data-oncuvate-role="child"][data-coach-page-locked="true"] .actionbar:before{content:"코치와 같은 화면을 보고 있어요";margin-right:auto;color:#5128b7;font-size:12px;font-weight:800}
-@media (max-width:680px){.oncuvate-coach-dock{top:8px;right:8px}.oncuvate-coach-panel{max-height:calc(100vh - 68px)}}
+/* 온큐베이트 코치모드 v2 — 비문학 꼼꼼 읽기판 (coach-sync.css 2.0.0)
+   좌: 학생과 같은 수업 화면 · 우: 강사 콘솔. 콘솔은 수업 화면을 덮지 않는다.
+   Chromium 109 에서 도는 문법만 쓴다(:has·컨테이너 쿼리·중첩 없음). */
+:root {
+  --onq-dock-w: 340px;
+  --onq-r: 11px;
+  --onq-r-sm: 8px;
+  --onq-line: #e7e3ef;
+  --onq-accent: #5932b6;
+  --onq-accent-dark: #4b24a5;
+  --onq-accent-soft: #eee9fb;
+  --onq-ink: #27344e;
+  --onq-muted: #6f7789;
+  --onq-cyan: #4bc9dc;
+  --onq-font: "Pretendard", "Noto Sans KR", system-ui, sans-serif;
+}
+
+/* ══ 좌: 수업화면 · 우: 콘솔 ═══════════════════════════════════
+   도크 전체 폭 = 콘솔 폭 + 손잡이 14px + 오른쪽 여백 8px. 그만큼 수업 무대(#studio)를 줄인다. */
+html[data-oncuvate-role="coach"][data-coach-dock="open"] body {
+  padding-right: calc(var(--onq-dock-w) + 22px) !important;
+  box-sizing: border-box;
+}
+@media (min-width: 900px) {
+  html[data-oncuvate-role="coach"][data-coach-dock="open"] body {
+    place-items: center start !important;
+    padding-left: 8px !important;
+  }
+  html[data-oncuvate-role="coach"][data-coach-dock="open"] #studio.studio {
+    width: min(1200px, calc(100vw - var(--onq-dock-w) - 32px)) !important;
+    max-width: none !important;
+    margin: 0 !important;
+  }
+}
+/* 남는 폭이 900px보다 좁을 때(JS가 data-coach-fit="scale"을 단다) — 학생 화면 배치 그대로 줄여 보인다 */
+html[data-oncuvate-role="coach"][data-coach-dock="open"][data-coach-fit="scale"] #studio.studio {
+  position: fixed !important; left: 8px !important; top: 50% !important;
+  width: var(--onq-fit-w) !important;
+  transform: translateY(-50%) scale(var(--onq-fit));
+  transform-origin: 0 50%;
+}
+/* 접혔을 때는 오른쪽 위 둥근 단추만 남는다 — 수업 화면 머리띠를 가리지 않게 살짝 아래로 */
+html[data-oncuvate-role="coach"][data-coach-dock="closed"] .onq-coach-dock { width: auto; }
+
+/* ── 콘솔 도크 ─────────────────────────────────────────────── */
+.onq-coach-dock {
+  position: fixed; right: 0; top: 0; bottom: 0; z-index: 2147483100;
+  width: calc(var(--onq-dock-w) + 22px);
+  display: flex; align-items: stretch;
+  padding: 8px 8px 8px 0;
+  box-sizing: border-box;
+  font-family: var(--onq-font);
+  color: var(--onq-ink);
+  pointer-events: none;
+}
+.onq-coach-dock *, .onq-coach-dock *::before { box-sizing: border-box; }
+.onq-coach-dock > * { pointer-events: auto; }
+
+.onq-dock-tab {
+  align-self: flex-start; margin-top: 2px;
+  display: grid; place-items: center;
+  width: 40px; height: 40px; padding: 0;
+  border: 1px solid #d9cff5; border-radius: 50%;
+  background: #fff; color: var(--onq-accent); cursor: pointer;
+  box-shadow: 0 8px 22px rgba(37, 20, 78, .16);
+}
+.onq-dock-tab svg { width: 21px; height: 21px; }
+.onq-dock-tab:hover { border-color: #8d70d7; background: #f8f6fd; }
+
+/* 너비 조절 손잡이 */
+.onq-dock-grip {
+  flex: none; width: 14px; align-self: center; height: 92px;
+  display: grid; place-items: center; cursor: col-resize;
+  background: none; border: 0; padding: 0;
+}
+.onq-dock-grip::before {
+  content: ""; width: 5px; height: 76px; border-radius: 999px;
+  background: radial-gradient(circle, rgba(107, 96, 140, .55) 1px, transparent 1.2px) 0 0 / 5px 7px repeat-y, #eceaf3;
+}
+.onq-dock-grip:hover::before { background-color: #d9cff5; }
+
+/* 콘솔 카드 */
+.onq-dock-panel {
+  flex: 1 1 auto; min-width: 0;
+  display: flex; flex-direction: column;
+  border-radius: 20px; overflow: hidden;
+  background: #fff;
+  border: 1px solid var(--onq-line);
+  box-shadow: 0 16px 44px rgba(37, 45, 81, .12);
+}
+.onq-dock-head {
+  flex: none; display: flex; align-items: center; gap: 11px;
+  padding: 12px 14px 11px; border-bottom: 1px solid var(--onq-line);
+}
+.onq-dock-mark {
+  flex: none; width: 40px; height: 40px; border-radius: 12px;
+  display: grid; place-items: center;
+  background: linear-gradient(150deg, #5932b6, #8d70d7); color: #fff;
+}
+.onq-dock-mark svg { width: 21px; height: 21px; }
+.onq-dock-title { flex: 1 1 auto; min-width: 0; }
+.onq-dock-title strong { display: block; font-size: 15px; font-weight: 800; color: #35206f; }
+.onq-dock-title span { display: block; margin-top: 2px; font-size: 11.5px; color: var(--onq-muted); }
+.onq-dock-close {
+  flex: none; width: 30px; height: 30px; border-radius: 50%; cursor: pointer;
+  border: 1px solid var(--onq-line); background: #fff; color: var(--onq-muted);
+  font-size: 15px; line-height: 1; display: grid; place-items: center; padding: 0;
+}
+.onq-dock-close:hover { border-color: #d9cff5; color: var(--onq-accent); }
+
+.onq-dock-body { flex: 1 1 auto; min-height: 0; overflow-y: auto; padding: 12px 14px 16px; }
+.onq-dock-mode {
+  margin: 0 0 10px; padding: 6px 10px; border-radius: var(--onq-r-sm);
+  background: var(--onq-accent-soft); color: var(--onq-accent-dark); font-size: 11.5px; font-weight: 700;
+}
+.onq-dock-mode.live { background: #e9f8fa; color: #10707d; }
+
+/* 누르는 것 — 한 벌 */
+.onq-lock-btn, .onq-follow, .onq-nav-btn {
+  border: 1px solid var(--onq-line); border-radius: var(--onq-r);
+  background: #fff; color: var(--onq-ink);
+  font: 800 12.5px/1.2 var(--onq-font);
+  cursor: pointer; transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.onq-lock-btn:hover, .onq-follow:hover, .onq-nav-btn:hover:not([disabled]) { border-color: #d9cff5; color: var(--onq-accent); }
+.onq-lock-btn:focus-visible, .onq-follow:focus-visible, .onq-nav-btn:focus-visible,
+.onq-dock-close:focus-visible, .onq-learner:focus-visible, .onq-dock-tab:focus-visible {
+  outline: 3px solid rgba(75, 201, 220, .55); outline-offset: 2px;
+}
+.onq-lock-row { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+.onq-lock-btn { display: flex; align-items: center; justify-content: center; gap: 6px; padding: 11px 8px; }
+.onq-lock-btn svg { flex: none; }
+.onq-lock-btn[aria-pressed="true"] { background: var(--onq-accent); border-color: var(--onq-accent); color: #fff; }
+.onq-lock-btn[aria-pressed="true"]:hover { background: var(--onq-accent-dark); border-color: var(--onq-accent-dark); color: #fff; }
+
+.onq-nav-row { display: grid; grid-template-columns: 38px minmax(0, 1fr) 38px; gap: 8px; align-items: center; margin-top: 8px; }
+.onq-nav-btn { height: 38px; padding: 0; display: grid; place-items: center; }
+.onq-nav-btn[disabled] { opacity: .4; cursor: default; }
+.onq-nav-now { min-width: 0; text-align: center; font-size: 12.5px; color: var(--onq-ink);
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.onq-nav-now b { color: var(--onq-accent-dark); font-variant-numeric: tabular-nums; margin-right: 4px; }
+
+.onq-dock-section { margin-top: 16px; }
+.onq-dock-section > h3 {
+  margin: 0 0 9px; font-size: 12.5px; font-weight: 800; color: #35206f;
+  display: flex; align-items: center; gap: 7px;
+}
+.onq-count { color: #8d70d7; font-variant-numeric: tabular-nums; }
+.onq-dot { width: 7px; height: 7px; border-radius: 50%; background: var(--onq-line); }
+.onq-dot.on { background: var(--onq-cyan); box-shadow: 0 0 0 3px rgba(75, 201, 220, .22); }
+.onq-stale { margin-left: auto; font-size: 10.5px; font-weight: 700; color: #b7862f; background: #fdf3e0; padding: 2px 7px; border-radius: 999px; }
+.onq-dock-empty { margin: 0; font-size: 12px; line-height: 1.5; color: #a29db6; }
+.onq-dock-note { margin: 7px 0 0; font-size: 11px; line-height: 1.45; color: var(--onq-muted); }
+
+.onq-dock-learners { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 4px; }
+.onq-learner {
+  position: relative; padding: 7px 12px; border-radius: 999px; cursor: pointer;
+  border: 1px solid var(--onq-line); background: #fff;
+  font: 800 12px/1 var(--onq-font); letter-spacing: .06em; color: var(--onq-muted);
+}
+.onq-learner.online { border-color: var(--onq-cyan); color: var(--onq-ink); }
+.onq-learner.active { background: var(--onq-accent-dark); border-color: var(--onq-accent-dark); color: #fff; }
+.onq-help-dot { position: absolute; top: -3px; right: -3px; width: 10px; height: 10px; border-radius: 50%;
+  background: #f29a2e; border: 2px solid #fff; }
+.onq-follow { display: block; width: 100%; margin-top: 8px; padding: 10px 12px; text-align: center; color: var(--onq-accent-dark); }
+
+/* 진행 */
+.onq-progress-head { display: flex; align-items: baseline; justify-content: space-between; gap: 8px; }
+.onq-progress-head strong { font-size: 14px; color: #35206f; }
+.onq-progress-head span { font-size: 11.5px; font-weight: 700; color: var(--onq-muted); white-space: nowrap; }
+.onq-progress-track { height: 7px; margin: 8px 0 11px; border-radius: 999px; background: var(--onq-accent-soft); overflow: hidden; }
+.onq-progress-track i { display: block; height: 100%; border-radius: 999px; background: linear-gradient(90deg, #4bc9dc, #8d70d7); transition: width .3s ease; }
+.onq-now { margin: -3px 0 10px; padding: 8px 11px; border-radius: var(--onq-r); background: #edf5fb; font-size: 12.5px; line-height: 1.45; }
+.onq-facts { margin: 0; display: grid; gap: 6px; }
+.onq-facts > div { display: grid; grid-template-columns: 76px minmax(0, 1fr); gap: 8px; align-items: baseline; }
+.onq-facts dt { margin: 0; font-size: 11.5px; font-weight: 800; color: var(--onq-muted); }
+.onq-facts dd { margin: 0; font-size: 13px; line-height: 1.45; word-break: break-word; }
+.onq-facts dd b { font-weight: 800; color: var(--onq-accent-dark); }
+.onq-facts dd small { display: inline-block; margin-top: 2px; padding: 1px 7px; border-radius: 999px;
+  font-size: 10.5px; font-weight: 700; color: var(--onq-accent); background: var(--onq-accent-soft); }
+.onq-facts dd small.ok { color: #27866a; background: #eef9f5; }
+.onq-facts dd small.warn { color: #c2575d; background: #fff3f3; }
+
+/* 최근 응답·도움 요청 */
+.onq-events { max-height: 220px; overflow-y: auto; display: grid; gap: 4px; }
+.onq-events > div {
+  display: grid; grid-template-columns: minmax(0, 1fr) auto; column-gap: 8px; align-items: baseline;
+  padding: 7px 10px; border-radius: 9px; background: #f8f6fd; font-size: 11.5px;
+}
+.onq-events > div > svg { display: none; }
+.onq-events > div.help { grid-template-columns: 16px minmax(0, 1fr) auto; background: #fff1dc; }
+.onq-events > div.help > svg { display: block; align-self: center; }
+.onq-events > div.help b { color: #a45800; }
+.onq-events > div.warn { background: #fff3f3; }
+.onq-events > div.warn b { color: #c2575d; }
+.onq-events > div.ok b { color: #27866a; }
+.onq-events b { font-weight: 800; color: var(--onq-accent); min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.onq-events time { color: var(--onq-muted); font-variant-numeric: tabular-nums; white-space: nowrap; }
+.onq-events small { grid-column: 1 / -1; margin-top: 2px; color: var(--onq-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ── 학생 화면: 잠금 안내 · 잠금 표시 ───────────────────────── */
+.onq-coach-lock-note {
+  position: fixed; left: 50%; bottom: 28px; z-index: 2147483000;
+  transform: translateX(-50%);
+  padding: 11px 16px; border: 1px solid #d9cff5; border-radius: 12px;
+  color: #35206f; background: #fffdf7;
+  box-shadow: 0 12px 30px rgba(37, 20, 78, .16);
+  font: 800 14px/1.35 var(--onq-font);
+}
+.onq-coach-lock-note.follow { border-color: var(--onq-cyan); color: #10707d; }
+html[data-oncuvate-role="child"][data-coach-page-locked="true"] .step-link,
+html[data-oncuvate-role="child"][data-coach-page-locked="true"] #backButton,
+html[data-oncuvate-role="child"][data-coach-page-locked="true"] #nextButton,
+html[data-oncuvate-role="child"][data-coach-page-locked="true"] #stepDots button { opacity: .55; cursor: not-allowed; }
+html[data-oncuvate-role="child"][data-coach-activity-locked="true"] .page.active { cursor: not-allowed; }
+
+/* 아동 식별코드 워터마크 — 읽으려면 읽히되 눈에 걸리지 않게. 클릭을 가로채지 않는다. */
+.onq-child-watermark {
+  position: fixed; right: 10px; bottom: 8px; z-index: 2147482000;
+  pointer-events: none; user-select: none;
+  font: 700 11px/1 var(--onq-font); letter-spacing: .18em; color: var(--onq-ink); opacity: .22;
+}
+
+/* 좁은 화면(760px 미만) — 위 수업, 아래 콘솔 */
+@media (max-width: 760px) {
+  html[data-oncuvate-role="coach"][data-coach-dock="open"] body { padding-right: 0 !important; padding-bottom: 58vh !important; }
+  .onq-coach-dock { left: 0; top: auto; bottom: 0; width: auto; height: 58vh; padding: 0 8px 8px; }
+  html[data-oncuvate-role="coach"][data-coach-dock="closed"] .onq-coach-dock { left: auto; height: auto; }
+  .onq-dock-grip { display: none; }
+  .onq-dock-panel { border-radius: 18px 18px 0 0; }
+  .onq-dock-tab { margin: 0 0 10px; }
+}
+
+@media print { .onq-coach-dock, .onq-coach-lock-note { display: none !important; } }
+
+/* 2.1.0 — 학생별 칭찬 보내기 · 관찰 메모 */
+.onq-tools .onq-praise-row{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:6px 0 4px}
+.onq-praise-btn{border:1.5px solid #f2c46d;background:#fff8e2;color:#7a4b00;border-radius:12px;padding:7px 8px;font:inherit;font-size:12.5px;font-weight:700;line-height:1.3;cursor:pointer;text-align:left}
+.onq-praise-btn:hover{background:#ffeeb8}
+.onq-praise-sent{margin-left:auto;font-size:11px;font-weight:700;color:#a45800;background:#fff1cf;border-radius:99px;padding:1px 8px}
+.onq-tool-state{margin:2px 0 0;font-size:11.5px;color:#5d6573}.onq-tool-state.ok{color:#1d7a5b}.onq-tool-state.warn{color:#b4532a}
+.onq-memo-label{display:block;margin:12px 0 4px;font-size:12.5px;font-weight:800;color:#24324a}.onq-memo-label small{font-weight:600;color:#8a8f9b;margin-left:4px}
+.onq-memo{width:100%;box-sizing:border-box;min-height:64px;resize:vertical;border:1.5px solid #dcd4f5;border-radius:12px;padding:8px 10px;font:inherit;font-size:13px;line-height:1.5;background:#fff}
+.onq-memo:focus{outline:none;border-color:#5b2bc1}
+.onq-memo-row{display:flex;align-items:center;gap:8px;margin-top:6px}
+.onq-memo-btn{border:0;border-radius:10px;background:#5b2bc1;color:#fff;font:inherit;font-size:12.5px;font-weight:800;padding:6px 12px;cursor:pointer}
+/* 아이 화면 — 칭찬이 오면 */
+.onq-praise-pop{position:fixed;top:0;right:0;bottom:0;left:0;z-index:250000;display:grid;place-items:center;background:rgba(30,24,60,.18);transition:opacity .45s}
+.onq-praise-pop.out{opacity:0}
+.onq-praise-card{position:relative;display:grid;justify-items:center;gap:4px;padding:22px 30px 20px;border-radius:22px;background:#fffdf3;border:3px solid #ffc21a;box-shadow:0 18px 44px rgba(60,40,0,.25);text-align:center;animation:onqPraiseIn .45s cubic-bezier(.2,1.4,.4,1)}
+.onq-praise-card small{font-size:14px;font-weight:700;color:#8a6a1a}
+.onq-praise-card b{font-size:24px;color:#24324a;letter-spacing:-.01em}
+.onq-praise-burst{position:absolute;left:50%;top:44px;width:0;height:0}
+.onq-praise-burst i{position:absolute;width:9px;height:9px;border-radius:2px;background:#ffc21a;transform:rotate(var(--a)) translateY(0);animation:onqBurst .9s ease-out var(--d) forwards;opacity:0}
+.onq-praise-burst i:nth-child(3n){background:#7b5cf0}.onq-praise-burst i:nth-child(3n+1){background:#47bee6}
+@keyframes onqPraiseIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}
+@keyframes onqBurst{0%{opacity:1;transform:rotate(var(--a)) translateY(0)}100%{opacity:0;transform:rotate(var(--a)) translateY(-90px)}}
+@media (prefers-reduced-motion:reduce){.onq-praise-card,.onq-praise-burst i{animation:none}.onq-praise-burst{display:none}}
+
+/* 2.2.0 — 한눈에 보기(학생 진행 그래프) */
+.onq-overview h3{display:flex;align-items:center;gap:6px}
+.onq-need{margin-left:auto;font-size:11px;font-weight:800;color:#fff;background:#e0632a;border-radius:99px;padding:1px 8px}
+.onq-allgood{margin-left:auto;font-size:11px;font-weight:700;color:#1d7a5b;background:#e3f5ee;border-radius:99px;padding:1px 8px}
+.onq-ov-scale{display:flex;justify-content:space-between;margin:2px 0 2px 58px;margin-right:84px;font-size:10.5px;color:#8a8f9b}
+.onq-ov-rows{display:grid;gap:4px}
+.onq-ov-row{display:grid;grid-template-columns:52px 1fr 78px;align-items:center;gap:6px;width:100%;border:1.5px solid transparent;border-radius:10px;background:#faf9fd;padding:5px 6px;font:inherit;cursor:pointer;text-align:left}
+.onq-ov-row:hover{border-color:#dcd4f5}.onq-ov-row.active{border-color:#5b2bc1;background:#f3effe}
+.onq-ov-name{font-size:12.5px;font-weight:800;color:#24324a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.onq-ov-track{position:relative;height:12px;border-radius:99px;background:#ebe8f3;overflow:visible}
+.onq-ov-track i{position:absolute;top:2px;bottom:2px;width:1px;background:#fff;opacity:.9}
+.onq-ov-track b{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:#8a6fd8;transition:width .4s}
+.onq-ov-coach{position:absolute;top:-4px;bottom:-4px;width:3px;margin-left:-1px;border-radius:2px;background:#24324a}
+.onq-ov-tag{font-size:11px;font-weight:700;color:#5d6573;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.onq-ov-row.help{background:#fff4ea}.onq-ov-row.help b{background:#f08a24}.onq-ov-row.help .onq-ov-tag{color:#c25a00}
+.onq-ov-row.stuck{background:#fff0ee}.onq-ov-row.stuck b{background:#e0503a}.onq-ov-row.stuck .onq-ov-tag{color:#c0392b}
+.onq-ov-row.behind b{background:#e8b33a}.onq-ov-row.behind .onq-ov-tag{color:#9a6a00}
+.onq-ov-row.done b{background:#3fa98f}.onq-ov-row.done .onq-ov-tag{color:#1d7a5b}
+.onq-ov-row.off{opacity:.55}
+.onq-ov-legend{display:flex;flex-wrap:wrap;align-items:center;gap:3px 8px;margin:6px 0 0;font-size:10.5px;color:#8a8f9b}
+.onq-ov-legend .k{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:3px;vertical-align:-1px}
+.onq-ov-legend .k.help{background:#f08a24}.onq-ov-legend .k.stuck{background:#e0503a}.onq-ov-legend .k.behind{background:#e8b33a}.onq-ov-legend .k.coach{background:#24324a;width:3px}
+
+/* 2026-10-11 — 칭찬은 드롭다운 겸 입력칸 한 줄(골라 보내거나 직접 쓰기) */
+.onq-praise-pick{display:flex;gap:6px;margin:6px 0 4px}
+.onq-praise-input{flex:1 1 auto;min-width:0;height:34px;box-sizing:border-box;border:1.5px solid #f2c46d;border-radius:10px;background:#fffdf5;padding:0 8px;font:inherit;font-size:12.5px;color:#4a3300}
+.onq-praise-input:focus{outline:none;border-color:#e0a21a;background:#fff}
+.onq-praise-input::-webkit-calendar-picker-indicator{opacity:1;cursor:pointer}
+.onq-praise-send{flex:none;height:34px;border:0;border-radius:10px;background:#f2a516;color:#fff;font:inherit;font-size:12.5px;font-weight:800;padding:0 12px;cursor:pointer}
+.onq-praise-send:hover{background:#d98f05}
+
+/* 2026-10-11 — 칭찬 목록을 콘솔 안에 직접 그린다(기본 datalist는 배율 화면에서 엉뚱한 자리에 뜸) */
+.onq-praise-pick{position:relative}
+.onq-praise-open{flex:none;width:30px;height:34px;padding:0;border:1.5px solid #f2c46d;border-radius:10px;background:#fffdf5;color:#a45800;font-size:13px;line-height:1;cursor:pointer}
+.onq-praise-open[aria-expanded="true"]{background:#ffeeb8}
+.onq-praise-menu{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:30;margin:0;padding:4px;list-style:none;background:#fff;border:1.5px solid #f2c46d;border-radius:10px;box-shadow:0 10px 24px rgba(60,40,0,.16)}
+.onq-praise-menu[hidden]{display:none}
+.onq-praise-menu li{margin:0;padding:0}
+.onq-praise-menu button{display:block;width:100%;padding:6px 8px;border:0;border-radius:7px;background:none;text-align:left;font:inherit;font-size:12.5px;color:#4a3300;cursor:pointer}
+.onq-praise-menu button:hover,.onq-praise-menu button:focus-visible{background:#fff1cf;outline:none}

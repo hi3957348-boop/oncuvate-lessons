@@ -1,4 +1,4 @@
-/* ══ 온큐베이트 공용 도입 화면 v1 ═══════════════════════════════════════
+/* ══ 온큐베이트 공용 도입 화면 v1.3 ═════════════════════════════════════
  * 모든 수업이 같은 배치·같은 항목 순서·같은 버튼을 쓴다. 바뀌는 것은 그림·제목·목표 문장·활동 이름뿐.
  * 클래스인 하한 987×521에서 스크롤 없이 「수업 시작」이 보이도록 높이를 vh로 맞춘다.
  * 크롬 109에서 도는 문법만 쓴다.
@@ -43,9 +43,46 @@ html[data-oncuvate-role="coach"][data-coach-dock="open"] .oi-wrap{right:calc(var
 .oi-review:hover{background:#FAF8FF;border-color:#9C86F2}
 .oi-live{display:none;margin:0;font-size:clamp(11px,1.9vh,13px);color:#0F7B6C;font-weight:700}
 html[data-oncuvate-mode="coaching"] .oi-live{display:block}
+/* v1.1 자율학습 「오늘은 누구랑 공부해요?」 — 시작 단추 자리에 같은 크기로 바뀌어 들어온다 */
+.oi-btns[hidden]{display:none}
+.oi-ask{display:grid;grid-template-columns:1fr 1fr;gap:12px;max-width:480px}
+.oi-pick{gap:10px;height:clamp(52px,11vh,66px);padding:0 12px;line-height:1.2}
+.oi-pick svg{flex:none}
+.oi-pick span{word-break:keep-all;text-align:left}
+.oi-alone{border:0;color:#fff;background:linear-gradient(135deg,#6A3FE0,#5b2bc1);box-shadow:0 8px 18px rgba(91,43,193,.28)}
+.oi-alone:hover{box-shadow:0 10px 22px rgba(91,43,193,.36)}
+.oi-helper{border:2px solid #C9BDF4;color:#4B33B5;background:#fff}
+.oi-helper:hover{background:#FAF8FF;border-color:#9C86F2}
+.oi-skip{grid-column:1 / -1;justify-self:center;border:0;background:none;color:#7A7490;font:inherit;font-size:clamp(12px,2vh,14px);text-decoration:underline;cursor:pointer;padding:4px 8px}
+.oi-art.empty span svg{width:clamp(64px,14vh,104px);height:auto}
+/* v1.2 「오늘 감정은 어때요?」 — 얼굴 다섯 한 줄 + 「말하고 싶지 않아요」 */
+.oi-emotions{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:8px;max-width:540px}
+.oi-emotion{display:flex;flex-direction:column;align-items:center;justify-content:flex-start;gap:4px;border:2px solid #E6DEFA;background:#fff;border-radius:16px;
+  padding:clamp(6px,1.4vh,10px) 4px;cursor:pointer;font:inherit;font-size:clamp(11px,1.9vh,13px);font-weight:700;color:#3A3350;line-height:1.2;word-break:keep-all;text-align:center;
+  transition:transform .12s,border-color .12s,background .12s}
+.oi-emotion svg{width:clamp(34px,8vh,48px);height:auto}
+.oi-emotion:hover{border-color:#9C86F2;background:#FAF8FF}
+.oi-emotion:active{transform:translateY(1px)}
+.oi-emotion-box .oi-skip{display:block;margin:8px auto 0}
+/* v1.3 마무리 질문 — 작은 카드 하나, 단추 셋 */
+.oi-checkout .oi-card-small{display:block;width:min(640px,100%);height:auto;padding:clamp(18px,4vh,32px) clamp(18px,3vw,36px)}
+.oi-checkout .oi-body{padding:0;gap:clamp(12px,3vh,20px)}
+.oi-needs{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.oi-need{display:flex;flex-direction:column;align-items:center;gap:6px;border:2px solid #E6DEFA;background:#fff;border-radius:16px;padding:clamp(10px,2vh,14px) 6px;
+  cursor:pointer;font:inherit;font-weight:800;font-size:clamp(13px,2.3vh,16px);color:#3A3350;line-height:1.25;word-break:keep-all;text-align:center}
+.oi-need:hover{border-color:#9C86F2;background:#FAF8FF}
+.oi-need:active{transform:translateY(1px)}
 @media (max-width:760px){
   .oi-card{grid-template-columns:1fr;grid-template-rows:auto 1fr;height:100%}
   .oi-frame{max-width:200px}
   .oi-title{font-size:24px}
 }
 @media print{.oi-wrap{display:none}}
+
+/* 옛 도입 화면(#introGate)은 처음부터 숨긴다 — 스크립트가 숨기기 전에 잠깐 비치던 것(2026-10-10 꼼꼼 읽기 실측). 새 도입 화면(.oi-wrap)이 대신한다. */
+#introGate{display:none!important}
+
+/* 가림막(2026-10-10 꼼꼼 읽기 실측) — 새 도입 화면이 뜨기 전 수업 본 화면이 잠깐 비치던 것을 덮는다.
+   도입 화면이 뜨면(data-onq-intro) 걷히고, 안 뜨는 경우(로컬 ?intro=0 등)에도 3초 뒤 저절로 사라진다. */
+html:not([data-onq-intro]) body::before{content:"";position:fixed;inset:0;z-index:2147480999;background:#EDE8DE;animation:onq-cover-off 0s linear 3s forwards}
+@keyframes onq-cover-off{to{visibility:hidden}}
