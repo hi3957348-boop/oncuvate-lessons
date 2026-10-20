@@ -1,0 +1,43 @@
+<!doctype html>
+<html lang="ko" data-lesson-id="curling-team" data-lesson-title="젤리 컬링 팀전" data-lesson-version="1.1.0">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<meta name="robots" content="noindex, noarchive">
+<title>젤리 컬링 팀전</title>
+<style>
+  html, body { height: 100%; margin: 0; }
+  body {
+    background: radial-gradient(circle at 8% 0%, rgba(75,201,220,.07), transparent 28%),
+                linear-gradient(145deg, #f7f8f5, #f1f3f0 62%, #f5f4f1);
+  }
+</style>
+</head>
+<body>
+<div id="game"></div>
+
+<script>/* 파일럿: 수업 「게임 불러오기」 주소의 방·역할을 먼저 넣는다(연결은 pilot-game.js) */(function(){var q=new URLSearchParams(location.search),r=q.get('r')||'';if(/^\d{5}$/.test(r)){window.ONCUVATE={room:r,role:q.get('role')==='coach'?'coach':'child',child:String(q.get('child')||'').replace(/[^A-Za-z0-9_-]/g,'').slice(0,12),names:{}}}})();</script>
+<script type="module" src="pilot-game.js"></script>
+<script src="shared/curling.js"></script>
+<script src="shared/team.js"></script>
+<script>
+/* ───────── 내용 바꾸는 곳 ─────────
+   stonesPerTeam : 한 판(엔드)에 팀마다 던지는 돌 수(모두 이 수의 두 배)
+   ends          : 몇 판이면 경기가 끝나는지
+   barMs         : 힘 막대가 바닥에서 꼭대기까지 오르는 시간(밀리초, 작을수록 빠름)
+   credit        : 화면에 적는 저작권 표시
+   ※ 코치·아이 화면은 온큐베이트가 넣어 주는 값(window.ONCUVATE)으로 정해집니다.
+     실시간 연결이 없으면(혼자 열 때·내 컴퓨터에서 파일로 열 때) 한 기기에서 두 팀이 번갈아 던지는 「한 기기 팀전」이 됩니다.
+*/
+var GAME = {
+  activityId: 'curling-team',
+  stonesPerTeam: 4,
+  ends: 3,
+  barMs: 1400,
+  credit: '자체 제작'
+};
+
+window.curlingTeam = CurlingTeam.mount(document.getElementById('game'), GAME);
+</script>
+</body>
+</html>
