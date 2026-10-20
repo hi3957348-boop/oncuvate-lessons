@@ -1048,7 +1048,8 @@
         for (var i = 0; i < N; i++) html += '<i class="' + tm + (i < used ? ' used' : '') + '"></i>';
         box.innerHTML = html;
       });
-      var mates = t && g ? members(g.players, t).map(function (m) { return m.code; }) : [];
+      var mates = t && g ? members(g.players, t).map(function (m) { return nm(m.code); }) : [];
+      var mk = root.querySelector('.cu-mark'); if (mk && mk.textContent !== nm(CHILD)) mk.textContent = nm(CHILD);
       el.teamLine.textContent = t ? TEAM[t].name + ' · ' + mates.join(', ') : '';
       /* 말풍선 · 단추 */
       var line = T.watch, mood = 'jelly-look', act = canAct();
