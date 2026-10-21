@@ -1,0 +1,2 @@
+/* 이야기 차례 — 「차례대로 놓기」 엔진은 넣은 칸을 가득 채운다(약 920×450 기준, 750×417까지). 칸에 높이를 준다. */
+#app .onq-storyorder { width: 100%; height: min(450px, calc(100vh - 150px)); min-height: 360px; margin: 0 auto; }

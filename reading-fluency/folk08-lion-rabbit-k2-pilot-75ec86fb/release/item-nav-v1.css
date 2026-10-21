@@ -1,0 +1,34 @@
+/* 문항 사이 오가기 · 문장 다시 듣기 · 처음부터 다시 (2026-10-13)
+ * shared.js 의 itemNav()/itemDone() 과 activity-overrides.js 의 g1Bar()/renderG1Done() 이 그리는 것.
+ * 색은 아이 테마(kids-theme-v1)의 하늘색을 그대로 쓴다. */
+
+/* 「‹ 3 / 12 ›」 — 진행 표시 양옆 화살표 */
+#app .item-nav { display: inline-flex; align-items: center; gap: 6px; align-self: flex-start; }
+#app .item-nav .sentence-progress,
+#app .item-nav .compact-progress { align-self: center; }
+#app .item-nav-btn { display: inline-grid; place-items: center; width: 34px; height: 34px; padding: 0;
+  border: 1.5px solid #bfe0f6; border-radius: 999px; background: #fff; color: #2f8fd0; cursor: pointer;
+  box-shadow: 0 2px 0 #e3f1fb; }
+#app .item-nav-btn:not(:disabled):hover { background: #e8f5fd; }
+#app .item-nav-btn:disabled { opacity: .3; cursor: default; box-shadow: none; }
+#app .item-nav-btn svg { display: block; }
+/* 문장 완성 머리줄은 화면 위에 떠 있는 띠라 단추만 눌리게 한다 */
+#app .compact-activity-bar .item-nav { pointer-events: auto; }
+
+/* 나누어 읽기 — 한국어 문장 다시 듣기(자동 재생 뒤에도 다시 들을 수 있게) */
+#app .sentence-listen-row { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 8px 0 10px; }
+#app .sentence-replay { display: inline-flex; align-items: center; gap: 7px; min-height: 42px; padding: 0 16px;
+  border: 1.5px solid #bfe0f6; border-radius: 12px; background: #e8f5fd; color: #2f8fd0;
+  font: 800 15px/1.2 Pretendard, "Noto Sans KR", sans-serif; cursor: pointer; }
+#app .sentence-replay:hover { background: #d9eefc; }
+/* 다개국어 단추가 붙으면 같은 줄에 나란히 — 뜻 풀이 글은 아래 줄로 */
+#app .sentence-listen-row .ml-row { display: contents; }
+
+/* 다 마친 화면 — 수업 화면 하한(987×521)에서도 단추가 보이게 높이를 줄인다 */
+#app .item-done { min-height: 330px; padding: 24px 16px; gap: 18px; align-content: center; }
+#app .item-done .phrase { margin: 0; font-size: 24px; font-weight: 900; color: #2b2f4a; text-align: center; }
+#app .override-game1.is-finished .item-done { min-height: 360px; }
+
+/* 전체 읽기 끝 — 「처음부터 다시」와 「마치기」를 한 줄에 */
+#app .chat-foot .done-actions { flex-wrap: nowrap; width: 100%; gap: 10px; }
+#app .chat-foot .done-actions > button { flex: 1 1 0; width: auto; min-width: 0; margin: 0; }

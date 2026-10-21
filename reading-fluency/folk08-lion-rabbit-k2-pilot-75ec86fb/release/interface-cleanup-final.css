@@ -1,0 +1,243 @@
+/* Final shared layout cleanup: balanced panels and role-based controls. */
+
+.activity-view .compact-activity-bar:empty {
+  display: none !important;
+}
+
+.activity-view .word-scene-layout {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr)) !important;
+  align-items: stretch !important;
+  gap: clamp(12px, 1.6vw, 20px) !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+}
+
+.activity-view .word-scene-layout > .scene-card,
+.activity-view .word-scene-layout > .word-pool-card {
+  box-sizing: border-box !important;
+  width: 100% !important;
+  height: 100% !important;
+  min-width: 0 !important;
+  min-height: 0 !important;
+  margin: 0 !important;
+  border: 1px solid var(--oc-line, #e4e1ee) !important;
+  border-radius: 20px !important;
+  background: #fff !important;
+  overflow: hidden !important;
+}
+
+.activity-view .word-scene-layout > .scene-card {
+  padding: clamp(8px, 1vw, 12px) !important;
+}
+
+.activity-view .word-scene-layout > .word-pool-card {
+  display: flex !important;
+  flex-direction: column !important;
+  justify-content: center !important;
+  padding: clamp(22px, 3vw, 36px) !important;
+  overflow-y: auto !important;
+  overscroll-behavior: contain;
+  scrollbar-gutter: stable;
+}
+
+.activity-view .scene-collage,
+.activity-view .scene-collage-grid {
+  width: 100% !important;
+  height: 100% !important;
+  min-height: 0 !important;
+  overflow: hidden !important;
+}
+
+.activity-view .scene-collage img,
+.activity-view .scene-collage-grid img {
+  background: #fff !important;
+  overflow: hidden !important;
+}
+
+.bottombar,
+.bottom-bar {
+  position: relative !important;
+  z-index: 80 !important;
+  overflow: visible !important;
+  background: transparent !important;
+  box-shadow: none !important;
+}
+
+.bottom-actions {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: flex-end !important;
+  gap: 10px !important;
+  min-width: 0 !important;
+  position: relative !important;
+  z-index: 82 !important;
+}
+
+.bottom-actions > .activity-guide-action,
+.bottom-actions > .annotation-launcher,
+.bottom-actions > [data-action="next"] {
+  position: static !important;
+  inset: auto !important;
+  transform: none !important;
+  min-width: 72px !important;
+  min-height: 44px !important;
+  margin: 0 !important;
+  opacity: 1 !important;
+  visibility: visible !important;
+  pointer-events: auto !important;
+  border-radius: 13px !important;
+  font-weight: 800 !important;
+  line-height: 1 !important;
+  white-space: nowrap !important;
+}
+
+.bottom-actions > .activity-guide-action {
+  color: #285f79 !important;
+  background: #edf8fc !important;
+  border: 1px solid #b8dfea !important;
+  box-shadow: 0 8px 18px rgba(45, 103, 127, 0.09) !important;
+}
+
+.bottom-actions > .annotation-launcher {
+  color: #fff !important;
+  background: #3b8d94 !important;
+  border: 1px solid #337e85 !important;
+  box-shadow: 0 9px 20px rgba(59, 141, 148, 0.20) !important;
+}
+
+.bottom-actions > [data-action="next"] {
+  color: #fff !important;
+  background: linear-gradient(135deg, #5634c7, #805ee0) !important;
+  border: 1px solid transparent !important;
+  box-shadow: 0 10px 22px rgba(86, 52, 199, 0.24) !important;
+}
+
+.bottom-actions > .activity-guide-action:hover,
+.bottom-actions > .activity-guide-action:focus-visible,
+.bottom-actions > .annotation-launcher:hover,
+.bottom-actions > .annotation-launcher:focus-visible {
+  filter: brightness(0.98);
+}
+
+.bottom-actions > button:focus-visible {
+  outline: 3px solid rgba(72, 188, 214, 0.55) !important;
+  outline-offset: 3px !important;
+}
+
+/* Reserve violet for progression. Settings and tools use quieter role colors. */
+.mode-switch {
+  background: #edf5fb !important;
+  border: 1px solid #cfe2ef !important;
+}
+
+.mode-btn.active,
+.mode-btn[aria-pressed="true"] {
+  color: #fff !important;
+  background: #2785c7 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.mode-btn[data-speech-mode="off"].active,
+.mode-btn[data-speech-mode="off"][aria-pressed="true"] {
+  background: #607889 !important;
+}
+
+.ws-sound-switch {
+  background: #f4fafc !important;
+  border-color: #cfe2ef !important;
+}
+
+.ws-sound-switch button.active,
+.ws-sound-switch button[aria-pressed="true"] {
+  color: #fff !important;
+  border-color: #2785c7 !important;
+  background: #2785c7 !important;
+  background-image: none !important;
+  box-shadow: none !important;
+}
+
+.ws-sound-switch button[data-ws-sound="off"].active,
+.ws-sound-switch button[data-ws-sound="off"][aria-pressed="true"] {
+  border-color: #607889 !important;
+  background: #607889 !important;
+}
+
+.annotation-toolbar .tool-btn.active {
+  color: #fff !important;
+  border-color: #337e85 !important;
+  background: #3b8d94 !important;
+  background-image: none !important;
+}
+@media (max-width: 899px) {
+  .activity-view .word-scene-layout {
+    gap: 12px !important;
+  }
+
+  .activity-view .word-scene-layout > .word-pool-card {
+    padding: 18px !important;
+  }
+}
+
+@media (max-width: 620px) {
+  .activity-view .word-scene-layout {
+    grid-template-columns: minmax(0, 1fr) !important;
+    grid-template-rows: minmax(180px, 0.9fr) minmax(220px, 1.1fr) !important;
+  }
+
+  .bottom-actions {
+    gap: 6px !important;
+  }
+
+  .bottom-actions > .activity-guide-action,
+  .bottom-actions > .annotation-launcher,
+  .bottom-actions > [data-action="next"] {
+    min-width: 60px !important;
+    min-height: 42px !important;
+    padding-inline: 11px !important;
+  }
+}
+
+@media print {
+  .activity-guide-action,
+  .annotation-launcher {
+    display: none !important;
+  }
+}
+
+/* Highest-specificity role color: annotation stays teal. */
+#app .studio .bottombar .bottom-actions > .annotation-launcher,
+#app .activity-shell .bottombar .bottom-actions > .annotation-launcher {
+  color: #fff !important;
+  background: #3b8d94 !important;
+  background-image: none !important;
+  border-color: #337e85 !important;
+  box-shadow: 0 9px 20px rgba(59, 141, 148, 0.20) !important;
+}
+
+/* Center the Game2 level-complete card within the activity content only. */
+#app .activity-view:has(> .g2p-level-complete) {
+  display: grid !important;
+  align-items: center !important;
+  align-content: center !important;
+  justify-items: stretch !important;
+  padding-bottom: 12px !important;
+}
+
+#app .activity-view > .g2p-level-complete {
+  min-height: clamp(420px, calc(100dvh - 170px), 500px) !important;
+  place-items: center !important;
+  align-content: center !important;
+  padding-block: clamp(20px, 4vh, 40px) !important;
+  box-sizing: border-box !important;
+}
+
+
+
+/* 표지에는 판서·활동 안내를 두지 않는다 — 읽을 것도 짚을 것도 없는 화면이다.
+   두 버튼은 다른 모듈이 아래 줄(.bottom-actions)로 옮겨 붙이므로 거기서도 함께 내린다. */
+#app .studio[data-step-id="cover"] :is(.annotation-launcher, [data-action="open-modal"], .activity-guide-action, .compact-info, .help-request) {
+  display: none !important;
+}

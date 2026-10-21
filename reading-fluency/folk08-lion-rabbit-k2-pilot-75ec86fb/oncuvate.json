@@ -1,0 +1,35 @@
+{
+  "oncuvate": 2,
+  "id": "folk08-lion-rabbit-k2-fluency",
+  "version": "0.1.0",
+  "updatedAt": "2026-10-04",
+  "files": {
+    "session01.html": {
+      "use": "콘텐츠",
+      "version": "0.1.0",
+      "title": "L2 · 사자와 토끼(줄글) 읽기유창성",
+      "order": 1,
+      "minDurationMin": 40,
+      "level": "L2",
+      "axes": [
+        "accuracy",
+        "automaticity",
+        "vocabulary",
+        "phrasing",
+        "basicComprehension"
+      ],
+      "realtime": {
+        "nav": true,
+        "prog": true
+      },
+      "copyright": {
+        "kind": "inHouse",
+        "title": "사자와 토끼",
+        "author": "온큐베이트",
+        "source": "온큐베이트",
+        "license": "직접 제작 텍스트 · 온큐베이트 수업용 재구성",
+        "modified": false
+      }
+    }
+  }
+}

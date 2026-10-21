@@ -1,0 +1,71 @@
+/* 게임 뒤 읽기 평가 — 활동 위에 올라오는 카드.
+   콘솔이 아니라 아이가 보는 화면이므로, 수업 화면의 말투·색을 그대로 쓴다. */
+
+.onq-readcheck {
+  position: absolute; inset: 0; z-index: 60;
+  display: grid; place-items: center;
+  padding: 18px;
+  background: rgba(37, 45, 81, .28);
+  backdrop-filter: blur(2px);
+}
+
+.onq-rc-card {
+  width: min(560px, 100%);
+  padding: 22px 24px 20px;
+  border-radius: 20px;
+  background: var(--paper, #fffdf7);
+  border: 1px solid var(--line, #e7e3ef);
+  box-shadow: 0 24px 60px rgba(37, 20, 78, .22);
+  text-align: center;
+}
+
+.onq-rc-eyebrow {
+  display: inline-block; padding: 4px 11px; border-radius: 999px;
+  background: var(--violet-100, #eee9fb); color: var(--violet-700, #5932b6);
+  font: 800 11px/1 var(--font, Pretendard, sans-serif); letter-spacing: .08em;
+}
+.onq-rc-card h2 {
+  margin: 10px 0 14px; font-size: 20px; line-height: 1.35;
+  color: var(--violet-900, #35206f);
+}
+
+/* 읽을 것 — 아이가 보고 읽는 자리라 크고 또렷하게 */
+.onq-rc-target {
+  margin: 0 0 16px; padding: 14px 16px; border-radius: 14px;
+  background: #fff; border: 1px solid var(--violet-200, #d9cff5);
+  font-size: 22px; line-height: 1.6; color: var(--ink, #27344e); font-weight: 700;
+  display: flex; flex-wrap: wrap; gap: 8px 14px; justify-content: center;
+}
+.onq-rc-target span {
+  padding: 4px 12px; border-radius: 10px; background: var(--violet-050, #f8f6fd);
+}
+
+.onq-rc-hint { margin: 0 0 14px; font-size: 14px; line-height: 1.5; color: var(--muted, #6f7789); }
+.onq-rc-hint b { color: var(--violet-800, #4b24a5); }
+
+/* 그 자리에서 도움이 되는 말 하나. 점수·별점은 코치 콘솔로 간다(규격 7장). */
+.onq-rc-said {
+  margin: 0 0 14px; padding: 12px 14px; border-radius: 12px;
+  background: var(--success-bg, #eef9f5); color: var(--success, #27866a);
+  font-size: 15px; line-height: 1.55; font-weight: 700;
+}
+
+.onq-rc-row { display: flex; gap: 8px; justify-content: center; }
+.onq-rc-btn {
+  min-height: 46px; padding: 12px 20px; border-radius: 12px; cursor: pointer;
+  border: 1px solid var(--line, #e7e3ef); background: #fff;
+  font: 800 14px/1 var(--font, Pretendard, sans-serif); color: var(--ink, #27344e);
+  transition: background .16s ease, border-color .16s ease, color .16s ease;
+}
+.onq-rc-btn:hover { border-color: var(--violet-200, #d9cff5); color: var(--violet-700, #5932b6); }
+.onq-rc-btn.primary {
+  background: var(--violet-700, #5932b6); border-color: var(--violet-700, #5932b6); color: #fff;
+}
+.onq-rc-btn.primary:hover { background: var(--violet-800, #4b24a5); border-color: var(--violet-800, #4b24a5); }
+.onq-rc-btn:focus-visible { outline: 3px solid rgba(75, 201, 220, .58); outline-offset: 3px; }
+
+@media (max-width: 560px) {
+  .onq-rc-card { padding: 18px 16px 16px; }
+  .onq-rc-target { font-size: 19px; }
+  .onq-rc-card h2 { font-size: 17px; }
+}
