@@ -1,0 +1,72 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, noarchive">
+<title>주관식 답 쓰기 — 파일럿</title>
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.min.css">
+<style>
+:root{--ink:#27344e;--muted:#6a7386;--line:#e6e0d4;--violet:#35206f;--mark:#e3d9fa;--font:Pretendard,"Noto Sans KR","Apple SD Gothic Neo",sans-serif}
+*{box-sizing:border-box}
+html,body{min-height:100%;margin:0}
+body{display:grid;place-items:center;padding:16px;background:radial-gradient(circle at 12% 0%,rgba(75,201,220,.12),transparent 30%),linear-gradient(145deg,#f7f5ff,#f3f4ef 60%,#eef8f8);
+  color:var(--ink);font-family:var(--font);word-break:keep-all}
+.box{width:min(460px,100%);padding:24px 24px 20px;border:1.5px solid #ddd3f3;border-radius:24px;background:#fffdf7;box-shadow:0 18px 44px rgba(37,20,78,.12);text-align:center}
+.box img.jelly{height:84px}
+.badge{display:inline-block;padding:3px 10px;border-radius:999px;color:#fff;background:var(--violet);font-size:12px;font-weight:900}
+h1{margin:8px 0 2px;font-size:30px;font-weight:900;letter-spacing:-.05em;color:var(--violet)}
+h1 span{background:linear-gradient(transparent 62%,var(--mark) 62%,var(--mark) 90%,transparent 90%);padding:0 2px}
+.sub{margin:0 0 16px;color:#566077;font-size:14px;font-weight:750}
+label{display:block;margin-bottom:6px;font-size:14px;font-weight:850;text-align:left}
+input{width:100%;min-height:52px;padding:0 14px;border:2px solid var(--line);border-radius:14px;font:900 24px/1 var(--font);letter-spacing:.3em;text-align:center;color:var(--ink);background:#fff}
+input:focus{outline:none;border-color:#8d70d7;box-shadow:0 0 0 4px rgba(141,112,215,.18)}
+button{display:block;width:100%;min-height:50px;margin-top:10px;border:0;border-radius:14px;color:#fff;background:linear-gradient(135deg,#4b24a5,#8d70d7);font:900 16px/50px var(--font);cursor:pointer}
+.msg{min-height:20px;margin-top:8px;color:#c2575d;font-size:13px;font-weight:800}
+.menu{display:grid;gap:9px;margin-top:4px}
+.menu a{display:grid;grid-template-columns:auto 1fr;gap:12px;align-items:center;padding:12px 14px;border:1.5px solid var(--line);border-radius:16px;background:#fff;color:var(--ink);text-decoration:none;text-align:left}
+.menu a:hover{border-color:#9fd9e3;background:#f5fbfc}
+.menu .no{display:grid;place-items:center;width:42px;height:42px;border-radius:12px;color:#fff;font-size:15px;font-weight:900}
+.menu .n1{background:#4b24a5}.menu .n2{background:#2785c7}.menu .n3{background:#27866a}
+.menu a b{display:block;font-size:16px}
+.menu a small{color:var(--muted);font-size:12.5px;font-weight:700}
+.hidden{display:none}
+.foot{margin-top:14px;color:#9aa0ac;font-size:10.5px}
+</style>
+</head>
+<body>
+<main class="box">
+  <img class="jelly" src="assets/jelly-coach-square.png" alt="">
+  <div><span class="badge">파일럿</span></div>
+  <h1><span>주관식 답 쓰기</span></h1>
+  <p class="sub">묻는 말에 딱 맞게, 세 문장 이상으로</p>
+
+  <form id="gate" autocomplete="off">
+    <label for="code">학생 고유번호</label>
+    <input id="code" inputmode="numeric" maxlength="8" placeholder="····" aria-describedby="msg">
+    <button type="submit">들어가기</button>
+    <div class="msg" id="msg" role="status" aria-live="polite"></div>
+  </form>
+
+  <nav class="menu hidden" id="menu" aria-label="파일럿 자료">
+    <a href="session07.html"><span class="no n1">07</span><div><b>생각과 까닭 ① 익히기</b><small>주말의 강낭콩 · 친구 답에 쪽지 붙이기</small></div></a>
+    <a href="session08.html"><span class="no n2">08</span><div><b>생각과 까닭 ② 연습하기</b><small>교실 자리 바꾸기 · 고칠 곳 하나 고쳐 주기</small></div></a>
+    <a href="session09.html"><span class="no n3">09</span><div><b>생각과 까닭 ③ 다지기</b><small>비 오는 날 쉬는 시간 · 고칠 곳 둘 고쳐 주기</small></div></a>
+  </nav>
+  <p class="foot">© Oncuvate. All rights reserved.</p>
+</main>
+<script>
+(function(){
+  var KEY='oncuvate-short-answer-pilot:ok',CODE='6074';
+  var gate=document.getElementById('gate'),menu=document.getElementById('menu'),code=document.getElementById('code'),msg=document.getElementById('msg');
+  function open(){gate.classList.add('hidden');menu.classList.remove('hidden');}
+  try{if(localStorage.getItem(KEY)==='1')open();}catch(e){}
+  gate.onsubmit=function(e){e.preventDefault();
+    if(code.value.replace(/\D/g,'')!==CODE){msg.textContent='학생 고유번호를 확인해 주세요.';code.focus();code.select();return;}
+    try{localStorage.setItem(KEY,'1');}catch(e){}
+    open();};
+  if(!menu.classList.contains('hidden'))return;code.focus();
+})();
+</script>
+</body>
+</html>
