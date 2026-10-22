@@ -326,16 +326,16 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
 <section class="sheet" id="p5" aria-labelledby="t5">
 <header class="page-top"><div class="mini"><b>주관식 답 쓰기</b> · 09 복습 · 나의 학습 돌아보기</div></header><div class="coach"><div class="say">어떻게 공부했는지<br><b>돌아보는 것</b>도 실력이야!</div><img src="assets/jelly-coach-square.png" alt="젤리코치"></div>
 <div class="title-row"><span class="number">5</span><h2 id="t5">학습 돌아보기</h2></div>
-<p class="intro">예상한 시간과 실제로 걸린 시간을 비교해 보고, 오늘 공부를 돌아봐요. 알맞은 것을 고르기만 해도 돼요.</p>
+<p class="intro">정한 시간과 실제로 걸린 시간을 비교해 보고, 오늘 공부를 돌아봐요. 알맞은 것을 고르기만 해도 돼요.</p>
 <div class="time-screen" id="timeScreen">
   <div class="time-card"><div><span>시작한 시각</span><b id="tStart">-</b></div><div><span>끝낸 시각</span><b id="tEnd">-</b></div><div><span>시작부터 끝까지</span><b id="tTotal">-</b></div>
-    <div><span>예상한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
+    <div><span>정한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
   <p class="time-compare" id="tCompare">4쪽 끝의 「다 했어요」를 누르면 시간이 여기에 정리돼요.</p>
   <p class="time-compare" id="tHelp" hidden></p>
 </div>
 <div class="time-paper">
-  <div class="row"><span>예상한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
-  <div class="row"><span>예상보다 → &nbsp;○ 빨랐어요 &nbsp; ○ 비슷했어요 &nbsp; ○ 오래 걸렸어요</span></div>
+  <div class="row"><span>정한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
+  <div class="row"><span>정한 시간보다 → &nbsp;○ 빨랐어요 &nbsp; ○ 비슷했어요 &nbsp; ○ 오래 걸렸어요</span></div>
 </div>
 <div class="ref"><h3><i>1</i>공부가 얼마나 술술 되었나요?</h3><div class="faces" id="faces"></div></div>
 <div class="ref"><h3><i>2</i>왜 그랬다고 생각하나요?</h3><div class="chips" id="chipsWhy"></div>
@@ -352,7 +352,7 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
   <div class="ef-card">
     <div class="ef-card-head"><div><h2 id="efTitle">오늘의 복습 계획</h2><p class="lead">네 가지 활동을 하고, 마지막에 돌아보기를 해요.</p></div><img src="assets/jelly-coach-square.png" alt=""></div>
     <ol class="ef-list" id="efList"></ol>
-    <p class="ef-q">다 하는 데 얼마나 걸릴 것 같아요?</p>
+    <p class="ef-q">오늘은 몇 분 동안 집중해 볼까?</p>
     <div class="ef-est" id="efEst"></div>
     <p class="ef-note">3분 넘게 멈추거나 다른 화면으로 가면, 그 시간은 「멈춘 시간」으로 따로 적어 둘게요.</p>
     <button class="ef-go" id="efGo" type="button" disabled>시작하기</button>
@@ -569,6 +569,11 @@ window.OCWS.findMissing=()=>{const out=[];
   if(b.length)out.push({page:'3쪽',text:'뼈대 '+b.map(n=>n+'번 칸').join(', '),el:boneTa[b[0]-1]});
   if(!ans.value.trim())out.push({page:'4쪽',text:'답 쓰기',el:ans});
   return out;};
+window.OCWS.pageNums=()=>{const need=Math.min(P.need||2,boneTa.length);
+  return[{name:'문제 뜯어보기',done:SPEC.qa.filter((x,i)=>{const a=A['qa'+i]||{};return a.ask&&a.cond;}).length,total:SPEC.qa.length},
+    {name:F.title,done:F.items.filter((x,i)=>((A['f'+i]||{}).picked||[]).length).length,total:F.items.length},
+    {name:'뼈대 세우기',done:boneTa.slice(0,need).filter(t=>t.value.trim()).length,total:need},
+    {name:'답 쓰고 점검하기',done:ans.value.trim()?1:0,total:1}];};
 window.OCWS.pageStats=()=>{
   const qOk=SPEC.qa.filter((x,i)=>{const a=A['qa'+i]||{};return a.ask&&a.cond;}).length,fOk=F.items.filter((x,i)=>(A['f'+i]||{}).ok).length;
   const bFill=boneTa.filter(t=>t.value.trim()).length,t=ans.value,n=finished(t),cOk=checks.filter(c=>c.test(t)).length;
@@ -584,7 +589,7 @@ const FACE=(m,l)=>`<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" c
 const FACES=[['M10 23c3-4 9-4 12 0','많이 막혔어요'],['M11 22c3-2 7-2 10 0','조금 막혔어요'],['M11 21h10','보통이에요'],['M11 20c3 2 7 2 10 0','잘 됐어요'],['M9 19c3 5 11 5 14 0','술술 됐어요']];
 $('faces').innerHTML=FACES.map((f,i)=>`<label class="face"><input type="radio" name="efSmooth" value="${i+1}" data-track="input">${FACE(f[0],f[1])}</label>`).join('');
 const chip=(n,v)=>`<label class="chip"><input type="checkbox" name="${n}" value="${v}" data-track="input">${v}</label>`;
-$('chipsWhy').innerHTML=['집중이 잘 됐어요','할 일을 잘 찾았어요','문제가 쉬웠어요','어려운 문제가 있었어요','중간에 딴생각이 났어요','주변이 시끄러웠어요','예상보다 시간이 부족했어요'].map(v=>chip('efWhy',v)).join('');
+$('chipsWhy').innerHTML=['집중이 잘 됐어요','할 일을 잘 찾았어요','문제가 쉬웠어요','어려운 문제가 있었어요','중간에 딴생각이 났어요','주변이 시끄러웠어요','생각보다 시간이 부족했어요'].map(v=>chip('efWhy',v)).join('');
 $('chipsSkill').innerHTML=SPEC.skills.map(v=>chip('efSkill',v)).join('');
 $('chipsBetter').innerHTML=['시작 전에 시간 계획 세우기','멈추면 바로 다시 돌아오기','문제를 끝까지 읽고 쓰기','다 쓰고 소리 내어 읽기','어려우면 도움 청하기'].map(v=>chip('efBetter',v)).join('');
 $('efList').innerHTML=SPEC.plan4.map((p,i)=>`<li><i>${i+1}</i>${p[0]}<small>${p[1]}</small></li>`).join('');
@@ -615,7 +620,7 @@ function fill(){const total=st.end-st.start;
   $('tStart').textContent=hm(st.start);$('tEnd').textContent=hm(st.end);$('tTotal').textContent=mins(total)+'분';
   $('tEst').textContent=st.est?st.est+'분':'-';$('tActive').textContent=mins(st.active)+'분';$('tAway').textContent=mins(st.away)+'분'+(st.awayCount?` (${st.awayCount}번)`:'');
   const real=mins(st.active);let cmp='';
-  if(st.est){const d=real-st.est;cmp=Math.abs(d)<=2?`예상(${st.est}분)과 실제 학습 시간(${real}분)이 거의 같아요. 계획을 잘 세웠어요!`:d<0?`예상(${st.est}분)보다 ${-d}분 빨리 끝냈어요.`:`예상(${st.est}분)보다 ${d}분 더 걸렸어요. 어디서 시간이 더 들었을까요?`;}
+  if(st.est){const d=real-st.est;cmp=Math.abs(d)<=2?`정한 시간(${st.est}분)과 실제 학습 시간(${real}분)이 거의 같아요. 계획을 잘 세웠어요!`:d<0?`정한 시간(${st.est}분)보다 ${-d}분 빨리 끝냈어요.`:`정한 시간(${st.est}분)보다 ${d}분 더 걸렸어요. 어디서 시간이 더 들었을까요?`;}
   if(st.away>=60000)cmp+=` 중간에 ${mins(st.away)}분 멈췄어요.`;
   $('tCompare').textContent=cmp||'시간을 정리했어요.';
   const nh=(window.OCWS.A.hints||[]).length;$('tHelp').hidden=false;$('tHelp').textContent=nh?`오늘 쓴 도움: ${nh}번`:'오늘은 도움 없이 해냈어요!';
@@ -670,8 +675,8 @@ async function saveResultImage(){
   const mm=ms=>Math.round(ms/60000)+'분';
   head('학습 시간');
   row('시작 ~ 끝',st.start&&st.end?`${hm(st.start)} ~ ${hm(st.end)}`:st.start?`${hm(st.start)} ~ (진행 중)`:'-');
-  row('예상한 시간',st.est?st.est+'분':'-');row('실제 학습 시간',st.start?mm(st.active):'-','#35206f');row('멈춘 시간',st.start?mm(st.away)+(st.awayCount?` (${st.awayCount}번)`:''):'-','#b06a1f');
-  if(st.est&&st.start){const d=Math.round(st.active/60000)-st.est;row('예상과 비교',Math.abs(d)<=2?'예상과 거의 같아요':d<0?`예상보다 ${-d}분 빨랐어요`:`예상보다 ${d}분 더 걸렸어요`);}
+  row('정한 시간',st.est?st.est+'분':'-');row('실제 학습 시간',st.start?mm(st.active):'-','#35206f');row('멈춘 시간',st.start?mm(st.away)+(st.awayCount?` (${st.awayCount}번)`:''):'-','#b06a1f');
+  if(st.est&&st.start){const d=Math.round(st.active/60000)-st.est;row('정한 시간과 비교',Math.abs(d)<=2?'정한 시간과 거의 같아요':d<0?`정한 시간보다 ${-d}분 빨랐어요`:`정한 시간보다 ${d}분 더 걸렸어요`);}
   y+=10;head('활동');window.OCWS.pageStats().forEach(([k,v])=>row(k,v));
   y+=10;head('돌아보기');
   row('얼마나 술술?',r.smooth?FACES[r.smooth-1][1]:'-');row('왜 그랬을까?',[...r.why,r.whyText].filter(Boolean).join(' · ')||'-');
@@ -681,10 +686,145 @@ async function saveResultImage(){
   const a=document.createElement('a');const d=new Date();a.download=`주관식답쓰기_${SPEC.no}_결과표_${d.getFullYear()}${String(d.getMonth()+1).padStart(2,'0')}${String(d.getDate()).padStart(2,'0')}.png`;
   a.href=out.toDataURL('image/png');document.body.appendChild(a);a.click();a.remove();emit('ef-result-image',{});$('efMsg').textContent='결과표 그림을 저장했어요.';}
 $('efImg').onclick=()=>{st.ref=collect();save();saveResultImage();};
+/* 정한 시간 끝·나머지 약속(ef-later)에 넘기는 값 */
+window.EF_BRIDGE={key:KEY,title:`주관식 답 쓰기 ${SPEC.no} 복습`,emit,now:()=>{const n=Date.now(),gap=document.hidden?0:n-last;return{running:!!running(),done:!!st.end,est:st.est,start:st.start,active:st.active+(running()&&gap<IDLE?gap:0)};},pages:()=>window.OCWS.pageNums()};
 restoreRef();
 document.querySelectorAll('.ref-write textarea').forEach(t=>{if(t.value.trim()){t.parentElement.hidden=false;t.parentElement.previousElementSibling.setAttribute('aria-expanded','true');}});
 if(st.end)fill();
 if(running()||!st.end)openCover();
 })();
 </script>
+<!-- ef-later:start -->
+<style>
+/* 정한 시간이 끝나면 완성도 보기 → 나머지 약속 → 알람 (기기 저장만, 외부 전송 없음) */
+.efl-cover{z-index:60}
+.efl-sum{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;margin:14px 0 4px}
+.efl-ring{width:120px;height:120px}
+.efl-bars{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.efl-bars li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13.5px;font-weight:850}
+.efl-bars li span{color:var(--muted)}
+.efl-bars li i{grid-column:1/-1;height:12px;border-radius:99px;background:#ece8f6;overflow:hidden}
+.efl-bars li i b{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#4b24a5,#8d70d7)}
+.efl-bars li.full i b{background:linear-gradient(90deg,#2f9b6a,#5cc595)}
+.efl-msg{margin:10px 0 0;font-size:15px;font-weight:850}
+.efl-days{grid-template-columns:repeat(3,1fr)}
+.efl-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.efl-pick label{display:grid;gap:4px;font-size:13px;font-weight:850;color:var(--muted)}
+.efl-pick input{min-height:44px;padding:0 10px;border:1.5px solid #cfc9bd;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:850}
+.efl-err{margin:8px 0 0;color:#b4462f;font-size:13.5px;font-weight:850}
+.efl-promise{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:var(--violet-soft);color:var(--violet);font-size:15.5px;font-weight:900}
+.efl-tip{margin:8px 0 0;color:var(--muted);font-size:13px;font-weight:750}
+@media(max-width:520px){.efl-sum{grid-template-columns:1fr;justify-items:center}.efl-bars{width:100%}}
+@media print{.efl-cover{display:none!important}}
+</style>
+<div class="ef-cover efl-cover" id="eflUp" role="dialog" aria-modal="true" aria-labelledby="eflTitle" hidden>
+  <div class="ef-card">
+    <h2 id="eflTitle"></h2>
+    <div class="efl-sum">
+      <svg class="efl-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="#ece8f6" stroke-width="14"/><circle id="eflArc" cx="60" cy="60" r="50" fill="none" stroke="#6a45c9" stroke-width="14" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 60 60)"/><text id="eflPct" x="60" y="68" text-anchor="middle" font-size="26" font-weight="900" fill="#35206f">0%</text></svg>
+      <ul class="efl-bars" id="eflBars"></ul>
+    </div>
+    <p class="efl-msg" id="eflMsg"></p>
+    <div id="eflAsk">
+      <p class="ef-q">나머지는 언제 해 볼까?</p>
+      <div class="ef-est efl-days" id="eflDays"><button type="button" data-d="0" aria-pressed="false">오늘</button><button type="button" data-d="1" aria-pressed="false">내일</button><button type="button" data-d="2" aria-pressed="false">모레</button></div>
+      <div class="efl-pick"><label>날짜<input type="date" id="eflDate"></label><label>시간<input type="time" id="eflTime" step="300"></label></div>
+      <p class="efl-err" id="eflErr" hidden></p>
+      <button class="ef-go" id="eflSet" type="button">이때 할래요</button>
+    </div>
+    <div id="eflSaved" hidden>
+      <p class="efl-promise" id="eflPromise"></p>
+      <button class="ef-go" id="eflCal" type="button">달력에 알람 넣기</button>
+      <p class="efl-tip">이 화면을 열어 두면 그 시간에 소리로도 알려 줄게요.</p>
+    </div>
+    <button class="ef-go sub" id="eflMore" type="button">5분 더!</button>
+  </div>
+</div>
+<div class="ef-cover efl-cover" id="eflRing" role="alertdialog" aria-modal="true" aria-labelledby="eflRingTitle" hidden>
+  <div class="ef-card">
+    <h2 id="eflRingTitle">약속한 시간이에요!</h2>
+    <p class="efl-msg" id="eflRingMsg"></p>
+    <button class="ef-go" id="eflRingGo" type="button">지금 할래요</button>
+    <button class="ef-go sub" id="eflRingLater" type="button">시간 다시 정하기</button>
+  </div>
+</div>
+<script>
+(()=>{'use strict';
+const B=window.EF_BRIDGE;if(!B)return;
+const $=id=>document.getElementById(id);
+const KEY=B.key+':later';
+let L={};try{L=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(L));}catch(e){}};
+const emit=(t,d)=>{try{B.emit&&B.emit(t,d);}catch(e){}};
+const WD='일월화수목금토';
+const when=t=>{const d=new Date(t),h=d.getHours();return `${d.getMonth()+1}월 ${d.getDate()}일(${WD[d.getDay()]}) ${h<12?'오전':'오후'} ${h%12||12}:${String(d.getMinutes()).padStart(2,'0')}`;};
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+/* 완성도: 쪽마다 같은 몫으로 셈 */
+function progress(){const ps=B.pages().map(p=>({...p,total:Math.max(1,p.total),done:Math.min(p.done,Math.max(1,p.total))}));
+  const pct=Math.round(ps.reduce((s,p)=>s+p.done/p.total,0)/ps.length*100);return{ps,pct};}
+function drawProgress(){const{ps,pct}=progress();
+  $('eflArc').setAttribute('stroke-dashoffset',(314.16*(1-pct/100)).toFixed(1));$('eflArc').setAttribute('stroke',pct>=100?'#2f9b6a':'#6a45c9');$('eflPct').textContent=pct+'%';
+  $('eflBars').innerHTML=ps.map((p,i)=>`<li class="${p.done>=p.total?'full':''}">${i+1}쪽 ${p.name}<span>${p.done} / ${p.total}</span><i><b style="width:${Math.round(p.done/p.total*100)}%"></b></i></li>`).join('');
+  return{ps,pct};}
+/* 날짜·시간 고르기 */
+function pickDay(n){const d=new Date();d.setDate(d.getDate()+n);$('eflDate').value=ymd(d);markDay();}
+function markDay(){const t=new Date();t.setHours(0,0,0,0);const v=$('eflDate').value?new Date($('eflDate').value+'T00:00'):null,n=v?Math.round((v-t)/864e5):-1;
+  [...$('eflDays').children].forEach(b=>b.setAttribute('aria-pressed',+b.dataset.d===n));}
+$('eflDays').onclick=e=>{const b=e.target.closest('button');if(b)pickDay(+b.dataset.d);};
+$('eflDate').oninput=markDay;
+function openAsk(title){const{ps,pct}=drawProgress();$('eflTitle').textContent=title;
+  $('eflMsg').textContent=pct>=100?'다 채웠어요! 마지막 쪽의 「다 했어요」를 눌러 끝내요.':`전체의 ${pct}%를 했어요.`;
+  $('eflAsk').hidden=pct>=100;$('eflSaved').hidden=true;$('eflErr').hidden=true;
+  $('eflMore').textContent=pct>=100?'알았어요':'5분 더!';
+  const d=new Date();$('eflDate').min=ymd(d);
+  if(L.at&&!L.fired&&L.at>Date.now()){const a=new Date(L.at);$('eflDate').value=ymd(a);$('eflTime').value=`${String(a.getHours()).padStart(2,'0')}:${String(a.getMinutes()).padStart(2,'0')}`;markDay();}
+  else{pickDay(1);$('eflTime').value=`${String(d.getHours()).padStart(2,'0')}:${String(Math.floor(d.getMinutes()/10)*10).padStart(2,'0')}`;}
+  $('eflRing').hidden=true;$('eflUp').hidden=false;}
+/* 「5분 더!」: 5분 더 집중하면 완성도 창을 다시 띄움 */
+$('eflMore').onclick=()=>{if($('eflMore').textContent==='5분 더!'&&L.upStart===B.now().start){L.nextMin=(L.shownMin||0)+5;save();emit('ef-more',{addMin:5,targetMin:L.nextMin});}$('eflUp').hidden=true;};
+$('eflSet').onclick=()=>{const v=$('eflDate').value,t=$('eflTime').value;
+  const at=v&&t?new Date(v+'T'+t).getTime():NaN;
+  if(!(at>Date.now()+60000)){$('eflErr').textContent=v&&t?'지금보다 뒤의 시간을 골라요.':'날짜와 시간을 골라요.';$('eflErr').hidden=false;return;}
+  const{ps,pct}=progress();
+  L.at=at;L.fired=false;L.start=B.now().start;L.left=ps.filter(p=>p.done<p.total).map(p=>p.name);L.pct=pct;save();
+  emit('ef-later',{remindAt:at,percent:pct});
+  try{if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();}catch(e){}
+  $('eflPromise').textContent=`${when(at)}에 나머지를 하기로 했어요.`;
+  $('eflAsk').hidden=true;$('eflSaved').hidden=false;$('eflMore').textContent='알았어요';};
+/* 달력 파일(.ics): 기기 달력이 그 시간에 알람을 울림 */
+$('eflCal').onclick=()=>{if(!L.at)return;
+  const z=t=>new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  const esc=s=>String(s).replace(/[\\,;]/g,m=>'\\'+m);
+  const title=`${B.title} 나머지 하기`,desc=L.left&&L.left.length?'남은 곳: '+L.left.join(', '):'';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Oncuvate//Review//KO','CALSCALE:GREGORIAN','BEGIN:VEVENT',
+    `UID:${L.at}-${Math.random().toString(36).slice(2)}@oncuvate`,`DTSTAMP:${z(Date.now())}`,`DTSTART:${z(L.at)}`,`DTEND:${z(L.at+30*60000)}`,
+    `SUMMARY:${esc(title)}`,`DESCRIPTION:${esc(desc)}`,'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${esc(title)}`,'TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  a.download=`${B.title.replace(/[\\/:*?"<>|「」]/g,'').trim()}_나머지_약속.ics`;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},4000);emit('ef-later-calendar',{remindAt:L.at});};
+/* 화면 알람: 열려 있으면 그 시간에, 닫혀 있었으면 다음에 열 때 */
+let ac=null;
+function beep(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const t0=ac.currentTime;
+  [0,.35,.7,1.4,1.75,2.1].forEach((s,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=i%3===2?1046:784;
+    g.gain.setValueAtTime(0,t0+s);g.gain.linearRampToValueAtTime(.25,t0+s+.03);g.gain.exponentialRampToValueAtTime(.001,t0+s+.3);o.connect(g).connect(ac.destination);o.start(t0+s);o.stop(t0+s+.32);});}catch(e){}}
+document.addEventListener('pointerdown',()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();}catch(e){}},{once:true,capture:true});
+function ring(){const late=Date.now()-L.at>30*60000;
+  $('eflRingTitle').textContent=late?'약속한 시간이 지났어요':'약속한 시간이에요!';
+  const pct=Math.max(L.pct||0,progress().pct);$('eflRingMsg').textContent=`${when(L.at)}에 하기로 했어요.${pct?` 지난번에 ${pct}%까지 했어요.`:''} 나머지를 해 볼까요?`;
+  $('eflUp').hidden=true;$('eflRing').hidden=false;beep();
+  try{if('Notification'in window&&Notification.permission==='granted'&&document.hidden)new Notification(`${B.title} 나머지 할 시간이에요`,{body:L.left&&L.left.length?'남은 곳: '+L.left.join(', '):'',tag:KEY});}catch(e){}
+  L.fired=true;save();emit('ef-later-ring',{remindAt:L.at,late});}
+$('eflRingGo').onclick=()=>{$('eflRing').hidden=true;};
+$('eflRingLater').onclick=()=>{L.at=null;save();openAsk('나머지는 언제 해 볼까?');};
+function check(){const n=B.now();
+  if(L.at&&!L.fired){if(n.done||(L.start&&n.start&&n.start!==L.start)){L.at=null;save();}
+    else if(Date.now()>=L.at)ring();}
+  const same=L.upStart===n.start,target=same?(L.nextMin||L.shownMin||n.est):n.est;
+  if(n.running&&n.est&&n.active>=target*60000&&!(same&&L.shownMin===target)&&$('efStart').hidden&&$('eflRing').hidden&&$('eflUp').hidden){
+    L.upStart=n.start;L.shownMin=target;L.nextMin=target;save();
+    openAsk(`${target}분 집중 끝!`);emit('ef-time-up',{estimateMin:n.est,targetMin:target,percent:progress().pct});}}
+setInterval(check,1000);check();
+})();
+</script>
+<!-- ef-later:end -->
 </body></html>
