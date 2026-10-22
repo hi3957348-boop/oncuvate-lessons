@@ -388,9 +388,9 @@ window.OCWS={A,emit,useHelp};
 /* 문장 세기·점검 */
 const finished=t=>(String(t).match(/[.!?](?=["”’']?(\s|$))/g)||[]).length;
 const sentences=t=>String(t).replace(/\s+/g,' ').trim().split(/(?<=[.!?]["”’']?)\s+/).map(s=>s.trim()).filter(Boolean);
-/* 끝말 세기: 마침표 없이 이어 쓴 문장도 ‘-요’·‘-다’로 끝나는 낱말에서 끊어 센다 */
-function endings(t){let yo=0,da=0;const add=c=>{if(c==='요')yo++;else if(c==='다')da++;};
-  sentences(t).forEach(s=>{const ps=s.replace(/["”’'.!?\s]+$/,'').split(/\s+/);ps.forEach((p,k)=>{if(k===ps.length-1||/(?:[^필중]요|니다|[는었았했였겠한된인이있없같좋많]다)$/.test(p))add(p.slice(-1));});});return{yo,da};}
+/* 끝말 세기: 마침표 없이 이어 쓴 문장도 ‘-요’·‘-다’로 끝나는 낱말에서 끊어 센다. ‘-요’와 ‘-습니다’는 같은 높임말로 함께 센다(섞여도 괜찮다) */
+function endings(t){let yo=0,da=0;const add=p=>{if(/(요|니다)$/.test(p))yo++;else if(/다$/.test(p))da++;};
+  sentences(t).forEach(s=>{const ps=s.replace(/["”’'.!?\s]+$/,'').split(/\s+/);ps.forEach((p,k)=>{if(k===ps.length-1||/(?:[^필중]요|니다|[는었았했였겠한된인이있없같좋많]다)$/.test(p))add(p);});});return{yo,da};}
 const linesOk=t=>String(t).split(/\n+/).map(x=>x.trim()).filter(Boolean).every(x=>/[.!?]["”’']?$/.test(x));
 const REASON=/왜냐하면|때문|까닭|이유|니까/,MORE=/또 |또한|게다가|그리고|둘째|두 번째|뿐만 아니라/;
 const NUMW=['','한','두','세','네','다섯'];
@@ -400,7 +400,7 @@ const CK={
   two:()=>({id:'two',q:'까닭이 두 가지인가요?',ok:'까닭이 두 가지예요',fix:'‘또’로 까닭을 하나 더 붙여요.',test:t=>REASON.test(t)&&MORE.test(t)&&finished(t)>=3}),
   count:o=>{const m=o.min||3;return{id:'count',q:NUMW[m]+' 문장 이상인가요?',ok:NUMW[m]+' 문장 이상이에요',fix:NUMW[m]+' 문장이 되게 더 써요.',test:t=>finished(t)>=m};},
   period:()=>({id:'period',q:'문장 끝마다 마침표를 찍었나요?',ok:'문장 끝에 마침표가 있어요',fix:'문장이 끝나는 곳에 마침표(.)를 찍어요.',test:t=>String(t).trim().length>0&&linesOk(t)}),
-  ending:()=>({id:'ending',q:'끝말(-요/-다)을 하나로 맞췄나요?',ok:'끝말이 하나로 맞아요',fix:'‘-요’와 ‘-다’가 섞였어요. 하나로 맞춰요.',test:t=>{const e=endings(t);return String(t).trim().length>0&&!(e.yo&&e.da);}}),
+  ending:()=>({id:'ending',q:'끝말(-요/-다)을 하나로 맞췄나요?',ok:'끝말이 하나로 맞아요',fix:'높임말(‘-요’·‘-습니다’)과 ‘-다’가 섞였어요. 하나로 맞춰요.',test:t=>{const e=endings(t);return String(t).trim().length>0&&!(e.yo&&e.da);}}),
   cond:o=>({id:'cond',q:'조건을 지켰나요?',ok:o.condOk,fix:o.condFix,test:t=>String(t).trim().length>0&&!new RegExp(o.condBad).test(t)&&(!o.condGood||new RegExp(o.condGood).test(t))})
 };
 /* 점검 쪽지: 이름(문자열)이면 기본 쪽지, 객체면 회차 쪽지 — re(들어 있어야 할 말)·not(없어야 할 말)·first(첫 문장만)·countRe/countMin(서로 다른 말 몇 개) */

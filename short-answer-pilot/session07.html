@@ -773,10 +773,10 @@ ENTER[3]=renderPlan;
 function finished(t){return (String(t).match(/[.!?](?=["”’']?(\s|$))/g)||[]).length;}
 function sentences(t){return String(t).replace(/\s+/g,' ').trim().split(/(?<=[.!?]["”’']?)\s+/).map(function(s){return s.trim();}).filter(Boolean);}
 function endings(t){
-  var yo=0,da=0;function add(c){if(c==='요')yo++;else if(c==='다')da++;}
-  /* 마침표 없이 이어 쓴 문장도 ‘-요’·‘-다’로 끝나는 낱말에서 끊어 센다 */
+  var yo=0,da=0;function add(p){if(/(요|니다)$/.test(p))yo++;else if(/다$/.test(p))da++;}
+  /* 마침표 없이 이어 쓴 문장도 ‘-요’·‘-다’로 끝나는 낱말에서 끊어 센다. ‘-요’와 ‘-습니다’는 같은 높임말로 함께 센다(섞여도 괜찮다) */
   sentences(t).forEach(function(s){var ps=s.replace(/["”’'.!?\s]+$/,'').split(/\s+/);
-    ps.forEach(function(p,k){if(k===ps.length-1||/(?:[^필중]요|니다|[는었았했였겠한된인이있없같좋많]다)$/.test(p))add(p.slice(-1));});});
+    ps.forEach(function(p,k){if(k===ps.length-1||/(?:[^필중]요|니다|[는었았했였겠한된인이있없같좋많]다)$/.test(p))add(p);});});
   return {yo:yo,da:da};
 }
 function linesOk(t){return String(t).split(/\n+/).map(function(x){return x.trim();}).filter(Boolean).every(function(x){return /[.!?]["”’']?$/.test(x);});}
@@ -785,7 +785,7 @@ var CHECKS=[
   {id:'reason',test:function(t){return /왜냐하면|때문|까닭|이유|니까/.test(t);},ok:'까닭이 보여요',fix:'<b>왜냐하면 ~ 때문이다.</b>로 까닭을 붙여요.'},
   {id:'count',test:function(t){return finished(t)>=3;},ok:'세 문장 이상이에요',fix:function(t){return '지금 '+finished(t)+'문장이에요. <b>세 문장</b>이 되게 더 써요.';}},
   {id:'period',test:function(t){return String(t).trim().length>0&&linesOk(t);},ok:'문장 끝에 마침표가 있어요',fix:'문장이 끝나는 곳에 <b>마침표(.)</b>를 찍어요.'},
-  {id:'ending',test:function(t){var e=endings(t);return String(t).trim().length>0&&!(e.yo&&e.da);},ok:'끝말이 하나로 맞아요',fix:'‘-요’와 ‘-다’가 섞였어요. <b>하나로</b> 맞춰요.'}
+  {id:'ending',test:function(t){var e=endings(t);return String(t).trim().length>0&&!(e.yo&&e.da);},ok:'끝말이 하나로 맞아요',fix:'높임말(‘-요’·‘-습니다’)과 ‘-다’가 섞였어요. <b>하나로</b> 맞춰요.'}
 ];
 function checkAll(t){return CHECKS.map(function(c){return {c:c,ok:c.test(t)};});}
 function meter(el,t){
