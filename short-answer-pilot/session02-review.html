@@ -17,7 +17,7 @@ html{background:#eef0ec;scroll-behavior:smooth;scroll-padding-top:80px}
 body{margin:0;color:var(--ink);font:16px/1.6 Pretendard,"Noto Sans KR","Apple SD Gothic Neo","Malgun Gothic",sans-serif;word-break:keep-all;line-break:strict;-webkit-print-color-adjust:exact;print-color-adjust:exact}
 button,input,textarea{font:inherit}button{cursor:pointer}[hidden]{display:none!important}
 button:focus-visible,a:focus-visible,input:focus-visible,textarea:focus-visible,summary:focus-visible{outline:3px solid rgba(75,201,220,.6);outline-offset:3px}
-.ico{display:inline-block;width:18px;height:18px;vertical-align:-3px}
+.ico{display:inline-block;width:22px;height:22px;vertical-align:-6px;object-fit:contain}
 
 /* 도구 막대 (화면 전용) */
 .toolbar{position:sticky;top:0;z-index:10;display:flex;flex-wrap:wrap;gap:8px;align-items:center;justify-content:center;padding:10px 12px;background:rgba(238,240,236,.94);border-bottom:1px solid var(--line)}
@@ -222,7 +222,7 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
 .ref h3 i{display:inline-grid;place-items:center;width:22px;height:22px;margin-right:6px;border-radius:50%;color:#fff;background:var(--violet-900);font-style:normal;font-size:12px}
 .faces{display:grid;grid-template-columns:repeat(5,1fr);gap:6px}
 .face{position:relative;display:grid;justify-items:center;gap:2px;padding:6px 4px;border:1.5px solid #cfc9bd;border-radius:12px;background:#fff;font-size:12px;font-weight:850;cursor:pointer}
-.face svg{width:30px;height:30px}
+.face img{width:38px;height:38px;object-fit:contain}
 .face input,.chip input{position:absolute;opacity:0;width:1px;height:1px}
 .face:has(input:checked){border-color:var(--violet);background:var(--violet-soft)}
 .chips{display:flex;flex-wrap:wrap;gap:6px}
@@ -289,7 +289,7 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
 <body>
 <nav class="toolbar" aria-label="워크지 도구">
 <a href="#p1">1 문제</a><a href="#p2">2 친구 답</a><a href="#p3">3 뼈대</a><a href="#p4">4 답 쓰기</a><a href="#p5">5 돌아보기</a><span class="spacer"></span>
-<button type="button" class="ef-clock" id="efClock" hidden aria-expanded="false" aria-label="학습 시간 보기"><svg class="ico" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="13" r="8" fill="none" stroke="#4b24a5" stroke-width="2.2"/><path d="M12 9v4.5l3 2" fill="none" stroke="#4b24a5" stroke-width="2.2" stroke-linecap="round"/><path d="M9 2.5h6" stroke="#4b24a5" stroke-width="2.2" stroke-linecap="round"/></svg><span class="ef-times" hidden>학습 <b id="efActive">0:00</b><span class="away"> · 멈춤 <b id="efAway">0:00</b></span></span></button>
+<button type="button" class="ef-clock" id="efClock" hidden aria-expanded="false" aria-label="학습 시간 보기"><img class="ico" src="assets/stopwatch.webp" alt=""><span class="ef-times" hidden>학습 <b id="efActive">0:00</b><span class="away"> · 멈춤 <b id="efAway">0:00</b></span></span></button>
 <button id="keyBtn" aria-pressed="false">해설 보기</button><button id="blankPrint">빈 워크지 인쇄</button><button id="answerPrint" class="main">작성 내용 인쇄</button>
 </nav>
 <main>
@@ -594,8 +594,9 @@ window.OCWS.pageStats=()=>{
 (()=>{'use strict';
 const $=id=>document.getElementById(id);
 const KEY=SPEC.key+':ef',IDLE=180000;
-const FACE=(m,l)=>`<svg viewBox="0 0 32 32" aria-hidden="true"><circle cx="16" cy="16" r="14" fill="#fff6d6" stroke="#2e2848" stroke-width="2"/><circle cx="11" cy="13" r="1.8" fill="#2e2848"/><circle cx="21" cy="13" r="1.8" fill="#2e2848"/><path d="${m}" fill="none" stroke="#2e2848" stroke-width="2.2" stroke-linecap="round"/></svg>${l}`;
-const FACES=[['M10 23c3-4 9-4 12 0','많이 막혔어요'],['M11 22c3-2 7-2 10 0','조금 막혔어요'],['M11 21h10','보통이에요'],['M11 20c3 2 7 2 10 0','잘 됐어요'],['M9 19c3 5 11 5 14 0','술술 됐어요']];
+/* 얼굴 = 젤리코치 표정 그림(많이 막힘 → 술술) */
+const FACE=(src,l)=>`<img src="assets/${src}" alt="" width="38" height="38">${l}`;
+const FACES=[['jelly-face-1.webp','많이 막혔어요'],['jelly-face-2.webp','조금 막혔어요'],['jelly-face-3.webp','보통이에요'],['jelly-face-4.webp','잘 됐어요'],['jelly-face-5.webp','술술 됐어요']];
 $('faces').innerHTML=FACES.map((f,i)=>`<label class="face"><input type="radio" name="efSmooth" value="${i+1}" data-track="input">${FACE(f[0],f[1])}</label>`).join('');
 const chip=(n,v)=>`<label class="chip"><input type="checkbox" name="${n}" value="${v}" data-track="input">${v}</label>`;
 $('chipsWhy').innerHTML=['집중이 잘 됐어요','할 일을 잘 찾았어요','문제가 쉬웠어요','어려운 문제가 있었어요','중간에 딴생각이 났어요','주변이 시끄러웠어요','생각보다 시간이 부족했어요'].map(v=>chip('efWhy',v)).join('');
