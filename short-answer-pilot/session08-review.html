@@ -82,13 +82,27 @@ h1,h2{margin:0;font-size:21px;line-height:1.3;letter-spacing:-.03em;font-weight:
 .chunk.ask{border-bottom:2px solid var(--ask-line);background:var(--ask)}
 .chunk.cond{border-bottom:2px solid var(--cond-line);background:var(--cond)}
 .chunk.pulse{outline:2px dashed #8d70d7;outline-offset:1px}
-.qa-tools{grid-column:2;display:flex;flex-wrap:wrap;align-items:center;gap:10px;margin-top:-4px}
-.qa-item .feedback,.qa-item .key{grid-column:2}
-.todo-line{font-size:13px;font-weight:800;color:#55607a}
-.qa-sum{margin-top:10px;background:#fbfaff;border-style:dashed;border-color:#d4c9ee}
-.qa-sum h3{margin:0 0 4px;font-size:14.5px;font-weight:900}
-.sum-row{display:grid;grid-template-columns:76px 1fr;gap:8px;align-items:end;margin-top:4px}
-.sum-row .legend-chip{justify-self:start;margin-bottom:6px;font-size:12.5px}
+.chunk.on2{border-bottom:2px solid #2aa3b5;background:#e3f6f9}
+.chunk:disabled{cursor:default}
+.qa-steps{grid-column:2;display:grid;gap:6px;margin-top:-2px}
+.qa-step{padding:6px 10px;border:1px solid var(--line);border-radius:10px;background:#fbfaf6}
+.qa-step.wait{opacity:.55}
+.qa-step.done{background:#f6fbf8;border-color:#cfe9dc}
+.qs-head{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px 10px}
+.qs-head b{font-size:14px;font-weight:900}
+.qs-head b .legend-chip{margin-right:6px;font-size:12px}
+.qs-tools{display:flex;flex-wrap:wrap;gap:6px}
+.qs-tools button{min-height:30px;padding:0 12px;border-radius:999px;font-size:12px;font-weight:850}
+.qs-tools .hint-btn,.qs-tools .none-btn{border:1px solid #d9cff5;background:#fff;color:var(--violet)}
+.qs-tools .check{min-height:30px;margin:0}
+.qa-step.done .qs-tools,.qa-step.wait .qs-tools{display:none}
+.mc{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-top:6px}
+.mc button{min-height:34px;padding:4px 10px;border:1.5px solid #cfc9bd;border-radius:10px;background:#fff;color:var(--ink);font-size:13px;font-weight:800;line-height:1.35;text-align:left}
+.mc button:hover{border-color:var(--cyan-line)}
+.mc button.wrong{border-color:#efb6b8;background:var(--no-bg)}
+.mc button.right{border-color:#9dd8c1;background:var(--ok-bg)}
+.pline{display:none;margin:4px 0 0;font-size:13.5px;font-weight:800;color:#55607a}
+.pline .blank{min-width:0;width:calc(100% - 52px);text-align:left;padding-left:4px}
 
 /* 2쪽 친구 답 */
 .friends{display:grid;gap:9px}
@@ -236,6 +250,18 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
   .sheet{width:210mm;min-height:297mm;margin:0;padding:12mm 13mm 10mm;box-shadow:none;break-after:page}
   .sheet:last-child{break-after:auto}
   .print-name{display:flex}
+  .pline{display:block;flex:1;margin:0}
+  .pline .pl{display:none}
+  .pline .blank{width:100%}
+  .qs-tools,.qa-step .feedback{display:none!important}
+  .qa-step{display:flex;align-items:flex-end;gap:10px;padding:4px 10px;background:#fff}
+  .qa-step .qs-head{flex:0 0 auto}
+  .qa-item .q-text{line-height:2}
+  .qa{gap:8px}
+  .qa-step.wait{opacity:1}
+  .mc{display:none!important}
+  .print-blank .pline .blank{color:transparent}
+  .print-blank .chunk.on2{border-bottom:2px dashed #c9c2d6;background:none}
   .prt-only{display:inline}
   .scr-only{display:none!important}
   .option:hover{border-color:#cfc9bd}
@@ -270,10 +296,9 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
 <section class="sheet" id="p1" aria-labelledby="t1">
 <header class="head"><div><div class="series"><span class="series-name">주관식 답 쓰기</span><span class="series-sub">묻는 말에 딱 맞게, 세 문장 이상으로</span></div><div class="lesson"><span class="lesson-no">08 복습</span>생각과 까닭 ② 연습하기</div><div class="print-name"><span>이름</span><span>날짜</span></div></div><img src="assets/jelly-coach-square.png" alt="젤리코치"></header>
 <div class="title-row"><span class="number">1</span><h1 id="t1">문제 뜯어보기</h1></div>
-<p class="intro"><span class="scr-only">문제에서 해야 할 일을 알려 주는 말을 눌러 표시하고 「확인」을 눌러요.</span><span class="prt-only">문제에서 해야 할 일을 알려 주는 말에 밑줄을 긋고, 할 일이 몇 가지인지 써요.</span></p>
-<p class="top-note"><span class="legend-chip a">묻는 것</span> 무엇을 쓰라고 하나요? &nbsp; <span class="legend-chip c">조건</span> 몇 가지, 몇 문장, 어디서처럼 꼭 지켜야 할 것은요?</p>
+<p class="intro"><span class="scr-only">문제마다 ① 무엇을 적어야 하는지, ② 답을 적을 때 조건은 무엇인지 문제 속 말을 눌러 골라요. 막히면 「힌트」를 눌러요.</span><span class="prt-only">무엇을 적어야 하는지 알려 주는 말에는 밑줄, 조건에는 동그라미를 그리고 아래에 짧게 적어요.</span></p>
+<p class="top-note"><span class="legend-chip a">무엇</span> 무엇을 적으라고 하나요? &nbsp; <span class="legend-chip c">조건</span> 몇 가지, 몇 문장, 어디서처럼 답을 적을 때 꼭 지켜야 할 것은요?</p>
 <div class="qa" id="qa"></div>
-<div class="card qa-sum" id="qaSum"></div>
 <footer class="foot"><span>Oncuvate · 자체 제작 텍스트 · 1 / 5</span><div class="pager"><a href="#p2">다음: 친구 답 →</a></div></footer>
 </section>
 <section class="sheet" id="p2" aria-labelledby="t2">
@@ -343,7 +368,7 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
 </div>
 <div class="ef-toast" id="efToast" role="status" aria-live="polite"></div>
 <script>
-const SPEC={"no": "08", "name": "생각과 까닭 ② 연습하기", "key": "short-answer-writing:review08", "plan4": [["문제 뜯어보기", "문제 4개"], ["친구 답 고쳐 주기", "고칠 곳 하나씩"], ["뼈대 세우기", "까닭 두 가지"], ["답 쓰고 점검하기", "세 문장 이상"]], "skills": ["문제의 조건(두 가지·세 문장) 세기", "첫 문장에 바로 답하기", "‘또’로 까닭 하나 더 붙이기", "친구 말을 내 말로 바꿔 쓰기", "다 쓰고 소리 내어 읽기", "점검 쪽지로 확인하기"], "qa": [{"chunks": [["토끼가", 0], ["좋아하는 먹이를", 1], ["두 가지", 2], ["쓰세요.", 3]], "todo": ["좋아하는 먹이", "두 가지"]}, {"chunks": [["내가 반장이라면", 0], ["무엇을 하고 싶은지", 1], ["쓰고,", 3], ["그 까닭을", 1], ["두 가지", 2], ["쓰세요.", 3]], "todo": ["하고 싶은 일", "까닭 쓰기", "까닭 두 가지"]}, {"chunks": [["여름과 겨울 중", 0], ["더 좋아하는 계절을", 1], ["쓰고,", 3], ["그 까닭을", 1], ["세 문장 이상으로", 2], ["쓰세요.", 3]], "todo": ["좋아하는 계절", "까닭 쓰기", "세 문장 이상"]}, {"chunks": [["유나와 건우 중", 0], ["누구의 생각에 찬성하는지 쓰고,", 1], ["그렇게 생각한 까닭을", 1], ["두 가지", 2], ["쓰세요.", 3], ["(세 문장 이상)", 2]], "todo": ["누구 생각에 찬성하는지", "까닭 쓰기", "까닭 두 가지", "세 문장 이상"]}], "friend": {"mode": "fix1", "title": "친구 답 고쳐 주기", "say": "고칠 곳은<br><b>한 군데</b>씩이야!", "intro": "친구 답마다 고칠 곳 하나를 쪽지로 고르고, 바르게 고쳐 써요.", "question": "방학 숙제로 일기 쓰기와 독서 기록장 중 무엇이 더 좋은지 쓰고, 그 까닭을 두 가지 쓰세요. (세 문장 이상)", "tags": [["noanswer", "#첫 문장에 답이 없어요", "친구는 첫 문장에서 무엇이 더 좋은지 바로 답했어요."], ["one", "#까닭이 하나뿐이에요", "친구는 까닭을 두 가지 썼어요."], ["mech", "#마침표·끝말을 고쳐요", "이 답은 마침표도 있고 끝말도 ‘-다’로 맞아요."], ["off", "#묻는 것과 다른 이야기", "친구는 묻는 것에 맞게 썼어요."]], "answerRe": "일기|독서", "answerFix": "첫 문장에 무엇이 더 좋은지 바로 써요.", "items": [{"who": "친구 마", "text": "나는 일기 쓰기가 더 좋다고 생각한다. 왜냐하면 하루를 돌아볼 수 있기 때문이다.", "ans": ["one"], "why": "문제는 까닭을 두 가지 쓰라고 했는데 하나만 썼어요. ‘또’로 하나 더 붙여요.", "fix": "나는 일기 쓰기가 더 좋다고 생각한다. 왜냐하면 하루를 돌아볼 수 있기 때문이다. 또 글쓰기 실력이 늘 수 있다.", "hint": "문제는 까닭을 몇 가지 쓰라고 했나요? 친구는 몇 가지 썼나요?", "checks": ["answer", "two", "period", "ending"]}, {"who": "친구 바", "text": "나는 독서 기록장이 더 좋다고 생각해요. 왜냐하면 책을 더 많이 읽게 되기 때문이다. 또 좋은 문장을 모아 둘 수 있다.", "ans": ["mech"], "why": "첫 문장만 ‘-요’로 끝나서 끝말이 섞였어요. ‘-다’로 맞춰요.", "fix": "나는 독서 기록장이 더 좋다고 생각한다. 왜냐하면 책을 더 많이 읽게 되기 때문이다. 또 좋은 문장을 모아 둘 수 있다.", "hint": "문장 끝을 하나씩 읽어 봐요. 끝말이 모두 같나요?", "checks": ["answer", "two", "period", "ending"]}]}, "plan": {"say": "친구가 한 말을<br><b>내 말</b>로 바꾸면 까닭이 돼!", "intro": "글을 읽고 누구 생각에 찬성할지 정한 다음, 까닭 두 가지를 내 말로 메모해요.", "passage": {"title": "체험 학습 장소", "paras": ["다음 달 체험 학습 장소를 정하려고 학급 회의를 했다.", "유나는 <span class=\"say\">“과학관에 가면 신기한 실험을 직접 해 볼 수 있어요.”</span>라고 말했다.", "건우는 <span class=\"say\">“동물원에 가면 책에서만 보던 동물을 가까이에서 볼 수 있어요.”</span>라고 말했다.", "선생님께서는 두 사람의 까닭을 잘 듣고 정하자고 하셨다."]}, "question": "유나와 건우 중 누구의 생각에 찬성하는지 쓰고, 그렇게 생각한 까닭을 두 가지 쓰세요. (세 문장 이상)", "sides": [{"name": "유나", "desc": "과학관에 가기"}, {"name": "건우", "desc": "동물원에 가기"}], "sideFrame": "나는 {}의 생각에 찬성한다.", "cards": [{"t": "실험을 하며 과학 원리를 배울 수 있다.", "side": "유나"}, {"t": "동물이 사는 모습을 직접 볼 수 있다.", "side": "건우"}, {"t": "비가 와도 실내라서 걱정이 없다.", "side": "유나"}, {"t": "넓은 곳을 걸으며 바깥 공기를 마실 수 있다.", "side": "건우"}, {"t": "나는 버스 타는 것을 좋아한다.", "side": null}], "cardsMode": "folded", "bones": [[1, "답", "누구 생각에 찬성하는지"], [2, "까닭 1", "왜냐하면 ~ 때문이다"], [3, "까닭 2", "또 ~"], [4, "마무리", "그래서 ~ (쓰고 싶으면)"]], "need": 3}, "write": {"say": "까닭 두 개는<br><b>왜냐하면</b>과 <b>또</b>로!", "intro": "3쪽 뼈대를 보며 답을 써요. 까닭 두 가지가 꼭 들어가야 해요.", "frames": [[1, "나는 ", "의 생각에 찬성한다."], [2, "왜냐하면 ", " 때문이다."], [3, "또 ", ""], [4, "그래서 ", ""]], "framesMode": "folded", "checks": ["answer", "reason", "two", "count", "period", "ending"], "answerRe": "유나|건우|과학관|동물원", "answerFix": "첫 문장에 누구 생각에 찬성하는지 바로 써요.", "min": 3}};
+const SPEC={"no": "08", "name": "생각과 까닭 ② 연습하기", "key": "short-answer-writing:review08", "plan4": [["문제 뜯어보기", "문제 4개"], ["친구 답 고쳐 주기", "고칠 곳 하나씩"], ["뼈대 세우기", "까닭 두 가지"], ["답 쓰고 점검하기", "세 문장 이상"]], "skills": ["문제의 조건(두 가지·세 문장) 세기", "첫 문장에 바로 답하기", "‘또’로 까닭 하나 더 붙이기", "친구 말을 내 말로 바꿔 쓰기", "다 쓰고 소리 내어 읽기", "점검 쪽지로 확인하기"], "qa": [{"chunks": [["토끼가", 0], ["좋아하는 먹이를", 1], ["두 가지", 2], ["쓰세요.", 3]], "askMc": ["토끼가 좋아하는 먹이", "토끼가 사는 곳", "토끼의 생김새"], "condMc": ["두 가지 쓰기", "한 가지만 쓰기", "세 문장 이상으로 쓰기"], "todo": ["좋아하는 먹이", "두 가지"]}, {"chunks": [["내가 반장이라면", 0], ["무엇을 하고 싶은지", 1], ["쓰고,", 3], ["그 까닭을", 1], ["두 가지", 2], ["쓰세요.", 3]], "askMc": ["반장이라면 하고 싶은 일과 그 까닭", "반장이 되는 방법", "지금 반장의 이름"], "condMc": ["까닭을 두 가지 쓰기", "까닭을 한 가지 쓰기", "하고 싶은 일을 세 가지 쓰기"], "todo": ["하고 싶은 일", "까닭 쓰기", "까닭 두 가지"]}, {"chunks": [["여름과 겨울 중", 0], ["더 좋아하는 계절을", 1], ["쓰고,", 3], ["그 까닭을", 1], ["세 문장 이상으로", 2], ["쓰세요.", 3]], "askMc": ["더 좋아하는 계절과 그 까닭", "여름과 겨울의 날씨", "계절마다 입는 옷"], "condMc": ["세 문장 이상으로 쓰기", "한 문장으로 쓰기", "두 가지 쓰기"], "todo": ["좋아하는 계절", "까닭 쓰기", "세 문장 이상"]}, {"chunks": [["유나와 건우 중", 0], ["누구의 생각에 찬성하는지 쓰고,", 1], ["그렇게 생각한 까닭을", 1], ["두 가지", 2], ["쓰세요.", 3], ["(세 문장 이상)", 2]], "askMc": ["누구 생각에 찬성하는지와 그 까닭", "유나와 건우가 한 말", "체험 학습 날짜"], "condMc": ["까닭 두 가지, 세 문장 이상", "까닭 한 가지, 두 문장", "까닭 세 가지, 한 문장"], "todo": ["누구 생각에 찬성하는지", "까닭 쓰기", "까닭 두 가지", "세 문장 이상"]}], "friend": {"mode": "fix1", "title": "친구 답 고쳐 주기", "say": "고칠 곳은<br><b>한 군데</b>씩이야!", "intro": "친구 답마다 고칠 곳 하나를 쪽지로 고르고, 바르게 고쳐 써요.", "question": "방학 숙제로 일기 쓰기와 독서 기록장 중 무엇이 더 좋은지 쓰고, 그 까닭을 두 가지 쓰세요. (세 문장 이상)", "tags": [["noanswer", "#첫 문장에 답이 없어요", "친구는 첫 문장에서 무엇이 더 좋은지 바로 답했어요."], ["one", "#까닭이 하나뿐이에요", "친구는 까닭을 두 가지 썼어요."], ["mech", "#마침표·끝말을 고쳐요", "이 답은 마침표도 있고 끝말도 ‘-다’로 맞아요."], ["off", "#묻는 것과 다른 이야기", "친구는 묻는 것에 맞게 썼어요."]], "answerRe": "일기|독서", "answerFix": "첫 문장에 무엇이 더 좋은지 바로 써요.", "items": [{"who": "친구 마", "text": "나는 일기 쓰기가 더 좋다고 생각한다. 왜냐하면 하루를 돌아볼 수 있기 때문이다.", "ans": ["one"], "why": "문제는 까닭을 두 가지 쓰라고 했는데 하나만 썼어요. ‘또’로 하나 더 붙여요.", "fix": "나는 일기 쓰기가 더 좋다고 생각한다. 왜냐하면 하루를 돌아볼 수 있기 때문이다. 또 글쓰기 실력이 늘 수 있다.", "hint": "문제는 까닭을 몇 가지 쓰라고 했나요? 친구는 몇 가지 썼나요?", "checks": ["answer", "two", "period", "ending"]}, {"who": "친구 바", "text": "나는 독서 기록장이 더 좋다고 생각해요. 왜냐하면 책을 더 많이 읽게 되기 때문이다. 또 좋은 문장을 모아 둘 수 있다.", "ans": ["mech"], "why": "첫 문장만 ‘-요’로 끝나서 끝말이 섞였어요. ‘-다’로 맞춰요.", "fix": "나는 독서 기록장이 더 좋다고 생각한다. 왜냐하면 책을 더 많이 읽게 되기 때문이다. 또 좋은 문장을 모아 둘 수 있다.", "hint": "문장 끝을 하나씩 읽어 봐요. 끝말이 모두 같나요?", "checks": ["answer", "two", "period", "ending"]}]}, "plan": {"say": "친구가 한 말을<br><b>내 말</b>로 바꾸면 까닭이 돼!", "intro": "글을 읽고 누구 생각에 찬성할지 정한 다음, 까닭 두 가지를 내 말로 메모해요.", "passage": {"title": "체험 학습 장소", "paras": ["다음 달 체험 학습 장소를 정하려고 학급 회의를 했다.", "유나는 <span class=\"say\">“과학관에 가면 신기한 실험을 직접 해 볼 수 있어요.”</span>라고 말했다.", "건우는 <span class=\"say\">“동물원에 가면 책에서만 보던 동물을 가까이에서 볼 수 있어요.”</span>라고 말했다.", "선생님께서는 두 사람의 까닭을 잘 듣고 정하자고 하셨다."]}, "question": "유나와 건우 중 누구의 생각에 찬성하는지 쓰고, 그렇게 생각한 까닭을 두 가지 쓰세요. (세 문장 이상)", "sides": [{"name": "유나", "desc": "과학관에 가기"}, {"name": "건우", "desc": "동물원에 가기"}], "sideFrame": "나는 {}의 생각에 찬성한다.", "cards": [{"t": "실험을 하며 과학 원리를 배울 수 있다.", "side": "유나"}, {"t": "동물이 사는 모습을 직접 볼 수 있다.", "side": "건우"}, {"t": "비가 와도 실내라서 걱정이 없다.", "side": "유나"}, {"t": "넓은 곳을 걸으며 바깥 공기를 마실 수 있다.", "side": "건우"}, {"t": "나는 버스 타는 것을 좋아한다.", "side": null}], "cardsMode": "folded", "bones": [[1, "답", "누구 생각에 찬성하는지"], [2, "까닭 1", "왜냐하면 ~ 때문이다"], [3, "까닭 2", "또 ~"], [4, "마무리", "그래서 ~ (쓰고 싶으면)"]], "need": 3}, "write": {"say": "까닭 두 개는<br><b>왜냐하면</b>과 <b>또</b>로!", "intro": "3쪽 뼈대를 보며 답을 써요. 까닭 두 가지가 꼭 들어가야 해요.", "frames": [[1, "나는 ", "의 생각에 찬성한다."], [2, "왜냐하면 ", " 때문이다."], [3, "또 ", ""], [4, "그래서 ", ""]], "framesMode": "folded", "checks": ["answer", "reason", "two", "count", "period", "ending"], "answerRe": "유나|건우|과학관|동물원", "answerFix": "첫 문장에 누구 생각에 찬성하는지 바로 써요.", "min": 3}};
 </script>
 <script>
 /* 활동 1~4쪽: 문제 뜯어보기 · 친구 답 · 뼈대 · 답 쓰기와 점검. 쓴 내용은 기기에만 저장 */
@@ -377,36 +402,60 @@ function bindText(t,key){t.value=A[key]!=null?A[key]:(t.value||'');const m=t.nex
   t.addEventListener('input',()=>{A[key]=t.value;saveA();if(m&&m.classList.contains('answer-mirror'))m.textContent=t.value;if(t.dataset.grow)grow(t);});}
 function say(id,html){$(id).innerHTML=html;}
 
-/* ===== 1쪽 문제 뜯어보기 ===== */
+/* ===== 1쪽 문제 뜯어보기: ① 무엇을 적어야 하나요? → ② 답을 적을 때 조건은 무엇인가요?
+   기본은 문제 속 말을 눌러 고르기, 「힌트」를 누르면 객관식. k: 1=무엇, 2=조건, 0=상황, 3=어느 문제에나 있는 말 ===== */
+const NONE='따로 조건이 없어요';
+const rot=(a,n)=>{n=a.length?n%a.length:0;return a.slice(n).concat(a.slice(0,n));};
 SPEC.qa.forEach((q,i)=>{
+  const hasCond=q.chunks.some(c=>c[1]===2),askJ=q.chunks.map((c,j)=>c[1]===1?j:-1).filter(j=>j>=0),condJ=q.chunks.map((c,j)=>c[1]===2?j:-1).filter(j=>j>=0);
+  const right={ask:q.askMc[0],cond:hasCond?q.condMc[0]:NONE};
+  const mcList=k=>{const o=rot([right[k]].concat((k==='ask'?q.askMc:q.condMc).filter(x=>x!==right[k]&&x!==NONE)),i+(k==='cond'?1:0));if(k==='cond')o.push(NONE);return o;};
   const el=document.createElement('article');el.className='qa-item card';el.dataset.qa=i;
+  const step=(k,t,chip)=>`<div class="qa-step" data-s="${k}"><div class="qs-head"><b><span class="legend-chip ${chip}">${k==='ask'?'무엇':'조건'}</span>${t}</b><span class="qs-tools"><button type="button" class="hint-btn" data-track="hint">힌트</button>${k==='cond'?'<button type="button" class="none-btn" data-track="answer">조건이 없어요</button>':''}<button type="button" class="check">확인</button></span></div>
+    <div class="mc" hidden></div><div class="feedback" role="status"></div><p class="pline"><span class="pl">${k==='ask'?'무엇':'조건'}: </span><span class="blank">&nbsp;</span></p></div>`;
   el.innerHTML=`<span class="qbadge">${i+1}</span><p class="q-text">${q.chunks.map((c,j)=>`<button type="button" class="chunk" data-j="${j}" data-track="answer">${esc(c[0])}</button>`).join(' ')}</p>
-    <div class="qa-tools"><button type="button" class="check">확인</button><span class="todo-line prt-only">할 일 <span class="blank">&nbsp;</span>가지</span></div>
-    <div class="feedback" role="status"></div><p class="key">할 일 ${q.todo.length}가지: ${q.todo.map(esc).join(' · ')}</p>`;
+    <div class="qa-steps">${step('ask','① 무엇을 적어야 하나요?','a')}${step('cond','② 답을 적을 때 조건은 무엇인가요?','c')}</div>
+    <p class="key" style="grid-column:2">무엇: ${esc(right.ask)}<br>조건: ${esc(right.cond)}</p>`;
   $('qa').append(el);
-  const btns=[...el.querySelectorAll('.chunk')],fb=el.querySelector('.feedback'),targets=q.chunks.map((c,j)=>c[1]===1||c[1]===2?j:-1).filter(j=>j>=0);
-  const st=A['qa'+i]||{on:[],solved:false,wrong:0};
-  const paint=()=>{btns.forEach((b,j)=>{b.classList.remove('on','ask','cond');if(st.solved){if(targets.includes(j))b.classList.add(q.chunks[j][1]===1?'ask':'cond');}else if(st.on.includes(j))b.classList.add('on');});};
-  paint();if(st.solved){fb.className='feedback';fb.textContent='할 일 '+q.todo.length+'가지: '+q.todo.join(' · ');el.querySelector('.check').hidden=true;}
-  el.querySelector('.q-text').onclick=e=>{const b=e.target.closest('.chunk');if(!b||st.solved)return;const j=+b.dataset.j;st.on=st.on.includes(j)?st.on.filter(x=>x!==j):st.on.concat(j);b.classList.remove('pulse');A['qa'+i]=st;saveA();paint();};
-  el.querySelector('.check').onclick=()=>{
-    const on=st.on.filter(j=>q.chunks[j][1]!==3),extra=on.filter(j=>q.chunks[j][1]===0),missing=targets.filter(j=>!on.includes(j));
-    st.on=on;fb.className='feedback no';
-    if(!on.length){fb.textContent='해야 할 일을 알려 주는 말을 눌러서 표시해 봐요.';paint();return;}
-    if(extra.length){st.wrong++;st.on=on.filter(j=>!extra.includes(j));paint();fb.textContent=`「${q.chunks[extra[0]][0]}」 이 말은 상황을 알려 줘요. 무엇을 쓰라는지 알려 주는 말만 남겨요.`;A['qa'+i]=st;saveA();return;}
-    if(missing.length){st.wrong++;if(st.wrong>=2){missing.forEach(j=>btns[j].classList.add('pulse'));fb.textContent='점선 테두리가 생긴 말도 해야 할 일이에요.';}else fb.textContent='아직 찾지 못한 할 일이 있어요. 문제를 소리 내어 한 번 더 읽어 봐요.';A['qa'+i]=st;saveA();return;}
-    st.solved=true;A['qa'+i]=st;saveA();paint();el.querySelector('.check').hidden=true;
-    fb.className='feedback';fb.textContent=(st.wrong?'잘 찾았어요! ':'단번에 찾았어요! ')+'할 일 '+q.todo.length+'가지: '+q.todo.join(' · ');
-    emit('answer',{itemId:'qa'+(i+1),accuracy:st.wrong?'self-corrected':'accurate'});};
+  const btns=[...el.querySelectorAll('.chunk')],S={ask:el.querySelector('[data-s=ask]'),cond:el.querySelector('[data-s=cond]')};
+  const st=A['qa'+i]=Object.assign({on:[],ask:false,cond:false,wrong:{ask:0,cond:0},hint:{ask:false,cond:false}},A['qa'+i]||{});
+  const cur=()=>st.ask?(st.cond?null:'cond'):'ask';
+  function paint(){
+    btns.forEach((b,j)=>{b.classList.remove('on','on2','ask','cond','pulse');b.disabled=false;
+      if(st.ask&&askJ.includes(j)){b.classList.add('ask');b.disabled=true;}
+      else if(st.cond&&condJ.includes(j)){b.classList.add('cond');b.disabled=true;}
+      else if(st.on.includes(j))b.classList.add(cur()==='cond'?'on2':'on');
+      if(st.ask&&st.cond)b.disabled=true;});
+    ['ask','cond'].forEach(k=>{S[k].classList.toggle('done',!!st[k]);S[k].querySelector('.pline .blank').textContent=st[k]?right[k]:' ';});
+    S.cond.classList.toggle('wait',!st.ask);}
+  function fb(k,cls,msg){const f=S[k].querySelector('.feedback');f.className='feedback'+(cls?' '+cls:'');f.textContent=msg;}
+  function solve(k){st[k]=true;st.on=[];const acc=st.hint[k]?'support':st.wrong[k]?'self-corrected':'accurate';
+    emit('answer',{itemId:'qa'+(i+1)+'-'+(k==='ask'?'what':'condition'),accuracy:acc});
+    S[k].querySelector('.mc').hidden=true;fb(k,'',(st.wrong[k]||st.hint[k]?'맞아요! ':'단번에 찾았어요! ')+(k==='ask'?'무엇: ':'조건: ')+right[k]);
+    saveA();paint();}
+  paint();['ask','cond'].forEach(k=>{if(st[k])fb(k,'',(k==='ask'?'무엇: ':'조건: ')+right[k]);});
+  el.querySelector('.q-text').onclick=e=>{const b=e.target.closest('.chunk');const k=cur();if(!b||b.disabled||!k)return;const j=+b.dataset.j;
+    st.on=st.on.includes(j)?st.on.filter(x=>x!==j):st.on.concat(j);saveA();paint();};
+  ['ask','cond'].forEach(k=>{
+    S[k].querySelector('.check').onclick=()=>{if(cur()!==k)return;
+      const on=st.on.filter(j=>q.chunks[j][1]!==3),want=k==='ask'?askJ:condJ,other=k==='ask'?2:1;
+      st.on=on;paint();
+      if(!on.length){fb(k,'no',k==='ask'?'무엇을 적으라는지 알려 주는 말을 눌러서 골라 봐요.':'조건을 알려 주는 말을 눌러 고르거나, 없으면 「조건이 없어요」를 눌러요.');return;}
+      const sit=on.filter(j=>q.chunks[j][1]===0),oth=on.filter(j=>q.chunks[j][1]===other),miss=want.filter(j=>!on.includes(j));
+      if(sit.length||oth.length){st.wrong[k]++;st.on=on.filter(j=>!sit.includes(j)&&!oth.includes(j));saveA();paint();
+        fb(k,'no',sit.length?`「${q.chunks[sit[0]][0]}」 이 말은 상황을 알려 줘요. 다시 골라 봐요.`:`「${q.chunks[oth[0]][0]}」 이 말은 조건이에요. 지금은 무엇을 적는지 알려 주는 말만 골라요.`);return;}
+      if(miss.length){st.wrong[k]++;saveA();if(st.wrong[k]>=2){miss.forEach(j=>btns[j].classList.add('pulse'));fb(k,'no','점선 테두리가 생긴 말도 골라요. 어려우면 「힌트」를 눌러요.');}
+        else fb(k,'no','아직 더 있어요. 문제를 소리 내어 한 번 더 읽어 봐요.');return;}
+      solve(k);};
+    S[k].querySelector('.hint-btn').onclick=()=>{if(cur()!==k)return;const box=S[k].querySelector('.mc');
+      if(!st.hint[k]){st.hint[k]=true;saveA();emit('hint',{hintId:'qa'+(i+1)+'-'+k+'-choice',level:'A2'});}
+      box.innerHTML=mcList(k).map(t=>`<button type="button" data-track="answer">${esc(t)}</button>`).join('');box.hidden=false;
+      box.onclick=e=>{const b=e.target.closest('button');if(!b||b.classList.contains('wrong'))return;
+        if(b.textContent===right[k]){b.classList.add('right');solve(k);}else{b.classList.add('wrong');st.wrong[k]++;saveA();fb(k,'no','다시 골라 봐요. 문제를 한 번 더 읽어 봐요.');}};};
+  });
+  S.cond.querySelector('.none-btn').onclick=()=>{if(cur()!=='cond')return;if(!hasCond){solve('cond');return;}
+    st.wrong.cond++;saveA();fb('cond','no','조건이 있어요. 몇 가지·몇 문장·어디서를 알려 주는 말을 찾아봐요.');};
 });
-
-/* 마지막 문제의 할 일 정리 (묻는 것 · 조건을 내 말로) */
-(()=>{const q=SPEC.qa[SPEC.qa.length-1],ask=q.chunks.filter(c=>c[1]===1).map(c=>c[0].replace(/[,.]$/,'')),cond=q.chunks.filter(c=>c[1]===2).map(c=>c[0].replace(/[,.]$/,''));
-  $('qaSum').innerHTML=`<h3>${SPEC.qa.length}번 문제의 할 일을 짧게 적어요</h3>
-    <div class="sum-row"><span class="legend-chip a">묻는 것</span><div class="line-in"><textarea rows="1" data-grow="1" aria-label="묻는 것 적기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div></div>
-    <div class="sum-row"><span class="legend-chip c">조건</span><div class="line-in"><textarea rows="1" data-grow="1" aria-label="조건 적기" data-track="input"></textarea><span class="answer-mirror" aria-hidden="true"></span></div></div>
-    <p class="key">묻는 것: ${ask.map(esc).join(' · ')}<br>조건: ${cond.map(esc).join(' · ')}</p>`;
-  [...$('qaSum').querySelectorAll('textarea')].forEach((t,k)=>bindText(t,'sum'+k));})();
 
 /* ===== 2쪽 친구 답 ===== */
 const F=SPEC.friend;say('say2',F.say);$('intro2').textContent=F.intro;$('q2').textContent=F.question;
@@ -505,7 +554,7 @@ $('blankPrint').onclick=()=>{syncPrint();document.body.classList.add('print-blan
 
 /* 빈 곳 찾기·쪽별 기록 (실행기능 스크립트가 씀) */
 window.OCWS.findMissing=()=>{const out=[];
-  const q=SPEC.qa.map((x,i)=>(A['qa'+i]||{}).solved||((A['qa'+i]||{}).on||[]).length?null:i+1).filter(Boolean);
+  const q=SPEC.qa.map((x,i)=>{const a=A['qa'+i]||{};return a.ask&&a.cond?null:i+1;}).filter(Boolean);
   if(q.length)out.push({page:'1쪽',text:'문제 뜯어보기 '+q.map(n=>n+'번').join(', '),el:document.querySelector(`[data-qa="${q[0]-1}"]`)});
   const f=F.items.map((x,i)=>((A['f'+i]||{}).picked||[]).length?null:i+1).filter(Boolean);
   if(f.length)out.push({page:'2쪽',text:F.title+' '+f.map(n=>n+'번').join(', '),el:document.querySelector(`[data-f="${f[0]-1}"]`)});
@@ -514,9 +563,9 @@ window.OCWS.findMissing=()=>{const out=[];
   if(!ans.value.trim())out.push({page:'4쪽',text:'답 쓰기',el:ans});
   return out;};
 window.OCWS.pageStats=()=>{
-  const qOk=SPEC.qa.filter((x,i)=>(A['qa'+i]||{}).solved).length,fOk=F.items.filter((x,i)=>(A['f'+i]||{}).ok).length;
+  const qOk=SPEC.qa.filter((x,i)=>{const a=A['qa'+i]||{};return a.ask&&a.cond;}).length,fOk=F.items.filter((x,i)=>(A['f'+i]||{}).ok).length;
   const bFill=boneTa.filter(t=>t.value.trim()).length,t=ans.value,n=finished(t),cOk=checks.filter(c=>c.test(t)).length;
-  return[['1쪽 문제 뜯어보기',`${qOk} / ${SPEC.qa.length}문제 할 일 찾음`],['2쪽 '+F.title,`${fOk} / ${F.items.length}개 맞힘`],['3쪽 뼈대 세우기',`${bFill} / ${boneTa.length}칸 메모`],['4쪽 답 쓰고 점검하기',`${n}문장 · 점검 쪽지 ${cOk} / ${checks.length}`]];};
+  return[['1쪽 문제 뜯어보기',`${qOk} / ${SPEC.qa.length}문제 무엇·조건 찾음`],['2쪽 '+F.title,`${fOk} / ${F.items.length}개 맞힘`],['3쪽 뼈대 세우기',`${bFill} / ${boneTa.length}칸 메모`],['4쪽 답 쓰고 점검하기',`${n}문장 · 점검 쪽지 ${cOk} / ${checks.length}`]];};
 })();
 </script>
 <script>
