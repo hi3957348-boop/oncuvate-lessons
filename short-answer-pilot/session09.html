@@ -666,8 +666,10 @@ function questionTap(host,item,opt){
 function finished(t){return (String(t).match(/[.!?](?=["”’']?(\s|$))/g)||[]).length;}
 function sentences(t){return String(t).replace(/\s+/g,' ').trim().split(/(?<=[.!?]["”’']?)\s+/).map(function(s){return s.trim();}).filter(Boolean);}
 function endings(t){
-  var yo=0,da=0;
-  sentences(t).forEach(function(s){var c=s.replace(/["”’'.!?\s]+$/,'').slice(-1);if(c==='요')yo++;else if(c==='다')da++;});
+  var yo=0,da=0;function add(c){if(c==='요')yo++;else if(c==='다')da++;}
+  /* 마침표 없이 이어 쓴 문장도 ‘-요’·‘-다’로 끝나는 낱말에서 끊어 센다 */
+  sentences(t).forEach(function(s){var ps=s.replace(/["”’'.!?\s]+$/,'').split(/\s+/);
+    ps.forEach(function(p,k){if(k===ps.length-1||/(?:[^필중]요|니다|[는었았했였겠한된인이있없같좋많]다)$/.test(p))add(p.slice(-1));});});
   return {yo:yo,da:da};
 }
 function linesOk(t){return String(t).split(/\n+/).map(function(x){return x.trim();}).filter(Boolean).every(function(x){return /[.!?]["”’']?$/.test(x);});}
@@ -680,9 +682,9 @@ function stdChecks(o){
   ];
   if(o.two)list.push({id:'two',test:function(t){return REASON_RE.test(t)&&MORE_RE.test(t)&&finished(t)>=3;},ok:'까닭이 두 가지예요',fix:'문제는 까닭을 <b>두 가지</b> 쓰라고 했어요. <b>또</b>로 하나 더 붙여요.'});
   list.push(
-    {id:'count',test:function(t){return finished(t)>=(o.min||3);},ok:'세 문장 이상이에요',fix:function(t){return '지금 '+finished(t)+'문장이에요. <b>세 문장</b>이 되게 더 써요.';}},
+    {id:'count',test:function(t){return finished(t)>=(o.min||3);},ok:NUMW[o.min||3]+' 문장 이상이에요',fix:function(t){return '지금 '+finished(t)+'문장이에요. <b>'+NUMW[o.min||3]+' 문장</b>이 되게 더 써요.';}},
     {id:'period',test:function(t){return String(t).trim().length>0&&linesOk(t);},ok:'문장 끝에 마침표가 있어요',fix:'문장이 끝나는 곳에 <b>마침표(.)</b>를 찍어요.'},
-    {id:'ending',test:function(t){var e=endings(t);return finished(t)>0&&!(e.yo&&e.da);},ok:'끝말이 하나로 맞아요',fix:'‘-요’와 ‘-다’가 섞였어요. <b>하나로</b> 맞춰요.'});
+    {id:'ending',test:function(t){var e=endings(t);return String(t).trim().length>0&&!(e.yo&&e.da);},ok:'끝말이 하나로 맞아요',fix:'‘-요’와 ‘-다’가 섞였어요. <b>하나로</b> 맞춰요.'});
   return list;
 }
 function runChecks(list,t){return list.map(function(c){return {c:c,ok:c.test(t)};});}
@@ -690,11 +692,12 @@ function fixText(c,t){return typeof c.fix==='function'?c.fix(t):c.fix;}
 function checkRow(r,t){
   return '<div class="chk '+(r.ok?'ok':'fix')+'"><span class="ic">'+(r.ok?'✓':'!')+'</span><span>'+(r.ok?'<b>'+r.c.ok+'</b>':'<b>고쳐 봐요</b><small>'+fixText(r.c,t)+'</small>')+'</span></div>';
 }
-function meter(el,t){
-  var n=finished(t),len=String(t).trim().length,d='';
+var NUMW=['','한','두','세','네','다섯'];
+function meter(el,t,min){
+  min=min||3;var n=finished(t),len=String(t).trim().length,d='';
   for(var i=0;i<Math.max(4,n);i++)d+='<i class="'+(i<n?'on':'')+'"></i>';
   var warn=(len>12&&n===0)?'<span class="warn">마침표를 찍어야 한 문장으로 세어져요.</span>':'';
-  el.innerHTML='<span>완성 문장</span><span class="dots">'+d+'</span><span class="goal'+(n>=3?' ok':'')+'">'+(n>=3?'세 문장 이상 ✓':'목표: 세 문장 이상')+'</span><span>'+len+'자</span>'+warn;
+  el.innerHTML='<span>완성 문장</span><span class="dots">'+d+'</span><span class="goal'+(n>=min?' ok':'')+'">'+(n>=min?NUMW[min]+' 문장 이상 ✓':'목표: '+NUMW[min]+' 문장 이상')+'</span><span>'+len+'자</span>'+warn;
 }
 function insertAt(box,txt){
   var s=box.selectionStart!=null?box.selectionStart:box.value.length,e=box.selectionEnd!=null?box.selectionEnd:s;
@@ -795,7 +798,7 @@ function friendFix(o){
       '<div class="row-end"><button class="primary" type="button" data-track="activity-complete">다 고쳤어요</button></div>';
     var box=o.left.querySelector('textarea'),mt=o.left.querySelector('.meter'),ck=o.right.querySelector('.checks'),out=o.right.querySelector('.inline-feedback');
     box.value=o.friend;
-    function upd(){var t=box.value;meter(mt,t);ck.innerHTML=runChecks(o.checks,t).map(function(r){return checkRow(r,t);}).join('');}
+    function upd(){var t=box.value;meter(mt,t,o.min);ck.innerHTML=runChecks(o.checks,t).map(function(r){return checkRow(r,t);}).join('');}
     box.addEventListener('input',upd);upd();
     if(o.more){var used=false;o.right.querySelector('.help-stack button').onclick=function(){
       if(!used){used=true;useHint('fix-more','A2',o.activityId);}
