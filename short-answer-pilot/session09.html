@@ -582,7 +582,7 @@ $('helpButton').onclick=function(){HELP[cur]&&HELP[cur]();};
 /* 글 다시 보기 */
 $('passageCopy').innerHTML=$('passageText').innerHTML;
 document.addEventListener('click',function(e){
-  if(e.target.closest('[data-passage]')){$('passageModal').classList.remove('hidden');log({type:'hint',activityId:pages[cur].dataset.activityId,hintId:'passage',level:'A1'});}
+  if(e.target.closest('[data-passage]')){$('passageModal').classList.remove('hidden');var aid=pages[cur].dataset.activityId,pid='passage-'+aid;if(R.hints.indexOf(pid)<0)useHint(pid,'A1',aid);else log({type:'hint',activityId:aid,hintId:'passage',level:'A1'});}
 });
 $('passageClose').onclick=function(){$('passageModal').classList.add('hidden');};
 $('passageModal').addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden');});
@@ -632,7 +632,7 @@ function questionTap(host,item,opt){
       '<div class="legend"><span><i style="background:#e3d9fa;border-bottom:2px solid #4b24a5"></i>무엇</span><span><i style="background:#d3f0f5;border-bottom:2px solid #2aa3b5"></i>조건</span></div>');
     go.textContent=opt.nextLabel||'다음';opt.onSolved&&opt.onSolved(st);reveal(out);}
   function miss(k,list){st.wrongBy[k]++;
-    if(st.wrongBy[k]>=2){list.forEach(function(j){btns[j].classList.add('pulse');});fb(out,'attention','깜빡이는 말도 골라요. 어려우면 「힌트」를 눌러요.');}
+    if(st.wrongBy[k]>=2){if(!st['pulse_'+k]){st['pulse_'+k]=true;st.hintBy[k]=true;useHint('question-'+k+'-pulse','A2',opt.activityId);}list.forEach(function(j){btns[j].classList.add('pulse');});fb(out,'attention','깜빡이는 말도 골라요. 어려우면 「힌트」를 눌러요.');}
     else fb(out,'attention','아직 더 있어요. 문제를 소리 내어 한 번 더 읽어 봐요.');}
   box.onclick=function(e){var b=e.target.closest('.chunk');if(!b||b.disabled||st.solved)return;var j=+b.dataset.j,i=on.indexOf(j);
     if(i>=0)on.splice(i,1);else on.push(j);b.classList.remove('pulse');paint();};
@@ -769,13 +769,13 @@ function friendFix(o){
     if(bad.length){
       st.wrong++;
       btns.forEach(function(b){if(bad.indexOf(b.dataset.k)>=0){b.classList.remove('picked');b.classList.add('wrong');b.disabled=true;}});
-      if(st.wrong>=2){st.hint=true;fb(out,'attention',(tag(bad[0])[2]||'이 쪽지는 맞지 않아요.')+'<br>힌트: '+o.hints[missing[0]||o.need[0]]);}
+      if(st.wrong>=2){st.hint=true;if(!st.autoHint){st.autoHint=true;useHint('fix-tags-auto','A2',o.activityId);}fb(out,'attention',(tag(bad[0])[2]||'이 쪽지는 맞지 않아요.')+'<br>힌트: '+o.hints[missing[0]||o.need[0]]);}
       else fb(out,'attention',(tag(bad[0])[2]||'이 쪽지는 맞지 않아요.')+' 다른 쪽지를 골라요.');
       return;
     }
     if(missing.length){
       st.wrong++;
-      if(st.wrong>=2){st.hint=true;fb(out,'attention','힌트: '+o.hints[missing[0]]);}
+      if(st.wrong>=2){st.hint=true;if(!st.autoHint){st.autoHint=true;useHint('fix-tags-auto','A2',o.activityId);}fb(out,'attention','힌트: '+o.hints[missing[0]]);}
       else fb(out,'attention','고칠 곳이 하나 더 있어요. 2단계에서 찾은 <b>할 일</b>과 견줘 봐요.');
       return;
     }
@@ -873,7 +873,7 @@ $('planHelps').addEventListener('click',function(e){
     out.innerHTML='<p class="support-copy" style="margin:0 0 6px">누르면 ①번 칸에 들어가요.</p><div class="chips" id="ideaChips">'+IDEA_CARDS.map(function(c,j){return '<button type="button" data-j="'+j+'">'+esc(c[0])+'</button>';}).join('')+'</div>';
     $('ideaChips').onclick=function(ev){var x=ev.target.closest('button');if(!x)return;var c=IDEA_CARDS[+x.dataset.j];
       if(c[1]==='bad'){fb($('planFb'),'attention','글에서 <b>술래잡기</b>를 하다가 무슨 일이 생겼는지 떠올려 봐요. 모두가 즐거운 방법일까요?');log({type:'answer',activityId:'s09-plan',itemId:'idea-tag',accuracy:'support'});return;}
-      S.p1=c[0];$('p1').value=c[0];save();renderPlanState();fb($('planFb'),'success','①번 칸에 넣었어요. 까닭은 <b>내 말로</b> 써 봐요.');};
+      S.p1=c[0];$('p1').value=c[0];if(R.hints.indexOf('plan-card')<0)useHint('plan-card','A2','s09-plan');save();renderPlanState();fb($('planFb'),'success','①번 칸에 넣었어요. 까닭은 <b>내 말로</b> 써 봐요.');};
   }
   reveal(out);
 });

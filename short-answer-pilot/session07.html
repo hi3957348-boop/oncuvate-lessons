@@ -547,7 +547,7 @@ function ocToast(msg){toast.textContent=msg;toast.classList.add('show');clearTim
 /* 글 다시 보기 */
 $('passageCopy').innerHTML=$('passageText').innerHTML;
 document.addEventListener('click',function(e){
-  if(e.target.closest('[data-passage]')){$('passageModal').classList.remove('hidden');log({type:'hint',activityId:pages[cur].dataset.activityId,hintId:'passage',level:'A1'});}
+  if(e.target.closest('[data-passage]')){$('passageModal').classList.remove('hidden');var aid=pages[cur].dataset.activityId,pid='passage-'+aid;if(R.hints.indexOf(pid)<0)useHint(pid,'A1',aid);else log({type:'hint',activityId:aid,hintId:'passage',level:'A1'});}
 });
 $('passageClose').onclick=function(){$('passageModal').classList.add('hidden');};
 $('passageModal').addEventListener('click',function(e){if(e.target===this)this.classList.add('hidden');});
@@ -600,7 +600,7 @@ function questionTap(host,item,opt){
       '<div class="legend"><span><i style="background:#e3d9fa;border-bottom:2px solid #4b24a5"></i>무엇</span><span><i style="background:#d3f0f5;border-bottom:2px solid #2aa3b5"></i>조건</span></div>');
     go.textContent=opt.nextLabel||'다음';opt.onSolved&&opt.onSolved(st);reveal(out);}
   function miss(k,list){st.wrongBy[k]++;
-    if(st.wrongBy[k]>=2){list.forEach(function(j){btns[j].classList.add('pulse');});fb(out,'attention','깜빡이는 말도 골라요. 어려우면 「힌트」를 눌러요.');}
+    if(st.wrongBy[k]>=2){if(!st['pulse_'+k]){st['pulse_'+k]=true;st.hintBy[k]=true;useHint('question-'+k+'-pulse','A2',opt.activityId);}list.forEach(function(j){btns[j].classList.add('pulse');});fb(out,'attention','깜빡이는 말도 골라요. 어려우면 「힌트」를 눌러요.');}
     else fb(out,'attention','아직 더 있어요. 문제를 소리 내어 한 번 더 읽어 봐요.');}
   box.onclick=function(e){var b=e.target.closest('.chunk');if(!b||b.disabled||st.solved)return;var j=+b.dataset.j,i=on.indexOf(j);
     if(i>=0)on.splice(i,1);else on.push(j);b.classList.remove('pulse');paint();};
@@ -685,7 +685,7 @@ var P3={i:0,wrong:0,hint:false,solved:false,
     var it=DX[this.i],out=$('dxfb');
     if(b.dataset.k!==it.ans){
       this.wrong++;b.classList.add('wrong');b.disabled=true;
-      if(this.wrong>=2){this.hint=true;fb(out,'attention','힌트: '+it.hint);}
+      if(this.wrong>=2){if(!this.hint)useHint('dx'+(this.i+1)+'-auto','A2','s3-diagnose');this.hint=true;fb(out,'attention','힌트: '+it.hint);}
       else fb(out,'attention','다시 읽어 봐요. 문제가 시킨 일을 이 친구가 다 했나요?');
       return;
     }
@@ -748,7 +748,7 @@ function pickIdeaInner(b,out){
   if(!f.side){R.planWrong++;b.classList.add('nope');fb(out,'attention','이 말은 문제와 <b>관련이 없어요</b>. 묻지 않은 이야기는 답에 넣지 않아요.');log({type:'answer',activityId:'s4-plan',itemId:id,accuracy:'support'});return;}
   if(f.side!==S.side){R.planWrong++;b.classList.add('nope');fb(out,'attention','이건 <b>'+f.side+'</b> 생각을 돕는 까닭이에요. 내가 고른 '+S.side+' 생각을 돕는 까닭을 골라요.');log({type:'answer',activityId:'s4-plan',itemId:id,accuracy:'support'});return;}
   if(S.reasons.length>=2){fb(out,'','까닭은 두 개까지 골라요. 바꾸려면 고른 카드를 한 번 더 눌러 빼요.');return;}
-  S.reasons.push(id);save();renderPlan();
+  S.reasons.push(id);if(R.hints.indexOf('plan-card')<0)useHint('plan-card','A2','s4-plan');save();renderPlan();
   fb($('planFb'),'success',S.reasons.length===1?'좋아요! 하나 더 고르면 ③ 더하기 칸이 채워져요.':'뼈대가 다 섰어요. 오른쪽 아래 「이 뼈대로 쓰기」를 눌러요.');
 }
 function bonesData(){
@@ -910,6 +910,7 @@ $('reviseDone').onclick=function(){
 /* ================= 7. 마무리 ================= */
 function firstTry(arr,n){var c=0,d=0;for(var i=0;i<n;i++){if(arr[i])d++;if(arr[i]&&!arr[i].wrong)c++;}return d?c+' / '+n:'—';}
 function renderWrap(){
+  $('stats').style.gridTemplateColumns='repeat(3,minmax(0,1fr))';
   var t=S.text.trim(),res=checkAll(t),okN=res.filter(function(r){return r.ok;}).length;
   $('finalNote').innerHTML=t?esc(t):'<span style="color:#9a93a6">아직 쓴 답이 없어요. 5단계에서 답을 써 봐요.</span>';
   var revised=S.draft&&t&&t!==S.draft;
@@ -917,7 +918,8 @@ function renderWrap(){
     [firstTry(R.qa,QA.length),'문제 뜯어보기 단번에'],
     [firstTry(R.dx,DX.length),'친구 답 진단 단번에'],
     [okN+' / '+CHECKS.length,'점검 쪽지 통과'],
-    [revised?'고쳐 썼어요':(S.draft?'그대로 냈어요':'—'),'고쳐 쓰기']
+    [revised?'고쳐 썼어요':(S.draft?'그대로 냈어요':'—'),'고쳐 쓰기'],
+    [R.hints.length+'번','도움 쓴 횟수']
   ].map(function(s){return '<div class="stat"><b>'+s[0]+'</b><small>'+s[1]+'</small></div>';}).join('');
 }
 ENTER[6]=renderWrap;

@@ -331,6 +331,7 @@ details .inner{margin:5px 0;padding:6px 10px;border-radius:9px;background:#fff;b
   <div class="time-card"><div><span>시작한 시각</span><b id="tStart">-</b></div><div><span>끝낸 시각</span><b id="tEnd">-</b></div><div><span>시작부터 끝까지</span><b id="tTotal">-</b></div>
     <div><span>예상한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
   <p class="time-compare" id="tCompare">4쪽 끝의 「다 했어요」를 누르면 시간이 여기에 정리돼요.</p>
+  <p class="time-compare" id="tHelp" hidden></p>
 </div>
 <div class="time-paper">
   <div class="row"><span>예상한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
@@ -379,7 +380,10 @@ const AKEY=SPEC.key+':answers';
 let A={};try{A=JSON.parse(localStorage.getItem(AKEY)||'{}')||{};}catch(e){A={};}
 function saveA(){try{localStorage.setItem(AKEY,JSON.stringify(A));}catch(e){}}
 function emit(type,detail){try{window.dispatchEvent(new CustomEvent('oc:track',{detail:{type,page:'review'+SPEC.no,...detail}}));}catch(e){}}
-window.OCWS={A,emit};
+A.hints=Array.isArray(A.hints)?A.hints:[];
+/* 도움 사용: 종류마다 처음 한 번 세고 기기에 남긴다 */
+function useHelp(id,level){if(A.hints.includes(id))return;A.hints.push(id);saveA();emit('hint',{hintId:id,level:level||'A2'});}
+window.OCWS={A,emit,useHelp};
 
 /* 문장 세기·점검 */
 const finished=t=>(String(t).match(/[.!?](?=["”’']?(\s|$))/g)||[]).length;
@@ -444,11 +448,11 @@ SPEC.qa.forEach((q,i)=>{
       const sit=on.filter(j=>q.chunks[j][1]===0),oth=on.filter(j=>q.chunks[j][1]===other),miss=want.filter(j=>!on.includes(j));
       if(sit.length||oth.length){st.wrong[k]++;st.on=on.filter(j=>!sit.includes(j)&&!oth.includes(j));saveA();paint();
         fb(k,'no',sit.length?`「${q.chunks[sit[0]][0]}」 이 말은 상황을 알려 줘요. 다시 골라 봐요.`:`「${q.chunks[oth[0]][0]}」 이 말은 조건이에요. 지금은 무엇을 적는지 알려 주는 말만 골라요.`);return;}
-      if(miss.length){st.wrong[k]++;saveA();if(st.wrong[k]>=2){miss.forEach(j=>btns[j].classList.add('pulse'));fb(k,'no','점선 테두리가 생긴 말도 골라요. 어려우면 「힌트」를 눌러요.');}
+      if(miss.length){st.wrong[k]++;saveA();if(st.wrong[k]>=2){st.hint[k]=true;useHelp('qa'+(i+1)+'-'+k+'-pulse','A2');miss.forEach(j=>btns[j].classList.add('pulse'));fb(k,'no','점선 테두리가 생긴 말도 골라요. 어려우면 「힌트」를 눌러요.');}
         else fb(k,'no','아직 더 있어요. 문제를 소리 내어 한 번 더 읽어 봐요.');return;}
       solve(k);};
     S[k].querySelector('.hint-btn').onclick=()=>{if(cur()!==k)return;const box=S[k].querySelector('.mc');
-      if(!st.hint[k]){st.hint[k]=true;saveA();emit('hint',{hintId:'qa'+(i+1)+'-'+k+'-choice',level:'A2'});}
+      if(!st.hint[k]){st.hint[k]=true;saveA();}useHelp('qa'+(i+1)+'-'+k+'-choice','A2');
       box.innerHTML=mcList(k).map(t=>`<button type="button" data-track="answer">${esc(t)}</button>`).join('');box.hidden=false;
       box.onclick=e=>{const b=e.target.closest('button');if(!b||b.classList.contains('wrong'))return;
         if(b.textContent===right[k]){b.classList.add('right');solve(k);}else{b.classList.add('wrong');st.wrong[k]++;saveA();fb(k,'no','다시 골라 봐요. 문제를 한 번 더 읽어 봐요.');}};};
@@ -479,7 +483,7 @@ F.items.forEach((it,i)=>{
     if(!picked.length)msg='쪽지를 먼저 골라요.';
     else if(multi&&picked.length!==need.length)msg='쪽지를 두 개 골라요.';
     else{const bad=picked.filter(k=>!need.includes(k));
-      if(bad.length){const t=F.tags.find(x=>x[0]===bad[0]);msg=(t&&t[2]?t[2]+' ':'')+(st.tries>=2?'힌트: '+it.hint:'다른 쪽지를 골라 봐요.');}
+      if(bad.length){const t=F.tags.find(x=>x[0]===bad[0]);if(st.tries>=2)useHelp('friend'+(i+1)+'-hint','A2');msg=(t&&t[2]?t[2]+' ':'')+(st.tries>=2?'힌트: '+it.hint:'다른 쪽지를 골라 봐요.');}
       else{ok=true;msg=F.mode==='tag'?'맞아요! 해설 보기를 누르면 고친 예를 볼 수 있어요.':'쪽지를 잘 골랐어요!';}}
     fb.className='feedback'+(ok?'':' no');fb.textContent=msg;
     if(ok&&!st.ok){st.ok=true;emit('answer',{itemId:'friend'+(i+1),accuracy:st.tries>1?'self-corrected':'accurate'});}
@@ -515,7 +519,7 @@ $('plan').querySelectorAll('.cards button').forEach(b=>b.onclick=()=>{const c=P.
   if(P.sides&&c.side!==A.side){b.classList.add('nope');cf.textContent=`이건 ${c.side} 생각을 돕는 까닭이에요. 내가 고른 생각을 돕는 까닭을 골라요.`;return;}
   const slot=[1,2].map(k=>boneTa[k]).find(t=>!t.value.trim());
   if(!slot){cf.textContent='까닭 칸이 다 찼어요. 바꾸려면 칸의 글을 지우고 눌러요.';return;}
-  slot.value=c.t;slot.dispatchEvent(new Event('input'));cf.className='feedback';cf.textContent='칸에 넣었어요. 내 말로 조금 바꿔 써도 좋아요.';});
+  useHelp('plan-card','A2');slot.value=c.t;slot.dispatchEvent(new Event('input'));cf.className='feedback';cf.textContent='칸에 넣었어요. 내 말로 조금 바꿔 써도 좋아요.';});
 document.querySelectorAll('textarea[data-grow]').forEach(t=>setTimeout(()=>grow(t),0));
 
 /* ===== 4쪽 답 쓰기와 점검 ===== */
@@ -537,7 +541,7 @@ function meter(){const t=ans.value,n=finished(t),len=t.trim().length;let d='';fo
 ans.addEventListener('input',meter);meter();
 $('write').querySelectorAll('.frames button').forEach(b=>b.onclick=()=>{const f=W.frames[+b.dataset.f];const s=ans.selectionStart??ans.value.length,e=ans.selectionEnd??s;
   const before=ans.value.slice(0,s),pre=before&&!/[\s\n]$/.test(before)?' ':'';ans.value=before+pre+f[1]+ans.value.slice(e);const p=(before+pre+f[1]).length;ans.focus();ans.setSelectionRange(p,p);ans.dispatchEvent(new Event('input'));
-  if(!A.frameUsed){A.frameUsed=true;saveA();emit('hint',{hintId:'write-frames',level:'A1'});}});
+  useHelp('write-frames','A1');});
 const selfIns=[...$('write').querySelectorAll('.self input')];
 selfIns.forEach(x=>{x.checked=!!(A.self||{})[x.dataset.c];x.addEventListener('change',()=>{A.self=Object.assign(A.self||{},{[x.dataset.c]:x.checked});saveA();});});
 $('doCheck').onclick=()=>{const t=ans.value,res=checks.map(c=>({c,ok:c.test(t)}));
@@ -546,8 +550,11 @@ $('doCheck').onclick=()=>{const t=ans.value,res=checks.map(c=>({c,ok:c.test(t)})
   fb.textContent=!t.trim()?'먼저 답을 써요.':bad.length?bad.map(r=>r.c.fix).join(' '):'점검 쪽지를 모두 통과했어요!';
   A.checked=res.filter(r=>r.ok).length;saveA();emit('answer',{itemId:'write-check',chosen:A.checked+'/'+res.length,accuracy:'notApplicable'});};
 
+/* 접힌 도움(까닭 카드·생각 꺼내기 질문·문장 시작 말)을 열면 도움으로 센다 */
+document.querySelectorAll('#plan details,#write details').forEach(d=>d.addEventListener('toggle',()=>{if(d.open)useHelp(d.closest('#plan')?'plan-help-open':'write-frames-open','A1');}));
+
 /* 해설·인쇄 */
-$('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'해설 숨기기':'해설 보기';};
+$('keyBtn').onclick=()=>{const on=document.body.classList.toggle('show-key');if(on)useHelp('key','A3');$('keyBtn').setAttribute('aria-pressed',on);$('keyBtn').textContent=on?'해설 숨기기':'해설 보기';};
 function syncPrint(){document.querySelectorAll('textarea').forEach(x=>{const m=x.nextElementSibling;if(m&&m.classList.contains('answer-mirror'))m.textContent=x.value;});}
 window.addEventListener('beforeprint',syncPrint);window.addEventListener('afterprint',()=>document.body.classList.remove('print-blank'));
 $('blankPrint').onclick=()=>{syncPrint();document.body.classList.add('print-blank');window.print();};$('answerPrint').onclick=()=>{syncPrint();document.body.classList.remove('print-blank');window.print();};
@@ -565,7 +572,7 @@ window.OCWS.findMissing=()=>{const out=[];
 window.OCWS.pageStats=()=>{
   const qOk=SPEC.qa.filter((x,i)=>{const a=A['qa'+i]||{};return a.ask&&a.cond;}).length,fOk=F.items.filter((x,i)=>(A['f'+i]||{}).ok).length;
   const bFill=boneTa.filter(t=>t.value.trim()).length,t=ans.value,n=finished(t),cOk=checks.filter(c=>c.test(t)).length;
-  return[['1쪽 문제 뜯어보기',`${qOk} / ${SPEC.qa.length}문제 무엇·조건 찾음`],['2쪽 '+F.title,`${fOk} / ${F.items.length}개 맞힘`],['3쪽 뼈대 세우기',`${bFill} / ${boneTa.length}칸 메모`],['4쪽 답 쓰고 점검하기',`${n}문장 · 점검 쪽지 ${cOk} / ${checks.length}`]];};
+  return[['1쪽 문제 뜯어보기',`${qOk} / ${SPEC.qa.length}문제 무엇·조건 찾음`],['2쪽 '+F.title,`${fOk} / ${F.items.length}개 맞힘`],['3쪽 뼈대 세우기',`${bFill} / ${boneTa.length}칸 메모`],['4쪽 답 쓰고 점검하기',`${n}문장 · 점검 쪽지 ${cOk} / ${checks.length}`],['도움 쓴 횟수',`${A.hints.length}번`]];};
 })();
 </script>
 <script>
@@ -611,6 +618,7 @@ function fill(){const total=st.end-st.start;
   if(st.est){const d=real-st.est;cmp=Math.abs(d)<=2?`예상(${st.est}분)과 실제 학습 시간(${real}분)이 거의 같아요. 계획을 잘 세웠어요!`:d<0?`예상(${st.est}분)보다 ${-d}분 빨리 끝냈어요.`:`예상(${st.est}분)보다 ${d}분 더 걸렸어요. 어디서 시간이 더 들었을까요?`;}
   if(st.away>=60000)cmp+=` 중간에 ${mins(st.away)}분 멈췄어요.`;
   $('tCompare').textContent=cmp||'시간을 정리했어요.';
+  const nh=(window.OCWS.A.hints||[]).length;$('tHelp').hidden=false;$('tHelp').textContent=nh?`오늘 쓴 도움: ${nh}번`:'오늘은 도움 없이 해냈어요!';
   $('pEst').textContent=st.est||'';$('pStart').textContent=hm(st.start);$('pEnd').textContent=hm(st.end);$('pReal').textContent=mins(total);
   $('efResume').hidden=false;}
 const cover=$('efStart');
