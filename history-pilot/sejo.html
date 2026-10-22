@@ -1008,9 +1008,28 @@ body{overflow:hidden}
 }());
 </script>
 <script>
+/* 국면별 읽기 고침(fix_reading_tabs) */
+(function(){
+  var wrap=document.querySelector('section[data-screen="1"] .article-wrap');if(!wrap||wrap.__readFix)return;wrap.__readFix=1;
+  var fb=document.getElementById('articleFeedback');
+  function say(t,good){if(!fb)return;fb.textContent=t;fb.className='feedback'+(good?' good':'');}
+  wrap.addEventListener('click',function(e){
+    var tab=e.target.closest('[data-article]');
+    if(tab){var n=tab.dataset.article;
+      wrap.querySelectorAll('[data-article]').forEach(function(b){b.classList.toggle('active',b===tab)});
+      wrap.querySelectorAll('[data-part]').forEach(function(a){a.hidden=a.dataset.part!==n});
+      say("각 국면의 '원인 → 결과'를 짚으며 읽어 보세요.",false);return}
+    var c=e.target.closest('[data-check]');
+    if(c){var box=c.parentNode;if(box.querySelector('.correct'))return;
+      if(c.dataset.check==='true'){c.classList.add('correct');box.querySelectorAll('.wrong').forEach(function(b){b.classList.remove('wrong')});say('맞아요! 이 국면의 원인과 결과를 잘 찾았어요. 다음 국면도 읽어 봐요.',true)}
+      else{c.classList.add('wrong');say('글에서 그 부분을 다시 찾아볼까요? 원인 → 결과 문장을 천천히 읽어 봐요.',false)}}
+  });
+})();
+</script>
+<script>
 /* 국면별 읽기 — 탭을 누르면 그 국면을 보이고, 참/거짓 문장을 누르면 바로 알려 준다(아이마다 따로) */
 (function(){
-  var wrap=document.querySelector('section[data-screen="1"] .article-wrap');if(!wrap)return;
+  var wrap=document.querySelector('section[data-screen="1"] .article-wrap');if(!wrap||wrap.__readFix)return;wrap.__readFix=1;
   var fb=document.getElementById('articleFeedback');
   function say(t,good){if(!fb)return;fb.textContent=t;fb.className='feedback'+(good?' good':'');}
   wrap.addEventListener('click',function(e){

@@ -288,6 +288,7 @@
 .sjf-coach button.primary{border-color:#4b24a5;background:#4b24a5;color:#fff}
 @media(max-height:620px){.sjf{height:max(300px,calc(100vh - 200px));gap:6px;padding:8px 10px}.sjf-arena{padding:10px;gap:10px}.sjf-box{height:118px;font-size:32px}.sjf-box .cnt{font-size:64px}.sjf-opt{min-height:40px;font-size:17px;padding:4px 10px}.sjf-opts{gap:6px}.sjf-jelly{width:38px;height:38px}.sjf-foot{min-height:38px}.sjf-say{padding:6px 10px;font-size:13px}}
 
+.mc-cell.mc-nope{animation:mcNope .35s}@keyframes mcNope{0%,100%{transform:none}25%{transform:translateX(-5px)}75%{transform:translateX(5px)}}
 .pilot-pin{display:flex;align-items:center;justify-content:center;gap:8px;margin:6px 0 10px;font-size:13px;font-weight:900;color:#4b24a5}.pilot-pin input{width:120px;padding:7px 10px;border:1.5px solid #d4cdf0;border-radius:10px;font:inherit;letter-spacing:.12em}
 </style>
 <meta name="robots" content="noindex">
@@ -503,14 +504,14 @@
     function checkBingoWin(lines){if(lines<1)return;var k='taejong-bwon:'+room+':'+bingoGame()+':'+playerId;try{if(localStorage.getItem(k))return;localStorage.setItem(k,'1');}catch(e){}bingoCelebrate(lines);}
     function renderBingo(){if(!state)return;var rb=state.reviewBingo||{},called=new Set(rb.called||[]),board=bingoBoard(),markSet=new Set(bingoGetMarks().filter(function(w){return board.some(function(b){return b.id===w;});})),mk=new Set();board.forEach(function(b,i){if(markSet.has(b.id))mk.add(i);});var lines=bingoLineCount(mk);
       var sp=rb.spin||0;if(seenBingoSpin===null)seenBingoSpin=sp;if(sp>seenBingoSpin&&rb.last){seenBingoSpin=sp;bingoHint=false;runReel(rb.last);}
-      var bd=$('#reviewBingoBoard');if(bd){bd.innerHTML=board.map(function(b,i){var c=called.has(b.id),m=markSet.has(b.id);return '<button class="mc-cell '+(m?'marked':(c?'called':''))+'" type="button" data-bcell="'+b.id+'" '+((m||!c||state.activityLocked)?'disabled':'')+'><span>'+escapeText(b.word)+'</span></button>';}).join('');$$('[data-bcell]').forEach(function(btn){btn.addEventListener('click',function(){bingoMarkCell(btn.dataset.bcell);});});}
+      var bd=$('#reviewBingoBoard');if(bd){bd.innerHTML=board.map(function(b,i){var c=called.has(b.id),m=markSet.has(b.id);return '<button class="mc-cell '+(m?'marked':'')+'" type="button" data-bcell="'+b.id+'" '+((m||state.activityLocked)?'disabled':'')+'><span>'+escapeText(b.word)+'</span></button>';}).join('');$$('[data-bcell]').forEach(function(btn){btn.addEventListener('click',function(){bingoMarkCell(btn.dataset.bcell);});});}
       var last=rb.last?bingoPool.find(function(p){return p.id===rb.last;}):null,clue=$('#bingoReelClue'),hb=$('#bingoHint'),hw=$('#bingoHintWord');if(!reelSpin&&clue)clue.textContent=last?last.meaning:'코치가 룰렛을 돌리면 뜻이 나와요.';if(hb)hb.disabled=reelSpin||!last;if(hw){if(!reelSpin&&bingoHint&&last){hw.textContent='정답 단어 → '+last.word;hw.hidden=false;}else{hw.textContent='';hw.hidden=true;}}
       var lc=$('#reviewBingoLines');if(lc)lc.textContent=lines;
       var dots=$('#bingoLineDots');if(dots)dots.innerHTML=[0,1,2].map(function(i){return '<i class="'+(i<lines?'on':'')+'"></i>';}).join('');
       var roster=Object.keys(state.players||{}).filter(function(id){return id!=='preview';}),curId=roster.length?roster[(rb.turn||0)%roster.length]:null,curName=curId?((state.players[curId]||{}).nickname||'친구'):'';var sb=$('#bingoSpin');if(sb){var left=bingoPool.length-((rb.called||[]).length);if(role==='coach'){sb.hidden=false;sb.disabled=reelSpin||!left;sb.textContent=left?'🎲 룰렛 돌리기 (코치)':'단어를 모두 뽑았어요';}else{var myTurn=curId&&curId===playerId;sb.hidden=false;sb.disabled=reelSpin||!left||!myTurn;sb.textContent=!left?'단어를 모두 뽑았어요':(myTurn?'🎲 내 차례! 룰렛 돌리기':(curName||'코치')+' 차례예요');}}var ti=$('#bingoTurn');if(ti){if(curId){ti.textContent='지금은 '+curName+' 차례예요';ti.hidden=false;}else{ti.textContent='';ti.hidden=true;}}
       var rs=$('#reviewBingoReset');if(rs)rs.hidden=role!=='coach';
       checkBingoWin(lines);}
-    function bingoMarkCell(id){var rb=state.reviewBingo||{};if(!(rb.called||[]).includes(id))return;var m=bingoGetMarks();if(m.indexOf(id)>=0)return;m.push(id);bingoSetMarks(m);renderBingo();}
+    function bingoMarkCell(id){var rb=state.reviewBingo||{};if(!(rb.called||[]).includes(id)){var nb=document.querySelector('[data-bcell="'+id+'"]');if(nb){nb.classList.remove('mc-nope');void nb.offsetWidth;nb.classList.add('mc-nope');}showToast(rb.last?'그 뜻의 단어가 아니에요. 다시 찾아봐요.':'코치가 룰렛을 돌린 뒤에 찾아요.');return;}var m=bingoGetMarks();if(m.indexOf(id)>=0)return;m.push(id);bingoSetMarks(m);renderBingo();}
     $('#bingoSpin').addEventListener('click',async()=>{try{const data=await request('bingo_spin',role==='coach'?{room,coachToken}:{room,playerId});if(data.accepted===false){showToast('아직 네 차례가 아니에요.');return;}applyState(data.state);}catch(error){showToast(error.message);}});$('#bingoHint').addEventListener('click',()=>{if(!state||!state.reviewBingo||!state.reviewBingo.last)return;bingoHint=true;renderBingo();});
     $('#reviewBingoReset').addEventListener('click',async()=>{if(role!=='coach'||!confirm('새 게임을 시작할까요? 모두의 빙고판이 새로 섞여요.'))return;try{const data=await request('bingo_reset',{room,coachToken});seenBingoSpin=null;applyState(data.state);}catch(error){showToast(error.message);}});
     function vocabChoices(round){const correct=vocab[round];if(!correct)return[];const others=vocab.filter(v=>v.id!==correct.id).sort((a,b)=>((a.id+round).localeCompare(b.id))).slice(0,5);return[correct,...others].sort((a,b)=>((a.word.length+round)%4)-((b.word.length+round)%4))}
@@ -635,7 +636,7 @@
     else{cls(box,'sjf-box ask');put(box,'?')}
     /* 카드 */
     var o=order(f.idx),cnt={},n=0;ids.forEach(function(id){var v=(f.picks[id]||{})[key];if(typeof v==='number'){cnt[v]=(cnt[v]||0)+1;n++}});
-    var showOpts=f.phase==='reveal'||(f.phase==='go'&&(A.stage==='done'||coach));
+    var showOpts=f.phase==='reveal'||(f.phase==='go'&&(A.stage==='done'));
     if(!showOpts)put(opts,f.phase==='ready'?'':'<div class="sjf-wait">잘 봐요…</div>');
     else put(opts,o.map(function(t,i){var k=['sjf-opt'];if(f.phase==='reveal'){if(t===c[0])k.push('right');else if(mine===i)k.push('wrong');else k.push('dim')}else if(mine===i)k.push('sel');
       return '<button type="button" class="'+k.join(' ')+'" data-sjf-o="'+i+'"'+(coach||f.phase==='reveal'?' disabled':'')+'>'+esc(t)+(coach?'<span class="cnt">'+(cnt[i]||0)+'명</span>':'')+'</button>'}).join(''));
@@ -652,6 +653,306 @@
     else if(a==='next'){if(f.idx>=CARDS.length-1)ctl({phase:'end'});else ctl({phase:'ready',idx:f.idx+1})}
     else if(a==='restart')ctl(null,false,true)});
   opts.addEventListener('click',function(e){if(role==='coach')return;var f=F(),b=e.target.closest('[data-sjf-o]');if(b&&f.phase==='go'&&A.stage==='done')pick('c'+f.idx,Number(b.dataset.sjfO))});
+})();
+</script>
+<script>
+/* ══ 온큐베이트 코치 콘솔 보강 — 신문읽기·역사읽기 수업방판 (room-coach-addon 1.0.0 · 2026-10-11) ══
+ * 이 수업은 자체 수업방(별명 입장·코치 서랍)을 쓴다. 엔진은 그대로 두고, 코치 서랍에 다음을 더한다.
+ *   · 한눈에 보기 — 아이마다 지금 단계 막대 한 줄 + 코치 단계 세로선, 먼저 도울 아이를 위로
+ *   · 칭찬 보내기 — 목록에서 고르거나 직접 써서, 고른 아이 화면에만 뜬다
+ *   · 관찰 메모 — 고른 아이별. 플랫폼이면 코치 메모 통로(__memo), 아니면 이 컴퓨터에만
+ * 🔴 원래 서버(/api/game·route.ts)는 새 동작을 모른다. 역사읽기는 모르는 동작을 보내면 코치가 연습 방으로
+ *    떨어지므로, **연습 방·파일럿 방에서만** 켠다. 서버로 쓰는 중이면 이 보강은 아무것도 하지 않는다.
+ * 크롬 109 문법만 쓴다.
+ * ════════════════════════════════════════════════════════════════════ */
+(function () {
+  "use strict";
+  var PRAISES = ["끝까지 꼼꼼히 읽었어요", "근거를 잘 찾았어요", "스스로 고쳐 냈어요", "끝까지 집중했어요", "멋진 질문을 했어요", "친구를 응원해 주었어요"];
+  var STUCK_MS = 120000;
+  var esc = function (v) { return String(v == null ? "" : v).replace(/[&<>"']/g, function (c) { return { "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]; }); };
+  var hhmm = function () { var t = new Date(); return String(t.getHours()).padStart(2, "0") + ":" + String(t.getMinutes()).padStart(2, "0"); };
+  function g(name) { try { return (0, eval)(name); } catch (_) { return undefined; } }   // 엔진의 전역 let·const 를 읽는다(없으면 undefined)
+
+  /* ── 엔진 고르기 ─────────────────────────────────────────── */
+  var NIE = typeof g("gameState") === "object" && typeof g("publishGameState") === "function";
+  var HIS = !NIE && typeof g("localRequest") === "function" && typeof g("showStep") === "function";
+  if (!NIE && !HIS) return;
+
+  var E = NIE ? {
+    role: function () { return g("sessionRole"); },
+    room: function () { return g("sessionRoom"); },
+    me: function () { return g("playerId"); },
+    enabled: function () { var m = g("sessionMode"); return m === "platform" || m === "local"; },
+    myStep: function () { return (g("screenIndex") || 0) + 1; },
+    total: function () { var s = g("screens"); return s ? s.length : 1; },
+    stepLabel: function (i) { var s = g("screens"); return s && s[i - 1] ? (s[i - 1].title || s[i - 1].id) : ""; },
+    players: function () { var gs = g("gameState") || {}; return Object.values(gs.players || {}).map(function (p) { return { id: p.id, name: p.nickname || p.id }; }); },
+    select: function () { return document.getElementById("participationStudentSelect"); },
+    drawer: function () { return document.querySelector(".coach-drawer-content"); },
+    anchor: function () { return document.querySelector(".participation-award-panel"); },
+    praiseNow: function () { var gs = g("gameState") || {}; return gs.hpxPraise || null; },
+    sendPraise: function (p) { var gs = g("gameState"); gs.hpxPraise = p; g("publishGameState")(); return Promise.resolve(true); }
+  } : {
+    role: function () { return g("role"); },
+    room: function () { return g("room"); },
+    me: function () { return g("playerId"); },
+    enabled: function () { return Boolean(g("localPreview") || window.HP_READY || window.HP_PILOT); },
+    myStep: function () { return (g("currentStep") || 0) + 1; },
+    total: function () { return 7; },
+    stepLabel: function (i) { var m = g("stepMeta"); return m && m[i - 1] ? (m[i - 1][0] || m[i - 1].title || "") : i + "단계"; },
+    players: function () { var st = g("state") || {}; return Object.values(st.players || {}).filter(function (p) { return p.id !== "preview"; }).map(function (p) { return { id: p.id, name: p.nickname || p.id, step: p.hpxStep, at: p.hpxAt }; }); },
+    select: function () { return document.getElementById("awardStudent"); },
+    drawer: function () { return document.querySelector("#coachDrawer .coach-content"); },
+    anchor: function () { var s = document.getElementById("awardStudent"); return s ? s.closest(".coach-section") : null; },
+    praiseNow: function () { var st = g("state") || {}; return st.hpxPraise || null; },
+    sendPraise: function (p) { return g("request")("hpx_praise", { room: g("room"), coachToken: g("coachToken"), praise: p }).then(function (r) { if (r && r.state) g("applyState")(r.state); return true; }); }
+  };
+
+  /* ── 역사읽기: 상태 바꾸기 함수에 두 동작을 더한다(연습 방·파일럿 방이 이 함수를 그대로 돈다) ── */
+  if (HIS) {
+    var origLocal = g("localRequest");
+    window.localRequest = function (action, payload) {
+      payload = payload || {};
+      if (action !== "hpx_step" && action !== "hpx_praise") return origLocal.apply(this, arguments);
+      var code = String(payload.room || g("room")), next = g("readLocalRoom")(code);
+      if (!next) throw new Error("수업방을 찾지 못했어요.");
+      if (action === "hpx_step") { var p = next.players && next.players[payload.playerId]; if (p) { p.hpxStep = Number(payload.step) || 1; p.hpxAt = Date.now(); } }
+      if (action === "hpx_praise" && payload.praise) next.hpxPraise = payload.praise;
+      g("writeLocalRoom")(code, next);
+      return { success: true, state: next };
+    };
+  }
+
+  /* ── 신문읽기: 아이 단계는 플랫폼이면 prog/<아이>/hpx, 연습 방이면 이 브라우저 안 채널로 ── */
+  var learnerSteps = {};   // 신문읽기 코치가 모은 아이별 { step, at }
+  var channel = null;
+  function nieChannel() {
+    if (channel || !E.room()) return channel;
+    try { channel = new BroadcastChannel("nie-hpx:" + E.room()); channel.onmessage = function (e) { var d = e.data || {}; if (d.type === "step" && d.id) learnerSteps[d.id] = { step: d.step, at: d.at }; }; } catch (_) { channel = null; }
+    return channel;
+  }
+  function platformOk() { return Boolean(window._firebaseReady && typeof window.pth === "function" && typeof window._set === "function" && typeof window._onValue === "function"); }
+
+  /* ── 아이: 지금 단계를 알린다(바뀔 때 + 화면을 만지면 30초에 한 번) ── */
+  var lastSent = { step: 0, at: 0 }, touched = 0;
+  function reportStep(force) {
+    if (E.role() !== "child" || !E.enabled() || !E.me() || !E.room()) return;
+    var step = E.myStep(), now = Date.now();
+    if (!force && step === lastSent.step && !(touched > lastSent.at && now - lastSent.at > 30000)) return;
+    lastSent = { step: step, at: now };
+    if (NIE) {
+      if (g("sessionMode") === "platform" && platformOk()) { try { window._set(window.pth("prog/" + E.me() + "/hpx"), { step: step, at: now }); } catch (_) { /* 무시 */ } }
+      else { var ch = nieChannel(); if (ch) ch.postMessage({ type: "step", id: E.me(), step: step, at: now }); }
+    } else {
+      try { Promise.resolve(g("request")("hpx_step", { room: E.room(), playerId: E.me(), step: step })).catch(function () {}); } catch (_) { /* 무시 */ }
+    }
+  }
+  document.addEventListener("pointerdown", function () { touched = Date.now(); }, true);
+  document.addEventListener("keydown", function () { touched = Date.now(); }, true);
+
+  /* ── 아이: 나에게 온 새 칭찬이면 별 축하를 띄운다 ── */
+  var seenPraise = null;
+  function checkPraise() {
+    if (E.role() !== "child") return;
+    var p = E.praiseNow();
+    if (seenPraise === null) { seenPraise = p && p.id ? p.id : ""; return; }   // 들어오기 전 칭찬은 띄우지 않는다
+    if (!p || !p.id || p.id === seenPraise || p.to !== E.me()) return;
+    seenPraise = p.id;
+    if (Date.now() - (Number(p.at) || 0) > 90000) return;
+    var old = document.querySelector(".hpx-praise-pop"); if (old) old.remove();
+    var pop = document.createElement("div"); pop.className = "hpx-praise-pop"; pop.setAttribute("role", "status");
+    pop.innerHTML = '<div class="hpx-praise-card"><svg viewBox="0 0 24 24" width="44" height="44" aria-hidden="true"><path d="M12 2.8l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 16.9l-5.4 2.8 1-6.1-4.4-4.3 6.1-.9z" fill="#ffc21a" stroke="#e08a00" stroke-width="1.2" stroke-linejoin="round"></path></svg><small>선생님이 칭찬을 보냈어요</small><b>' + esc(String(p.text || "").slice(0, 40)) + "</b></div>";
+    document.body.appendChild(pop);
+    pop.addEventListener("click", function () { pop.remove(); });
+    setTimeout(function () { pop.classList.add("out"); }, 3200);
+    setTimeout(function () { pop.remove(); }, 3700);
+  }
+
+  /* ── 코치: 서랍에 한눈에 보기 · 칭찬 · 메모 ── */
+  var mounted = false, praiseCount = {}, memoDrafts = {};
+  function selected() { var s = E.select(); return s && s.value ? s.value : ""; }
+  function nameOfId(id) { var hit = E.players().filter(function (p) { return p.id === id; })[0]; return hit ? hit.name : id; }
+  function stepsOf(p) {
+    if (NIE) { var s = learnerSteps[p.id] || {}; return { step: Number(s.step) || 0, at: Number(s.at) || 0 }; }
+    return { step: Number(p.step) || 0, at: Number(p.at) || 0 };
+  }
+  function overviewHtml() {
+    var players = E.players();
+    if (!players.length) return '<p class="hpx-empty">입장한 학생이 오면 한 줄씩 나타나요.</p>';
+    var total = Math.max(1, E.total()), coachStep = E.myStep();
+    var rows = players.map(function (p) {
+      var s = stepsOf(p), idle = s.at ? Date.now() - s.at : 0, r;
+      if (!s.step) r = { k: "wait", n: 3, t: "아직 소식 없음" };
+      else if (idle > STUCK_MS) r = { k: "stuck", n: 1, t: Math.floor(idle / 60000) + "분째 그대로" };
+      else if (coachStep - s.step >= 2) r = { k: "behind", n: 2, t: (coachStep - s.step) + "단계 뒤" };
+      else r = { k: "ok", n: 3, t: s.step === coachStep ? "같은 단계" : s.step + "단계" };
+      return { p: p, s: s, r: r };
+    }).sort(function (a, b) { return a.r.n - b.r.n || String(a.p.name).localeCompare(String(b.p.name), "ko"); });
+    var need = rows.filter(function (x) { return x.r.n <= 2; }).length;
+    var coachLeft = Math.max(0, Math.min(100, ((coachStep - 0.5) / total) * 100));
+    return '<div class="hpx-ov-head"><span class="' + (need ? "need" : "good") + '">' + (need ? "먼저 볼 학생 " + need : "모두 잘 가는 중") + "</span></div>" +
+      rows.map(function (x) {
+        var pct = x.s.step ? Math.max(3, Math.round(x.s.step / total * 100)) : 2;
+        return '<button type="button" class="hpx-ov-row ' + x.r.k + '" data-hpx-pick="' + esc(x.p.id) + '" title="' + esc(E.stepLabel(x.s.step)) + '"><span class="hpx-ov-name">' + esc(x.p.name) + '</span><span class="hpx-ov-tag">' + esc(x.r.t) + '</span><span class="hpx-ov-track"><i style="width:' + pct + '%"></i><em style="left:' + coachLeft + '%"></em></span></button>';
+      }).join("") + '<p class="hpx-legend"><span class="k stuck"></span>그대로 <span class="k behind"></span>뒤처짐 <span class="k me"></span>내 단계</p>';
+  }
+  function mount() {
+    if (mounted || E.role() !== "coach") return;
+    var drawer = E.drawer(); if (!drawer) return;
+    mounted = true;
+    var css = document.createElement("style"); css.textContent = CSS; document.head.appendChild(css);
+    var ov = document.createElement("section"); ov.className = "hpx-section"; ov.innerHTML = '<h3>한눈에 보기</h3><div class="hpx-overview" data-hpx-ov></div>';
+    var tools = document.createElement("section"); tools.className = "hpx-section";
+    tools.innerHTML = '<h3>칭찬 · 메모 <small data-hpx-who>학생을 고르세요</small></h3>' +
+      (E.enabled() ? '<div class="onq-praise-pick hpx-praise"><input type="text" maxlength="40" autocomplete="off" data-coach-praise placeholder="칭찬 고르기·쓰기" aria-label="고른 학생에게 보낼 칭찬"><button class="onq-praise-open" type="button" data-praise-open aria-label="칭찬 목록 열기" aria-expanded="false">▾</button><button class="hpx-send" type="button" data-hpx-send>보내기</button><ul class="onq-praise-menu" data-praise-menu hidden>' + PRAISES.map(function (t) { return '<li><button type="button" data-praise-pick="' + esc(t) + '">' + esc(t) + "</button></li>"; }).join("") + "</ul></div>"
+        : '<p class="hpx-note">칭찬은 연습 방·파일럿 방에서 보낼 수 있어요.</p>') +
+      '<p class="hpx-state" data-hpx-praise-state></p>' +
+      '<textarea class="hpx-memo" data-hpx-memo rows="3" maxlength="2000" placeholder="고른 학생의 관찰 메모 — 보호자·학생에게 안 보여요"></textarea>' +
+      '<div class="hpx-memo-row"><button type="button" data-hpx-memo-save>메모 저장</button><span class="hpx-state" data-hpx-memo-state></span></div>';
+    var anchor = E.anchor();
+    if (anchor && anchor.parentNode === drawer) { drawer.insertBefore(ov, anchor); anchor.insertAdjacentElement("afterend", tools); }
+    else { drawer.insertBefore(ov, drawer.children[1] || null); drawer.appendChild(tools); }
+    wirePraiseMenu(tools);
+    ov.addEventListener("click", function (e) {
+      var b = e.target.closest("[data-hpx-pick]"); if (!b) return;
+      var s = E.select(); if (s) { s.value = b.dataset.hpxPick; s.dispatchEvent(new Event("change", { bubbles: true })); }
+      syncWho(); tools.scrollIntoView({ block: "nearest", behavior: "smooth" });
+    });
+    tools.addEventListener("click", function (e) {
+      if (e.target.closest("[data-hpx-send]")) sendPraise(tools);
+      if (e.target.closest("[data-hpx-memo-save]")) saveMemo(tools);
+    });
+    tools.addEventListener("keydown", function (e) {
+      if (e.target.matches && e.target.matches("[data-coach-praise]") && e.key === "Enter" && !e.isComposing) { e.preventDefault(); sendPraise(tools); }
+    });
+    tools.addEventListener("input", function (e) { if (e.target.matches("[data-hpx-memo]")) memoDrafts[selected()] = e.target.value; });
+    var s = E.select(); if (s) s.addEventListener("change", syncWho);
+    syncWho();
+  }
+  var memoTarget = null;
+  function syncWho() {
+    var tools = document.querySelector("[data-hpx-who]"); if (!tools) return;
+    var id = selected();
+    tools.textContent = id ? nameOfId(id) : "학생을 고르세요";
+    if (memoTarget === id) return;
+    memoTarget = id;
+    var area = document.querySelector("[data-hpx-memo]");
+    if (area) area.value = id ? (memoDrafts[id] != null ? memoDrafts[id] : (localStorage.getItem(memoKey(id)) || "")) : "";
+    var st = document.querySelector("[data-hpx-memo-state]"); if (st) st.textContent = "";
+    var ps = document.querySelector("[data-hpx-praise-state]"); if (ps) ps.textContent = id && praiseCount[id] ? "오늘 " + praiseCount[id] + "번 보냄" : "";
+  }
+  function memoKey(id) { return "hpx-memo:" + (document.documentElement.dataset.lessonId || location.pathname) + ":" + E.room() + ":" + id; }
+  function sendPraise(tools) {
+    var id = selected(), field = tools.querySelector("[data-coach-praise]"), st = tools.querySelector("[data-hpx-praise-state]");
+    var text = String(field && field.value || "").replace(/\s+/g, " ").trim().slice(0, 40);
+    if (!id) { st.textContent = "학생을 먼저 고르세요"; st.dataset.kind = "warn"; return; }
+    if (!text) { st.textContent = "칭찬을 고르거나 써 주세요"; st.dataset.kind = "warn"; return; }
+    var praise = { id: Date.now().toString(36) + Math.random().toString(36).slice(2, 6), to: id, text: text, at: Date.now() };
+    Promise.resolve(E.sendPraise(praise)).then(function () {
+      praiseCount[id] = (praiseCount[id] || 0) + 1; field.value = "";
+      st.textContent = "「" + text + "」 보냈어요 · " + hhmm() + " · 오늘 " + praiseCount[id] + "번"; st.dataset.kind = "ok";
+    }).catch(function () { st.textContent = "보내지 못했어요 · 연결 확인"; st.dataset.kind = "warn"; });
+  }
+  function saveMemo(tools) {
+    var id = selected(), area = tools.querySelector("[data-hpx-memo]"), st = tools.querySelector("[data-hpx-memo-state]");
+    var text = String(area && area.value || "").trim().slice(0, 2000);
+    if (!id) { st.textContent = "학생을 먼저 고르세요"; return; }
+    try { localStorage.setItem(memoKey(id), text); } catch (_) { /* 무시 */ }
+    var inj = window.ONCUVATE && typeof window.ONCUVATE === "object" ? window.ONCUVATE : null;
+    if (!text) { st.textContent = "메모 내용이 없어요"; return; }
+    if (!inj || typeof inj.base !== "string") { st.textContent = "이 컴퓨터에만 저장됨 · " + hhmm(); return; }
+    st.textContent = "저장하는 중…";
+    fetch(inj.base + "__memo", { method: "POST", credentials: "same-origin", cache: "no-store", headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ childId: id, sessionNo: Number(inj.session) || 1, text: text }) })
+      .then(function (r) { st.textContent = r.ok ? "저장됨 · " + hhmm() + " · 평가 화면에 함께 보여요" : (r.status === 403 ? "권한 없음 · 이 컴퓨터에만" : "저장 못 함 · 이 컴퓨터에만"); })
+      .catch(function () { st.textContent = "연결 없음 · 이 컴퓨터에만 저장됨"; });
+  }
+  function renderOverview() {
+    var box = document.querySelector("[data-hpx-ov]"); if (!box) return;
+    var html = overviewHtml(); if (box.innerHTML !== html) box.innerHTML = html;
+  }
+
+  /* 칭찬 고르기 목록 — 브라우저 기본 드롭다운(datalist)은 배율 화면에서 엉뚱한 자리에 떠서 직접 그린다 */
+  function wirePraiseMenu(root) {
+    var boxOf = function (n) { return n && n.closest ? n.closest(".onq-praise-pick") : null; };
+    var setOpen = function (n, open) { var b = boxOf(n); if (!b) return; var m = b.querySelector("[data-praise-menu]"); if (m) m.hidden = !open; var t = b.querySelector("[data-praise-open]"); if (t) t.setAttribute("aria-expanded", String(open)); };
+    root.addEventListener("mousedown", function (e) { if (e.target.closest && e.target.closest("[data-praise-pick],[data-praise-open]")) e.preventDefault(); });
+    root.addEventListener("click", function (e) {
+      var t = e.target.closest && e.target.closest("[data-praise-open]");
+      if (t) { var m = boxOf(t).querySelector("[data-praise-menu]"); setOpen(t, m.hidden); boxOf(t).querySelector("[data-coach-praise]").focus(); return; }
+      var p = e.target.closest && e.target.closest("[data-praise-pick]");
+      if (p) { var f = boxOf(p).querySelector("[data-coach-praise]"); f.value = p.dataset.praisePick; f.focus(); setOpen(p, false); }
+    });
+    root.addEventListener("focusout", function (e) { if (e.target.matches && e.target.matches("[data-coach-praise]")) { var t = e.target; setTimeout(function () { setOpen(t, false); }, 150); } });
+    root.addEventListener("keydown", function (e) { if (e.key === "Escape") setOpen(e.target, false); }, true);
+  }
+
+  var CSS = [
+    ".hpx-section{margin:0 0 10px;padding:11px;border:1px solid #e3dcf2;border-radius:14px;background:#fff;color:#29243a}",
+    ".hpx-section h3{display:flex;align-items:center;justify-content:space-between;gap:6px;margin:0 0 8px;font-size:13px}.hpx-section h3 small{font-size:11px;color:#6f7789;font-weight:700}",
+    ".hpx-overview{display:grid;gap:4px}.hpx-empty,.hpx-note{margin:0;font-size:11.5px;color:#8a8f9b}",
+    ".hpx-ov-head span{display:inline-block;font-size:10.5px;font-weight:800;border-radius:99px;padding:1px 8px}.hpx-ov-head .need{color:#fff;background:#e0632a}.hpx-ov-head .good{color:#1d7a5b;background:#e3f5ee}",
+    ".hpx-ov-row{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:\"name tag\" \"track track\";gap:3px 6px;width:100%;padding:5px 7px;border:1.5px solid transparent;border-radius:9px;background:#faf9fd;text-align:left;font:inherit;cursor:pointer}",
+    ".hpx-ov-row:hover{border-color:#dcd4f5}.hpx-ov-name{grid-area:name;font-size:12px;font-weight:800;color:#24324a;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.hpx-ov-tag{grid-area:tag;font-size:10.5px;font-weight:700;color:#5d6573;white-space:nowrap}",
+    ".hpx-ov-track{grid-area:track;position:relative;height:9px;border-radius:99px;background:#ebe8f3}.hpx-ov-track i{position:absolute;left:0;top:0;bottom:0;border-radius:99px;background:#8a6fd8}.hpx-ov-track em{position:absolute;top:-3px;bottom:-3px;width:3px;margin-left:-1px;border-radius:2px;background:#24324a}",
+    ".hpx-ov-row.stuck{background:#fff0ee}.hpx-ov-row.stuck i{background:#e0503a}.hpx-ov-row.stuck .hpx-ov-tag{color:#c0392b}.hpx-ov-row.behind i{background:#e8b33a}.hpx-ov-row.behind .hpx-ov-tag{color:#9a6a00}.hpx-ov-row.wait{opacity:.7}",
+    ".hpx-legend{display:flex;flex-wrap:wrap;align-items:center;gap:2px 7px;margin:3px 0 0;font-size:10px;color:#8a8f9b}.hpx-legend .k{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:2px}.hpx-legend .k.stuck{background:#e0503a}.hpx-legend .k.behind{background:#e8b33a}.hpx-legend .k.me{background:#24324a;width:3px}",
+    ".onq-praise-pick{position:relative;display:flex;gap:4px}.onq-praise-pick input{flex:1 1 0;width:0;min-width:0;height:32px;padding:0 8px;border:1.5px solid #f2c46d;border-radius:10px;background:#fffdf5;color:#4a3300;font:inherit;font-size:12.5px}",
+    ".onq-praise-pick input:focus{outline:none;border-color:#e0a21a;background:#fff}.onq-praise-open{flex:none;width:28px;height:32px;padding:0;border:1.5px solid #f2c46d;border-radius:10px;background:#fffdf5;color:#a45800;font-size:12px;cursor:pointer}",
+    ".hpx-send{flex:none;height:32px;padding:0 10px;border:0;border-radius:10px;background:#f2a516;color:#fff;font:inherit;font-size:12px;font-weight:800;cursor:pointer}",
+    ".onq-praise-menu{position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:40;margin:0;padding:4px;list-style:none;background:#fff;border:1.5px solid #f2c46d;border-radius:10px;box-shadow:0 10px 24px rgba(60,40,0,.16)}.onq-praise-menu[hidden]{display:none}.onq-praise-menu li{margin:0;padding:0}",
+    ".onq-praise-menu button{display:block;width:100%;padding:6px 8px;border:0;border-radius:7px;background:none;text-align:left;font:inherit;font-size:12.5px;color:#4a3300;cursor:pointer}.onq-praise-menu button:hover{background:#fff1cf}",
+    ".hpx-state{min-height:0;margin:4px 0 0;font-size:11px;color:#1d7a5b}.hpx-state[data-kind=warn]{color:#b4532a}.hpx-state:empty{display:none}",
+    ".hpx-memo{display:block;width:100%;box-sizing:border-box;margin-top:8px;min-height:60px;resize:vertical;padding:7px 9px;border:1.5px solid #dcd4f5;border-radius:10px;font:inherit;font-size:12.5px;line-height:1.5}",
+    ".hpx-memo-row{display:flex;align-items:center;gap:7px;margin-top:5px}.hpx-memo-row button{border:0;border-radius:9px;background:#5b2bc1;color:#fff;font:inherit;font-size:12px;font-weight:800;padding:6px 11px;cursor:pointer}",
+    ".hpx-praise-pop{position:fixed;inset:0;z-index:250000;display:grid;place-items:center;background:rgba(30,24,60,.18);transition:opacity .45s}.hpx-praise-pop.out{opacity:0}",
+    ".hpx-praise-card{display:grid;justify-items:center;gap:4px;padding:22px 30px 20px;border-radius:22px;background:#fffdf3;border:3px solid #ffc21a;box-shadow:0 18px 44px rgba(60,40,0,.25);text-align:center;animation:hpxIn .45s cubic-bezier(.2,1.4,.4,1)}",
+    ".hpx-praise-card small{font-size:14px;font-weight:700;color:#8a6a1a}.hpx-praise-card b{font-size:24px;color:#24324a}@keyframes hpxIn{from{transform:scale(.6);opacity:0}to{transform:scale(1);opacity:1}}"
+  ].join("\n");
+
+  /* ── 돌리기: 수업방에 들어간 뒤부터 ── */
+  var subscribedIds = {};
+  setInterval(function () {
+    var role = E.role();
+    if (!role || !E.room()) return;
+    if (role === "child") {
+      // 아이 쪽 칭찬 띄우기도 이 스타일을 쓴다
+      if (!document.getElementById("hpx-child-css")) { var c = document.createElement("style"); c.id = "hpx-child-css"; c.textContent = CSS; document.head.appendChild(c); }
+      reportStep(false); checkPraise();
+      return;
+    }
+    mount();
+    if (NIE && E.enabled()) {
+      if (g("sessionMode") === "platform" && platformOk()) {
+        // 아이마다 prog/<아이>/hpx 를 따로 구독한다(부모 prog 구독이 두 겹 아래를 모아 주지 않는 런타임도 있다)
+        E.players().forEach(function (p) {
+          if (!p.id || subscribedIds[p.id]) return;
+          subscribedIds[p.id] = true;
+          try { window._onValue(window.pth("prog/" + p.id + "/hpx"), function (snap) { var h = snap && typeof snap.val === "function" ? snap.val() : snap; if (h && typeof h === "object") learnerSteps[p.id] = { step: h.step, at: h.at }; }); } catch (_) { subscribedIds[p.id] = false; }
+        });
+      } else nieChannel();
+    }
+    renderOverview(); syncWho();
+  }, 1000);
+}());
+</script>
+<script>
+/* 국면별 읽기 고침(fix_reading_tabs) */
+(function(){
+  var wrap=document.querySelector('section[data-screen="1"] .article-wrap');if(!wrap||wrap.__readFix)return;wrap.__readFix=1;
+  var fb=document.getElementById('articleFeedback');
+  function say(t,good){if(!fb)return;fb.textContent=t;fb.className='feedback'+(good?' good':'');}
+  wrap.addEventListener('click',function(e){
+    var tab=e.target.closest('[data-article]');
+    if(tab){var n=tab.dataset.article;
+      wrap.querySelectorAll('[data-article]').forEach(function(b){b.classList.toggle('active',b===tab)});
+      wrap.querySelectorAll('[data-part]').forEach(function(a){a.hidden=a.dataset.part!==n});
+      say("각 국면의 '원인 → 결과'를 짚으며 읽어 보세요.",false);return}
+    var c=e.target.closest('[data-check]');
+    if(c){var box=c.parentNode;if(box.querySelector('.correct'))return;
+      if(c.dataset.check==='true'){c.classList.add('correct');box.querySelectorAll('.wrong').forEach(function(b){b.classList.remove('wrong')});say('맞아요! 이 국면의 원인과 결과를 잘 찾았어요. 다음 국면도 읽어 봐요.',true)}
+      else{c.classList.add('wrong');say('글에서 그 부분을 다시 찾아볼까요? 원인 → 결과 문장을 천천히 읽어 봐요.',false)}}
+  });
 })();
 </script>
 </body>
