@@ -265,7 +265,7 @@ h1,h2{margin:0;font-size:21px;line-height:1.3;letter-spacing:-.03em;font-weight:
   <div class="ef-card">
     <div class="ef-card-head"><div><h2 id="efTitle">오늘의 복습 계획</h2><p class="lead">네 가지 활동을 하고, 마지막에 돌아보기를 해요.</p></div><img src="assets/jelly-guide.png" alt=""></div>
     <ol class="ef-list" id="efList"></ol>
-    <p class="ef-q">다 하는 데 얼마나 걸릴 것 같아요?</p>
+    <p class="ef-q">오늘은 몇 분 동안 집중해 볼까?</p>
     <div class="ef-est" id="efEst"><button type="button" data-min="10" aria-pressed="false">10분</button><button type="button" data-min="15" aria-pressed="false">15분</button><button type="button" data-min="20" aria-pressed="false">20분</button><button type="button" data-min="25" aria-pressed="false">25분</button><button type="button" data-min="30" aria-pressed="false">30분</button></div>
     <p class="ef-note">3분 넘게 멈추거나 다른 화면으로 가면, 그 시간은 「멈춘 시간」으로 따로 적어 둘게요.</p>
     <button class="ef-go" id="efGo" type="button" disabled>시작하기</button>
@@ -382,12 +382,12 @@ const s5 = RV.p5;
 const chipRow = (grp, list) => `<div class="chips">${list.map(v => `<label class="chip"><input type="checkbox" name="${grp}" value="${esc(v)}" data-track="input">${esc(v)}</label>`).join("")}</div>`;
 const page5 = `<section class="sheet" id="p5" aria-labelledby="t5">${top(s5)}
 <div class="title-row"><span class="number">5</span><h2 id="t5">${esc(P[4])}</h2></div>
-<p class="intro">예상한 시간과 실제로 걸린 시간을 견주어 보고, 오늘 공부를 돌아봐요. 알맞은 것을 고르기만 해도 돼요.</p>
+<p class="intro">정한 시간과 실제로 걸린 시간을 견주어 보고, 오늘 공부를 돌아봐요. 알맞은 것을 고르기만 해도 돼요.</p>
 <div class="time-screen"><div class="time-card"><div><span>시작한 시각</span><b id="tStart">-</b></div><div><span>끝낸 시각</span><b id="tEnd">-</b></div><div><span>시작부터 끝까지</span><b id="tTotal">-</b></div>
-  <div><span>예상한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
+  <div><span>정한 시간</span><b id="tEst">-</b></div><div><span>실제 학습 시간</span><b id="tActive">-</b></div><div class="away"><span>멈춘 시간</span><b id="tAway">-</b></div></div>
   <p class="time-compare" id="tCompare">4쪽 끝의 「다 했어요」를 누르면 시간이 여기에 정리돼요.</p></div>
-<div class="time-paper"><div class="row"><span>예상한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
-  <div class="row"><span>예상보다 → &nbsp;○ 빨랐어요 &nbsp; ○ 비슷했어요 &nbsp; ○ 오래 걸렸어요</span></div></div>
+<div class="time-paper"><div class="row"><span>정한 시간 <span class="blank" id="pEst">&nbsp;</span>분</span><span>시작 <span class="blank" id="pStart">&nbsp;</span></span><span>끝 <span class="blank" id="pEnd">&nbsp;</span></span><span>실제 걸린 시간 <span class="blank" id="pReal">&nbsp;</span>분</span></div>
+  <div class="row"><span>정한 시간보다 → &nbsp;○ 빨랐어요 &nbsp; ○ 비슷했어요 &nbsp; ○ 오래 걸렸어요</span></div></div>
 <div class="ref"><h3><i>1</i>공부가 얼마나 술술 되었나요?</h3><div class="faces">${[["😣", "많이 막혔어요"], ["🙁", "조금 막혔어요"], ["😐", "보통이에요"], ["🙂", "잘 됐어요"], ["😄", "술술 됐어요"]].map(([f, t], k) => `<label class="face"><input type="radio" name="efSmooth" value="${k + 1}" data-track="input"><span>${f}</span>${t}</label>`).join("")}</div></div>
 <div class="ref"><h3><i>2</i>왜 그랬다고 생각하나요?</h3>${chipRow("efWhy", s5.why)}</div>
 <div class="ref"><h3><i>3</i>다음에도 기억해 두고 쓸 방법은?</h3>${chipRow("efSkill", s5.skills)}</div>
@@ -506,8 +506,8 @@ function fill() {
   if (!st.end) return; const total = st.end - st.start;
   $("tStart").textContent = hm(st.start); $("tEnd").textContent = hm(st.end); $("tTotal").textContent = mins(total) + "분";
   $("tEst").textContent = st.est ? st.est + "분" : "-"; $("tActive").textContent = mins(st.active) + "분"; $("tAway").textContent = mins(st.away) + "분";
-  const real = mins(st.active); let cmp = "예상한 시간을 고르지 않았어요.";
-  if (st.est) cmp = real < st.est - 2 ? `예상(${st.est}분)보다 빨리 끝냈어요!` : real > st.est + 2 ? `예상(${st.est}분)보다 ${real - st.est}분 더 걸렸어요. 어디서 오래 걸렸는지 떠올려 봐요.` : `예상(${st.est}분)과 비슷하게 끝냈어요!`;
+  const real = mins(st.active); let cmp = "정한 시간을 고르지 않았어요.";
+  if (st.est) cmp = real < st.est - 2 ? `정한 시간(${st.est}분)보다 빨리 끝냈어요!` : real > st.est + 2 ? `정한 시간(${st.est}분)보다 ${real - st.est}분 더 걸렸어요. 어디서 오래 걸렸는지 떠올려 봐요.` : `정한 시간(${st.est}분)과 비슷하게 끝냈어요!`;
   $("tCompare").textContent = cmp;
   $("pEst").textContent = st.est || " "; $("pStart").textContent = hm(st.start); $("pEnd").textContent = hm(st.end); $("pReal").textContent = real;
   $("efResume").hidden = false;
@@ -550,7 +550,7 @@ $("efImg").onclick = async () => {
   let y = 170; const head = t => { c.fillStyle = "#27344e"; c.font = `900 22px ${F}`; c.fillText(t, 40, y); y += 14; c.fillStyle = "#e2ddd2"; c.fillRect(40, y, W - 80, 2); y += 30; };
   const row = (k, v) => { c.fillStyle = "#6f7789"; c.font = `800 17px ${F}`; c.fillText(k, 56, y); c.fillStyle = "#27344e"; c.font = `900 19px ${F}`; y = wrapText(c, v, 300, y, W - 360, 28) + 6; };
   head("학습 시간");
-  if (st.start) { row("시작 · 끝", `${hm(st.start)} → ${st.end ? hm(st.end) : "진행 중"}`); row("예상한 시간", st.est ? st.est + "분" : "-"); row("실제 학습 시간", mins(st.active) + "분"); row("멈춘 시간", mins(st.away) + "분"); } else row("학습 시간", "시작하기를 누르지 않았어요");
+  if (st.start) { row("시작 · 끝", `${hm(st.start)} → ${st.end ? hm(st.end) : "진행 중"}`); row("정한 시간", st.est ? st.est + "분" : "-"); row("실제 학습 시간", mins(st.active) + "분"); row("멈춘 시간", mins(st.away) + "분"); } else row("학습 시간", "시작하기를 누르지 않았어요");
   y += 10; head("쪽별 활동");
   const sOk = document.querySelectorAll(".sound .option.right").length, lOk = set.querySelectorAll(".l.ok").length, qOk = document.querySelectorAll(".q .option.right").length, mine = [...document.querySelectorAll("#mine textarea")].filter(t => t.value.trim()).length;
   row("1쪽 소리와 글자", `${sOk} / ${s1.sounds.length} · 늘려 읽기 ${document.querySelectorAll('.rep[aria-pressed="true"]').length}번`);
@@ -563,10 +563,196 @@ $("efImg").onclick = async () => {
   const H = Math.ceil(y + 30), out = document.createElement("canvas"); out.width = W * 2; out.height = H * 2; out.getContext("2d").drawImage(cv, 0, 0);
   const a = document.createElement("a"), d = new Date(); a.download = `${RV.story}_복습_결과표_${d.getFullYear()}${String(d.getMonth() + 1).padStart(2, "0")}${String(d.getDate()).padStart(2, "0")}.png`; a.href = out.toDataURL("image/png"); a.click();
 };
+// 정한 시간 끝·나머지 약속(ef-later)에 넘기는 값
+window.EF_BRIDGE = { key: KEY, title: `「${RV.story}」 복습`, emit,
+  now: () => { const n = Date.now(), gap = document.hidden ? 0 : n - last; return { running: !!running(), done: !!st.end, est: st.est, start: st.start, active: st.active + (running() && gap < IDLE ? gap : 0) }; },
+  pages: () => { const p2w = [...document.querySelectorAll("#p2 .write-block textarea")], mine = [...document.querySelectorAll("#mine textarea")];
+    return [{ name: "소리와 글자", done: document.querySelectorAll(".sound .option.right").length, total: s1.sounds.length },
+      { name: "낱말 잇기", done: set.querySelectorAll(".l.ok").length + p2w.filter(t => t.value.trim()).length, total: s2.links.length + p2w.length },
+      { name: "새 이야기", done: (readTimes.length ? 1 : 0) + document.querySelectorAll(".q .option.right").length, total: 1 + s3.questions.length },
+      { name: "내 이야기", done: mine.filter(t => t.value.trim()).length, total: s4.questions.length }]; } };
+// 읽기 시간 기록을 쓴 답 저장(ws-save)과 함께 씀
+window.WS_READ_TIMES = readTimes;
 try { const child = window.ONCUVATE && window.ONCUVATE.child; if (child) $("wm").textContent = String(child); } catch (e) {}
 restoreRef(); fill();
 if (running()) { $("efClock").hidden = false; openCover(); } else if (!st.end) openCover();
 })();
 </script>
+<!-- ws-save:start -->
+<script>
+// 쓴 답 저장: 창을 닫았다 열어도 답이 남도록 기기에만 저장(외부 전송 없음). 되살릴 때는 기록 이벤트를 다시 보내지 않음
+(() => { "use strict";
+const RV = window.RV, KEY = "oncuvate-folktale:" + RV.id + ":answers";
+const $ = id => document.getElementById(id), q = (s, r = document) => [...r.querySelectorAll(s)];
+const snap = () => ({
+  radios: q("#p1 input[type=radio]:checked, #p3 input[type=radio]:checked").map(x => [x.name, x.value]),
+  reps: q(".rep").map(r => r.getAttribute("aria-pressed") === "true"),
+  links: q("#links .link-svg line").map(l => +l.dataset.li),
+  texts: q("#p2 textarea, #mine textarea").map(t => t.value),
+  reads: (window.WS_READ_TIMES || []).slice() });
+let cleared = false, t = 0;
+function save() { if (cleared) return; try { localStorage.setItem(KEY, JSON.stringify(snap())); } catch (e) {} }
+const later = () => { clearTimeout(t); t = setTimeout(save, 300); };
+["input", "change", "click", "keyup"].forEach(ev => document.addEventListener(ev, later, true));
+document.addEventListener("visibilitychange", () => { if (document.hidden) save(); }); window.addEventListener("pagehide", save);
+function mark(input, right, text) { const box = input.closest(".sound,.q"), fb = box.querySelector(".feedback");
+  input.closest(".option").classList.add(right ? "right" : "retry"); fb.className = right ? "feedback" : "feedback warm"; fb.textContent = text; }
+function restore(d) {
+  (d.radios || []).forEach(([n, v]) => { const x = document.querySelector(`input[name="${n}"][value="${CSS.escape(v)}"]`); if (!x) return; x.checked = true;
+    if (/^snd\d+$/.test(n)) { const s = RV.p1.sounds[+n.slice(3)]; mark(x, v === s.word, v === s.word ? "맞아요! " + s.why : v === s.heard ? "들리는 소리 그대로 골랐어요. 글자로는 어떻게 쓸까요?" : "다시 들어 보고 골라요."); }
+    else if (/^q\d+$/.test(n)) { const s = RV.p3.questions[+n.slice(1)]; mark(x, +v === s.a, +v === s.a ? "맞아요! " + s.why : s.hint); } });
+  q(".rep").forEach((r, i) => { if (d.reps && d.reps[i]) r.setAttribute("aria-pressed", "true"); });
+  const set = $("links");
+  (d.links || []).forEach(li => { const L = set.querySelector(`.l[data-i="${li}"]`), R = set.querySelector(`.r[data-i="${li}"]`); if (!L || !R) return;
+    L.classList.add("ok"); R.classList.add("ok"); const slot = R.querySelector(".slot"); if (slot) { slot.textContent = RV.p2.links[li].fill; slot.classList.add("filled"); }
+    const ln = document.createElementNS("http://www.w3.org/2000/svg", "line"); ln.dataset.li = li; ln.dataset.ri = li; set.querySelector(".link-svg").append(ln); });
+  if (d.links && d.links.length) { const fb = set.querySelector(".feedback"); fb.className = "feedback"; fb.textContent = d.links.length === RV.p2.links.length ? "모두 이었어요! 빈칸에 넣어 소리 내어 읽어 봐요." : "잘 이었어요!"; }
+  q("#p2 textarea, #mine textarea").forEach((x, i) => { const v = d.texts && d.texts[i]; if (v) { x.value = v; x.dispatchEvent(new Event("input", { bubbles: true })); } });
+  const rt = window.WS_READ_TIMES;
+  if (rt && d.reads && d.reads.length) { rt.splice(0, rt.length, ...d.reads.slice(0, 3));
+    q("#times b").forEach((x, k) => x.textContent = rt[k] != null ? rt[k] + "초" : "-");
+    q(".times-paper .blank").forEach((x, k) => x.textContent = rt[k] != null ? rt[k] : " ");
+    $("timer").textContent = rt.length >= 3 ? "⏱ 다시 재기" : "⏱ 읽기 시작"; }
+  const redraw = () => window.dispatchEvent(new Event("resize")); requestAnimationFrame(redraw);
+  try { document.fonts && document.fonts.ready.then(redraw); } catch (e) {} }
+try { const d = JSON.parse(localStorage.getItem(KEY) || "null"); if (d) restore(d); } catch (e) {}
+// 「처음부터 새로 시작」이면 쓴 답도 지우고 새로 엶
+const nw = $("efNew"); if (nw) nw.addEventListener("click", () => { cleared = true; try { localStorage.removeItem(KEY); } catch (e) {} setTimeout(() => location.reload(), 50); });
+})();
+</script>
+<!-- ws-save:end -->
+<!-- ef-later:start -->
+<style>
+/* 정한 시간이 끝나면 완성도 보기 → 나머지 약속 → 알람 (기기 저장만, 외부 전송 없음) */
+.efl-cover{z-index:60}
+.efl-sum{display:grid;grid-template-columns:120px 1fr;gap:16px;align-items:center;margin:14px 0 4px}
+.efl-ring{width:120px;height:120px}
+.efl-bars{list-style:none;margin:0;padding:0;display:grid;gap:9px}
+.efl-bars li{display:grid;grid-template-columns:1fr auto;gap:2px 8px;font-size:13.5px;font-weight:850}
+.efl-bars li span{color:var(--muted)}
+.efl-bars li i{grid-column:1/-1;height:12px;border-radius:99px;background:#ece8f6;overflow:hidden}
+.efl-bars li i b{display:block;height:100%;border-radius:99px;background:linear-gradient(90deg,#4b24a5,#8d70d7)}
+.efl-bars li.full i b{background:linear-gradient(90deg,#2f9b6a,#5cc595)}
+.efl-msg{margin:10px 0 0;font-size:15px;font-weight:850}
+.efl-days{grid-template-columns:repeat(3,1fr)}
+.efl-pick{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px}
+.efl-pick label{display:grid;gap:4px;font-size:13px;font-weight:850;color:var(--muted)}
+.efl-pick input{min-height:44px;padding:0 10px;border:1.5px solid #cfc9bd;border-radius:12px;background:#fff;color:var(--ink);font:inherit;font-size:15px;font-weight:850}
+.efl-err{margin:8px 0 0;color:#b4462f;font-size:13.5px;font-weight:850}
+.efl-promise{margin:14px 0 0;padding:12px 14px;border-radius:14px;background:var(--violet-soft);color:var(--violet);font-size:15.5px;font-weight:900}
+.efl-tip{margin:8px 0 0;color:var(--muted);font-size:13px;font-weight:750}
+@media(max-width:520px){.efl-sum{grid-template-columns:1fr;justify-items:center}.efl-bars{width:100%}}
+@media print{.efl-cover{display:none!important}}
+</style>
+<div class="ef-cover efl-cover" id="eflUp" role="dialog" aria-modal="true" aria-labelledby="eflTitle" hidden>
+  <div class="ef-card">
+    <h2 id="eflTitle"></h2>
+    <div class="efl-sum">
+      <svg class="efl-ring" viewBox="0 0 120 120" aria-hidden="true"><circle cx="60" cy="60" r="50" fill="none" stroke="#ece8f6" stroke-width="14"/><circle id="eflArc" cx="60" cy="60" r="50" fill="none" stroke="#6a45c9" stroke-width="14" stroke-linecap="round" stroke-dasharray="314.16" stroke-dashoffset="314.16" transform="rotate(-90 60 60)"/><text id="eflPct" x="60" y="68" text-anchor="middle" font-size="26" font-weight="900" fill="#35206f">0%</text></svg>
+      <ul class="efl-bars" id="eflBars"></ul>
+    </div>
+    <p class="efl-msg" id="eflMsg"></p>
+    <div id="eflAsk">
+      <p class="ef-q">나머지는 언제 해 볼까?</p>
+      <div class="ef-est efl-days" id="eflDays"><button type="button" data-d="0" aria-pressed="false">오늘</button><button type="button" data-d="1" aria-pressed="false">내일</button><button type="button" data-d="2" aria-pressed="false">모레</button></div>
+      <div class="efl-pick"><label>날짜<input type="date" id="eflDate"></label><label>시간<input type="time" id="eflTime" step="300"></label></div>
+      <p class="efl-err" id="eflErr" hidden></p>
+      <button class="ef-go" id="eflSet" type="button">이때 할래요</button>
+    </div>
+    <div id="eflSaved" hidden>
+      <p class="efl-promise" id="eflPromise"></p>
+      <button class="ef-go" id="eflCal" type="button">달력에 알람 넣기</button>
+      <p class="efl-tip">이 화면을 열어 두면 그 시간에 소리로도 알려 줄게요.</p>
+    </div>
+    <button class="ef-go sub" id="eflMore" type="button">5분 더!</button>
+  </div>
+</div>
+<div class="ef-cover efl-cover" id="eflRing" role="alertdialog" aria-modal="true" aria-labelledby="eflRingTitle" hidden>
+  <div class="ef-card">
+    <h2 id="eflRingTitle">약속한 시간이에요!</h2>
+    <p class="efl-msg" id="eflRingMsg"></p>
+    <button class="ef-go" id="eflRingGo" type="button">지금 할래요</button>
+    <button class="ef-go sub" id="eflRingLater" type="button">시간 다시 정하기</button>
+  </div>
+</div>
+<script>
+(()=>{'use strict';
+const B=window.EF_BRIDGE;if(!B)return;
+const $=id=>document.getElementById(id);
+const KEY=B.key+':later';
+let L={};try{L=JSON.parse(localStorage.getItem(KEY)||'{}')||{};}catch(e){}
+const save=()=>{try{localStorage.setItem(KEY,JSON.stringify(L));}catch(e){}};
+const emit=(t,d)=>{try{B.emit&&B.emit(t,d);}catch(e){}};
+const WD='일월화수목금토';
+const when=t=>{const d=new Date(t),h=d.getHours();return `${d.getMonth()+1}월 ${d.getDate()}일(${WD[d.getDay()]}) ${h<12?'오전':'오후'} ${h%12||12}:${String(d.getMinutes()).padStart(2,'0')}`;};
+const ymd=d=>`${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}-${String(d.getDate()).padStart(2,'0')}`;
+/* 완성도: 쪽마다 같은 몫으로 셈 */
+function progress(){const ps=B.pages().map(p=>({...p,total:Math.max(1,p.total),done:Math.min(p.done,Math.max(1,p.total))}));
+  const pct=Math.round(ps.reduce((s,p)=>s+p.done/p.total,0)/ps.length*100);return{ps,pct};}
+function drawProgress(){const{ps,pct}=progress();
+  $('eflArc').setAttribute('stroke-dashoffset',(314.16*(1-pct/100)).toFixed(1));$('eflArc').setAttribute('stroke',pct>=100?'#2f9b6a':'#6a45c9');$('eflPct').textContent=pct+'%';
+  $('eflBars').innerHTML=ps.map((p,i)=>`<li class="${p.done>=p.total?'full':''}">${i+1}쪽 ${p.name}<span>${p.done} / ${p.total}</span><i><b style="width:${Math.round(p.done/p.total*100)}%"></b></i></li>`).join('');
+  return{ps,pct};}
+/* 날짜·시간 고르기 */
+function pickDay(n){const d=new Date();d.setDate(d.getDate()+n);$('eflDate').value=ymd(d);markDay();}
+function markDay(){const t=new Date();t.setHours(0,0,0,0);const v=$('eflDate').value?new Date($('eflDate').value+'T00:00'):null,n=v?Math.round((v-t)/864e5):-1;
+  [...$('eflDays').children].forEach(b=>b.setAttribute('aria-pressed',+b.dataset.d===n));}
+$('eflDays').onclick=e=>{const b=e.target.closest('button');if(b)pickDay(+b.dataset.d);};
+$('eflDate').oninput=markDay;
+function openAsk(title){const{ps,pct}=drawProgress();$('eflTitle').textContent=title;
+  $('eflMsg').textContent=pct>=100?'다 채웠어요! 마지막 쪽의 「다 했어요」를 눌러 끝내요.':`전체의 ${pct}%를 했어요.`;
+  $('eflAsk').hidden=pct>=100;$('eflSaved').hidden=true;$('eflErr').hidden=true;
+  $('eflMore').textContent=pct>=100?'알았어요':'5분 더!';
+  const d=new Date();$('eflDate').min=ymd(d);
+  if(L.at&&!L.fired&&L.at>Date.now()){const a=new Date(L.at);$('eflDate').value=ymd(a);$('eflTime').value=`${String(a.getHours()).padStart(2,'0')}:${String(a.getMinutes()).padStart(2,'0')}`;markDay();}
+  else{pickDay(1);$('eflTime').value=`${String(d.getHours()).padStart(2,'0')}:${String(Math.floor(d.getMinutes()/10)*10).padStart(2,'0')}`;}
+  $('eflRing').hidden=true;$('eflUp').hidden=false;}
+/* 「5분 더!」: 5분 더 집중하면 완성도 창을 다시 띄움 */
+$('eflMore').onclick=()=>{if($('eflMore').textContent==='5분 더!'&&L.upStart===B.now().start){L.nextMin=(L.shownMin||0)+5;save();emit('ef-more',{addMin:5,targetMin:L.nextMin});}$('eflUp').hidden=true;};
+$('eflSet').onclick=()=>{const v=$('eflDate').value,t=$('eflTime').value;
+  const at=v&&t?new Date(v+'T'+t).getTime():NaN;
+  if(!(at>Date.now()+60000)){$('eflErr').textContent=v&&t?'지금보다 뒤의 시간을 골라요.':'날짜와 시간을 골라요.';$('eflErr').hidden=false;return;}
+  const{ps,pct}=progress();
+  L.at=at;L.fired=false;L.start=B.now().start;L.left=ps.filter(p=>p.done<p.total).map(p=>p.name);L.pct=pct;save();
+  emit('ef-later',{remindAt:at,percent:pct});
+  try{if('Notification'in window&&Notification.permission==='default')Notification.requestPermission();}catch(e){}
+  $('eflPromise').textContent=`${when(at)}에 나머지를 하기로 했어요.`;
+  $('eflAsk').hidden=true;$('eflSaved').hidden=false;$('eflMore').textContent='알았어요';};
+/* 달력 파일(.ics): 기기 달력이 그 시간에 알람을 울림 */
+$('eflCal').onclick=()=>{if(!L.at)return;
+  const z=t=>new Date(t).toISOString().replace(/[-:]/g,'').replace(/\.\d{3}/,'');
+  const esc=s=>String(s).replace(/[\\,;]/g,m=>'\\'+m);
+  const title=`${B.title} 나머지 하기`,desc=L.left&&L.left.length?'남은 곳: '+L.left.join(', '):'';
+  const ics=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//Oncuvate//Review//KO','CALSCALE:GREGORIAN','BEGIN:VEVENT',
+    `UID:${L.at}-${Math.random().toString(36).slice(2)}@oncuvate`,`DTSTAMP:${z(Date.now())}`,`DTSTART:${z(L.at)}`,`DTEND:${z(L.at+30*60000)}`,
+    `SUMMARY:${esc(title)}`,`DESCRIPTION:${esc(desc)}`,'BEGIN:VALARM','ACTION:DISPLAY',`DESCRIPTION:${esc(title)}`,'TRIGGER:PT0M','END:VALARM','END:VEVENT','END:VCALENDAR'].join('\r\n');
+  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([ics],{type:'text/calendar'}));
+  a.download=`${B.title.replace(/[\\/:*?"<>|「」]/g,'').trim()}_나머지_약속.ics`;document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},4000);emit('ef-later-calendar',{remindAt:L.at});};
+/* 화면 알람: 열려 있으면 그 시간에, 닫혀 있었으면 다음에 열 때 */
+let ac=null;
+function beep(){try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();const t0=ac.currentTime;
+  [0,.35,.7,1.4,1.75,2.1].forEach((s,i)=>{const o=ac.createOscillator(),g=ac.createGain();o.type='sine';o.frequency.value=i%3===2?1046:784;
+    g.gain.setValueAtTime(0,t0+s);g.gain.linearRampToValueAtTime(.25,t0+s+.03);g.gain.exponentialRampToValueAtTime(.001,t0+s+.3);o.connect(g).connect(ac.destination);o.start(t0+s);o.stop(t0+s+.32);});}catch(e){}}
+document.addEventListener('pointerdown',()=>{try{ac=ac||new(window.AudioContext||window.webkitAudioContext)();if(ac.state==='suspended')ac.resume();}catch(e){}},{once:true,capture:true});
+function ring(){const late=Date.now()-L.at>30*60000;
+  $('eflRingTitle').textContent=late?'약속한 시간이 지났어요':'약속한 시간이에요!';
+  const pct=Math.max(L.pct||0,progress().pct);$('eflRingMsg').textContent=`${when(L.at)}에 하기로 했어요.${pct?` 지난번에 ${pct}%까지 했어요.`:''} 나머지를 해 볼까요?`;
+  $('eflUp').hidden=true;$('eflRing').hidden=false;beep();
+  try{if('Notification'in window&&Notification.permission==='granted'&&document.hidden)new Notification(`${B.title} 나머지 할 시간이에요`,{body:L.left&&L.left.length?'남은 곳: '+L.left.join(', '):'',tag:KEY});}catch(e){}
+  L.fired=true;save();emit('ef-later-ring',{remindAt:L.at,late});}
+$('eflRingGo').onclick=()=>{$('eflRing').hidden=true;};
+$('eflRingLater').onclick=()=>{L.at=null;save();openAsk('나머지는 언제 해 볼까?');};
+function check(){const n=B.now();
+  if(L.at&&!L.fired){if(n.done||(L.start&&n.start&&n.start!==L.start)){L.at=null;save();}
+    else if(Date.now()>=L.at)ring();}
+  const same=L.upStart===n.start,target=same?(L.nextMin||L.shownMin||n.est):n.est;
+  if(n.running&&n.est&&n.active>=target*60000&&!(same&&L.shownMin===target)&&$('efStart').hidden&&$('eflRing').hidden&&$('eflUp').hidden){
+    L.upStart=n.start;L.shownMin=target;L.nextMin=target;save();
+    openAsk(`${target}분 집중 끝!`);emit('ef-time-up',{estimateMin:n.est,targetMin:target,percent:progress().pct});}}
+setInterval(check,1000);check();
+})();
+</script>
+<!-- ef-later:end -->
 </body>
 </html>
